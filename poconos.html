@@ -751,12 +751,8 @@ body{
 
       <div class="slide-actions">
         <button class="btn-cta-book" data-cal-link="rev-whisper/discovery-poconos" data-cal-config='{"layout":"month_view"}'>
-          Book a call
+          Book A Call
           <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-        </button>
-        <button class="btn-cta-learn" onclick="nextSlide()">
-          Learn more
-          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h8M7 3l4 4-4 4"/></svg>
         </button>
       </div>
       <div class="promo-badge">
@@ -1079,7 +1075,7 @@ body{
       Back
     </button>
     <button class="btn-next" id="btn-next">
-      Next
+      <span id="btn-next-label">Next</span>
       <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h8M7 3l4 4-4 4"/></svg>
     </button>
   </div>
@@ -1294,6 +1290,7 @@ let isTransitioning = false;
 
 const btnBack = document.getElementById('btn-back');
 const btnNext = document.getElementById('btn-next');
+const btnNextLabel = document.getElementById('btn-next-label');
 
 // Transition types per slide boundary
 // 0→1: slide-up, 1→2: slide-left, 2→3: reveal, 3→4: slide-up
@@ -1473,9 +1470,7 @@ function animateCounter(el, target, duration, prefix, suffix) {
 function updateNav() {
   btnBack.disabled = current === 0;
   btnNext.style.display = current === totalSlides - 1 ? 'none' : '';
-
-  // Hide nav-bar on slide 0 (landing page uses its own CTA buttons)
-  document.querySelector('.nav-bar').classList.toggle('nav-bar--hidden', current === 0);
+  if (btnNextLabel) btnNextLabel.textContent = current === 0 ? 'Learn more' : 'Next';
 
   document.querySelectorAll('.progress-dot').forEach((dot, i) => {
     dot.classList.remove('active', 'done');
