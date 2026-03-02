@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solution Section | RevWhisper</title>
+<link rel="icon" href="../icons/favicon-light.svg" type="image/svg+xml" media="(prefers-color-scheme: light)">
+<link rel="icon" href="../icons/favicon-dark.svg" type="image/svg+xml" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../icons/favicon-light.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=DM+Sans:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#fff;color:#32302F;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+:root{
+  --black:#32302F;
+  --white:#ffffff;
+  --accent:#4A6741;
+  --accent-light:#dce6d8;
+  --accent-border:#b3c5ab;
+  --g50:#faf9f8;--g100:#f3f1ef;--g200:#E0DCDA;--g300:#ccc8c5;--g400:#a39e9b;--g500:#706b68;--g600:#58534f;--g700:#48433f;
+  --stone:#f3f1ef;
+  --radius:8px;--radius-sm:6px;
+  --heading:'Lora','Georgia',serif;
+  --body:'DM Sans','system-ui','Helvetica Neue',sans-serif;
+  --mono:'DM Mono','Consolas',monospace;
+}
+.w{max-width:1100px;margin:0 auto;padding:0 28px}
+
+/* Solution header */
+section{padding:120px 0}
+.solution-header{max-width:620px;margin-bottom:56px}
+.eyebrow{display:inline-block;font-family:var(--body);font-size:clamp(.7rem,.9vw,.8rem);font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+.h2{font-family:var(--heading);font-size:clamp(1.6rem,3vw,2.2rem);font-weight:400;color:var(--black);line-height:1.3;letter-spacing:-.01em}
+.sub{font-family:var(--body);font-size:clamp(.92rem,1.1vw,1rem);color:var(--g500);line-height:1.7;margin-top:16px;font-weight:300;max-width:540px}
+.em-mark{font-style:italic;background:linear-gradient(to top,var(--accent-light) 32%,transparent 32%);padding:0 2px}
+
+/* CTA button */
+.btn-primary{display:inline-block;font-family:var(--body);font-size:.95rem;font-weight:500;color:#fff;background:var(--accent);padding:14px 32px;border-radius:var(--radius);text-decoration:none;letter-spacing:.01em;transition:background .15s,transform .15s}
+.btn-primary:hover{background:#3d5736;transform:translateY(-1px)}
+
+/* Bento grid */
+.bento-grid{display:grid;grid-template-columns:1.15fr 1fr;grid-template-rows:1fr 1fr;gap:12px}
+.bento-tile{background:#fff;border:1.5px solid var(--g200);border-radius:var(--radius);padding:32px 28px;transition:border-color .2s,box-shadow .2s;display:flex;flex-direction:column}
+.bento-tile:hover{border-color:var(--accent);box-shadow:0 0 0 4px rgba(74,103,65,.07)}
+.bento-revenue{grid-row:1/3;padding:40px 36px}
+.bt-eyebrow{font-family:var(--mono);font-size:11px;font-weight:500;color:var(--accent);letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px}
+.bt-title{font-family:var(--heading);font-weight:400;letter-spacing:-.01em;margin-bottom:10px}
+.bento-revenue .bt-title{font-size:24px}
+.bento-listing .bt-title,.bento-photo .bt-title{font-size:20px}
+.bt-desc{font-size:14px;color:var(--g500);line-height:1.7;font-weight:300;margin-bottom:20px}
+.bt-chart{margin:auto 0;padding:20px 0}
+.bt-chart svg{width:100%;height:auto;display:block}
+.bt-chart-line{fill:none;stroke:var(--accent);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:stroke-dashoffset .5s cubic-bezier(.4,0,.2,1)}
+.bt-chart-area{fill:url(#fern-fade);opacity:.15}
+.bt-bars{display:flex;flex-direction:column;gap:10px;margin:auto 0;padding:16px 0}
+.bt-bar{display:flex;align-items:center;gap:12px}
+.bt-bar-label{font-family:var(--mono);font-size:11px;color:var(--g500);width:84px;flex-shrink:0;text-align:right}
+.bt-bar-track{flex:1;height:8px;background:var(--g100);border-radius:4px;overflow:hidden}
+.bt-bar-fill{height:100%;border-radius:4px;width:0;transition:width .4s ease}
+.bt-histo{margin:auto 0;padding:12px 0}
+.bt-histo-svg{width:100%;height:auto;display:block}
+.bt-histo-bar{transform-box:fill-box;transform-origin:center bottom;transform:scaleY(0);opacity:0}
+.bt-histo-bar.show{opacity:1;transform:scaleY(1);transition:transform .45s cubic-bezier(.34,1.56,.64,1),opacity .25s ease}
+.bt-histo-axis{display:flex;justify-content:space-between;padding:8px 10px 0}
+.bt-histo-axis span{font-family:var(--mono);font-size:9px;color:var(--g400);letter-spacing:.04em}
+
+/* Reveal animation */
+.r{opacity:0;transform:translateY(8px);transition:opacity .4s cubic-bezier(0.25,0.1,0.25,1),transform .4s cubic-bezier(0.25,0.1,0.25,1)}
+.r.in{opacity:1;transform:translateY(0)}
+.d1{transition-delay:.07s}.d2{transition-delay:.14s}.d3{transition-delay:.21s}
+
+/* Responsive */
+@media(max-width:900px){
+  .w{padding:0 20px}
+  section{padding:80px 0}
+  .bento-grid{grid-template-columns:1fr}
+  .bento-revenue{grid-row:auto}
+}
+</style>
+</head>
+<body>
+
+<section id="solution" style="background:#fff">
+  <div class="w">
+    <div class="solution-header r">
+      <span class="eyebrow">The Solution</span>
+      <h2 class="h2">Introducing the Revwhisper <em class="em-mark">Revenue Uplift Program.</em></h2>
+      <p class="sub">A fully managed, subscription-based acceleration engine. We handle everything: pricing, photos, copy, promotions, and review responses. You collect the revenue.</p>
+    </div>
+    <div class="bento-grid r d1">
+      <div class="bento-tile bento-revenue">
+        <div class="bt-eyebrow">Revenue Management</div>
+        <div class="bt-title">AI-Powered Dynamic Pricing</div>
+        <p class="bt-desc">Data-driven rate optimization that adapts nightly to demand, competitors, and seasonality — so every booking captures maximum value.</p>
+        <div class="bt-chart">
+          <svg viewBox="0 0 240 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="fern-fade" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="var(--accent)"/>
+                <stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <path class="bt-chart-area" d="M0,95 30,80 70,85 110,60 150,50 190,30 240,15 240,120 0,120Z"/>
+            <polyline class="bt-chart-line" points="0,95 30,80 70,85 110,60 150,50 190,30 240,15"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="bento-tile bento-listing r d2">
+        <div class="bt-eyebrow">Listing Optimization</div>
+        <div class="bt-title">Algorithm-First Content</div>
+        <p class="bt-desc">Every word, tag, and detail engineered for search ranking and guest conversion.</p>
+        <div class="bt-bars">
+          <div class="bt-bar"><span class="bt-bar-label">Title</span><div class="bt-bar-track"><div class="bt-bar-fill" data-width="90" style="background:var(--accent)"></div></div></div>
+          <div class="bt-bar"><span class="bt-bar-label">Description</span><div class="bt-bar-track"><div class="bt-bar-fill" data-width="82" style="background:rgba(74,103,65,.7)"></div></div></div>
+          <div class="bt-bar"><span class="bt-bar-label">Amenities</span><div class="bt-bar-track"><div class="bt-bar-fill" data-width="78" style="background:rgba(74,103,65,.5)"></div></div></div>
+          <div class="bt-bar"><span class="bt-bar-label">SEO</span><div class="bt-bar-track"><div class="bt-bar-fill" data-width="85" style="background:rgba(74,103,65,.8)"></div></div></div>
+        </div>
+      </div>
+
+      <div class="bento-tile bento-photo r d3">
+        <div class="bt-eyebrow">Visual Optimization</div>
+        <div class="bt-title">Professional Photo Pipeline</div>
+        <p class="bt-desc">Quality scoring and enhancement that makes every listing photo convert clicks to bookings.</p>
+        <div class="bt-histo">
+          <svg class="bt-histo-svg" viewBox="0 0 240 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <line x1="0" y1="18" x2="240" y2="18" stroke="var(--g100)" stroke-width=".5"/>
+            <line x1="0" y1="51" x2="240" y2="51" stroke="var(--g100)" stroke-width=".5"/>
+            <line x1="0" y1="84" x2="240" y2="84" stroke="var(--g100)" stroke-width=".5"/>
+            <line x1="0" y1="118" x2="240" y2="118" stroke="var(--g200)" stroke-width=".5"/>
+          </svg>
+          <div class="bt-histo-axis"><span>Shadows</span><span>Midtones</span><span>Highlights</span></div>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:36px" class="r d2">
+      <div><a href="get-started" class="btn-primary">Book your free strategy call →</a></div>
+    </div>
+  </div>
+</section>
+
+<script>
+/* Scroll reveal */
+const io = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) entry.target.classList.add('in');
+  });
+}, { threshold: 0.07, rootMargin: '0px 0px -28px 0px' });
+document.querySelectorAll('.r').forEach(el => io.observe(el));
+
+/* Bento grid animations */
+(function(){
+  let bentoFired = false;
+  function animateBars(grid) {
+    grid.querySelectorAll('.bt-bar-fill').forEach((bar, i) => {
+      setTimeout(() => { bar.style.width = bar.dataset.width + '%'; }, i * 80);
+    });
+  }
+  function animateChart(grid) {
+    const line = grid.querySelector('.bt-chart-line');
+    if (!line) return;
+    const len = line.getTotalLength();
+    line.style.strokeDasharray = len;
+    line.style.strokeDashoffset = len;
+    requestAnimationFrame(() => { line.style.strokeDashoffset = '0'; });
+  }
+  function buildHistogram(grid) {
+    var svg = grid.querySelector('.bt-histo-svg');
+    if (!svg || svg.dataset.built) return;
+    svg.dataset.built = '1';
+    // 40-point smooth bell curves for each RGB channel
+    var R = [3,6,10,16,24,34,44,55,65,74,82,88,93,96,97,96,93,88,82,74,65,55,44,34,26,20,15,11,8,6,5,4,3,3,2,2,2,1,1,1];
+    var G = [1,1,2,3,5,7,10,14,20,27,35,44,54,63,72,80,86,91,94,96,96,94,90,84,76,66,55,44,34,25,18,13,9,6,4,3,2,2,1,1];
+    var B = [1,1,1,1,2,2,3,4,5,7,9,12,16,20,26,32,40,48,57,66,74,81,87,91,94,96,96,94,90,84,76,66,54,42,32,23,16,10,6,3];
+    var n = R.length, barW = 4.8, gap = 1.2, baseY = 118, maxH = 100;
+    var totalW = n * (barW + gap) - gap;
+    var startX = (240 - totalW) / 2;
+    var ns = 'http://www.w3.org/2000/svg';
+    // Render order: R first (back), then B, then G (front) for nice overlap
+    [[R,'rgba(192,118,82,.35)'],[B,'rgba(88,120,168,.3)'],[G,'rgba(74,103,65,.42)']].forEach(function(ch) {
+      ch[0].forEach(function(val, i) {
+        var h = val * maxH / 100;
+        if (h < 1) h = 1;
+        var rect = document.createElementNS(ns, 'rect');
+        rect.setAttribute('x', startX + i * (barW + gap));
+        rect.setAttribute('y', baseY - h);
+        rect.setAttribute('width', barW);
+        rect.setAttribute('height', h);
+        rect.setAttribute('rx', '1');
+        rect.setAttribute('fill', ch[1]);
+        rect.classList.add('bt-histo-bar');
+        rect.dataset.delay = i * 15;
+        svg.appendChild(rect);
+      });
+    });
+  }
+  function animateHistogram(grid) {
+    grid.querySelectorAll('.bt-histo-bar').forEach(function(bar) {
+      setTimeout(function() { bar.classList.add('show'); }, parseInt(bar.dataset.delay) || 0);
+    });
+  }
+  const bentoObs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !bentoFired) {
+        bentoFired = true;
+        const grid = entry.target;
+        animateChart(grid);
+        animateBars(grid);
+        buildHistogram(grid);
+        setTimeout(function(){ animateHistogram(grid); }, 50);
+        bentoObs.unobserve(grid);
+      }
+    });
+  }, { threshold: 0.3 });
+  const bg = document.querySelector('.bento-grid');
+  if (bg) bentoObs.observe(bg);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Problem Section | RevWhisper</title>
+<link rel="icon" href="../icons/favicon-light.svg" type="image/svg+xml" media="(prefers-color-scheme: light)">
+<link rel="icon" href="../icons/favicon-dark.svg" type="image/svg+xml" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../icons/favicon-light.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=DM+Sans:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#fff;color:#32302F;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+:root{
+  --black:#32302F;
+  --white:#ffffff;
+  --accent:#4A6741;
+  --accent-light:#dce6d8;
+  --accent-border:#b3c5ab;
+  --g50:#faf9f8;--g100:#f3f1ef;--g200:#E0DCDA;--g300:#ccc8c5;--g400:#a39e9b;--g500:#706b68;--g700:#48433f;
+  --radius:8px;--radius-sm:6px;
+  --heading:'Lora','Georgia',serif;
+  --body:'DM Sans','system-ui','Helvetica Neue',sans-serif;
+}
+.w{max-width:1100px;margin:0 auto;padding:0 28px}
+
+/* Problem Section */
+.problem{background:var(--black);color:var(--white);padding:120px 0}
+
+/* Stat block */
+.problem-stat{text-align:center;margin-bottom:80px}
+.problem-stat-num-wrap{display:inline-block}
+.problem-stat-num{font-family:var(--heading);font-size:clamp(3.5rem,6vw,5rem);font-weight:400;letter-spacing:-.03em;color:var(--accent);line-height:1.1}
+.problem-stat-label{font-family:var(--body);font-size:clamp(0.85rem,1.2vw,0.95rem);color:var(--g400);max-width:420px;margin:12px auto 0;line-height:1.6;font-weight:300}
+
+/* Cards — 3-column grid */
+.problem-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;margin-top:64px}
+.problem-card{padding:0}
+.problem-card-num{font-family:var(--body);font-size:0.8rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+.problem-card-title{font-family:var(--heading);font-size:clamp(1.05rem,1.5vw,1.2rem);font-weight:400;color:var(--white);line-height:1.4;margin-bottom:10px}
+.problem-card-desc{font-family:var(--body);font-size:clamp(0.88rem,1vw,0.95rem);color:var(--g400);line-height:1.75;font-weight:300}
+
+/* Bridge */
+.problem-bridge{text-align:center;margin-top:80px}
+.problem-bridge p{font-family:var(--heading);font-style:italic;font-size:clamp(1rem,1.5vw,1.15rem);color:var(--g400);line-height:1.6;max-width:480px;margin:0 auto}
+
+/* Reveal animation */
+.r{opacity:0;transform:translateY(8px);transition:opacity .4s cubic-bezier(0.25,0.1,0.25,1),transform .4s cubic-bezier(0.25,0.1,0.25,1)}
+.r.in{opacity:1;transform:translateY(0)}
+.d1{transition-delay:.07s}.d2{transition-delay:.14s}.d3{transition-delay:.21s}
+
+/* Responsive */
+@media(max-width:900px){
+  .w{padding:0 20px}
+  .problem{padding:80px 0}
+  .problem-stat{margin-bottom:56px}
+  .problem-cards{grid-template-columns:1fr;gap:32px;margin-top:48px}
+  .problem-card{padding:24px 0;border-top:1px solid rgba(255,255,255,0.08)}
+  .problem-card:first-child{border-top:none;padding-top:0}
+  .problem-bridge{margin-top:56px}
+}
+</style>
+</head>
+<body>
+
+<section class="problem">
+  <div class="w">
+
+    <!-- Stat Anchor -->
+    <div class="problem-stat r">
+      <div class="problem-stat-num-wrap">
+        <div class="problem-stat-num" data-target="30000">$0</div>
+      </div>
+      <p class="problem-stat-label">The average annual revenue gap between self-managed and professionally optimized Airbnb listings.</p>
+    </div>
+
+    <!-- Pain Point Cards — 3 Column -->
+    <div class="problem-cards">
+
+      <div class="problem-card r d1">
+        <div class="problem-card-num">01</div>
+        <h3 class="problem-card-title">When's the last time you checked your ranking?</h3>
+        <p class="problem-card-desc">Most hosts obsess over nightly rates. But Airbnb's algorithm weighs conversion velocity, response time, and booking momentum. A well-priced listing on page three still loses.</p>
+      </div>
+
+      <div class="problem-card r d2">
+        <div class="problem-card-num">02</div>
+        <h3 class="problem-card-title">Did you adjust when the algorithm changed?</h3>
+        <p class="problem-card-desc">Airbnb overhauled its ranking system in 2025. The new listing boost is gone. Conversion-based weighting replaced it. Hosts who didn't adapt are being quietly buried, and most of them don't know it yet.</p>
+      </div>
+
+      <div class="problem-card r d3">
+        <div class="problem-card-num">03</div>
+        <h3 class="problem-card-title">Your competition isn't other hosts anymore.</h3>
+        <p class="problem-card-desc">Revenue management companies now run dynamic pricing, automated messaging, and A/B-tested listing copy across thousands of properties. The bar moved. The question is whether your listing moved with it.</p>
+      </div>
+
+    </div>
+
+    <!-- Bridge Line -->
+    <div class="problem-bridge r">
+      <p>You don't need to work harder. You need to see what you're missing.</p>
+    </div>
+
+  </div>
+</section>
+
+<script>
+/* Count-up animation with slot machine flash */
+function animateCount(el, target, duration) {
+  const flashDuration = 380;
+  const flashRate = 48;
+  const flashStart = performance.now();
+  let lastFlash = 0;
+
+  function flash(now) {
+    if (now - flashStart < flashDuration) {
+      if (now - lastFlash >= flashRate) {
+        const rand = Math.floor(Math.random() * 80000) + 8000;
+        el.textContent = '$' + rand.toLocaleString();
+        lastFlash = now;
+      }
+      requestAnimationFrame(flash);
+    } else {
+      /* Flash done — smooth count-up from 0 */
+      const countStart = performance.now();
+      const easeOut = t => 1 - Math.pow(1 - t, 4);
+
+      function tick(now) {
+        const elapsed = now - countStart;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = easeOut(progress);
+        const current = Math.round(eased * target);
+        el.textContent = '$' + current.toLocaleString();
+        if (progress < 1) requestAnimationFrame(tick);
+      }
+
+      requestAnimationFrame(tick);
+    }
+  }
+
+  requestAnimationFrame(flash);
+}
+
+/* Intersection Observer - reveal + count-up */
+const io = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('in');
+
+      /* Trigger count-up on the stat element */
+      const numEl = entry.target.querySelector('.problem-stat-num[data-target]');
+      if (numEl && !numEl.dataset.counted) {
+        numEl.dataset.counted = '1';
+        animateCount(numEl, parseInt(numEl.dataset.target, 10), 2000);
+      }
+    }
+  });
+}, { threshold: 0.07, rootMargin: '0px 0px -28px 0px' });
+
+document.querySelectorAll('.r').forEach(el => io.observe(el));
+</script>
+</body>
+</html>
