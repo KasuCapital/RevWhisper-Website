@@ -249,11 +249,81 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
 .cred .h2{margin-bottom:16px}
 .cred .sub{max-width:520px;margin:0 auto 32px}
 
-/* Team Bubbles */
-.team-bubbles{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:1}
-.team-bubble{position:absolute;border-radius:50%;overflow:hidden;border:2.5px solid var(--g200);box-shadow:0 4px 20px rgba(50,48,47,.08);opacity:0;transition:opacity 1s ease;will-change:transform}
-.team-bubble.visible{opacity:0.55}
-.team-bubble img{width:100%;height:100%;object-fit:cover;display:block}
+/* Team Carousel */
+.cred-carousel-shell{
+  width:min(1040px,100%);
+  margin:26px auto 0;
+  padding:16px 0 14px;
+}
+.cred-carousel-head{
+  text-align:center;
+  font-family:var(--body);
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--g500);
+}
+.cred-carousel-wrap{
+  width:100%;
+  overflow:hidden;
+  margin-top:12px;
+  position:relative;
+  -webkit-mask-image:linear-gradient(90deg,transparent 0%,#000 9%,#000 91%,transparent 100%);
+  mask-image:linear-gradient(90deg,transparent 0%,#000 9%,#000 91%,transparent 100%);
+}
+.cred-carousel-track{
+  display:flex;
+  gap:20px;
+  width:max-content;
+  animation:credTeamScroll 38s linear infinite;
+}
+.cred-carousel-track:hover{animation-play-state:paused}
+@keyframes credTeamScroll{
+  0%{transform:translateX(0)}
+  100%{transform:translateX(-50%)}
+}
+.cred-team-card{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:9px;
+  width:154px;
+  flex-shrink:0;
+}
+.cred-team-photo{
+  position:relative;
+  width:106px;
+  height:106px;
+  border-radius:26px;
+  overflow:hidden;
+  transition:transform .2s ease;
+}
+.cred-team-card:hover .cred-team-photo{
+  transform:translateY(-1px);
+}
+.cred-team-photo img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+.cred-team-name{
+  font-size:14px;
+  font-weight:600;
+  color:var(--black);
+  letter-spacing:-.01em;
+  line-height:1.2;
+  white-space:nowrap;
+}
+.cred-team-division{
+  font-size:10px;
+  font-weight:500;
+  color:var(--g400);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  white-space:nowrap;
+}
 
 /* ── Pricing Section ── */
 #pricing{background:#fff;padding:120px 0}
@@ -381,7 +451,16 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
   .hiw-cal-dh{font-size:0.55rem}
   .hiw-cal-month{font-size:0.78rem}
   .cred{padding:80px 0}
-  .team-bubble{border-width:2px}
+  .cred-carousel-shell{margin-top:18px;padding:12px 0 10px}
+  .cred-carousel-wrap{
+    -webkit-mask-image:linear-gradient(90deg,transparent 0%,#000 7%,#000 93%,transparent 100%);
+    mask-image:linear-gradient(90deg,transparent 0%,#000 7%,#000 93%,transparent 100%);
+  }
+  .cred-carousel-track{gap:14px}
+  .cred-team-card{width:116px;gap:7px}
+  .cred-team-photo{width:76px;height:76px;border-radius:18px}
+  .cred-team-name{font-size:12px}
+  .cred-team-division{font-size:9px;letter-spacing:.06em}
   .hiw-cal-badge{font-size:0.55rem;padding:2px 6px}
   .stakes{padding:80px 0}
   .stakes-layout{grid-template-columns:1fr;gap:48px}
@@ -405,8 +484,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
   .bt-rank-badge span{transition:none}
   .bt-rank-row.yours.celebrate{animation:none}
   .bt-rank-badge.glow{animation:none}
-  .team-bubble{transition:none}
-  .team-bubble.visible{opacity:0.4}
+  .cred-carousel-track{animation:none}
   .guar-number{text-shadow:none}
   .stakes-live-dot{animation:none;opacity:.6}
   .stakes-row{will-change:auto}
@@ -580,7 +658,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
               <!-- Row 1: Competitor A (starts #1, ends #2) -->
               <div class="bt-rank-row" data-start="1" data-end="2">
                 <div class="bt-rank-badge"><span class="bt-rank-num-old">1</span><span class="bt-rank-num-new">2</span></div>
-                <img class="bt-rank-thumb" src="/images/properties/kitchen-after.webp" alt="Mountain View Lodge">
+                <img class="bt-rank-thumb" src="../images/properties/kitchen-after.webp" alt="Mountain View Lodge">
                 <div class="bt-rank-info">
                   <div class="bt-rank-name">Mountain View Lodge</div>
                   <div class="bt-rank-score-line">
@@ -592,7 +670,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
               <!-- Row 2: Competitor B (starts #2, ends #3) -->
               <div class="bt-rank-row" data-start="2" data-end="3">
                 <div class="bt-rank-badge"><span class="bt-rank-num-old">2</span><span class="bt-rank-num-new">3</span></div>
-                <img class="bt-rank-thumb" src="/images/properties/backyardbbq-after.webp" alt="Lakeside Retreat">
+                <img class="bt-rank-thumb" src="../images/properties/backyardbbq-after.webp" alt="Lakeside Retreat">
                 <div class="bt-rank-info">
                   <div class="bt-rank-name">Lakeside Retreat</div>
                   <div class="bt-rank-score-line">
@@ -604,7 +682,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
               <!-- Row 3: Competitor C (starts #3, ends #4) -->
               <div class="bt-rank-row" data-start="3" data-end="4">
                 <div class="bt-rank-badge"><span class="bt-rank-num-old">3</span><span class="bt-rank-num-new">4</span></div>
-                <img class="bt-rank-thumb" src="/images/properties/bunkroom-after.webp" alt="Sunset Ridge Cabin">
+                <img class="bt-rank-thumb" src="../images/properties/bunkroom-after.webp" alt="Sunset Ridge Cabin">
                 <div class="bt-rank-info">
                   <div class="bt-rank-name">Sunset Ridge Cabin</div>
                   <div class="bt-rank-score-line">
@@ -616,7 +694,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
               <!-- Row 4: Your Property (starts #4, ends #1) -->
               <div class="bt-rank-row yours" data-start="4" data-end="1">
                 <div class="bt-rank-badge"><span class="bt-rank-num-old">4</span><span class="bt-rank-num-new">1</span></div>
-                <img class="bt-rank-thumb" src="/images/properties/livingroom-after.webp" alt="Your Property">
+                <img class="bt-rank-thumb" src="../images/properties/livingroom-after.webp" alt="Your Property">
                 <div class="bt-rank-info">
                   <div class="bt-rank-name">
                     Your Property
@@ -770,7 +848,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
       <!-- Left: Photo + Calendar overlay -->
       <div class="hiw-visual r">
         <div class="hiw-img-wrap">
-          <img src="/images/properties/livingroom-after.webp" alt="Beautiful vacation rental living room managed by RevWhisper" loading="lazy">
+          <img src="../images/properties/livingroom-after.webp" alt="Beautiful vacation rental living room managed by RevWhisper" loading="lazy">
 
           <!-- Floating calendar card -->
           <div class="hiw-cal-card">
@@ -902,13 +980,111 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
      SECTION 5 – CREDIBILITY & SOCIAL PROOF
      ════════════════════════════════════════════════ -->
 <section id="credibility" class="cred">
-  <div class="team-bubbles" id="teamBubbles"></div>
   <div class="w cred-inner">
 
     <div class="eyebrow r">Why trust us</div>
     <h2 class="h2 r d1">We use RevWhisper on our own portfolio</h2>
     <p class="sub r d2">We're not just building tools — we're hosts who depend on them. Our team manages properties, competes in real markets, and stakes our own revenue on every feature we ship.</p>
     <div class="r d3" style="text-align:center"><a href="/get-started" class="btn-accent">Book a call →</a></div>
+
+    <div class="cred-carousel-shell r d3" aria-label="RevWhisper team divisions">
+      <div class="cred-carousel-head">Meet the Divisions Behind RevWhisper</div>
+      <div class="cred-carousel-wrap">
+        <div class="cred-carousel-track">
+          <div class="cred-team-card">
+            <div class="cred-team-photo"><img src="../images/team/marisa.webp" alt="Marisa - Graphic Design" loading="lazy"></div>
+            <div class="cred-team-name">Marisa</div>
+            <div class="cred-team-division">Graphic Design</div>
+          </div>
+          <div class="cred-team-card">
+            <div class="cred-team-photo"><img src="../images/team/david.webp" alt="David - Revenue Optimization" loading="lazy"></div>
+            <div class="cred-team-name">David</div>
+            <div class="cred-team-division">Revenue Optimization</div>
+          </div>
+          <div class="cred-team-card">
+            <div class="cred-team-photo"><img src="../images/team/bryan.webp" alt="Bryan - AI Integrations" loading="lazy"></div>
+            <div class="cred-team-name">Bryan</div>
+            <div class="cred-team-division">AI Integrations</div>
+          </div>
+          <div class="cred-team-card">
+            <div class="cred-team-photo"><img src="../images/team/spencer.webp" alt="Spencer - Vision" loading="lazy"></div>
+            <div class="cred-team-name">Spencer</div>
+            <div class="cred-team-division">Vision</div>
+          </div>
+          <div class="cred-team-card">
+            <div class="cred-team-photo"><img src="../images/team/alex.webp" alt="Alex - Strategist" loading="lazy"></div>
+            <div class="cred-team-name">Alex</div>
+            <div class="cred-team-division">Strategist</div>
+          </div>
+          <div class="cred-team-card">
+            <div class="cred-team-photo"><img src="../images/team/nic.webp" alt="Nicolas - Customer Relations" loading="lazy"></div>
+            <div class="cred-team-name">Nicolas</div>
+            <div class="cred-team-division">Customer Relations</div>
+          </div>
+          <div class="cred-team-card">
+            <div class="cred-team-photo"><img src="../images/team/chris.webp" alt="Chris - Property Improvements" loading="lazy"></div>
+            <div class="cred-team-name">Chris</div>
+            <div class="cred-team-division">Property Improvements</div>
+          </div>
+          <div class="cred-team-card">
+            <div class="cred-team-photo"><img src="../images/team/cady.webp" alt="Cady - Property Improvements" loading="lazy"></div>
+            <div class="cred-team-name">Cady</div>
+            <div class="cred-team-division">Property Improvements</div>
+          </div>
+          <div class="cred-team-card">
+            <div class="cred-team-photo"><img src="../images/team/azmeree.webp" alt="Azmeree - Research" loading="lazy"></div>
+            <div class="cred-team-name">Azmeree</div>
+            <div class="cred-team-division">Research</div>
+          </div>
+
+          <div class="cred-team-card" aria-hidden="true">
+            <div class="cred-team-photo"><img src="../images/team/marisa.webp" alt="" loading="lazy"></div>
+            <div class="cred-team-name">Marisa</div>
+            <div class="cred-team-division">Graphic Design</div>
+          </div>
+          <div class="cred-team-card" aria-hidden="true">
+            <div class="cred-team-photo"><img src="../images/team/david.webp" alt="" loading="lazy"></div>
+            <div class="cred-team-name">David</div>
+            <div class="cred-team-division">Revenue Optimization</div>
+          </div>
+          <div class="cred-team-card" aria-hidden="true">
+            <div class="cred-team-photo"><img src="../images/team/bryan.webp" alt="" loading="lazy"></div>
+            <div class="cred-team-name">Bryan</div>
+            <div class="cred-team-division">AI Integrations</div>
+          </div>
+          <div class="cred-team-card" aria-hidden="true">
+            <div class="cred-team-photo"><img src="../images/team/spencer.webp" alt="" loading="lazy"></div>
+            <div class="cred-team-name">Spencer</div>
+            <div class="cred-team-division">Vision</div>
+          </div>
+          <div class="cred-team-card" aria-hidden="true">
+            <div class="cred-team-photo"><img src="../images/team/alex.webp" alt="" loading="lazy"></div>
+            <div class="cred-team-name">Alex</div>
+            <div class="cred-team-division">Strategist</div>
+          </div>
+          <div class="cred-team-card" aria-hidden="true">
+            <div class="cred-team-photo"><img src="../images/team/nic.webp" alt="" loading="lazy"></div>
+            <div class="cred-team-name">Nicolas</div>
+            <div class="cred-team-division">Customer Relations</div>
+          </div>
+          <div class="cred-team-card" aria-hidden="true">
+            <div class="cred-team-photo"><img src="../images/team/chris.webp" alt="" loading="lazy"></div>
+            <div class="cred-team-name">Chris</div>
+            <div class="cred-team-division">Property Improvements</div>
+          </div>
+          <div class="cred-team-card" aria-hidden="true">
+            <div class="cred-team-photo"><img src="../images/team/cady.webp" alt="" loading="lazy"></div>
+            <div class="cred-team-name">Cady</div>
+            <div class="cred-team-division">Property Improvements</div>
+          </div>
+          <div class="cred-team-card" aria-hidden="true">
+            <div class="cred-team-photo"><img src="../images/team/azmeree.webp" alt="" loading="lazy"></div>
+            <div class="cred-team-name">Azmeree</div>
+            <div class="cred-team-division">Research</div>
+          </div>
+        </div>
+      </div>
+    </div>
 
   </div>
 </section>
@@ -1542,159 +1718,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
         }
       }
     }, 100);
-  })();
-
-  /* ── 7. Team Bubbles – Physics Bounce ── */
-  (function() {
-    var container = document.getElementById('teamBubbles');
-    if (!container) return;
-    var section = document.getElementById('credibility');
-    var credInner = section ? section.querySelector('.cred-inner') : null;
-
-    var members = [
-      { file: '/images/team/alex.webp',     size: 72 },
-      { file: '/images/team/angela-1.webp', size: 58 },
-      { file: '/images/team/azmeree.webp',  size: 52 },
-      { file: '/images/team/bryan.webp',    size: 66 },
-      { file: '/images/team/cady.webp',     size: 54 },
-      { file: '/images/team/chris.webp',    size: 60 },
-      { file: '/images/team/david.webp',    size: 56 },
-      { file: '/images/team/marisa.webp',   size: 64 },
-      { file: '/images/team/nic.webp',      size: 50 },
-      { file: '/images/team/spencer.webp',  size: 68 },
-    ];
-
-    var PAD = 10;
-    var bubbles = [];
-    var W = function() { return container.offsetWidth || window.innerWidth; };
-    var H = function() { return container.offsetHeight || 600; };
-
-    function getExclusion() {
-      if (!credInner) return null;
-      var cr = container.getBoundingClientRect();
-      var sr = credInner.getBoundingClientRect();
-      var pad = 24;
-      return {
-        left:   sr.left   - cr.left - pad,
-        top:    sr.top    - cr.top  - pad,
-        right:  sr.right  - cr.left + pad,
-        bottom: sr.bottom - cr.top  + pad,
-      };
-    }
-
-    function spawnPosition(size) {
-      var w = W(), h = H();
-      var ex = getExclusion();
-      for (var attempts = 0; attempts < 60; attempts++) {
-        var x = PAD + Math.random() * (w - size - PAD * 2);
-        var y = PAD + Math.random() * (h - size - PAD * 2);
-        if (ex) {
-          var cx = x + size / 2, cy = y + size / 2;
-          if (cx > ex.left && cx < ex.right && cy > ex.top && cy < ex.bottom) continue;
-        }
-        return { x: x, y: y };
-      }
-      return { x: PAD, y: PAD };
-    }
-
-    members.forEach(function(m) {
-      var el = document.createElement('div');
-      el.className = 'team-bubble';
-      el.style.width = m.size + 'px';
-      el.style.height = m.size + 'px';
-      var img = document.createElement('img');
-      img.src = m.file;
-      img.alt = '';
-      img.loading = 'lazy';
-      el.appendChild(img);
-      container.appendChild(el);
-
-      var angle = Math.random() * Math.PI * 2;
-      var speed = 0.15 + Math.random() * 0.25;
-      var pos = spawnPosition(m.size);
-      bubbles.push({ el: el, x: pos.x, y: pos.y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed, size: m.size });
-    });
-
-    var animId = null;
-
-    function step() {
-      var w = W(), h = H();
-      var ex = getExclusion();
-
-      for (var i = 0; i < bubbles.length; i++) {
-        var b = bubbles[i];
-        b.x += b.vx;
-        b.y += b.vy;
-
-        if (b.x <= PAD)              { b.x = PAD;              b.vx = Math.abs(b.vx); }
-        if (b.x + b.size >= w - PAD) { b.x = w - PAD - b.size; b.vx = -Math.abs(b.vx); }
-        if (b.y <= PAD)              { b.y = PAD;              b.vy = Math.abs(b.vy); }
-        if (b.y + b.size >= h - PAD) { b.y = h - PAD - b.size; b.vy = -Math.abs(b.vy); }
-
-        if (ex) {
-          var bcx = b.x + b.size / 2, bcy = b.y + b.size / 2;
-          var r = b.size / 2;
-          if (bcx + r > ex.left && bcx - r < ex.right && bcy + r > ex.top && bcy - r < ex.bottom) {
-            var dL = Math.abs(bcx + r - ex.left);
-            var dR = Math.abs(bcx - r - ex.right);
-            var dT = Math.abs(bcy + r - ex.top);
-            var dB = Math.abs(bcy - r - ex.bottom);
-            var min = Math.min(dL, dR, dT, dB);
-            if (min === dL)      { b.x = ex.left - b.size;  b.vx = -Math.abs(b.vx); }
-            else if (min === dR) { b.x = ex.right;          b.vx =  Math.abs(b.vx); }
-            else if (min === dT) { b.y = ex.top - b.size;   b.vy = -Math.abs(b.vy); }
-            else                 { b.y = ex.bottom;          b.vy =  Math.abs(b.vy); }
-          }
-        }
-      }
-
-      for (var i = 0; i < bubbles.length; i++) {
-        for (var j = i + 1; j < bubbles.length; j++) {
-          var a = bubbles[i], bb = bubbles[j];
-          var ax = a.x + a.size / 2, ay = a.y + a.size / 2;
-          var bx = bb.x + bb.size / 2, by = bb.y + bb.size / 2;
-          var dx = ax - bx, dy = ay - by;
-          var dist = Math.sqrt(dx * dx + dy * dy);
-          var minDist = (a.size + bb.size) / 2;
-          if (dist < minDist && dist > 0) {
-            var nx = dx / dist, ny = dy / dist;
-            var overlap = minDist - dist;
-            a.x += nx * overlap / 2;
-            a.y += ny * overlap / 2;
-            bb.x -= nx * overlap / 2;
-            bb.y -= ny * overlap / 2;
-            var dvx = a.vx - bb.vx, dvy = a.vy - bb.vy;
-            var dot = dvx * nx + dvy * ny;
-            if (dot > 0) {
-              a.vx -= dot * nx; a.vy -= dot * ny;
-              bb.vx += dot * nx; bb.vy += dot * ny;
-            }
-          }
-        }
-      }
-
-      for (var i = 0; i < bubbles.length; i++) {
-        var b = bubbles[i];
-        b.el.style.transform = 'translate(' + b.x.toFixed(1) + 'px,' + b.y.toFixed(1) + 'px)';
-      }
-
-      animId = requestAnimationFrame(step);
-    }
-
-    /* Start/stop based on visibility */
-    var credObs = new IntersectionObserver(function(entries) {
-      entries.forEach(function(entry) {
-        if (entry.isIntersecting) {
-          bubbles.forEach(function(b) { b.el.classList.add('visible'); });
-          if (!animId) animId = requestAnimationFrame(step);
-        } else {
-          bubbles.forEach(function(b) { b.el.classList.remove('visible'); });
-          if (animId) { cancelAnimationFrame(animId); animId = null; }
-        }
-      });
-    }, { threshold: 0.05 });
-
-    credObs.observe(section);
   })();
 
   /* ── 8. Stakes ranking decay ── */
