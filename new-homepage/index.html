@@ -1093,7 +1093,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
               </div>
               <div class="stakes-info">
                 <div class="stakes-name">Creekstone Lodge</div>
-                <div class="stakes-meta"><span class="stakes-tag">Managed</span><span class="stakes-score">94.2</span></div>
+                <div class="stakes-meta"><span class="stakes-tag">Managed</span><span class="stakes-score" data-revenue="214">$214k/yr</span></div>
               </div>
             </div>
             <div class="stakes-row managed" data-drift="-0.06">
@@ -1109,7 +1109,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
               </div>
               <div class="stakes-info">
                 <div class="stakes-name">Timber Ridge Retreat</div>
-                <div class="stakes-meta"><span class="stakes-tag">Managed</span><span class="stakes-score">91.7</span></div>
+                <div class="stakes-meta"><span class="stakes-tag">Managed</span><span class="stakes-score" data-revenue="206">$206k/yr</span></div>
               </div>
             </div>
             <div class="stakes-row" data-drift="0.025">
@@ -1125,7 +1125,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
               </div>
               <div class="stakes-info">
                 <div class="stakes-name">Pine Valley Cabin</div>
-                <div class="stakes-meta"><span class="stakes-score">88.4</span></div>
+                <div class="stakes-meta"><span class="stakes-score" data-revenue="189">$189k/yr</span></div>
               </div>
             </div>
             <div class="stakes-row yours" data-drift="0.14">
@@ -1141,7 +1141,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
               </div>
               <div class="stakes-info">
                 <div class="stakes-name">Your Listing</div>
-                <div class="stakes-meta"><span class="stakes-score">85.1</span></div>
+                <div class="stakes-meta"><span class="stakes-score" data-revenue="182">$182k/yr</span></div>
               </div>
             </div>
             <div class="stakes-row managed" data-drift="-0.08">
@@ -1157,7 +1157,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
               </div>
               <div class="stakes-info">
                 <div class="stakes-name">Summit View Chalet</div>
-                <div class="stakes-meta"><span class="stakes-tag">Managed</span><span class="stakes-score">83.6</span></div>
+                <div class="stakes-meta"><span class="stakes-tag">Managed</span><span class="stakes-score" data-revenue="175">$175k/yr</span></div>
               </div>
             </div>
             <div class="stakes-row" data-drift="0.04">
@@ -1173,7 +1173,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
               </div>
               <div class="stakes-info">
                 <div class="stakes-name">Lakeview Hideaway</div>
-                <div class="stakes-meta"><span class="stakes-score">80.9</span></div>
+                <div class="stakes-meta"><span class="stakes-score" data-revenue="169">$169k/yr</span></div>
               </div>
             </div>
             <div class="stakes-row managed" data-drift="-0.11">
@@ -1189,12 +1189,12 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
               </div>
               <div class="stakes-info">
                 <div class="stakes-name">Birchwood Estate</div>
-                <div class="stakes-meta"><span class="stakes-tag">Managed</span><span class="stakes-score">78.3</span></div>
+                <div class="stakes-meta"><span class="stakes-tag">Managed</span><span class="stakes-score" data-revenue="163">$163k/yr</span></div>
               </div>
             </div>
           </div>
         </div>
-        <p class="stakes-caption">Simulated search position. Drift is illustrative.</p>
+        <p class="stakes-caption">Simulated annual revenue (USD). Drift is illustrative.</p>
       </div>
 
     </div>
@@ -1708,9 +1708,13 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
     var rows = Array.prototype.slice.call(list.querySelectorAll('.stakes-row'));
     if (!rows.length) return;
 
+    function formatRevenueK(value) {
+      return '$' + Math.round(value).toLocaleString() + 'k/yr';
+    }
+
     var entries = rows.map(function(row, idx) {
       var scoreEl = row.querySelector('.stakes-score');
-      var startScore = parseFloat(scoreEl ? scoreEl.textContent : '80') || 80;
+      var startScore = parseFloat(scoreEl ? scoreEl.dataset.revenue : '170') || 170;
       return {
         row: row,
         posEl: row.querySelector('.stakes-pos'),
@@ -1779,8 +1783,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
           entry.nextNudgeAt = elapsedMs + 4200 + Math.random() * 5200;
         }
 
-        if (entry.score > 96) entry.score = 96;
-        if (entry.score < 72) entry.score = 72;
+        if (entry.score > 240) entry.score = 240;
+        if (entry.score < 130) entry.score = 130;
       });
 
       if (reorderTimer >= 0.55) {
@@ -1810,7 +1814,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
           var rankText = Math.max(1, Math.min(slotOffsets.length, Math.round(entry.rankFloat)));
           entry.posEl.textContent = String(rankText);
         }
-        if (entry.scoreEl) entry.scoreEl.textContent = entry.score.toFixed(1);
+        if (entry.scoreEl) entry.scoreEl.textContent = formatRevenueK(entry.score);
       });
 
       animId = requestAnimationFrame(animate);
