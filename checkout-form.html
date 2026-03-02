@@ -417,6 +417,8 @@ body.terms-expanded .step[data-step="2"] .form-actions{
 }
 .success-detail strong{color:var(--black);font-weight:600}
 .success-state.revealed .success-detail{animation:fadeSlideUp .5s var(--ease-out-expo) .72s forwards}
+.success-actions{display:flex;justify-content:center;margin-top:24px;opacity:0}
+.success-state.revealed .success-actions{animation:fadeSlideUp .5s var(--ease-out-expo) .8s forwards}
 
 /* ── Confetti ── */
 .confetti-wrap{position:fixed;inset:0;pointer-events:none;z-index:100;overflow:hidden}
@@ -690,11 +692,14 @@ body.terms-expanded .step[data-step="2"] .form-actions{
         <div class="success-icon">
           <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="#4A6741" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
         </div>
-        <h2 class="success-title">Enrollment <em>received.</em></h2>
-        <p class="success-desc">We'll send your invoice to the email below. You should expect it within the next couple of minutes.</p>
+        <h2 class="success-title">Almost <em>done.</em></h2>
+        <p class="success-desc">We are redirecting you to secure checkout now to complete payment.</p>
         <div class="success-detail">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="var(--accent)" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-          <span>Invoice will be sent to <strong id="confirm-email">your email</strong></span>
+          <span>Checkout email: <strong id="confirm-email">your email</strong></span>
+        </div>
+        <div class="success-actions">
+          <a id="payment-link" href="#" class="btn-next accent">Continue to secure checkout <span class="arrow">→</span></a>
         </div>
       </div>
     </div>
@@ -712,6 +717,19 @@ let isTransitioning = false;
 // Read plan from URL params
 const params = new URLSearchParams(window.location.search);
 const plan = params.get('plan');
+const STRIPE_CHECKOUT_URLS = {
+  monthly: 'https://buy.stripe.com/14A6oH25ccCScp5aJY0oM00',
+  annual: 'https://buy.stripe.com/6oU9AT4dk0Ua60H19o0oM01'
+};
+
+function getStripeCheckoutUrl(selectedPlan, email) {
+  const baseUrl = STRIPE_CHECKOUT_URLS[selectedPlan] || STRIPE_CHECKOUT_URLS.monthly;
+  if (!email) return baseUrl;
+  const url = new URL(baseUrl);
+  url.searchParams.set('prefilled_email', email);
+  return url.toString();
+}
+
 if (plan) {
   const badge = document.getElementById('plan-badge');
   if (plan === 'annual') {
@@ -985,6 +1003,10 @@ function submitForm() {
     console.error('Webhook delivery failed:', error);
   });
 
+  const checkoutUrl = getStripeCheckoutUrl(plan, email);
+  const paymentLink = document.getElementById('payment-link');
+  paymentLink.href = checkoutUrl;
+
   // Show success state
   document.getElementById('confirm-email').textContent = data.email;
 
@@ -997,7 +1019,10 @@ function submitForm() {
     launchConfetti();
   }, 350);
 
-  // Keep user on success screen so they can see invoice instructions.
+  // Redirect to Stripe checkout after a short transition.
+  setTimeout(() => {
+    window.location.href = checkoutUrl;
+  }, 1200);
 }
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
