@@ -409,6 +409,100 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
 .stakes-row.yours .stakes-score{color:var(--red)}
 .stakes-caption{font-family:var(--mono);font-size:9px;color:var(--g600);margin-top:12px;text-align:center;letter-spacing:.02em}
 
+/* ── Final CTA + Footer ── */
+#cta{padding:100px 0 86px;background:#fff}
+.cta-card{
+  background:var(--accent);
+  border-radius:var(--radius);
+  padding:92px 76px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.cta-card::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:radial-gradient(ellipse at 50% -10%,rgba(255,255,255,.12) 0%,transparent 55%);
+  pointer-events:none;
+}
+.cta-ey{
+  display:inline-block;
+  font-size:12px;
+  font-weight:600;
+  letter-spacing:.05em;
+  text-transform:uppercase;
+  color:var(--accent);
+  background:#fff;
+  padding:6px 16px;
+  border-radius:var(--radius-sm);
+  margin-bottom:28px;
+  position:relative;
+}
+.cta-h2{
+  font-family:var(--heading);
+  font-size:clamp(42px,6vw,72px);
+  font-weight:400;
+  letter-spacing:-.02em;
+  line-height:1.06;
+  color:#fff;
+  margin-bottom:22px;
+  position:relative;
+}
+.em-mark-w{position:relative;display:inline;white-space:nowrap}
+.em-mark-w::after{
+  content:'';
+  position:absolute;
+  left:-2%;
+  right:-2%;
+  bottom:-6px;
+  height:14px;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 16' preserveAspectRatio='none'%3E%3Cpath d='M2 11 C25 4, 75 4, 98 11' fill='none' stroke='%23ffffff' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center/100% 100%;
+  pointer-events:none;
+  transform:rotate(-0.5deg);
+}
+.cta-sub{
+  font-size:17px;
+  color:rgba(255,255,255,.55);
+  max-width:520px;
+  margin:0 auto 44px;
+  line-height:1.7;
+  position:relative;
+  font-weight:300;
+}
+.btn-white{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  background:#fff;
+  color:var(--black);
+  font-size:13px;
+  font-weight:400;
+  letter-spacing:0;
+  padding:12px 28px;
+  border-radius:var(--radius-sm);
+  text-decoration:none;
+  box-shadow:0 4px 20px rgba(50,48,47,.3);
+  transition:transform .15s,box-shadow .15s;
+  position:relative;
+}
+.btn-white:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(50,48,47,.4)}
+.cta-note{margin-top:18px;font-size:13px;color:rgba(255,255,255,.3);position:relative}
+
+footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
+.footer-grid{display:grid;grid-template-columns:1fr;gap:24px;margin-bottom:36px}
+.footer-logo{
+  display:flex;align-items:center;gap:8px;
+  font-size:16px;font-weight:700;letter-spacing:-.03em;color:var(--black);
+  margin-bottom:10px;
+}
+.footer-tag{font-size:13px;color:var(--g400);max-width:420px;line-height:1.6}
+.footer-bottom{
+  display:flex;align-items:center;justify-content:space-between;
+  padding-top:24px;border-top:1px solid var(--g200);
+  font-size:13px;color:var(--g400);
+}
+
 /* ── Reveal Animation ── */
 .r{opacity:0;transform:translateY(8px);transition:opacity .4s cubic-bezier(0.25,0.1,0.25,1),transform .4s cubic-bezier(0.25,0.1,0.25,1)}
 .r.in{opacity:1;transform:translateY(0)}
@@ -467,6 +561,11 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
   .stakes-viz{position:relative;top:auto}
   .stakes-h2{font-size:1.5rem}
   .stakes-h2 br{display:none}
+  #cta{padding:76px 0 64px}
+  .cta-card{padding:70px 26px}
+  .cta-sub{font-size:15px;margin-bottom:32px}
+  footer{padding:40px 0 30px}
+  .footer-bottom{flex-direction:column;gap:10px;align-items:flex-start}
 }
 
 @media(max-width:480px){
@@ -1377,6 +1476,41 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
   </div>
 </section>
 
+<section id="cta">
+  <div class="w">
+    <div class="cta-card r">
+      <div class="cta-ey">Start now</div>
+      <h2 class="cta-h2">Stop guessing. Start <em class="em-mark-w">earning.</em></h2>
+      <p class="cta-sub">Book a free strategy call. We will show you exactly where your listing is leaking revenue and walk you through what we would fix first.</p>
+      <a href="/get-started" class="btn-white">Book your free strategy call &rarr;</a>
+      <p class="cta-note">No obligation. No pressure. Just data.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="w">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">
+          <div class="lm">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24" fill="none">
+              <path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="#32302F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="#32302F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span style="font-family:var(--heading);font-weight:600">RevWhisper</span>
+        </div>
+        <p class="footer-tag">A revenue intelligence team that layers into your Airbnb listing to accelerate performance and maximize earnings.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 MNW Holdings LLC d/b/a RevWhisper. All rights reserved.</span>
+      <span>Airbnb Revenue Acceleration</span>
+    </div>
+  </div>
+</footer>
+
 <!-- ════════════════════════════════════════════════
      SCRIPTS
      ════════════════════════════════════════════════ -->
@@ -1862,5 +1996,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
 
 })();
 </script>
+<script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
