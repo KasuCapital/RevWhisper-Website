@@ -318,8 +318,18 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
 .stakes-row.yours{background:rgba(184,82,82,.08);border:1px solid rgba(184,82,82,.15)}
 .stakes-pos{font-family:var(--mono);font-size:12px;font-weight:500;color:var(--g500);width:20px;text-align:center;flex-shrink:0}
 .stakes-row.yours .stakes-pos{color:var(--red)}
-.stakes-thumb{width:36px;height:36px;border-radius:var(--radius-sm);flex-shrink:0;opacity:.5}
-.stakes-row.yours .stakes-thumb{opacity:.7;border:1.5px solid rgba(184,82,82,.3)}
+.stakes-thumb{
+  width:36px;height:36px;border-radius:var(--radius-sm);flex-shrink:0;position:relative;
+  border:1px solid rgba(255,255,255,.12);overflow:hidden;
+  background:linear-gradient(145deg,var(--thumb-bg,#8B7355),var(--thumb-bg-dark,#6f5a4b));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14);
+  display:grid;place-items:center;
+}
+.stakes-thumb svg{width:24px;height:24px;display:block}
+.stakes-thumb .house-roof{fill:var(--thumb-roof,#F3E6D1)}
+.stakes-thumb .house-body{fill:var(--thumb-wall,#E7D2B4)}
+.stakes-thumb .house-door,.stakes-thumb .house-window{fill:var(--thumb-ink,#6A5443)}
+.stakes-row.yours .stakes-thumb{border:1.5px solid rgba(184,82,82,.35);box-shadow:0 0 0 2px rgba(184,82,82,.12),inset 0 1px 0 rgba(255,255,255,.16)}
 .stakes-info{flex:1;min-width:0}
 .stakes-name{font-family:var(--body);font-size:12px;font-weight:400;color:var(--g300);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3;margin-bottom:3px}
 .stakes-row.yours .stakes-name{color:#fff;font-weight:500}
@@ -1072,7 +1082,15 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
           <div class="stakes-list" id="stakesRankList">
             <div class="stakes-row managed" data-drift="-0.09">
               <div class="stakes-pos">1</div>
-              <div class="stakes-thumb" style="background:#8B7355"></div>
+              <div class="stakes-thumb" style="--thumb-bg:#8B7355;--thumb-bg-dark:#6f5b47;--thumb-roof:#F3E6D1;--thumb-wall:#E6D0B1;--thumb-ink:#5A4637">
+                <svg viewBox="0 0 36 36" aria-hidden="true" focusable="false">
+                  <path class="house-roof" d="M8 17.5L18 10L28 17.5V19H8z"/>
+                  <rect class="house-body" x="10" y="18" width="16" height="11" rx="2"/>
+                  <rect class="house-door" x="16.4" y="22.2" width="3.2" height="6.8" rx=".8"/>
+                  <rect class="house-window" x="12.3" y="20.7" width="2.7" height="2.3" rx=".5"/>
+                  <rect class="house-window" x="21" y="20.7" width="2.7" height="2.3" rx=".5"/>
+                </svg>
+              </div>
               <div class="stakes-info">
                 <div class="stakes-name">Creekstone Lodge</div>
                 <div class="stakes-meta"><span class="stakes-tag">Managed</span><span class="stakes-score">94.2</span></div>
@@ -1080,7 +1098,15 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
             </div>
             <div class="stakes-row managed" data-drift="-0.06">
               <div class="stakes-pos">2</div>
-              <div class="stakes-thumb" style="background:#6B8E7B"></div>
+              <div class="stakes-thumb" style="--thumb-bg:#6B8E7B;--thumb-bg-dark:#577466;--thumb-roof:#E4EFEA;--thumb-wall:#D3E4DB;--thumb-ink:#3F5A4C">
+                <svg viewBox="0 0 36 36" aria-hidden="true" focusable="false">
+                  <path class="house-roof" d="M8 17.5L18 10L28 17.5V19H8z"/>
+                  <rect class="house-body" x="10" y="18" width="16" height="11" rx="2"/>
+                  <rect class="house-door" x="16.4" y="22.2" width="3.2" height="6.8" rx=".8"/>
+                  <rect class="house-window" x="12.3" y="20.7" width="2.7" height="2.3" rx=".5"/>
+                  <rect class="house-window" x="21" y="20.7" width="2.7" height="2.3" rx=".5"/>
+                </svg>
+              </div>
               <div class="stakes-info">
                 <div class="stakes-name">Timber Ridge Retreat</div>
                 <div class="stakes-meta"><span class="stakes-tag">Managed</span><span class="stakes-score">91.7</span></div>
@@ -1088,7 +1114,15 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
             </div>
             <div class="stakes-row" data-drift="0.025">
               <div class="stakes-pos">3</div>
-              <div class="stakes-thumb" style="background:#A0887A"></div>
+              <div class="stakes-thumb" style="--thumb-bg:#A0887A;--thumb-bg-dark:#826c5f;--thumb-roof:#F2E9DE;--thumb-wall:#E6D9CC;--thumb-ink:#5E4B40">
+                <svg viewBox="0 0 36 36" aria-hidden="true" focusable="false">
+                  <path class="house-roof" d="M8 17.5L18 10L28 17.5V19H8z"/>
+                  <rect class="house-body" x="10" y="18" width="16" height="11" rx="2"/>
+                  <rect class="house-door" x="16.4" y="22.2" width="3.2" height="6.8" rx=".8"/>
+                  <rect class="house-window" x="12.3" y="20.7" width="2.7" height="2.3" rx=".5"/>
+                  <rect class="house-window" x="21" y="20.7" width="2.7" height="2.3" rx=".5"/>
+                </svg>
+              </div>
               <div class="stakes-info">
                 <div class="stakes-name">Pine Valley Cabin</div>
                 <div class="stakes-meta"><span class="stakes-score">88.4</span></div>
@@ -1096,7 +1130,15 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
             </div>
             <div class="stakes-row yours" data-drift="0.14">
               <div class="stakes-pos">4</div>
-              <div class="stakes-thumb" style="background:#7A9B8E"></div>
+              <div class="stakes-thumb" style="--thumb-bg:#7A9B8E;--thumb-bg-dark:#5f7e73;--thumb-roof:#EAF2EE;--thumb-wall:#D9E7DF;--thumb-ink:#456152">
+                <svg viewBox="0 0 36 36" aria-hidden="true" focusable="false">
+                  <path class="house-roof" d="M8 17.5L18 10L28 17.5V19H8z"/>
+                  <rect class="house-body" x="10" y="18" width="16" height="11" rx="2"/>
+                  <rect class="house-door" x="16.4" y="22.2" width="3.2" height="6.8" rx=".8"/>
+                  <rect class="house-window" x="12.3" y="20.7" width="2.7" height="2.3" rx=".5"/>
+                  <rect class="house-window" x="21" y="20.7" width="2.7" height="2.3" rx=".5"/>
+                </svg>
+              </div>
               <div class="stakes-info">
                 <div class="stakes-name">Your Listing</div>
                 <div class="stakes-meta"><span class="stakes-score">85.1</span></div>
@@ -1104,7 +1146,15 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
             </div>
             <div class="stakes-row managed" data-drift="-0.08">
               <div class="stakes-pos">5</div>
-              <div class="stakes-thumb" style="background:#8B6F5E"></div>
+              <div class="stakes-thumb" style="--thumb-bg:#8B6F5E;--thumb-bg-dark:#6f584b;--thumb-roof:#F1E4D8;--thumb-wall:#E3D1C0;--thumb-ink:#5B473D">
+                <svg viewBox="0 0 36 36" aria-hidden="true" focusable="false">
+                  <path class="house-roof" d="M8 17.5L18 10L28 17.5V19H8z"/>
+                  <rect class="house-body" x="10" y="18" width="16" height="11" rx="2"/>
+                  <rect class="house-door" x="16.4" y="22.2" width="3.2" height="6.8" rx=".8"/>
+                  <rect class="house-window" x="12.3" y="20.7" width="2.7" height="2.3" rx=".5"/>
+                  <rect class="house-window" x="21" y="20.7" width="2.7" height="2.3" rx=".5"/>
+                </svg>
+              </div>
               <div class="stakes-info">
                 <div class="stakes-name">Summit View Chalet</div>
                 <div class="stakes-meta"><span class="stakes-tag">Managed</span><span class="stakes-score">83.6</span></div>
@@ -1112,7 +1162,15 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
             </div>
             <div class="stakes-row" data-drift="0.04">
               <div class="stakes-pos">6</div>
-              <div class="stakes-thumb" style="background:#9B8B7A"></div>
+              <div class="stakes-thumb" style="--thumb-bg:#9B8B7A;--thumb-bg-dark:#7e7062;--thumb-roof:#EFE5D9;--thumb-wall:#E1D4C5;--thumb-ink:#5C4B3E">
+                <svg viewBox="0 0 36 36" aria-hidden="true" focusable="false">
+                  <path class="house-roof" d="M8 17.5L18 10L28 17.5V19H8z"/>
+                  <rect class="house-body" x="10" y="18" width="16" height="11" rx="2"/>
+                  <rect class="house-door" x="16.4" y="22.2" width="3.2" height="6.8" rx=".8"/>
+                  <rect class="house-window" x="12.3" y="20.7" width="2.7" height="2.3" rx=".5"/>
+                  <rect class="house-window" x="21" y="20.7" width="2.7" height="2.3" rx=".5"/>
+                </svg>
+              </div>
               <div class="stakes-info">
                 <div class="stakes-name">Lakeview Hideaway</div>
                 <div class="stakes-meta"><span class="stakes-score">80.9</span></div>
@@ -1120,7 +1178,15 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
             </div>
             <div class="stakes-row managed" data-drift="-0.11">
               <div class="stakes-pos">7</div>
-              <div class="stakes-thumb" style="background:#6E8B7A"></div>
+              <div class="stakes-thumb" style="--thumb-bg:#6E8B7A;--thumb-bg-dark:#5a7062;--thumb-roof:#E6EFEA;--thumb-wall:#D5E3DB;--thumb-ink:#435B4E">
+                <svg viewBox="0 0 36 36" aria-hidden="true" focusable="false">
+                  <path class="house-roof" d="M8 17.5L18 10L28 17.5V19H8z"/>
+                  <rect class="house-body" x="10" y="18" width="16" height="11" rx="2"/>
+                  <rect class="house-door" x="16.4" y="22.2" width="3.2" height="6.8" rx=".8"/>
+                  <rect class="house-window" x="12.3" y="20.7" width="2.7" height="2.3" rx=".5"/>
+                  <rect class="house-window" x="21" y="20.7" width="2.7" height="2.3" rx=".5"/>
+                </svg>
+              </div>
               <div class="stakes-info">
                 <div class="stakes-name">Birchwood Estate</div>
                 <div class="stakes-meta"><span class="stakes-tag">Managed</span><span class="stakes-score">78.3</span></div>
@@ -1637,58 +1703,129 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
     if (!section) return;
     var list = document.getElementById('stakesRankList');
     if (!list) return;
+    if (reducedMotion) return;
 
-    var rows = list.querySelectorAll('.stakes-row');
-    var offsets = [];
-    var drifts = [];
-    var nudgeTimers = [];
-    var lastNudge = [];
+    var rows = Array.prototype.slice.call(list.querySelectorAll('.stakes-row'));
+    if (!rows.length) return;
 
-    rows.forEach(function(row) {
-      offsets.push(0);
-      drifts.push(parseFloat(row.dataset.drift) || 0);
-      nudgeTimers.push(3000 + Math.random() * 8000);
-      lastNudge.push(0);
+    var entries = rows.map(function(row, idx) {
+      var scoreEl = row.querySelector('.stakes-score');
+      var startScore = parseFloat(scoreEl ? scoreEl.textContent : '80') || 80;
+      return {
+        row: row,
+        posEl: row.querySelector('.stakes-pos'),
+        scoreEl: scoreEl,
+        initialRank: idx + 1,
+        targetRank: idx + 1,
+        rankFloat: idx + 1,
+        score: startScore,
+        drift: parseFloat(row.dataset.drift) || 0,
+        yCurrent: 0,
+        yTarget: 0,
+        nextNudgeAt: row.classList.contains('yours')
+          ? 3500 + Math.random() * 2800
+          : 4500 + Math.random() * 4500
+      };
     });
 
-    var MAX_DRIFT = 70;
+    var slotOffsets = [];
+    function measureSlots() {
+      slotOffsets = rows.map(function(row) { return row.offsetTop; });
+    }
+    measureSlots();
+
+    var resizeTimer = null;
+    window.addEventListener('resize', function() {
+      if (resizeTimer) clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(measureSlots, 120);
+    });
+
     var animId = null;
     var isVisible = false;
-    var startTime = null;
+    var elapsedMs = 0;
+    var lastTs = 0;
+    var reorderTimer = 0;
+
+    function refreshTargetRanks() {
+      var sorted = entries.slice().sort(function(a, b) {
+        var diff = b.score - a.score;
+        // Keep relative order when scores are very close to avoid jitter swaps.
+        if (Math.abs(diff) < 0.18) return a.targetRank - b.targetRank;
+        return diff;
+      });
+      sorted.forEach(function(entry, idx) {
+        entry.targetRank = idx + 1;
+      });
+    }
 
     function animate(now) {
       if (!isVisible) return;
-      if (!startTime) startTime = now;
-      var elapsed = now - startTime;
+      if (!lastTs) lastTs = now;
+      var dt = Math.min((now - lastTs) / 1000, 0.06);
+      lastTs = now;
+      elapsedMs += dt * 1000;
+      reorderTimer += dt;
 
-      rows.forEach(function(row, i) {
-        offsets[i] += drifts[i];
+      entries.forEach(function(entry) {
+        entry.score -= entry.drift * dt * 0.9;
 
-        if (row.classList.contains('managed') && elapsed - lastNudge[i] > nudgeTimers[i]) {
-          offsets[i] -= (1.5 + Math.random() * 2.5);
-          nudgeTimers[i] = 2000 + Math.random() * 5000;
-          lastNudge[i] = elapsed;
+        if (entry.row.classList.contains('managed') && elapsedMs >= entry.nextNudgeAt) {
+          entry.score += 0.12 + Math.random() * 0.32;
+          entry.nextNudgeAt = elapsedMs + 5000 + Math.random() * 6000;
         }
 
-        if (offsets[i] > MAX_DRIFT) offsets[i] = MAX_DRIFT;
-        if (offsets[i] < -MAX_DRIFT) offsets[i] = -MAX_DRIFT;
+        if (entry.row.classList.contains('yours') && elapsedMs >= entry.nextNudgeAt) {
+          entry.score -= 0.25 + Math.random() * 0.55;
+          entry.nextNudgeAt = elapsedMs + 4200 + Math.random() * 5200;
+        }
 
-        row.style.transform = 'translateY(' + offsets[i].toFixed(2) + 'px)';
+        if (entry.score > 96) entry.score = 96;
+        if (entry.score < 72) entry.score = 72;
+      });
+
+      if (reorderTimer >= 0.55) {
+        refreshTargetRanks();
+        reorderTimer = 0;
+      }
+
+      entries.forEach(function(entry) {
+        entry.rankFloat += (entry.targetRank - entry.rankFloat) * 0.07;
+
+        var low = Math.max(0, Math.min(slotOffsets.length - 1, Math.floor(entry.rankFloat) - 1));
+        var high = Math.max(0, Math.min(slotOffsets.length - 1, Math.ceil(entry.rankFloat) - 1));
+        var frac = entry.rankFloat - Math.floor(entry.rankFloat);
+        if (!isFinite(frac) || frac < 0) frac = 0;
+
+        var lowY = slotOffsets[low] || 0;
+        var highY = slotOffsets[high] || lowY;
+        var desiredAbsY = lowY + (highY - lowY) * frac;
+        var homeAbsY = slotOffsets[entry.initialRank - 1] || 0;
+        entry.yTarget = desiredAbsY - homeAbsY;
+        entry.yCurrent += (entry.yTarget - entry.yCurrent) * 0.16;
+
+        entry.row.style.transform = 'translateY(' + entry.yCurrent.toFixed(2) + 'px)';
+        entry.row.style.zIndex = String(100 - Math.round(entry.rankFloat * 10));
+
+        if (entry.posEl) {
+          var rankText = Math.max(1, Math.min(slotOffsets.length, Math.round(entry.rankFloat)));
+          entry.posEl.textContent = String(rankText);
+        }
+        if (entry.scoreEl) entry.scoreEl.textContent = entry.score.toFixed(1);
       });
 
       animId = requestAnimationFrame(animate);
     }
 
-    if (reducedMotion) return;
-
     var stakesObs = new IntersectionObserver(function(entries) {
       entries.forEach(function(entry) {
         if (entry.isIntersecting) {
           isVisible = true;
+          refreshTargetRanks();
           if (!animId) animId = requestAnimationFrame(animate);
         } else {
           isVisible = false;
           if (animId) { cancelAnimationFrame(animId); animId = null; }
+          lastTs = 0;
         }
       });
     }, { threshold: 0.05 });
