@@ -1,15 +1,17 @@
 # Project Map
 
 ## Live Routes
-- `/` -> legacy homepage (`index.html`)
-- `/new-homepage` -> new homepage (`new-homepage/index.html`)
+- `/` -> homepage (`index.html`)
 - `/checkout` -> pricing/checkout selector (`checkout.html`)
 - `/checkout-form` -> enrollment form (`checkout-form.html`)
 - `/get-started` -> strategy-call form (`get-started.html`)
+- `/poconos` -> event page (`poconos.html`)
+- `/success-b` -> payment success page (`success-b.html`)
 - `/api/create-checkout-session` -> Stripe Checkout Session creator (`api/create-checkout-session.js`)
 - `/api/stripe-webhook` -> Stripe webhook receiver for payment events (`api/stripe-webhook.js`)
 
 ## Source Organization
-- `archive/new-homepage-sections/` contains the original section-by-section drafts and the initial combined draft from the redesign process.
-- `new-homepage/index.html` is the single-file consolidated new homepage intended for iteration and launch.
 - `api/` contains Vercel serverless functions for Stripe checkout creation and webhook processing.
+- `docs/` contains brand guide, Stripe setup docs, and this project map.
+- `images/` contains team photos and property before/after images.
+- `icons/` contains SVG favicons.
