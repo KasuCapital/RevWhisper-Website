@@ -716,26 +716,40 @@ let isTransitioning = false;
 
 // Read plan from URL params
 const params = new URLSearchParams(window.location.search);
-const plan = params.get('plan');
-const STRIPE_CHECKOUT_URLS = {
-  monthly: 'https://buy.stripe.com/14A6oH25ccCScp5aJY0oM00',
-  annual: 'https://buy.stripe.com/6oU9AT4dk0Ua60H19o0oM01'
-};
+const requestedPlan = params.get('plan');
+const selectedPlan = requestedPlan === 'annual' ? 'annual' : 'monthly';
+const CREATE_CHECKOUT_ENDPOINT = '/api/create-checkout-session';
+const DEFAULT_ENTERPRISE_URL = '/get-started?plan=enterprise';
+let submitInProgress = false;
 
-function getStripeCheckoutUrl(selectedPlan, email) {
-  const baseUrl = STRIPE_CHECKOUT_URLS[selectedPlan] || STRIPE_CHECKOUT_URLS.monthly;
-  if (!email) return baseUrl;
-  const url = new URL(baseUrl);
-  url.searchParams.set('prefilled_email', email);
-  return url.toString();
+function showCheckoutTransition(email, destinationUrl, descriptionText, ctaText) {
+  const paymentLink = document.getElementById('payment-link');
+  paymentLink.href = destinationUrl;
+  paymentLink.innerHTML = `${ctaText} <span class="arrow">→</span>`;
+
+  document.getElementById('confirm-email').textContent = email;
+  document.querySelector('.success-desc').textContent = descriptionText;
+
+  const from = current;
+  current = totalSteps;
+  transitionStep(from, current, 'forward');
+
+  setTimeout(() => {
+    document.getElementById('success-state').classList.add('revealed');
+    launchConfetti();
+  }, 350);
+
+  setTimeout(() => {
+    window.location.href = destinationUrl;
+  }, 1200);
 }
 
-if (plan) {
+if (requestedPlan) {
   const badge = document.getElementById('plan-badge');
-  if (plan === 'annual') {
+  if (selectedPlan === 'annual') {
     badge.textContent = '12-Month Annual Plan · $500/mo';
     badge.style.display = 'inline-flex';
-  } else if (plan === 'monthly') {
+  } else if (selectedPlan === 'monthly') {
     badge.textContent = '3-Month Monthly Plan · $750/mo';
     badge.style.display = 'inline-flex';
   }
@@ -953,11 +967,12 @@ function launchConfetti() {
   setTimeout(() => { wrap.innerHTML = ''; }, 4000);
 }
 
-function submitForm() {
+async function submitForm() {
   if (!document.getElementById('agree-check').checked) {
     document.getElementById('terms-agree').classList.add('error');
     return;
   }
+  if (submitInProgress) return;
 
   // Collect listing URLs
   const listingUrls = [];
@@ -976,7 +991,7 @@ function submitForm() {
   const phoneFull = `${phoneCode} ${phoneNumber}`.trim();
 
   const data = {
-    plan: plan || 'unknown',
+    plan: selectedPlan,
     first_name: firstName,
     last_name: lastName,
     full_name: fullName,
@@ -993,6 +1008,11 @@ function submitForm() {
 
   console.log('Enrollment submitted:', data);
 
+  submitInProgress = true;
+  const submitBtn = document.getElementById('btn-submit');
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = 'Securing checkout...';
+
   // Send data to Make.com webhook
   fetch('https://hook.us2.make.com/jgedj1a6t70wyml2umwaaa73maexffrk', {
     method: 'POST',
@@ -1003,26 +1023,46 @@ function submitForm() {
     console.error('Webhook delivery failed:', error);
   });
 
-  const checkoutUrl = getStripeCheckoutUrl(plan, email);
-  const paymentLink = document.getElementById('payment-link');
-  paymentLink.href = checkoutUrl;
+  try {
+    const response = await fetch(CREATE_CHECKOUT_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
 
-  // Show success state
-  document.getElementById('confirm-email').textContent = data.email;
+    const payload = await response.json();
+    if (!response.ok) {
+      throw new Error(payload.error || 'Unable to create Stripe checkout session.');
+    }
 
-  const from = current;
-  current = totalSteps;
-  transitionStep(from, current, 'forward');
+    if (payload.enterprise) {
+      const enterpriseUrl = payload.redirect_url || DEFAULT_ENTERPRISE_URL;
+      showCheckoutTransition(
+        data.email,
+        enterpriseUrl,
+        'Your portfolio qualifies for enterprise pricing. We are redirecting you to custom quote setup.',
+        'Continue to enterprise pricing'
+      );
+      return;
+    }
 
-  setTimeout(() => {
-    document.getElementById('success-state').classList.add('revealed');
-    launchConfetti();
-  }, 350);
+    if (!payload.checkout_url) {
+      throw new Error('Stripe did not return a checkout URL.');
+    }
 
-  // Redirect to Stripe checkout after a short transition.
-  setTimeout(() => {
-    window.location.href = checkoutUrl;
-  }, 1200);
+    showCheckoutTransition(
+      data.email,
+      payload.checkout_url,
+      'We are redirecting you to secure checkout now to complete payment.',
+      'Continue to secure checkout'
+    );
+  } catch (error) {
+    console.error('Stripe checkout setup failed:', error);
+    alert('Checkout is temporarily unavailable. Please email Admin@RevWhisper.com and we will send your payment link directly.');
+    submitInProgress = false;
+    submitBtn.disabled = !document.getElementById('agree-check').checked;
+    submitBtn.innerHTML = 'Complete Enrollment <span class="arrow">→</span>';
+  }
 }
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
