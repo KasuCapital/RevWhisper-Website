@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Cookie Consent + GA4 (consent-gated) -->
+<script>
+window.dataLayer=window.dataLayer||[];
+function gtag(){dataLayer.push(arguments);}
+function rwLoadGA(){
+  var s=document.createElement('script');s.async=true;
+  s.src='https://www.googletagmanager.com/gtag/js?id=G-Y1FYZ5849B';
+  document.head.appendChild(s);
+  gtag('js',new Date());gtag('config','G-Y1FYZ5849B');
+}
+function rwTrack(e,p){if(localStorage.getItem('rw_cookie_consent')==='accepted')gtag('event',e,p||{});}
+(function(){
+  var c=localStorage.getItem('rw_cookie_consent');
+  if(c==='accepted'){rwLoadGA();return;}
+  if(c==='declined')return;
+  document.addEventListener('DOMContentLoaded',function(){
+    var b=document.createElement('div');b.id='rw-consent';
+    b.innerHTML='<div style="position:fixed;bottom:0;left:0;right:0;z-index:9999;padding:16px 24px;background:#32302F;color:#fff;font-family:DM Sans,system-ui,sans-serif;font-size:14px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;box-shadow:0 -4px 24px rgba(0,0,0,.15)"><span style="flex:1;min-width:240px;line-height:1.5">We use cookies to analyze site usage and improve your experience.</span><div style="display:flex;gap:10px;flex-shrink:0"><button id="rw-decline" style="background:transparent;color:#ccc8c5;border:1.5px solid #706b68;padding:8px 20px;border-radius:6px;font-size:13px;font-family:inherit;cursor:pointer">Decline</button><button id="rw-accept" style="background:#4A6741;color:#fff;border:none;padding:8px 20px;border-radius:6px;font-size:13px;font-family:inherit;cursor:pointer;font-weight:500">Accept</button></div></div>';
+    document.body.appendChild(b);
+    document.getElementById('rw-accept').addEventListener('click',function(){localStorage.setItem('rw_cookie_consent','accepted');b.remove();rwLoadGA();});
+    document.getElementById('rw-decline').addEventListener('click',function(){localStorage.setItem('rw_cookie_consent','declined');b.remove();});
+  });
+})();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Revenue Lift Calculator | RevWhisper</title>
+<meta name="description" content="See how much more your Airbnb listing could earn with RevWhisper's revenue optimization. Get your free Revenue Lift report.">
+<link rel="canonical" href="https://revwhisper.com/revenue-lift">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Revenue Lift Calculator | RevWhisper">
+<meta property="og:description" content="See how much more your Airbnb listing could earn with RevWhisper's revenue optimization.">
+<meta property="og:url" content="https://revwhisper.com/revenue-lift">
+<meta property="og:site_name" content="RevWhisper">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="icons/favicon-light.svg" type="image/svg+xml" media="(prefers-color-scheme: light)">
+<link rel="icon" href="icons/favicon-dark.svg" type="image/svg+xml" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="icons/favicon-light.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=DM+Sans:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{height:100%;overflow:hidden}
+body{
+  font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;
+  background:#fff;color:#32302F;line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  height:100%;display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+}
+:root{
+  --black:#32302F;
+  --white:#ffffff;
+  --accent:#4A6741;
+  --accent-light:#dce6d8;
+  --accent-border:#b3c5ab;
+  --g50:#faf9f8;--g100:#f3f1ef;--g200:#E0DCDA;--g300:#ccc8c5;--g400:#a39e9b;--g500:#706b68;--g700:#48433f;
+  --radius:8px;--radius-sm:6px;
+  --sh-sm:0 1px 3px rgba(50,48,47,.06),0 1px 2px rgba(50,48,47,.04);
+  --sh:0 4px 16px rgba(50,48,47,.07),0 2px 6px rgba(50,48,47,.04);
+  --sh-lg:0 16px 48px rgba(50,48,47,.1),0 4px 12px rgba(50,48,47,.05);
+  --heading:'Lora','Georgia',serif;
+  --body:'DM Sans','system-ui','Helvetica Neue',sans-serif;
+  --ease-out-expo:cubic-bezier(.16,1,.3,1);
+  --ease-out-back:cubic-bezier(.34,1.56,.64,1);
+  --ease-spring:cubic-bezier(.25,.1,.25,1.4);
+}
+
+/* ── Ambient Background ── */
+body::before{
+  content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%;
+  background:
+    radial-gradient(ellipse at 30% 20%, rgba(74,103,65,.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 80%, rgba(74,103,65,.03) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(74,103,65,.02) 0%, transparent 70%);
+  animation:ambientDrift 20s ease-in-out infinite alternate;
+  pointer-events:none;z-index:0;
+}
+@keyframes ambientDrift{
+  0%{transform:translate(0,0) rotate(0deg)}
+  100%{transform:translate(30px,-20px) rotate(2deg)}
+}
+
+/* ── Form Container ── */
+.form-shell{width:100%;max-width:560px;padding:28px;position:relative;z-index:1;margin:auto}
+
+/* ── Step Container ── */
+.steps-viewport{position:relative}
+.step{
+  position:absolute;top:0;left:0;right:0;
+  opacity:0;visibility:hidden;
+  transform:translateY(20px);
+  transition:none;
+  pointer-events:none;
+}
+.step.active{
+  position:relative;
+  opacity:1;visibility:visible;
+  transform:translateY(0);
+  pointer-events:auto;
+}
+
+/* ── Transition States ── */
+.step.exit-up{
+  position:absolute;
+  opacity:0;visibility:visible;
+  transform:translateY(-30px) scale(.98);
+  transition:opacity .35s var(--ease-out-expo), transform .35s var(--ease-out-expo), visibility 0s .35s;
+  pointer-events:none;
+}
+.step.exit-down{
+  position:absolute;
+  opacity:0;visibility:visible;
+  transform:translateY(30px) scale(.98);
+  transition:opacity .35s var(--ease-out-expo), transform .35s var(--ease-out-expo), visibility 0s .35s;
+  pointer-events:none;
+}
+.step.enter-from-below{
+  position:relative;
+  opacity:1;visibility:visible;
+  transform:translateY(0);
+  transition:opacity .5s var(--ease-out-expo) .1s, transform .5s var(--ease-out-expo) .1s;
+  pointer-events:auto;
+}
+.step.enter-from-above{
+  position:relative;
+  opacity:1;visibility:visible;
+  transform:translateY(0);
+  transition:opacity .5s var(--ease-out-expo) .1s, transform .5s var(--ease-out-expo) .1s;
+  pointer-events:auto;
+}
+
+/* ── Staggered Child Reveal ── */
+.step.active .step-eyebrow,
+.step.enter-from-below .step-eyebrow,
+.step.enter-from-above .step-eyebrow{animation:fadeSlideUp .5s var(--ease-out-expo) .15s both}
+
+.step.active .step-title,
+.step.enter-from-below .step-title,
+.step.enter-from-above .step-title{animation:fadeSlideUp .55s var(--ease-out-expo) .22s both}
+
+.step.active .step-desc,
+.step.enter-from-below .step-desc,
+.step.enter-from-above .step-desc{animation:fadeSlideUp .55s var(--ease-out-expo) .3s both}
+
+.step.active .field,
+.step.enter-from-below .field,
+.step.enter-from-above .field{animation:fadeSlideUp .5s var(--ease-out-expo) .38s both}
+
+.step.active .form-actions,
+.step.enter-from-below .form-actions,
+.step.enter-from-above .form-actions{animation:fadeSlideUp .5s var(--ease-out-expo) .46s both}
+
+@keyframes fadeSlideUp{
+  from{opacity:0;transform:translateY(16px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* ── Step Header ── */
+.step-eyebrow{font-size:11px;font-weight:500;color:var(--accent);letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px}
+.step-title{font-family:var(--heading);font-size:clamp(28px,4vw,36px);font-weight:400;letter-spacing:-.02em;line-height:1.15;color:var(--black);margin-bottom:10px}
+.step-title em{font-style:italic;color:var(--accent);position:relative}
+.step-title em::after{
+  content:'';position:absolute;bottom:-2px;left:-2%;width:104%;height:2px;
+  background:var(--accent);border-radius:2px;
+  transform:scaleX(0) rotate(-1.5deg);transform-origin:left;
+  animation:underlineDraw .6s var(--ease-out-expo) .55s forwards;
+}
+@keyframes underlineDraw{
+  from{transform:scaleX(0) rotate(-1.5deg)}
+  to{transform:scaleX(1) rotate(-1.5deg)}
+}
+.step-desc{font-size:15px;color:var(--g500);line-height:1.7;font-weight:300;margin-bottom:36px;max-width:440px}
+
+/* ── Text Inputs ── */
+.field{margin-bottom:20px}
+.field-label{display:block;font-size:13px;font-weight:500;color:var(--black);margin-bottom:7px;transition:color .2s}
+.field-input{
+  width:100%;padding:13px 16px;
+  border:1.5px solid var(--g200);border-radius:var(--radius);
+  font-size:15px;font-family:var(--body);color:var(--black);background:#fff;
+  outline:none;
+  transition:border-color .3s, box-shadow .3s var(--ease-out-expo), transform .2s var(--ease-out-expo);
+}
+.field-input::placeholder{color:var(--g400);font-weight:300}
+.field-input:hover{border-color:var(--g300)}
+.field-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(74,103,65,.1);transform:translateY(-1px)}
+.field:focus-within .field-label{color:var(--accent)}
+.field-input.error{border-color:#B85252;box-shadow:0 0 0 3px rgba(184,82,82,.08);animation:inputShake .4s var(--ease-out-expo)}
+@keyframes inputShake{
+  0%,100%{transform:translateX(0)}
+  20%{transform:translateX(-6px)}
+  40%{transform:translateX(5px)}
+  60%{transform:translateX(-3px)}
+  80%{transform:translateX(2px)}
+}
+.field-hint{font-size:12px;color:var(--g400);margin-top:5px;font-weight:300}
+.field-error{font-size:12px;color:#B85252;margin-top:5px;font-weight:400;display:none}
+.field-input.error ~ .field-error{display:block;animation:fadeSlideUp .3s var(--ease-out-expo)}
+.field-input.error ~ .field-hint{display:none}
+
+/* ── URL Input with icon ── */
+.input-icon-wrap{position:relative}
+.input-icon-wrap .field-input{padding-left:42px}
+.input-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--g400);display:flex;align-items:center;transition:color .3s;z-index:2;pointer-events:none}
+.field:focus-within .input-icon{color:var(--accent)}
+
+/* ── Buttons ── */
+.form-actions{display:flex;align-items:center;gap:12px;margin-top:8px}
+.btn-next{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--black);color:#fff;font-size:14px;font-weight:400;letter-spacing:0;
+  padding:14px 28px;border-radius:var(--radius-sm);border:none;cursor:pointer;
+  font-family:var(--body);position:relative;overflow:hidden;
+  transition:transform .25s var(--ease-out-back), box-shadow .3s, opacity .3s;
+}
+.btn-next::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.15) 0%,transparent 60%);
+  opacity:0;transition:opacity .3s;
+}
+.btn-next:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(50,48,47,.15)}
+.btn-next:hover::before{opacity:1}
+.btn-next:active{transform:translateY(0) scale(.97);box-shadow:var(--sh-sm)}
+.btn-next:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-next:disabled:hover{transform:none;box-shadow:none}
+.btn-next:disabled::before{display:none}
+.btn-next.accent{background:var(--accent)}
+.btn-next .arrow{display:inline-block;transition:transform .25s var(--ease-out-expo)}
+.btn-next:hover:not(:disabled) .arrow{transform:translateX(3px)}
+
+/* ── Analysis Loading ── */
+.analysis-wrap{text-align:center;padding:20px 0}
+.analysis-ring-wrap{position:relative;width:140px;height:140px;margin:0 auto 36px}
+.analysis-ring{width:140px;height:140px;transform:rotate(-90deg)}
+.analysis-ring-bg{fill:none;stroke:var(--g200);stroke-width:6}
+.analysis-ring-fg{fill:none;stroke:var(--accent);stroke-width:6;stroke-linecap:round;stroke-dasharray:408;stroke-dashoffset:408;transition:stroke-dashoffset .6s var(--ease-out-expo)}
+.analysis-pct{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-family:var(--heading);font-size:32px;font-weight:600;color:var(--black);
+}
+.analysis-pct span{font-size:18px;font-weight:400;color:var(--g400)}
+
+.analysis-steps{text-align:left;max-width:360px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+.analysis-step{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 18px;border-radius:var(--radius);
+  background:var(--g50);border:1.5px solid var(--g200);
+  opacity:.4;
+  transition:opacity .4s, border-color .4s, background .4s, transform .3s var(--ease-out-expo);
+}
+.analysis-step.active{opacity:1;border-color:var(--accent-border);background:var(--accent-light);transform:translateX(4px)}
+.analysis-step.done{opacity:1;border-color:var(--accent-border);background:var(--accent-light)}
+.analysis-step-icon{
+  width:24px;height:24px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+}
+.analysis-step-icon .spinner{
+  width:24px;height:24px;border-radius:50%;
+  border:2.5px solid var(--g200);border-top-color:var(--accent);
+  animation:spin .8s linear infinite;
+  display:none;
+}
+.analysis-step.active .spinner{display:block}
+.analysis-step-icon .check{
+  display:none;color:var(--accent);
+}
+.analysis-step.done .spinner{display:none}
+.analysis-step.done .check{display:block;animation:checkPop .35s var(--ease-out-back)}
+.analysis-step-icon .pending{
+  width:8px;height:8px;border-radius:50%;background:var(--g300);
+}
+.analysis-step.active .pending,
+.analysis-step.done .pending{display:none}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes checkPop{
+  from{transform:scale(0);opacity:0}
+  to{transform:scale(1);opacity:1}
+}
+
+.analysis-step-text{font-size:14px;font-weight:400;color:var(--g500)}
+.analysis-step.active .analysis-step-text{color:var(--black);font-weight:500}
+.analysis-step.done .analysis-step-text{color:var(--accent);font-weight:500}
+
+.analysis-title{
+  font-family:var(--heading);font-size:clamp(24px,3.5vw,30px);font-weight:400;
+  letter-spacing:-.02em;color:var(--black);margin-bottom:8px;
+}
+.analysis-title em{font-style:italic;color:var(--accent)}
+.analysis-sub{font-size:14px;color:var(--g400);margin-bottom:32px;font-weight:300}
+
+/* Glow pulse behind ring during analysis */
+.analysis-ring-wrap::after{
+  content:'';position:absolute;inset:-16px;border-radius:50%;
+  background:radial-gradient(circle,rgba(74,103,65,.12) 0%,transparent 70%);
+  animation:glowPulse 2s ease-in-out infinite;
+}
+@keyframes glowPulse{
+  0%,100%{opacity:.3;transform:scale(.95)}
+  50%{opacity:1;transform:scale(1.05)}
+}
+
+/* ── Success State ── */
+.success-state{text-align:center;padding:32px 0}
+.success-icon{
+  width:80px;height:80px;border-radius:50%;
+  background:var(--accent-light);border:2px solid var(--accent-border);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 28px;position:relative;
+}
+.success-icon svg{opacity:0}
+.success-state.revealed .success-icon{animation:iconBounceIn .6s var(--ease-out-back) forwards}
+.success-state.revealed .success-icon svg{animation:checkDraw .4s var(--ease-out-expo) .4s forwards}
+.success-state.revealed .success-icon::after{
+  content:'';position:absolute;inset:-8px;border-radius:50%;
+  border:2px solid var(--accent-border);opacity:0;
+  animation:ringPulse .8s var(--ease-out-expo) .3s forwards;
+}
+@keyframes iconBounceIn{
+  0%{opacity:0;transform:scale(0)}
+  50%{transform:scale(1.12)}
+  70%{transform:scale(.95)}
+  100%{opacity:1;transform:scale(1)}
+}
+@keyframes checkDraw{
+  from{opacity:0;transform:scale(.5) rotate(-10deg)}
+  to{opacity:1;transform:scale(1) rotate(0deg)}
+}
+@keyframes ringPulse{
+  0%{opacity:0;transform:scale(.8)}
+  50%{opacity:.4}
+  100%{opacity:0;transform:scale(1.3)}
+}
+
+.success-title{
+  font-family:var(--heading);font-size:clamp(26px,4vw,32px);font-weight:400;
+  letter-spacing:-.02em;color:var(--black);margin-bottom:10px;
+  opacity:0;
+}
+.success-title em{font-style:italic;color:var(--accent)}
+.success-state.revealed .success-title{animation:fadeSlideUp .5s var(--ease-out-expo) .5s forwards}
+
+.success-desc{
+  font-size:15px;color:var(--g500);line-height:1.7;font-weight:300;
+  max-width:400px;margin:0 auto 32px;opacity:0;
+}
+.success-state.revealed .success-desc{animation:fadeSlideUp .5s var(--ease-out-expo) .6s forwards}
+
+.success-detail{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:12px 20px;background:var(--g50);border:1px solid var(--g200);
+  border-radius:var(--radius);font-size:13px;color:var(--g500);opacity:0;
+}
+.success-detail strong{color:var(--black);font-weight:600}
+.success-state.revealed .success-detail{animation:fadeSlideUp .5s var(--ease-out-expo) .72s forwards}
+
+/* ── Confetti Particles ── */
+.confetti-wrap{position:fixed;inset:0;pointer-events:none;z-index:100;overflow:hidden}
+.confetti{
+  position:absolute;width:8px;height:8px;border-radius:2px;
+  opacity:0;
+}
+.confetti.go{animation:confettiFall var(--fall-dur, 2.5s) var(--ease-out-expo) forwards}
+@keyframes confettiFall{
+  0%{opacity:1;transform:translateY(0) rotate(0deg) scale(1)}
+  20%{opacity:1}
+  100%{opacity:0;transform:translateY(calc(100vh + 50px)) rotate(var(--spin, 720deg)) scale(.3)}
+}
+
+/* ── Page Load Animation ── */
+.form-shell{opacity:0;transform:translateY(16px);animation:initialLoad .7s var(--ease-out-expo) .1s forwards}
+@keyframes initialLoad{
+  from{opacity:0;transform:translateY(16px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* ── Responsive ── */
+@media(max-width:640px){
+  html,body{overflow-y:auto}
+  body{padding:20px}
+  .form-shell{max-width:100%}
+  .step-title{font-size:26px}
+  .analysis-ring-wrap{width:110px;height:110px}
+  .analysis-ring{width:110px;height:110px}
+  .analysis-pct{font-size:26px}
+  .analysis-step{padding:12px 14px;gap:10px}
+}
+</style>
+</head>
+<body>
+
+<div class="form-shell">
+  <div class="steps-viewport">
+
+    <!-- Step 1: Confirm Listing URL -->
+    <div class="step active" data-step="0">
+      <div class="step-eyebrow">Revenue Analysis</div>
+      <h1 class="step-title">Let's analyze your <em>listing.</em></h1>
+      <p class="step-desc">We'll pull your listing data and compare it against top-performing properties in your market.</p>
+      <div class="field">
+        <label class="field-label" for="listing-url">Airbnb Listing URL</label>
+        <div class="input-icon-wrap">
+          <div class="input-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+          </div>
+          <input type="url" class="field-input" id="listing-url" placeholder="https://www.airbnb.com/rooms/..." autocomplete="off">
+        </div>
+        <div class="field-hint">Paste your full Airbnb listing page link</div>
+        <div class="field-error">Please enter a valid Airbnb listing URL</div>
+      </div>
+      <div class="form-actions">
+        <button class="btn-next accent" onclick="startAnalysis()" id="btn-analyze">Analyze My Listing <span class="arrow">→</span></button>
+      </div>
+    </div>
+
+    <!-- Step 2: Analysis Loading -->
+    <div class="step" data-step="1">
+      <div class="analysis-wrap">
+        <h2 class="analysis-title">Analyzing your <em>listing...</em></h2>
+        <p class="analysis-sub">This usually takes a few seconds</p>
+        <div class="analysis-ring-wrap">
+          <svg class="analysis-ring" viewBox="0 0 140 140">
+            <circle class="analysis-ring-bg" cx="70" cy="70" r="65"/>
+            <circle class="analysis-ring-fg" id="ring-progress" cx="70" cy="70" r="65"/>
+          </svg>
+          <div class="analysis-pct"><span id="pct-num">0</span><span>%</span></div>
+        </div>
+        <div class="analysis-steps">
+          <div class="analysis-step" data-idx="0">
+            <div class="analysis-step-icon">
+              <div class="pending"></div>
+              <div class="spinner"></div>
+              <svg class="check" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+            </div>
+            <span class="analysis-step-text">Pulling listing data</span>
+          </div>
+          <div class="analysis-step" data-idx="1">
+            <div class="analysis-step-icon">
+              <div class="pending"></div>
+              <div class="spinner"></div>
+              <svg class="check" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+            </div>
+            <span class="analysis-step-text">Analyzing pricing history</span>
+          </div>
+          <div class="analysis-step" data-idx="2">
+            <div class="analysis-step-icon">
+              <div class="pending"></div>
+              <div class="spinner"></div>
+              <svg class="check" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+            </div>
+            <span class="analysis-step-text">Comparing market rates</span>
+          </div>
+          <div class="analysis-step" data-idx="3">
+            <div class="analysis-step-icon">
+              <div class="pending"></div>
+              <div class="spinner"></div>
+              <svg class="check" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+            </div>
+            <span class="analysis-step-text">Calculating revenue potential</span>
+          </div>
+          <div class="analysis-step" data-idx="4">
+            <div class="analysis-step-icon">
+              <div class="pending"></div>
+              <div class="spinner"></div>
+              <svg class="check" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+            </div>
+            <span class="analysis-step-text">Generating revenue report</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: Email Capture -->
+    <div class="step" data-step="2">
+      <div class="step-eyebrow">Report Ready</div>
+      <h1 class="step-title">Your report is <em>ready.</em></h1>
+      <p class="step-desc">Enter your email and we'll send you a detailed Revenue Lift report with actionable insights for your listing.</p>
+      <div class="field">
+        <label class="field-label" for="email">Email Address</label>
+        <div class="input-icon-wrap">
+          <div class="input-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          </div>
+          <input type="email" class="field-input" id="email" placeholder="jane@example.com" autocomplete="email">
+        </div>
+        <div class="field-error">Please enter a valid email address</div>
+      </div>
+      <div class="form-actions">
+        <button class="btn-next accent" onclick="submitEmail()" id="btn-email">Send My Report <span class="arrow">→</span></button>
+      </div>
+    </div>
+
+    <!-- Step 4: Success -->
+    <div class="step" data-step="3">
+      <div class="success-state" id="success-state">
+        <div class="success-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="#4A6741" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <h2 class="success-title">Report <em>sent.</em></h2>
+        <p class="success-desc">Check your inbox for your personalized Revenue Lift report. We'll show you exactly where your listing is leaving money on the table.</p>
+        <div class="success-detail">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="var(--accent)" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          <span>Report sent to <strong id="confirm-email">your email</strong></span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Confetti container -->
+<div class="confetti-wrap" id="confetti-wrap"></div>
+
+<script>
+let current = 0;
+let isTransitioning = false;
+
+// Pre-fill URL from query param
+(function(){
+  var params = new URLSearchParams(window.location.search);
+  var url = params.get('url');
+  if (url) document.getElementById('listing-url').value = url;
+})();
+
+function transitionStep(from, to, direction) {
+  if (isTransitioning) return;
+  isTransitioning = true;
+
+  var fromEl = document.querySelector('.step[data-step="' + from + '"]');
+  var toEl = document.querySelector('.step[data-step="' + to + '"]');
+  if (!fromEl || !toEl) { isTransitioning = false; return; }
+
+  fromEl.classList.remove('active', 'enter-from-below', 'enter-from-above');
+  fromEl.classList.add(direction === 'forward' ? 'exit-up' : 'exit-down');
+
+  toEl.classList.remove('active', 'exit-up', 'exit-down');
+  toEl.style.position = 'relative';
+  toEl.style.opacity = '0';
+  toEl.style.visibility = 'visible';
+  toEl.style.transform = direction === 'forward' ? 'translateY(24px)' : 'translateY(-24px)';
+  toEl.style.transition = 'none';
+  toEl.style.pointerEvents = 'auto';
+
+  void toEl.offsetHeight;
+
+  requestAnimationFrame(function(){
+    toEl.style.transition = '';
+    toEl.classList.add(direction === 'forward' ? 'enter-from-below' : 'enter-from-above');
+    toEl.style.position = '';
+    toEl.style.opacity = '';
+    toEl.style.visibility = '';
+    toEl.style.transform = '';
+    toEl.style.pointerEvents = '';
+  });
+
+  setTimeout(function(){
+    fromEl.classList.remove('exit-up', 'exit-down');
+    fromEl.style.position = '';
+    isTransitioning = false;
+  }, 500);
+}
+
+function startAnalysis() {
+  var url = document.getElementById('listing-url');
+  var val = url.value.trim();
+  if (!val || (!val.includes('airbnb.com') && !val.includes('airbnb.'))) {
+    url.classList.add('error');
+    return;
+  }
+  url.classList.remove('error');
+
+  rwTrack('revenue_lift_analyze', { page: 'revenue-lift', url: val });
+
+  current = 1;
+  transitionStep(0, 1, 'forward');
+
+  // Start the fake analysis sequence
+  setTimeout(runAnalysis, 600);
+}
+
+function runAnalysis() {
+  var steps = document.querySelectorAll('.analysis-step');
+  var ring = document.getElementById('ring-progress');
+  var pctEl = document.getElementById('pct-num');
+  var circumference = 2 * Math.PI * 65; // ~408
+  var totalSteps = steps.length;
+  var stepDuration = 2000; // 2s per step
+  var currentStep = 0;
+  var targetPct = 0;
+  var currentPct = 0;
+
+  function activateStep(idx) {
+    if (idx >= totalSteps) {
+      // All done — advance to email step
+      setTimeout(function(){
+        current = 2;
+        transitionStep(1, 2, 'forward');
+      }, 600);
+      return;
+    }
+
+    // Mark current step active
+    steps[idx].classList.add('active');
+
+    // Animate percentage
+    targetPct = Math.round(((idx + 1) / totalSteps) * 100);
+    animatePct();
+
+    // After duration, mark done and move to next
+    setTimeout(function(){
+      steps[idx].classList.remove('active');
+      steps[idx].classList.add('done');
+      currentStep++;
+      activateStep(currentStep);
+    }, stepDuration);
+  }
+
+  function animatePct() {
+    if (currentPct >= targetPct) return;
+    currentPct++;
+    pctEl.textContent = currentPct;
+
+    // Update ring
+    var offset = circumference - (circumference * currentPct / 100);
+    ring.style.strokeDashoffset = offset;
+
+    if (currentPct < targetPct) {
+      setTimeout(animatePct, stepDuration / ((targetPct - (currentPct - 1)) || 1));
+    }
+  }
+
+  activateStep(0);
+}
+
+function submitEmail() {
+  var email = document.getElementById('email');
+  var val = email.value.trim();
+  if (!val || !val.includes('@') || !val.includes('.')) {
+    email.classList.add('error');
+    return;
+  }
+  email.classList.remove('error');
+
+  var listingUrl = document.getElementById('listing-url').value;
+
+  rwTrack('revenue_lift_email', { page: 'revenue-lift', email: val });
+
+  // Send to Make.com webhook
+  fetch('https://hook.us2.make.com/23rh699yc1ob5tcetd6ionr18431yvyr', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ listingUrl: listingUrl, email: val, source: 'revenue-lift-calculator' })
+  });
+
+  // Show confirmation email
+  document.getElementById('confirm-email').textContent = val;
+
+  // Transition to success
+  current = 3;
+  transitionStep(2, 3, 'forward');
+
+  // Trigger success animations
+  setTimeout(function(){
+    document.getElementById('success-state').classList.add('revealed');
+    launchConfetti();
+  }, 400);
+}
+
+function launchConfetti() {
+  var wrap = document.getElementById('confetti-wrap');
+  var colors = ['#4A6741','#dce6d8','#b3c5ab','#32302F','#E0DCDA','#706b68','#8aab7f','#c5d6bf'];
+  var count = 60;
+
+  for (var i = 0; i < count; i++) {
+    var el = document.createElement('div');
+    el.className = 'confetti';
+    el.style.background = colors[Math.floor(Math.random() * colors.length)];
+    el.style.left = (Math.random() * 100) + '%';
+    el.style.top = (-10 - Math.random() * 20) + '%';
+    el.style.width = (5 + Math.random() * 6) + 'px';
+    el.style.height = (5 + Math.random() * 6) + 'px';
+    el.style.borderRadius = Math.random() > .5 ? '50%' : '2px';
+    el.style.setProperty('--fall-dur', (1.8 + Math.random() * 1.5) + 's');
+    el.style.setProperty('--spin', (360 + Math.random() * 720) + 'deg');
+    wrap.appendChild(el);
+    (function(el){
+      setTimeout(function(){ el.classList.add('go'); }, Math.random() * 400);
+    })(el);
+  }
+
+  setTimeout(function(){ wrap.innerHTML = ''; }, 4000);
+}
+
+// Clear error on input
+document.querySelectorAll('.field-input').forEach(function(input){
+  input.addEventListener('input', function(){
+    input.classList.remove('error');
+  });
+});
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
