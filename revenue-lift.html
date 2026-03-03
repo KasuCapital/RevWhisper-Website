@@ -398,24 +398,25 @@ body::before{
 <div class="form-shell">
   <div class="steps-viewport">
 
-    <!-- Step 1: Confirm Listing URL -->
+    <!-- Step 1: Annual Revenue -->
     <div class="step active" data-step="0">
+      <input type="hidden" id="listing-url" value="">
       <div class="step-eyebrow">Revenue Analysis</div>
-      <h1 class="step-title">Let's analyze your <em>listing.</em></h1>
-      <p class="step-desc">We'll pull your listing data and compare it against top-performing properties in your market.</p>
+      <h1 class="step-title">What's your estimated <em>annual revenue?</em></h1>
+      <p class="step-desc">Enter your current or estimated yearly earnings so we can calculate your revenue lift potential.</p>
       <div class="field">
-        <label class="field-label" for="listing-url">Airbnb Listing URL</label>
+        <label class="field-label" for="annual-revenue">Estimated Annual Revenue</label>
         <div class="input-icon-wrap">
           <div class="input-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           </div>
-          <input type="url" class="field-input" id="listing-url" placeholder="https://www.airbnb.com/rooms/..." autocomplete="off">
+          <input type="text" class="field-input" id="annual-revenue" placeholder="$50,000" autocomplete="off" inputmode="numeric">
         </div>
-        <div class="field-hint">Paste your full Airbnb listing page link</div>
-        <div class="field-error">Please enter a valid Airbnb listing URL</div>
+        <div class="field-hint">Your best estimate is fine — we'll refine it in the analysis</div>
+        <div class="field-error">Please enter your estimated annual revenue</div>
       </div>
       <div class="form-actions">
-        <button class="btn-next accent" onclick="startAnalysis()" id="btn-analyze">Analyze My Listing <span class="arrow">→</span></button>
+        <button class="btn-next accent" onclick="startAnalysis()" id="btn-analyze">Calculate My Revenue Lift <span class="arrow">→</span></button>
       </div>
     </div>
 
@@ -567,15 +568,15 @@ function transitionStep(from, to, direction) {
 }
 
 function startAnalysis() {
-  var url = document.getElementById('listing-url');
-  var val = url.value.trim();
-  if (!val || (!val.includes('airbnb.com') && !val.includes('airbnb.'))) {
-    url.classList.add('error');
+  var rev = document.getElementById('annual-revenue');
+  var val = rev.value.trim().replace(/[^0-9]/g, '');
+  if (!val || parseInt(val) <= 0) {
+    rev.classList.add('error');
     return;
   }
-  url.classList.remove('error');
+  rev.classList.remove('error');
 
-  rwTrack('revenue_lift_analyze', { page: 'revenue-lift', url: val });
+  rwTrack('revenue_lift_analyze', { page: 'revenue-lift', revenue: val });
 
   current = 1;
   transitionStep(0, 1, 'forward');
@@ -648,6 +649,7 @@ function submitEmail() {
   email.classList.remove('error');
 
   var listingUrl = document.getElementById('listing-url').value;
+  var revenue = document.getElementById('annual-revenue').value.trim();
 
   rwTrack('revenue_lift_email', { page: 'revenue-lift', email: val });
 
@@ -655,7 +657,7 @@ function submitEmail() {
   fetch('https://hook.us2.make.com/23rh699yc1ob5tcetd6ionr18431yvyr', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ listingUrl: listingUrl, email: val, source: 'revenue-lift-calculator' })
+    body: JSON.stringify({ listingUrl: listingUrl, annualRevenue: revenue, email: val, source: 'revenue-lift-calculator' })
   });
 
   // Show confirmation email
