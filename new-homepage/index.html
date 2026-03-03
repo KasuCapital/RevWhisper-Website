@@ -260,50 +260,90 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
 .bt-map-pulse{fill:var(--accent);animation:mapPulse 2.5s ease-in-out infinite}
 
 /* ── How It Works ── */
-.hiw{background:#fff;padding:100px 0 60px}
-.hiw-header{text-align:center;margin-bottom:64px}
-.hiw-eyebrow{font-family:var(--body);font-size:clamp(.7rem,.9vw,.8rem);font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
-.hiw-title{font-family:var(--heading);font-size:clamp(1.6rem,3vw,2.2rem);font-weight:400;color:var(--black);line-height:1.3;letter-spacing:-.01em}
-.hiw-layout{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:stretch}
-.hiw-visual{display:flex;flex-direction:column}
-.hiw-img-wrap{position:relative}
-.hiw-img-wrap img{width:100%;height:auto;display:block;border-radius:var(--radius);aspect-ratio:4/3;object-fit:cover;border:1.5px solid var(--g200)}
-/* Before/After calendar pair at bottom of HIW */
-.hiw-ba-wrap{display:flex;gap:12px;justify-content:center;margin-top:32px;z-index:2}
-.hiw-ba-float{width:210px;padding:12px 14px;box-shadow:var(--sh-lg)}
-.hiw-ba-wrap .onboard-ba-label{font-size:9px;margin-bottom:10px}
-.hiw-ba-wrap .ba-badge{font-size:.55rem;padding:2px 6px}
-.hiw-ba-wrap .ba-month{font-size:.75rem}
-.hiw-ba-wrap .ba-cell{font-size:.58rem;padding:4px 0}
-.hiw-ba-wrap .ba-dh{font-size:9px;padding:3px 0}
+.hiw{background:#fff;padding:100px 0 60px;position:relative;overflow:hidden}
 
-.hiw-ba-wrap{opacity:0;transform:translateY(20px);transition:opacity .5s .3s ease,transform .5s .3s ease}
-.hiw-visual.in .hiw-ba-wrap{opacity:1;transform:translateY(0)}
-.hiw-visual.in .hiw-ba-float.before{animation:calFloatBefore 5s 1s ease-in-out infinite}
-.hiw-visual.in .hiw-ba-float.after{animation:calFloatAfter 5s 1.5s ease-in-out infinite}
-@keyframes calFloatBefore{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
-@keyframes calFloatAfter{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-.hiw-steps-col{position:relative;padding-left:0}
-.hiw-vline{position:absolute;left:21px;top:42px;bottom:42px;width:0;border-left:2px dashed var(--accent-border);z-index:0;transform:scaleY(0);transform-origin:top;transition:transform .8s cubic-bezier(0.25,0.1,0.25,1)}
-.hiw-vline.in{transform:scaleY(1)}
-.hiw-img-wrap img{transition:transform .6s ease,box-shadow .6s ease}
-.hiw-img-wrap:hover img{transform:scale(1.02);box-shadow:0 12px 40px rgba(0,0,0,.12)}
-.hiw-vstep{display:flex;gap:20px;align-items:flex-start;padding:18px 0;position:relative;z-index:1;transition:transform .3s ease}
-.hiw-vstep:hover{transform:translateX(4px)}
-.hiw-vstep:first-child{padding-top:0}
-.hiw-vstep:last-child{padding-bottom:0}
-.hiw-vstep-icon{width:44px;height:44px;min-width:44px;border-radius:var(--radius-sm);background:var(--accent);display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0;transition:transform .4s cubic-bezier(.34,1.56,.64,1),box-shadow .3s ease}
-.hiw-vstep.in .hiw-vstep-icon{animation:hiwIconPop .5s ease both}
-.hiw-vstep:hover .hiw-vstep-icon{transform:scale(1.08);box-shadow:0 4px 16px rgba(74,103,65,.3)}
+/* Header entrance */
+.hiw-header{text-align:center;margin-bottom:64px}
+.hiw-eyebrow{font-family:var(--body);font-size:clamp(.7rem,.9vw,.8rem);font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;opacity:0;transform:translateY(14px);transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1)}
+.hiw-title{font-family:var(--heading);font-size:clamp(1.6rem,3vw,2.2rem);font-weight:400;color:var(--black);line-height:1.3;letter-spacing:-.01em;opacity:0;transform:translateY(18px) scale(.97);transition:opacity .7s .1s cubic-bezier(.22,1,.36,1),transform .7s .1s cubic-bezier(.22,1,.36,1)}
+.hiw-header.in .hiw-eyebrow{opacity:1;transform:translateY(0)}
+.hiw-header.in .hiw-title{opacity:1;transform:translateY(0) scale(1)}
+
+/* Steps row */
+.hiw-steps-row{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;max-width:960px;margin:0 auto;position:relative}
+.hiw-hline{position:absolute;top:46px;left:12.5%;right:12.5%;height:0;border-top:2px dashed var(--accent-border);z-index:0;transform:scaleX(0);transform-origin:left;transition:transform 1.2s .2s cubic-bezier(.22,1,.36,1)}
+.hiw-steps-row.in .hiw-hline{transform:scaleX(1)}
+.hiw-step-card{text-align:center;padding:24px 16px;position:relative;z-index:1;opacity:0;transform:translateY(28px);transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1)}
+.hiw-step-card:nth-child(3){transition-delay:.3s}
+.hiw-step-card:nth-child(4){transition-delay:.6s}
+.hiw-step-card:nth-child(5){transition-delay:.9s}
+.hiw-steps-row.in .hiw-step-card{opacity:1;transform:translateY(0)}
+.hiw-step-card:hover{transform:translateY(-6px)}
+.hiw-step-card:hover .hiw-vstep-icon{transform:scale(1.1) rotate(-4deg);box-shadow:0 6px 20px rgba(74,103,65,.35)}
+.hiw-step-card:hover .hiw-step-n{color:var(--accent)}
+.hiw-step-card:hover .hiw-step-title{color:var(--accent)}
+.hiw-step-card:hover .hiw-step-desc{color:var(--g600)}
+.hiw-vstep-icon{width:44px;height:44px;min-width:44px;border-radius:var(--radius-sm);background:var(--accent);display:inline-flex;align-items:center;justify-content:center;color:#fff;margin-bottom:16px;transition:transform .4s cubic-bezier(.34,1.56,.64,1),box-shadow .3s ease}
+.hiw-steps-row.in .hiw-vstep-icon{animation:hiwIconPop .6s cubic-bezier(.34,1.56,.64,1) both}
+.hiw-step-card:nth-child(3) .hiw-vstep-icon{animation-delay:.3s}
+.hiw-step-card:nth-child(4) .hiw-vstep-icon{animation-delay:.6s}
+.hiw-step-card:nth-child(5) .hiw-vstep-icon{animation-delay:.9s}
 .hiw-vstep-icon svg{width:20px;height:20px}
-.hiw-vstep-body{flex:1}
-.hiw-vstep-n{display:block;font-family:var(--body);font-size:12px;font-weight:700;color:var(--g300);letter-spacing:.04em;margin-bottom:4px;transition:color .25s ease}
-.hiw-vstep:hover .hiw-vstep-n{color:var(--accent)}
-.hiw-vstep-title{font-family:var(--heading);font-size:18px;font-weight:400;letter-spacing:-.01em;color:var(--black);line-height:1.4;margin-bottom:5px;transition:color .25s ease}
-.hiw-vstep:hover .hiw-vstep-title{color:var(--accent)}
-.hiw-vstep-desc{font-family:var(--body);font-size:14px;color:var(--g500);line-height:1.7;font-weight:300;transition:color .25s ease}
-.hiw-vstep:hover .hiw-vstep-desc{color:var(--g600)}
-@keyframes hiwIconPop{0%{transform:scale(0);opacity:0}60%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+.hiw-step-n{display:block;font-family:var(--body);font-size:11px;font-weight:700;color:var(--g300);letter-spacing:.06em;margin-bottom:6px;text-transform:uppercase;transition:color .3s ease}
+.hiw-step-title{font-family:var(--heading);font-size:17px;font-weight:600;color:var(--black);margin-bottom:8px;letter-spacing:-.01em;transition:color .3s ease}
+.hiw-step-desc{font-size:13px;color:var(--g500);line-height:1.6;transition:color .3s ease}
+@keyframes hiwIconPop{0%{transform:scale(0) rotate(-12deg);opacity:0}60%{transform:scale(1.18) rotate(3deg)}100%{transform:scale(1) rotate(0deg);opacity:1}}
+
+/* Before / After showcase */
+.hiw-showcase{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:48px;margin-bottom:0;max-width:960px;margin-left:auto;margin-right:auto}
+.hiw-ba-card{background:var(--g50);border:1.5px solid var(--g200);border-radius:var(--radius);padding:24px;opacity:0;transform:translateY(32px) scale(.97);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1),box-shadow .4s ease,border-color .3s ease}
+.hiw-ba-card.before{transition-delay:.1s}
+.hiw-ba-card.after{transition-delay:.3s}
+.hiw-showcase.in .hiw-ba-card{opacity:1;transform:translateY(0) scale(1)}
+.hiw-showcase.in .hiw-ba-card.before{animation:hiwFloat 5s 1.2s ease-in-out infinite}
+.hiw-showcase.in .hiw-ba-card.after{animation:hiwFloat 5s 1.8s ease-in-out infinite}
+.hiw-ba-card:hover{transform:translateY(-4px) scale(1.01);box-shadow:0 16px 48px rgba(50,48,47,.1);animation-play-state:paused!important}
+.hiw-ba-card.after{border-color:var(--accent-border);background:rgba(74,103,65,.03)}
+.hiw-ba-card.after:hover{border-color:var(--accent);box-shadow:0 16px 48px rgba(74,103,65,.12)}
+.hiw-ba-card-label{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--g400);margin-bottom:16px;text-align:center;opacity:0;transform:translateY(8px);transition:opacity .5s .2s ease,transform .5s .2s ease}
+.hiw-showcase.in .hiw-ba-card-label{opacity:1;transform:translateY(0)}
+.hiw-ba-card.after .hiw-ba-card-label{color:var(--accent);transition-delay:.4s}
+/* Photo */
+.hiw-ba-photo{width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:var(--radius-sm);border:1px solid var(--g200);margin-bottom:16px;transition:transform .5s cubic-bezier(.22,1,.36,1),filter .5s ease}
+.hiw-ba-card.before .hiw-ba-photo{filter:saturate(.6) brightness(.92)}
+.hiw-ba-card:hover .hiw-ba-photo{transform:scale(1.02)}
+.hiw-ba-card.before:hover .hiw-ba-photo{filter:saturate(.7) brightness(.95)}
+/* Stats row: calendar + rank side by side */
+.hiw-ba-stats{display:flex;gap:12px;align-items:stretch;opacity:0;transform:translateY(12px);transition:opacity .6s .3s ease,transform .6s .3s cubic-bezier(.22,1,.36,1)}
+.hiw-showcase.in .hiw-ba-stats{opacity:1;transform:translateY(0)}
+.hiw-ba-card.after .hiw-ba-stats{transition-delay:.5s}
+/* Calendar mini */
+.hiw-ba-cal{flex:1;background:#fff;border:1px solid var(--g200);border-radius:var(--radius-sm);padding:10px 12px;transition:box-shadow .3s ease}
+.hiw-ba-card:hover .hiw-ba-cal{box-shadow:0 4px 12px rgba(50,48,47,.06)}
+.hiw-ba-cal .ba-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.hiw-ba-cal .ba-month{font-family:var(--heading);font-size:.72rem;font-weight:400;color:var(--black)}
+.hiw-ba-cal .ba-badge{font-family:var(--body);font-size:.5rem;font-weight:600;padding:2px 6px;border-radius:var(--radius-sm);letter-spacing:.02em;transition:transform .3s ease}
+.hiw-ba-cal .ba-badge.before{background:var(--g100);color:var(--g500);border:1px solid var(--g200)}
+.hiw-ba-cal .ba-badge.after{background:var(--accent-light);color:var(--accent);border:1px solid var(--accent-border)}
+.hiw-ba-cal .ba-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;text-align:center}
+.hiw-ba-cal .ba-dh{font-family:var(--body);font-size:10px;font-weight:600;color:var(--g400);padding:4px 0}
+.hiw-ba-cal .ba-cell{font-family:var(--body);font-size:.65rem;color:var(--g500);padding:5px 2px;border-radius:4px;line-height:1}
+.hiw-ba-cal .ba-cell.empty{visibility:hidden}
+.hiw-ba-cal .ba-cell.booked.filled{transition:transform .2s ease}
+.hiw-ba-cal .ba-cell.booked.filled:hover{transform:scale(1.2)}
+.hiw-ba-card.before .ba-cell.booked.filled{animation:baCellGrey .45s cubic-bezier(.34,1.56,.64,1) both}
+.hiw-ba-card.after .ba-cell.booked.filled{animation:baCellGreen .45s cubic-bezier(.34,1.56,.64,1) both}
+/* Rank card */
+.hiw-ba-rank{width:80px;min-width:80px;background:#fff;border:1px solid var(--g200);border-radius:var(--radius-sm);padding:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;transition:box-shadow .3s ease}
+.hiw-ba-card:hover .hiw-ba-rank{box-shadow:0 4px 12px rgba(50,48,47,.06)}
+.hiw-ba-rank-num{font-family:var(--heading);font-size:28px;font-weight:600;line-height:1;margin-bottom:4px;color:var(--g400);transition:transform .4s cubic-bezier(.34,1.56,.64,1)}
+.hiw-showcase.in .hiw-ba-rank-num{animation:rankPop .6s .8s cubic-bezier(.34,1.56,.64,1) both}
+.hiw-ba-card.after .hiw-ba-rank-num{color:var(--accent)}
+.hiw-ba-card.after .hiw-ba-rank-num{animation-delay:1.2s}
+.hiw-ba-rank-label{font-family:var(--body);font-size:8px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--g400);line-height:1.3}
+.hiw-ba-card.after .hiw-ba-rank{border-color:var(--accent-border);background:rgba(74,103,65,.04)}
+@keyframes rankPop{0%{transform:scale(0);opacity:0}60%{transform:scale(1.2)}100%{transform:scale(1);opacity:1}}
+@keyframes hiwFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 /* ── Credibility / Social Proof ── */
 .cred{padding:60px 0 100px;background:#fff;position:relative;overflow:hidden}
 .cred-inner{position:relative;z-index:2;text-align:center}
@@ -824,13 +864,12 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
   .guar-proofs{flex-direction:column;gap:14px}
   .hiw{padding:80px 0}
   .hiw-header{margin-bottom:48px}
-  .hiw-layout{grid-template-columns:1fr;gap:40px}
-  .hiw-img-wrap{max-width:480px;margin:0 auto}
-  .hiw-ba-wrap{gap:8px}
-  .hiw-ba-float{width:180px;padding:10px 12px}
-  .hiw-ba-wrap .ba-cell{font-size:.52rem;padding:3px 0}
-  .hiw-ba-wrap .ba-dh{font-size:8px}
-  .hiw-ba-wrap .ba-month{font-size:.7rem}
+  .hiw-showcase{grid-template-columns:1fr 1fr;gap:16px}
+  .hiw-ba-card{padding:16px}
+  .hiw-ba-rank{width:64px;min-width:64px}
+  .hiw-ba-rank-num{font-size:22px}
+  .hiw-steps-row{grid-template-columns:1fr 1fr;gap:16px}
+  .hiw-hline{display:none}
   .cred{padding:80px 0}
   .cred-carousel-shell{margin-top:18px;padding:12px 0 10px}
   .cred-carousel-wrap{
@@ -865,8 +904,9 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
   .compare-feat{padding:10px 12px;font-size:11.5px}
   .compare-col{padding:10px 6px;font-size:11px}
   .compare-head{font-size:9px}
-  .hiw-ba-wrap{flex-direction:column;align-items:center;margin-top:40px}
-  .hiw-ba-float{width:220px;padding:12px 14px}
+  .hiw-showcase{grid-template-columns:1fr}
+  .hiw-ba-card{padding:16px}
+  .hiw-steps-row{grid-template-columns:1fr}
 }
 
 /* ── Reduced Motion ── */
@@ -893,6 +933,11 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
   .cta-card.in .cta-ey,.cta-card.in .cta-h2,.cta-card.in .cta-sub,.cta-card.in .btn-white,.cta-card.in .cta-note{animation:none;opacity:1;transform:none}
   .r.in .em-mark::after{animation:none;clip-path:none}
   .cta-card.in .em-mark-w::after{animation:none;clip-path:none}
+  .hiw-showcase.in .hiw-ba-card.before,
+  .hiw-showcase.in .hiw-ba-card.after{animation:none!important}
+  .hiw-steps-row.in .hiw-vstep-icon{animation:none!important}
+  .hiw-hline{transform:scaleX(1)!important;transition:none!important}
+  .hiw-showcase.in .hiw-ba-rank-num{animation:none!important}
 }
 </style>
 </head>
@@ -919,10 +964,6 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
   <div class="w">
     <h1 class="hero-h1 r d1">Airbnb Owners Make <em class="em-mark">$25,892 More</em> With RevWhisper</h1>
     <p class="hero-sub r d2">Our team tracks your Airbnb search position daily, deploys algorithm-timed pricing, and optimizes every part of your listing so you earn more without lifting a finger.</p>
-    <div class="hero-actions r d2">
-      <a href="/get-started" class="btn-accent">Find Out How Much More You Could Make</a>
-      <a href="/get-started" class="btn-outline">Book a call</a>
-    </div>
     <div class="hero-trust r d3">
       <span class="ht-item">✓ Fully managed</span>
       <div class="ht-sep"></div>
@@ -1272,18 +1313,59 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
       <h2 class="hiw-title">How It Works</h2>
     </div>
 
-    <!-- Two-column layout -->
-    <div class="hiw-layout">
-
-      <!-- Left: Photo + Calendar overlay -->
-      <div class="hiw-visual r">
-        <div class="hiw-img-wrap">
-          <img src="../images/properties/livingroom-after.webp" alt="Beautiful vacation rental living room managed by RevWhisper" loading="lazy">
+    <!-- Steps row -->
+    <div class="hiw-steps-row r d1">
+      <div class="hiw-hline"></div>
+      <div class="hiw-step-card">
+        <div class="hiw-vstep-icon">
+          <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="16" cy="16" r="9"/><line x1="23" y1="23" x2="32" y2="32"/><line x1="16" y1="11" x2="16" y2="21"/><line x1="11" y1="16" x2="21" y2="16"/>
+          </svg>
         </div>
-        <!-- Before / After floating calendar cards -->
-        <div class="hiw-ba-wrap">
-          <div class="onboard-ba-card before hiw-ba-float">
-            <div class="onboard-ba-label">Before</div>
+        <span class="hiw-step-n">Step 01</span>
+        <h3 class="hiw-step-title">Audit</h3>
+        <p class="hiw-step-desc">We analyze your listing performance, pricing gaps, and market positioning to build a clear picture of where revenue is being left behind.</p>
+      </div>
+      <div class="hiw-step-card">
+        <div class="hiw-vstep-icon">
+          <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="16" cy="14" r="5"/><path d="M6 32c0-5.523 4.477-10 10-10s10 4.477 10 10"/><line x1="30" y1="14" x2="30" y2="22"/><line x1="26" y1="18" x2="34" y2="18"/>
+          </svg>
+        </div>
+        <span class="hiw-step-n">Step 02</span>
+        <h3 class="hiw-step-title">Onboarding</h3>
+        <p class="hiw-step-desc">A guided setup that connects your accounts, aligns on goals, and establishes the strategy without disrupting a single booking.</p>
+      </div>
+      <div class="hiw-step-card">
+        <div class="hiw-vstep-icon">
+          <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="6" y="6" width="12" height="12" rx="2"/><rect x="22" y="6" width="12" height="12" rx="2"/><rect x="6" y="22" width="12" height="12" rx="2"/><rect x="22" y="22" width="12" height="12" rx="2"/>
+          </svg>
+        </div>
+        <span class="hiw-step-n">Step 03</span>
+        <h3 class="hiw-step-title">Listing Optimization</h3>
+        <p class="hiw-step-desc">From photos and copy to pricing and search ranking, we refine every element guests and the algorithm evaluate.</p>
+      </div>
+      <div class="hiw-step-card">
+        <div class="hiw-vstep-icon">
+          <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="4,24 10,24 14,12 18,30 22,18 26,26 30,20 36,20"/>
+          </svg>
+        </div>
+        <span class="hiw-step-n">Step 04</span>
+        <h3 class="hiw-step-title">Ongoing Revenue Management</h3>
+        <p class="hiw-step-desc">Dynamic pricing, performance monitoring, and continuous adjustments that compound returns month after month.</p>
+      </div>
+    </div>
+
+    <!-- Before / After Showcase -->
+    <div class="hiw-showcase r">
+      <!-- Before Card -->
+      <div class="hiw-ba-card before">
+        <div class="hiw-ba-card-label">Before RevWhisper</div>
+        <img class="hiw-ba-photo" src="../images/properties/livingroom-before.webp" alt="Living room before RevWhisper optimization" loading="lazy">
+        <div class="hiw-ba-stats">
+          <div class="hiw-ba-cal" data-type="before">
             <div class="ba-header">
               <span class="ba-month"></span>
               <span class="ba-badge before"><span class="ba-count">0</span> nights</span>
@@ -1292,8 +1374,18 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
               <span class="ba-dh">S</span><span class="ba-dh">M</span><span class="ba-dh">T</span><span class="ba-dh">W</span><span class="ba-dh">T</span><span class="ba-dh">F</span><span class="ba-dh">S</span>
             </div>
           </div>
-          <div class="onboard-ba-card after hiw-ba-float">
-            <div class="onboard-ba-label">After</div>
+          <div class="hiw-ba-rank">
+            <div class="hiw-ba-rank-num">#47</div>
+            <div class="hiw-ba-rank-label">Search Rank</div>
+          </div>
+        </div>
+      </div>
+      <!-- After Card -->
+      <div class="hiw-ba-card after">
+        <div class="hiw-ba-card-label">After RevWhisper</div>
+        <img class="hiw-ba-photo" src="../images/properties/livingroom-after.webp" alt="Living room after RevWhisper optimization" loading="lazy">
+        <div class="hiw-ba-stats">
+          <div class="hiw-ba-cal" data-type="after">
             <div class="ba-header">
               <span class="ba-month"></span>
               <span class="ba-badge after"><span class="ba-count">0</span> nights</span>
@@ -1302,76 +1394,12 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
               <span class="ba-dh">S</span><span class="ba-dh">M</span><span class="ba-dh">T</span><span class="ba-dh">W</span><span class="ba-dh">T</span><span class="ba-dh">F</span><span class="ba-dh">S</span>
             </div>
           </div>
+          <div class="hiw-ba-rank">
+            <div class="hiw-ba-rank-num">#3</div>
+            <div class="hiw-ba-rank-label">Search Rank</div>
+          </div>
         </div>
       </div>
-
-      <!-- Right: Vertical steps -->
-      <div class="hiw-steps-col">
-        <div class="hiw-vline"></div>
-
-        <div class="hiw-vstep r">
-          <div class="hiw-vstep-icon">
-            <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="16" cy="16" r="9"/>
-              <line x1="23" y1="23" x2="32" y2="32"/>
-              <line x1="16" y1="11" x2="16" y2="21"/>
-              <line x1="11" y1="16" x2="21" y2="16"/>
-            </svg>
-          </div>
-          <div class="hiw-vstep-body">
-            <span class="hiw-vstep-n">STEP 01</span>
-            <h3 class="hiw-vstep-title">Audit</h3>
-            <p class="hiw-vstep-desc">We analyze your listing performance, pricing gaps, and market positioning to build a clear picture of where revenue is being left behind.</p>
-          </div>
-        </div>
-
-        <div class="hiw-vstep r">
-          <div class="hiw-vstep-icon">
-            <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="16" cy="14" r="5"/>
-              <path d="M6 32c0-5.523 4.477-10 10-10s10 4.477 10 10"/>
-              <line x1="30" y1="14" x2="30" y2="22"/>
-              <line x1="26" y1="18" x2="34" y2="18"/>
-            </svg>
-          </div>
-          <div class="hiw-vstep-body">
-            <span class="hiw-vstep-n">STEP 02</span>
-            <h3 class="hiw-vstep-title">Onboarding</h3>
-            <p class="hiw-vstep-desc">A guided setup that connects your accounts, aligns on goals, and establishes the strategy without disrupting a single booking.</p>
-          </div>
-        </div>
-
-        <div class="hiw-vstep r">
-          <div class="hiw-vstep-icon">
-            <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="6" y="6" width="12" height="12" rx="2"/>
-              <rect x="22" y="6" width="12" height="12" rx="2"/>
-              <rect x="6" y="22" width="12" height="12" rx="2"/>
-              <rect x="22" y="22" width="12" height="12" rx="2"/>
-            </svg>
-          </div>
-          <div class="hiw-vstep-body">
-            <span class="hiw-vstep-n">STEP 03</span>
-            <h3 class="hiw-vstep-title">Listing Optimization</h3>
-            <p class="hiw-vstep-desc">From photos and copy to pricing and search ranking, we refine every element guests and the algorithm evaluate.</p>
-          </div>
-        </div>
-
-        <div class="hiw-vstep r">
-          <div class="hiw-vstep-icon">
-            <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="4,24 10,24 14,12 18,30 22,18 26,26 30,20 36,20"/>
-            </svg>
-          </div>
-          <div class="hiw-vstep-body">
-            <span class="hiw-vstep-n">STEP 04</span>
-            <h3 class="hiw-vstep-title">Ongoing Revenue Management</h3>
-            <p class="hiw-vstep-desc">Dynamic pricing, performance monitoring, and continuous adjustments that compound returns month after month.</p>
-          </div>
-        </div>
-
-      </div>
-
     </div>
 
   </div>
@@ -2972,8 +3000,8 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
 
   /* ── 7b. Before / After calendar build + animation ── */
   (function() {
-    var baWrap = document.querySelector('.hiw-ba-wrap');
-    if (!baWrap) return;
+    var showcase = document.querySelector('.hiw-showcase');
+    if (!showcase) return;
 
     var now = new Date();
     var year = now.getFullYear();
@@ -2983,8 +3011,9 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
     var firstDay = new Date(year, month, 1).getDay();
 
     /* Set month labels */
-    var monthEls = baWrap.querySelectorAll('.ba-month');
-    monthEls.forEach(function(el) { el.textContent = monthNames[month] + ' ' + year; });
+    showcase.querySelectorAll('.ba-month').forEach(function(el) {
+      el.textContent = monthNames[month] + ' ' + year;
+    });
 
     /* Generate random bookings */
     function pickUnbooked(total, unbookedPct) {
@@ -2993,9 +3022,8 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
       while (Object.keys(set).length < count) { set[Math.floor(Math.random() * total) + 1] = true; }
       return set;
     }
-    var beforeUnbooked = pickUnbooked(daysInMonth, 0.60); /* ~40% occupancy */
-    var afterUnbooked = pickUnbooked(daysInMonth, 0.08);   /* ~92% occupancy */
-
+    var beforeUnbooked = pickUnbooked(daysInMonth, 0.60);
+    var afterUnbooked = pickUnbooked(daysInMonth, 0.08);
     var beforeBooked = daysInMonth - Object.keys(beforeUnbooked).length;
     var afterBooked = daysInMonth - Object.keys(afterUnbooked).length;
 
@@ -3023,10 +3051,10 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
       return cells;
     }
 
-    var beforeGrid = baWrap.querySelector('.before .ba-grid');
-    var afterGrid = baWrap.querySelector('.after .ba-grid');
-    var beforeCells = buildGrid(beforeGrid, beforeUnbooked);
-    var afterCells = buildGrid(afterGrid, afterUnbooked);
+    var beforeCal = showcase.querySelector('.hiw-ba-cal[data-type="before"]');
+    var afterCal = showcase.querySelector('.hiw-ba-cal[data-type="after"]');
+    var beforeCells = buildGrid(beforeCal.querySelector('.ba-grid'), beforeUnbooked);
+    var afterCells = buildGrid(afterCal.querySelector('.ba-grid'), afterUnbooked);
 
     /* Animate on scroll */
     var baAnimated = false;
@@ -3034,8 +3062,8 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
       entries.forEach(function(entry) {
         if (entry.isIntersecting && !baAnimated) {
           baAnimated = true;
-          var beforeCount = baWrap.querySelector('.before .ba-count');
-          var afterCount = baWrap.querySelector('.after .ba-count');
+          var beforeCount = beforeCal.querySelector('.ba-count');
+          var afterCount = afterCal.querySelector('.ba-count');
 
           if (reducedMotion) {
             beforeCells.forEach(function(c) { c.classList.add('filled'); });
@@ -3045,25 +3073,25 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
             return;
           }
 
-          /* Phase 1: Before cells fill (grey, 100ms stagger) */
+          /* Phase 1: Before cells fill (grey, 80ms stagger) */
           var bc = 0;
           beforeCells.forEach(function(cell, i) {
             setTimeout(function() {
               cell.classList.add('filled');
               bc++;
               if (beforeCount) beforeCount.textContent = bc;
-            }, i * 100);
+            }, i * 80);
           });
 
-          /* Phase 2: After cells fill (green, 80ms stagger, starts after before finishes + 600ms pause) */
-          var afterDelay = beforeCells.length * 100 + 600;
+          /* Phase 2: After cells fill (green, 60ms stagger) */
+          var afterDelay = beforeCells.length * 80 + 500;
           var ac = 0;
           afterCells.forEach(function(cell, i) {
             setTimeout(function() {
               cell.classList.add('filled');
               ac++;
               if (afterCount) afterCount.textContent = ac;
-            }, afterDelay + i * 80);
+            }, afterDelay + i * 60);
           });
 
           baObs.unobserve(entry.target);
@@ -3071,7 +3099,7 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
       });
     }, { threshold: 0.2 });
 
-    baObs.observe(baWrap);
+    baObs.observe(showcase);
   })();
 
   /* ── 8. Stakes ranking decay ── */
