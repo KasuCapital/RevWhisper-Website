@@ -54,7 +54,7 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
 .w{max-width:1100px;margin:0 auto;padding:0 28px}
 
 /* ── Nav ── */
-nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--g200)}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;background:#fff;border-bottom:1px solid var(--g200)}
 .nav-i{display:flex;align-items:center;justify-content:space-between;height:64px;max-width:1100px;margin:0 auto;padding:0 32px}
 .logo{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--black)}
 .lm{width:34px;height:34px;background:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
@@ -72,7 +72,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
 
 /* ── Emphasis marks ── */
 .em-mark{position:relative;display:inline;white-space:nowrap}
-.em-mark::after{content:'';position:absolute;left:-2%;right:-2%;bottom:-6px;height:14px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 16' preserveAspectRatio='none'%3E%3Cpath d='M2 11 C25 4, 75 4, 98 11' fill='none' stroke='%234A6741' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center/100% 100%;pointer-events:none;transform:rotate(-0.5deg)}
+.em-mark::after{content:'';position:absolute;left:-2%;right:-2%;bottom:-6px;height:14px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 16' preserveAspectRatio='none'%3E%3Cpath d='M2 11 C25 4, 75 4, 98 11' fill='none' stroke='%234A6741' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center/100% 100%;pointer-events:none;transform:rotate(-0.5deg);clip-path:inset(0 100% 0 0)}
+.r.in .em-mark::after{animation:ctaUnderlineDraw .8s .4s ease both}
 .em-mark-hi{font-style:italic;background:linear-gradient(to top,var(--accent-light) 32%,transparent 32%);padding:0 2px}
 
 /* ── Hero ── */
@@ -108,70 +109,58 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
 @keyframes logoScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 
 /* ── Problem Section ── */
-.problem{background:var(--black);color:var(--white);padding:120px 0}
-.problem-stat{position:relative;text-align:center;margin-bottom:96px;padding:24px 0 16px}
-.problem-stat-num-wrap{
-  display:inline-block;
-  position:relative;
-  padding:0 0 14px;
-}
-.problem-stat-num-wrap::before{
-  content:"";
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  width:500%;
-  height:500%;
-  background:radial-gradient(ellipse at center,rgba(255,255,255,0.22) 0%,rgba(255,255,255,0.13) 20%,rgba(255,255,255,0.06) 40%,transparent 70%);
-  pointer-events:none;
-  z-index:0;
-  opacity:0;
-  transition:opacity 500ms ease-out;
-}
-.problem-stat-num-wrap.glow-in::before{
-  opacity:1;
-}
-.problem-stat-num-wrap::after{
-  content:"";
-  position:absolute;
-  bottom:0;
-  left:50%;
-  transform:translateX(-50%) scaleX(0);
-  width:60%;
-  height:2px;
-  background:var(--accent);
-  border-radius:1px;
-  transform-origin:center;
-  transition:transform 400ms cubic-bezier(0.16,1,0.3,1);
-}
-.problem-stat-num-wrap.underline-in::after{
-  transform:translateX(-50%) scaleX(1);
-}
-.problem-stat-num{
-  position:relative;
-  z-index:1;
-  font-family:var(--mono);
-  font-size:clamp(4rem,8vw,6.5rem);
-  font-weight:400;
-  letter-spacing:-.02em;
-  color:var(--accent);
-  line-height:1;
-  opacity:0;
-  transition:opacity 150ms ease-out;
-}
-.problem-stat-num.visible{opacity:1}
-.problem-stat-label{font-family:var(--body);font-size:clamp(0.85rem,1.2vw,0.95rem);color:#adb0b2;max-width:480px;margin:24px auto 0;line-height:1.6;font-weight:300}
-.problem-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;margin-top:64px}
-.problem-card{padding:0}
-.problem-card-num{font-family:var(--body);font-size:0.8rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
-.problem-card-title{font-family:var(--heading);font-size:clamp(1.05rem,1.5vw,1.2rem);font-weight:400;color:var(--white);line-height:1.4;margin-bottom:10px}
-.problem-card-desc{font-family:var(--body);font-size:clamp(0.88rem,1vw,0.95rem);color:var(--g400);line-height:1.75;font-weight:300}
-.problem-bridge{text-align:center;margin-top:80px}
-.problem-bridge p{font-family:var(--heading);font-style:italic;font-size:clamp(1rem,1.5vw,1.15rem);color:var(--g400);line-height:1.6;max-width:480px;margin:0 auto}
+/* ── Problem / Revenue Gap Section ── */
+.problem{background:var(--black);color:var(--white);padding:100px 0}
+.rg-counter-wrap{display:flex;flex-direction:column;align-items:center;margin-bottom:24px}
+.rg-counter-box{background:var(--accent);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:32px 52px 36px;position:relative;overflow:hidden;transition:transform .4s ease,box-shadow .4s ease}
+.rg-counter-box:hover{transform:scale(1.03);box-shadow:0 12px 40px rgba(74,103,65,.35)}
+.rg-counter-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:80%;height:100%;background:radial-gradient(ellipse at center,rgba(255,255,255,.05) 0%,transparent 70%);pointer-events:none;opacity:0;transition:opacity 1.2s ease}
+.rg-counter-glow.show{opacity:1}
+.rg-counter{font-family:var(--heading);font-size:clamp(40px,7vw,64px);font-weight:400;letter-spacing:-2px;line-height:1;display:inline-flex;align-items:baseline;position:relative}
+.rg-dollar{color:rgba(255,255,255,.35);transition:color .4s ease}
+.rg-counter-box:hover .rg-dollar{color:rgba(255,255,255,.6)}
+.rg-digit{color:#fff;display:inline-block}
+@keyframes digitSettle{0%{transform:translateY(-4px);opacity:.7}50%{transform:translateY(1px)}100%{transform:translateY(0);opacity:1}}
+.rg-sub{text-align:center;font-size:clamp(16px,2vw,19px);color:rgba(255,255,255,.48);max-width:500px;margin:0 auto;line-height:1.6;font-weight:400}
+.rg-divider{display:flex;align-items:center;justify-content:center;gap:16px;margin:72px auto;max-width:180px}
+.rg-divider-line{flex:1;height:1px;background:rgba(255,255,255,.08)}
+.rg-divider-dot{width:4px;height:4px;border-radius:50%;background:var(--g200);opacity:.3;animation:rgDotPulse 3s ease-in-out infinite}
+@keyframes rgDotPulse{0%,100%{opacity:.3;transform:scale(1)}50%{opacity:.7;transform:scale(1.6)}}
+.rg-divider-line{transition:width .6s ease}
+
+/* Divider line draw-in */
+.rg-divider.rg-anim .rg-divider-line{animation:rgLineDraw .8s ease both}
+.rg-divider.rg-anim .rg-divider-line:last-child{animation-delay:.1s}
+@keyframes rgLineDraw{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+
+.rg-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:0;max-width:1040px;margin:0 auto}
+.rg-card{padding:0 32px;border-left:1px solid rgba(255,255,255,.08);cursor:default;transition:transform .3s ease}
+.rg-card:hover{transform:translateY(-4px)}
+.rg-card:first-child{border-left:none}
+.rg-card-num{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:8px;background:var(--g400);font-family:var(--mono);font-size:12px;font-weight:500;color:#fff;margin-bottom:20px;letter-spacing:.1em;transition:background .25s ease,color .25s ease,transform .3s cubic-bezier(.34,1.56,.64,1)}
+.rg-card:hover .rg-card-num{background:#fff;color:var(--red);transform:scale(1.08)}
+.rg-card h3{font-family:var(--heading);font-size:clamp(18px,2vw,21px);font-weight:400;margin:0 0 14px;line-height:1.3;color:rgba(255,255,255,.93);letter-spacing:-.02em;min-height:56px;transition:color .3s ease}
+.rg-card:hover h3{color:#fff}
+.rg-card-bar{width:20px;height:3px;background:var(--g200);margin-bottom:18px;opacity:.15;transition:width .4s cubic-bezier(.34,1.56,.64,1),opacity .4s ease,background .3s ease;border-radius:1px}
+.rg-card:hover .rg-card-bar{width:48px;background:var(--terra);opacity:1}
+.rg-card p{font-size:15px;color:rgba(255,255,255,.48);line-height:1.75;margin:0;font-weight:400;transition:color .3s ease}
+.rg-card:hover p{color:rgba(255,255,255,.65)}
+.rg-closing{text-align:center;margin-top:88px}
+.rg-closing-line{font-family:var(--heading);font-size:clamp(20px,2.5vw,26px);font-weight:400;color:rgba(255,255,255,.93);margin:0 0 6px;line-height:1.3;letter-spacing:-.02em}
+.rg-closing-em{font-family:var(--heading);font-size:clamp(20px,2.5vw,26px);font-weight:400;margin:0 0 48px;line-height:1.3;letter-spacing:-.02em;color:var(--g200);font-style:italic}
+.rg-cta{display:inline-flex;align-items:center;gap:10px;padding:15px 36px;border-radius:var(--radius);background:#fff;color:var(--black);font-family:var(--body);font-size:15px;font-weight:500;text-decoration:none;letter-spacing:.01em;transition:background .3s ease,color .3s ease,transform .3s ease,box-shadow .3s ease;box-shadow:0 4px 16px rgba(0,0,0,.15)}
+.rg-cta:hover{background:var(--accent);color:#fff;transform:translateY(-2px);box-shadow:0 8px 28px rgba(74,103,65,.3)}
+.rg-cta-arrow{font-size:15px;opacity:.5;transition:transform .3s ease,opacity .3s ease}
+.rg-cta:hover .rg-cta-arrow{transform:translateX(4px);opacity:1}
+
+/* Card stagger on reveal */
+.rg-cards.in .rg-card{animation:rgCardIn .6s ease both}
+.rg-cards.in .rg-card:nth-child(2){animation-delay:.12s}
+.rg-cards.in .rg-card:nth-child(3){animation-delay:.24s}
+@keyframes rgCardIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 
 /* ── Solution Section ── */
-#solution{padding:120px 0;background:#fff}
+#solution{padding:100px 0;background:#fff}
 .solution-header{max-width:620px;margin-bottom:56px}
 .eyebrow{display:inline-block;font-family:var(--body);font-size:clamp(.7rem,.9vw,.8rem);font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
 .h2{font-family:var(--heading);font-size:clamp(1.6rem,3vw,2.2rem);font-weight:400;color:var(--black);line-height:1.3;letter-spacing:-.01em}
@@ -270,38 +259,58 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
 .bt-map-pulse{fill:var(--accent);animation:mapPulse 2.5s ease-in-out infinite}
 
 /* ── How It Works ── */
-.hiw{background:#fff;padding:120px 0}
+.hiw{background:#fff;padding:100px 0 60px}
 .hiw-header{text-align:center;margin-bottom:64px}
 .hiw-eyebrow{font-family:var(--body);font-size:clamp(.7rem,.9vw,.8rem);font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
 .hiw-title{font-family:var(--heading);font-size:clamp(1.6rem,3vw,2.2rem);font-weight:400;color:var(--black);line-height:1.3;letter-spacing:-.01em}
 .hiw-layout{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
 .hiw-img-wrap{position:relative}
 .hiw-img-wrap img{width:100%;height:auto;display:block;border-radius:var(--radius);aspect-ratio:4/3;object-fit:cover;border:1.5px solid var(--g200)}
-.hiw-cal-card{position:absolute;bottom:24px;right:-24px;width:260px;background:#fff;border-radius:var(--radius);border:1.5px solid var(--g200);box-shadow:var(--sh-lg);padding:16px 18px;z-index:2;animation:calFloat 4s ease-in-out infinite}
+.hiw-cal-card{position:absolute;bottom:24px;right:-24px;width:260px;background:#fff;border-radius:var(--radius);border:1.5px solid var(--g200);box-shadow:var(--sh-lg);padding:16px 18px;z-index:2}
+.hiw-visual.in .hiw-cal-card{animation:calFloat 4s 1s ease-in-out infinite}
 .hiw-cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 .hiw-cal-month{font-family:var(--heading);font-size:0.85rem;font-weight:400;color:var(--black)}
 .hiw-cal-badge{font-family:var(--body);font-size:0.6rem;font-weight:600;padding:3px 8px;border-radius:var(--radius-sm);background:var(--accent-light);color:var(--accent);border:1px solid var(--accent-border);letter-spacing:0.02em}
 .hiw-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;text-align:center}
 .hiw-cal-dh{font-family:var(--body);font-size:10px;font-weight:600;color:var(--g400);padding:4px 0}
 .hiw-cal-cell{font-family:var(--body);font-size:0.65rem;color:var(--g500);padding:5px 0;border-radius:4px;line-height:1}
-.hiw-cal-cell.booked{background:var(--accent);color:#fff;font-weight:500}
+.hiw-cal-cell.booked{background:transparent;color:var(--g500);font-weight:500}
+.hiw-cal-cell.booked.filled{animation:calCellPop .45s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes calCellPop{
+  0%{background:transparent;color:var(--g500);transform:scale(0.6);opacity:.4}
+  50%{background:var(--accent);color:#fff;transform:scale(1.2);opacity:1}
+  100%{background:var(--accent);color:#fff;transform:scale(1);opacity:1}
+}
 .hiw-cal-cell.empty{visibility:hidden}
 @keyframes calFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
 .hiw-steps-col{position:relative;padding-left:0}
 .hiw-vline{position:absolute;left:21px;top:42px;bottom:42px;width:0;border-left:2px dashed var(--accent-border);z-index:0;transform:scaleY(0);transform-origin:top;transition:transform .8s cubic-bezier(0.25,0.1,0.25,1)}
 .hiw-vline.in{transform:scaleY(1)}
-.hiw-vstep{display:flex;gap:20px;align-items:flex-start;padding:18px 0;position:relative;z-index:1}
+.hiw-img-wrap img{transition:transform .6s ease,box-shadow .6s ease}
+.hiw-img-wrap:hover img{transform:scale(1.02);box-shadow:0 12px 40px rgba(0,0,0,.12)}
+.hiw-cal-card{opacity:0;transform:translateX(20px) translateY(0);transition:opacity .5s .3s ease,transform .5s .3s ease}
+.hiw-visual.in .hiw-cal-card{opacity:1;transform:translateX(0) translateY(0)}
+.hiw-vstep{display:flex;gap:20px;align-items:flex-start;padding:18px 0;position:relative;z-index:1;transition:transform .3s ease}
+.hiw-vstep:hover{transform:translateX(4px)}
 .hiw-vstep:first-child{padding-top:0}
 .hiw-vstep:last-child{padding-bottom:0}
-.hiw-vstep-icon{width:44px;height:44px;min-width:44px;border-radius:var(--radius-sm);background:var(--accent);display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0}
+.hiw-vstep-icon{width:44px;height:44px;min-width:44px;border-radius:var(--radius-sm);background:var(--accent);display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0;transition:transform .4s cubic-bezier(.34,1.56,.64,1),box-shadow .3s ease}
+.hiw-vstep.in .hiw-vstep-icon{animation:hiwIconPop .5s ease both}
+.hiw-vstep:hover .hiw-vstep-icon{transform:scale(1.08);box-shadow:0 4px 16px rgba(74,103,65,.3)}
 .hiw-vstep-icon svg{width:20px;height:20px}
 .hiw-vstep-body{flex:1}
-.hiw-vstep-n{display:block;font-family:var(--body);font-size:12px;font-weight:700;color:var(--g300);letter-spacing:.04em;margin-bottom:4px}
-.hiw-vstep-title{font-family:var(--heading);font-size:18px;font-weight:400;letter-spacing:-.01em;color:var(--black);line-height:1.4;margin-bottom:5px}
-.hiw-vstep-desc{font-family:var(--body);font-size:14px;color:var(--g500);line-height:1.7;font-weight:300}
+.hiw-vstep-n{display:block;font-family:var(--body);font-size:12px;font-weight:700;color:var(--g300);letter-spacing:.04em;margin-bottom:4px;transition:color .25s ease}
+.hiw-vstep:hover .hiw-vstep-n{color:var(--accent)}
+.hiw-vstep-title{font-family:var(--heading);font-size:18px;font-weight:400;letter-spacing:-.01em;color:var(--black);line-height:1.4;margin-bottom:5px;transition:color .25s ease}
+.hiw-vstep:hover .hiw-vstep-title{color:var(--accent)}
+.hiw-vstep-desc{font-family:var(--body);font-size:14px;color:var(--g500);line-height:1.7;font-weight:300;transition:color .25s ease}
+.hiw-vstep:hover .hiw-vstep-desc{color:var(--g600)}
+@keyframes hiwIconPop{0%{transform:scale(0);opacity:0}60%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+.hiw-cal-cell.booked.filled{transition:transform .2s ease}
+.hiw-cal-cell.booked.filled:hover{transform:scale(1.2)}
 
 /* ── Credibility / Social Proof ── */
-.cred{padding:120px 0;background:#fff;position:relative;overflow:hidden}
+.cred{padding:60px 0 100px;background:#fff;position:relative;overflow:hidden}
 .cred-inner{position:relative;z-index:2;text-align:center}
 .cred .h2{margin-bottom:16px}
 .cred .sub{max-width:520px;margin:0 auto 32px}
@@ -311,6 +320,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
   width:min(1040px,100%);
   margin:26px auto 0;
   padding:16px 0 14px;
+  text-align:center;
 }
 .cred-carousel-head{
   text-align:center;
@@ -320,11 +330,18 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
   letter-spacing:.12em;
   text-transform:uppercase;
   color:var(--g500);
+  position:relative;
+  display:inline-block;
+}
+.cred-carousel-head::before,.cred-carousel-head::after{
+  content:'';display:inline-block;width:40px;height:1px;
+  background:var(--g200);vertical-align:middle;margin:0 14px;
 }
 .cred-carousel-wrap{
   width:100%;
   overflow:hidden;
-  margin-top:12px;
+  margin-top:44px;
+  padding:16px 0 24px;
   position:relative;
   -webkit-mask-image:linear-gradient(90deg,transparent 0%,#000 9%,#000 91%,transparent 100%);
   mask-image:linear-gradient(90deg,transparent 0%,#000 9%,#000 91%,transparent 100%);
@@ -335,7 +352,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
   width:max-content;
   animation:credTeamScroll 38s linear infinite;
 }
-.cred-carousel-track:hover{animation-play-state:paused}
 @keyframes credTeamScroll{
   0%{transform:translateX(0)}
   100%{transform:translateX(-50%)}
@@ -347,6 +363,16 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
   gap:9px;
   width:154px;
   flex-shrink:0;
+  transition:transform .3s ease;
+}
+/* Wave float — each card bobs at its own offset */
+.cred-team-card:nth-child(odd){animation:credFloat 4s ease-in-out infinite}
+.cred-team-card:nth-child(even){animation:credFloat 4s .5s ease-in-out infinite}
+.cred-team-card:nth-child(3n){animation-delay:1s}
+.cred-team-card:nth-child(4n){animation-delay:1.5s}
+@keyframes credFloat{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-6px)}
 }
 .cred-team-photo{
   position:relative;
@@ -354,17 +380,23 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
   height:106px;
   border-radius:26px;
   overflow:hidden;
-  transition:transform .2s ease;
+  box-shadow:0 4px 16px rgba(0,0,0,.06);
+  border:2.5px solid transparent;
+  transition:transform .4s cubic-bezier(.34,1.56,.64,1),box-shadow .4s ease,border-color .3s ease;
 }
 .cred-team-card:hover .cred-team-photo{
-  transform:translateY(-1px);
+  transform:translateY(-8px);
+  box-shadow:0 12px 28px rgba(74,103,65,.2);
 }
 .cred-team-photo img{
   width:100%;
   height:100%;
   object-fit:cover;
+  object-position:center 15%;
   display:block;
+  transition:filter .3s ease;
 }
+.cred-team-card:hover .cred-team-photo img{filter:brightness(1.05)}
 .cred-team-name{
   font-size:14px;
   font-weight:600;
@@ -372,7 +404,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
   letter-spacing:-.01em;
   line-height:1.2;
   white-space:nowrap;
+  transition:color .3s ease,letter-spacing .3s ease;
 }
+.cred-team-card:hover .cred-team-name{color:var(--accent);letter-spacing:.02em}
 .cred-team-division{
   font-size:10px;
   font-weight:500;
@@ -380,33 +414,57 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
   letter-spacing:.08em;
   text-transform:uppercase;
   white-space:nowrap;
+  transition:color .3s ease;
 }
+.cred-team-card:hover .cred-team-division{color:var(--accent)}
 
 /* ── Pricing Section ── */
-#pricing{background:#fff;padding:120px 0}
+#pricing{background:var(--g50);padding:100px 0;position:relative;overflow:hidden}
 .pricing-header{text-align:center;max-width:620px;margin:0 auto 56px}
-.pricing-header .sub{margin:0 auto}
-.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:960px;margin:0 auto}
-.price-card{background:var(--g50);border:1.5px solid var(--g200);border-radius:var(--radius);padding:36px 30px;text-align:center;transition:border-color .2s,box-shadow .2s;display:flex;flex-direction:column}
-.price-card:hover{box-shadow:var(--sh);border-color:var(--g300)}
-.price-card.featured{border-color:var(--accent);background:#fff;box-shadow:var(--sh),0 0 0 4px rgba(74,103,65,.07)}
-.price-badge{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:14px;min-height:18px}
-.price-name{font-family:var(--heading);font-size:20px;font-weight:400;letter-spacing:-.01em;margin-bottom:6px}
-.price-amt{font-family:var(--heading);font-size:48px;font-weight:700;letter-spacing:-.04em;color:var(--black);line-height:1;margin-bottom:4px}
+.pricing-header .sub{margin:24px auto 0}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:980px;margin:0 auto;align-items:start}
+.price-card{background:#fff;border:1.5px solid var(--g200);border-radius:14px;padding:40px 32px;text-align:center;display:flex;flex-direction:column;position:relative;opacity:0;transform:translateY(30px);transition:transform .45s cubic-bezier(.34,1.56,.64,1),box-shadow .35s ease,border-color .3s ease,opacity .4s ease}
+.price-card.in{opacity:1;transform:translateY(0)}
+.price-card:hover{box-shadow:0 8px 32px rgba(50,48,47,.1),0 2px 8px rgba(50,48,47,.06);border-color:var(--g300);transform:translateY(-4px)}
+.price-card.in:hover{transform:translateY(-4px)}
+.price-card.featured{border-color:var(--accent);background:#fff;box-shadow:0 8px 32px rgba(74,103,65,.1),0 2px 8px rgba(74,103,65,.06);transform:translateY(30px) scale(1.03)}
+.price-card.featured.in{transform:scale(1.03)}
+.price-card.featured:hover{box-shadow:0 16px 48px rgba(74,103,65,.15),0 4px 12px rgba(74,103,65,.08);transform:scale(1.05) translateY(-4px)}
+.price-badge{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:var(--accent);display:inline-block;padding:4px 12px;border-radius:20px;margin:0 auto 16px;min-height:18px}
+.price-badge:empty,.price-badge-empty{background:transparent;color:transparent}
+.price-card:not(.featured) .price-badge{background:transparent;color:var(--accent)}
+.price-name{font-family:var(--heading);font-size:22px;font-weight:500;letter-spacing:-.01em;margin-bottom:8px;color:var(--black)}
+.price-amt{font-family:var(--heading);font-size:52px;font-weight:700;letter-spacing:-.04em;color:var(--black);line-height:1;margin-bottom:4px}
 .price-amt span{font-size:18px;font-weight:600;color:var(--g400);letter-spacing:0}
-.price-term{font-size:13px;color:var(--g400);margin-bottom:24px}
-.price-features{text-align:left;margin-bottom:28px;flex:1}
-.price-feat{font-size:13px;color:var(--g500);padding:8px 0;border-bottom:1px solid var(--g200);display:flex;align-items:center;gap:8px}
+.price-term{font-size:13px;color:var(--g400);margin-bottom:28px}
+.price-features{text-align:left;margin-bottom:32px;flex:1}
+.price-feat{font-size:13px;color:var(--g500);padding:9px 0;border-bottom:1px solid var(--g200);display:flex;align-items:center;gap:8px;opacity:0;transform:translateX(-14px);transition:opacity .35s ease,transform .35s cubic-bezier(.34,1.56,.64,1)}
+.price-feat.in{opacity:1;transform:translateX(0)}
 .price-feat:last-child{border-bottom:none}
-.price-feat::before{content:'';display:inline-block;width:14px;height:14px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-6' fill='none' stroke='%234A6741' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center/contain;flex-shrink:0}
-.price-card .btn-primary,.price-card .btn-outline{width:100%;justify-content:center}
+.price-feat::before{content:'';display:inline-block;width:16px;height:16px;border-radius:50%;background:var(--accent-light) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-6' fill='none' stroke='%234A6741' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center/10px;flex-shrink:0;transform:scale(0) rotate(-45deg);transition:transform .4s cubic-bezier(.34,1.56,.64,1)}
+.price-feat.in::before{transform:scale(1) rotate(0deg)}
+.price-card .btn-primary,.price-card .btn-outline{width:100%;justify-content:center;transition:transform .25s ease,box-shadow .25s ease,background .2s ease,color .2s ease,border-color .2s ease}
+.price-card .btn-primary:hover,.price-card .btn-outline:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(74,103,65,.2)}
+.price-divider{width:0;height:1px;background:var(--g200);margin:0 auto 28px;transition:width .6s .2s ease}
+.price-card.in .price-divider{width:100%}
 .price-guarantee{text-align:center;margin-top:36px;padding:20px;background:var(--green-bg);border:1px solid var(--green-bd);border-radius:var(--radius-sm);max-width:640px;margin-left:auto;margin-right:auto}
 .price-guarantee-title{font-size:15px;font-weight:700;color:var(--green);margin-bottom:4px}
 .price-guarantee-desc{font-size:13px;color:var(--g500);line-height:1.6}
 
 /* ── Guarantee Section ── */
-.guarantee{background:var(--accent);color:#fff;padding:120px 0;text-align:center;position:relative;overflow:hidden}
+.guarantee{background:var(--accent);color:#fff;padding:100px 0;text-align:center;position:relative;overflow:hidden}
 .guar-bg-pattern{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+.guar-circle{position:absolute;pointer-events:none;z-index:1;opacity:.18;will-change:transform;color:rgba(255,255,255,1)}
+.guar-circle svg{display:block;width:100%;height:100%}
+.guar-icon svg{transition:transform .4s cubic-bezier(.34,1.56,.64,1)}
+.guar-icon:hover svg{transform:scale(1.15) rotate(-5deg)}
+.guar-amount-wrap{transition:transform .3s ease}
+.guar-number{transition:text-shadow .4s ease}
+.guarantee:hover .guar-number{text-shadow:0 0 80px rgba(255,255,255,.35),0 0 160px rgba(255,255,255,.15)}
+.guar-divider{transition:width .6s ease}
+.guarantee .guar-divider.in-guar{width:100px}
+.guar-proof{transition:transform .3s ease,color .3s ease}
+.guar-proof:hover{transform:translateY(-2px);color:#fff}
 .guar-icon{margin-bottom:20px}
 .guar-icon svg{width:44px;height:44px}
 .guar-eyebrow{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:24px}
@@ -426,23 +484,45 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
 .btn-guar:hover{background:rgba(255,255,255,.92);transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,.2)}
 
 /* ── Stakes ── */
-.stakes{background:var(--black);color:var(--white);padding:120px 0;position:relative;overflow:hidden}
-.stakes-bg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+.stakes{background:#fff;color:var(--black);padding:100px 0;position:relative;overflow:hidden}
+.stakes-fill{position:absolute;bottom:0;left:0;right:0;height:0;background:#f5f4f1;pointer-events:none;z-index:0}
+.stakes-fill-wave{position:absolute;top:-12px;left:0;width:200%;height:14px;pointer-events:none;animation:stakesFillWave 6s ease-in-out infinite}
+@keyframes stakesFillWave{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.stakes-bg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;opacity:.3}
 .stakes-inner{position:relative;z-index:2}
 .stakes-layout{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
 .stakes-eyebrow{display:inline-block;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--g400);margin-bottom:20px}
-.stakes-h2{font-family:var(--heading);font-size:clamp(1.5rem,2.8vw,2.1rem);font-weight:400;color:#fff;line-height:1.35;letter-spacing:-.015em;margin-bottom:32px}
-.stakes-body p{font-family:var(--body);font-size:clamp(.88rem,1.05vw,.96rem);color:var(--g400);line-height:1.8;font-weight:300;margin-bottom:20px}
-.stakes-body p:last-child{margin-bottom:0;color:var(--g300);font-family:var(--heading);font-style:italic;font-size:clamp(.92rem,1.1vw,1rem);line-height:1.6}
+.stakes-h2{font-family:var(--heading);font-size:clamp(1.5rem,2.8vw,2.1rem);font-weight:400;color:var(--black);line-height:1.35;letter-spacing:-.015em;margin-bottom:32px}
+.stakes-body p{font-family:var(--body);font-size:clamp(.88rem,1.05vw,.96rem);color:var(--g500);line-height:1.8;font-weight:300;margin:0}
+.stakes-block{margin-bottom:28px;padding:20px 24px;border-left:2px solid rgba(0,0,0,.08);transition:border-color .4s ease,transform .35s ease,box-shadow .35s ease;opacity:0;transform:translateX(-20px)}
+.stakes-block.in{opacity:1;transform:translateX(0)}
+.stakes-block:hover{border-left-color:var(--accent);transform:translateX(6px);box-shadow:0 4px 20px rgba(0,0,0,.04)}
+.stakes-block:last-of-type{margin-bottom:0}
+.stakes-block-label{font-family:var(--body);font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--black);margin-bottom:10px;transition:color .3s ease,letter-spacing .3s ease}
+.stakes-block:hover .stakes-block-label{color:var(--accent);letter-spacing:.12em}
+.stakes-highlight{color:var(--black);font-weight:500;transition:color .3s ease,background .3s ease;padding:0 2px;border-radius:2px}
+.stakes-block:hover .stakes-highlight{color:var(--accent);background:rgba(74,103,65,.06)}
+.stakes-block--red:hover{border-left-color:var(--red);box-shadow:0 4px 20px rgba(184,82,82,.06)}
+.stakes-block--red:hover .stakes-block-label{color:var(--red)}
+.stakes-block--red:hover .stakes-highlight{color:var(--red);background:rgba(184,82,82,.06)}
+.stakes-callout{padding:20px 24px;border-radius:var(--radius);background:#fff;margin-bottom:16px;text-align:center;opacity:0;transform:translateY(16px) scale(.97);transition:opacity .5s ease,transform .5s cubic-bezier(.34,1.56,.64,1)}
+.stakes-callout.in{opacity:1;transform:translateY(0) scale(1)}
+.stakes-callout:hover{box-shadow:0 6px 24px rgba(184,82,82,.08)}
+.stakes-callout p{font-family:var(--heading);font-size:clamp(.95rem,1.2vw,1.05rem);font-weight:400;font-style:normal;color:var(--red);line-height:1.5;margin:0;letter-spacing:-.01em}
+.stakes-callout span{font-style:italic}
 .stakes-viz{position:sticky;top:120px}
-.stakes-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);padding:16px 18px;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+.stakes-card{background:var(--black);border:1px solid rgba(0,0,0,.1);border-radius:var(--radius);padding:16px 18px;opacity:0;transform:translateY(18px);transition:opacity .8s cubic-bezier(.22,1,.36,1),transform .8s cubic-bezier(.22,1,.36,1)}
+.stakes-card.in{opacity:1;transform:translateY(0)}
+.stakes-row{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--radius-sm);will-change:transform;opacity:0;transform:translateX(16px);transition:opacity .5s cubic-bezier(.22,1,.36,1),transform .5s cubic-bezier(.22,1,.36,1),background .3s ease,box-shadow .3s ease}
+.stakes-row.in{opacity:1;transform:translateX(0)}
+.stakes-row:not(.yours):hover{background:rgba(255,255,255,.03)}
+.stakes-row.yours{background:rgba(184,82,82,.08);border:1px solid rgba(184,82,82,.15);animation:stakesYourPulse 3s ease-in-out infinite}
+@keyframes stakesYourPulse{0%,100%{box-shadow:0 0 0 0 rgba(184,82,82,0)}50%{box-shadow:0 0 0 4px rgba(184,82,82,.08)}}
 .stakes-card-header{font-family:var(--mono);font-size:10px;color:var(--g400);letter-spacing:.06em;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
 .stakes-live{display:flex;align-items:center;gap:5px;font-size:9px;color:var(--g500);letter-spacing:.08em}
 .stakes-live-dot{width:5px;height:5px;border-radius:50%;background:var(--red);animation:stakesPulse 2.5s ease-in-out infinite}
 @keyframes stakesPulse{0%,100%{opacity:1}50%{opacity:.3}}
 .stakes-list{display:flex;flex-direction:column;gap:2px;position:relative;padding-bottom:60px}
-.stakes-row{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--radius-sm);will-change:transform}
-.stakes-row.yours{background:rgba(184,82,82,.08);border:1px solid rgba(184,82,82,.15)}
 .stakes-pos{font-family:var(--mono);font-size:12px;font-weight:500;color:var(--g500);width:20px;text-align:center;flex-shrink:0}
 .stakes-row.yours .stakes-pos{color:var(--red)}
 .stakes-thumb{
@@ -467,7 +547,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
 .stakes-caption{font-family:var(--mono);font-size:9px;color:var(--g600);margin-top:12px;text-align:center;letter-spacing:.02em}
 
 /* ── Final CTA + Footer ── */
-#cta{padding:100px 0 86px;background:#fff}
+#cta{padding:100px 0;background:#fff}
 .cta-card{
   background:var(--accent);
   border-radius:var(--radius);
@@ -495,6 +575,14 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
   border-radius:var(--radius-sm);
   margin-bottom:28px;
   position:relative;
+  cursor:pointer;
+  text-decoration:none;
+  transition:transform .5s cubic-bezier(.34,1.56,.64,1),box-shadow .3s ease;
+  box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+.cta-ey:hover{
+  transform:translateY(4px) scale(.97);
+  box-shadow:0 0 0 rgba(0,0,0,0);
 }
 .cta-h2{
   font-family:var(--heading);
@@ -540,11 +628,35 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
   border-radius:var(--radius-sm);
   text-decoration:none;
   box-shadow:0 4px 20px rgba(50,48,47,.3);
-  transition:transform .15s,box-shadow .15s;
+  transition:transform .25s ease,box-shadow .25s ease,background .3s ease,color .3s ease;
   position:relative;
 }
-.btn-white:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(50,48,47,.4)}
+.btn-white:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,.45);background:var(--black);color:#fff}
 .cta-note{margin-top:18px;font-size:13px;color:rgba(255,255,255,.3);position:relative}
+
+/* CTA floating money */
+.cta-money{position:absolute;top:0;left:0;color:rgba(255,255,255,.18);pointer-events:none;z-index:0;will-change:transform;line-height:1;display:block}
+.cta-money svg{display:block;width:100%;height:100%}
+
+/* CTA subtle animations */
+.cta-card::after{
+  content:'';position:absolute;bottom:-40%;left:50%;transform:translateX(-50%);
+  width:60%;height:50%;border-radius:50%;
+  background:radial-gradient(ellipse,rgba(255,255,255,.06) 0%,transparent 70%);
+  pointer-events:none;animation:ctaGlow 6s ease-in-out infinite;
+}
+@keyframes ctaGlow{0%,100%{opacity:.4;transform:translateX(-50%) scale(1)}50%{opacity:1;transform:translateX(-50%) scale(1.15)}}
+
+.cta-card.in .cta-ey{animation:ctaFadeIn .6s ease both}
+@keyframes ctaFadeIn{from{opacity:0}to{opacity:1}}
+.cta-card.in .cta-h2{animation:ctaFadeUp .6s .15s ease both}
+.cta-card.in .cta-sub{animation:ctaFadeUp .6s .3s ease both}
+.cta-card.in .btn-white{animation:ctaFadeUp .6s .45s ease both}
+.cta-card.in .cta-note{animation:ctaFadeUp .6s .55s ease both}
+@keyframes ctaFadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+.cta-card.in .em-mark-w::after{animation:ctaUnderlineDraw .8s .6s ease both}
+@keyframes ctaUnderlineDraw{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
 
 footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
 .footer-grid{display:grid;grid-template-columns:1fr;gap:24px;margin-bottom:36px}
@@ -574,15 +686,14 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
   .logo-track{gap:36px}
   .logo-track svg{height:18px}
   .logo-track svg.logo-lg{height:24px}
-  .problem{padding:80px 0}
-  .problem-stat{margin-bottom:56px;padding:16px 0 12px}
-  .problem-stat-num-wrap{padding:0 0 10px}
-  .problem-stat-num{font-size:clamp(3rem,10vw,4rem)}
-  .problem-stat-num-wrap::after{width:50%}
-  .problem-cards{grid-template-columns:1fr;gap:32px;margin-top:48px}
-  .problem-card{padding:24px 0;border-top:1px solid rgba(255,255,255,0.08)}
-  .problem-card:first-child{border-top:none;padding-top:0}
-  .problem-bridge{margin-top:56px}
+  .problem{padding:80px 0 72px}
+  .rg-cards{grid-template-columns:1fr}
+  .rg-card{border-left:none!important;padding:32px 0!important;border-bottom:1px solid rgba(255,255,255,.07)}
+  .rg-card:last-child{border-bottom:none}
+  .rg-card h3{min-height:auto}
+  .rg-counter-box{padding:24px 36px 28px}
+  .rg-divider{margin:48px auto}
+  .rg-closing{margin-top:56px}
   #solution{padding:80px 0}
   .bento-grid{grid-template-columns:1fr}
   .bento-tile,.bento-ranking,.bento-photo{grid-column:span 1}
@@ -592,8 +703,9 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
   .bt-rank-thumb{width:36px;height:36px}
   .bt-rank-bar{width:52px}
   #pricing{padding:80px 0}
-  .pricing-grid{grid-template-columns:1fr}
+  .pricing-grid{grid-template-columns:1fr;max-width:400px}
   .price-card.featured{order:-1}
+  .price-card.featured,.price-card.featured.in{transform:scale(1)}
   .guarantee{padding:80px 0}
   .guar-proofs{flex-direction:column;gap:14px}
   .hiw{padding:80px 0}
@@ -647,9 +759,16 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
   .guar-number{text-shadow:none}
   .stakes-live-dot{animation:none;opacity:.6}
   .stakes-row{will-change:auto}
-  .problem-stat-num{opacity:1;transform:none;transition:none}
-  .problem-stat-num-wrap::before{opacity:1;transition:none}
-  .problem-stat-num-wrap::after{transform:translateX(-50%) scaleX(1);transition:none}
+  .rg-counter-glow{opacity:1;transition:none}
+  .rg-digit{animation:none!important}
+  .rg-divider-dot{animation:none;opacity:.3}
+  .rg-divider.rg-anim .rg-divider-line{animation:none;transform:none}
+  .rg-cards.in .rg-card{animation:none;opacity:1;transform:none}
+  .cta-card::after{animation:none}
+  .cta-money{opacity:.04}
+  .cta-card.in .cta-ey,.cta-card.in .cta-h2,.cta-card.in .cta-sub,.cta-card.in .btn-white,.cta-card.in .cta-note{animation:none;opacity:1;transform:none}
+  .r.in .em-mark::after{animation:none;clip-path:none}
+  .cta-card.in .em-mark-w::after{animation:none;clip-path:none}
 }
 </style>
 </head>
@@ -713,36 +832,51 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
 <section class="problem">
   <div class="w">
 
-    <!-- Stat Anchor -->
-    <div class="problem-stat r">
-      <div class="problem-stat-num-wrap">
-        <div class="problem-stat-num" data-target="30000" aria-label="$30,000">&nbsp;</div>
-      </div>
-      <p class="problem-stat-label">The average annual revenue gap between self-managed and professionally optimized Airbnb listings.</p>
-    </div>
-
-    <!-- Pain Point Cards -->
-    <div class="problem-cards">
-      <div class="problem-card r d1">
-        <div class="problem-card-num">01</div>
-        <h3 class="problem-card-title">When's the last time you checked your ranking?</h3>
-        <p class="problem-card-desc">Most hosts obsess over nightly rates. But Airbnb's algorithm weighs conversion velocity, response time, and booking momentum. A well-priced listing on page three still loses.</p>
-      </div>
-      <div class="problem-card r d2">
-        <div class="problem-card-num">02</div>
-        <h3 class="problem-card-title">Did you adjust when the algorithm changed?</h3>
-        <p class="problem-card-desc">Airbnb overhauled its ranking system in 2025. The new listing boost is gone. Conversion-based weighting replaced it. Hosts who didn't adapt are being quietly buried, and most of them don't know it yet.</p>
-      </div>
-      <div class="problem-card r d3">
-        <div class="problem-card-num">03</div>
-        <h3 class="problem-card-title">Your competition isn't other hosts anymore.</h3>
-        <p class="problem-card-desc">Revenue management companies now run dynamic pricing, automated messaging, and A/B-tested listing copy across thousands of properties. The bar moved. The question is whether your listing moved with it.</p>
+    <!-- Counter -->
+    <div class="rg-counter-wrap r" id="rg-section">
+      <div class="rg-counter-box">
+        <div class="rg-counter-glow" id="rg-glow"></div>
+        <div class="rg-counter">
+          <span class="rg-dollar">$</span><span id="rg-digits"></span>
+        </div>
       </div>
     </div>
-
-    <!-- Bridge Line -->
-    <div class="problem-bridge r">
-      <p>You don't need to work harder. You need to see what you're missing.</p>
+    <!-- Subtitle -->
+    <p class="rg-sub r d1">The average annual revenue gap between self-managed and professionally optimized Airbnb listings.</p>
+    <!-- Divider -->
+    <div class="rg-divider">
+      <div class="rg-divider-line"></div>
+      <div class="rg-divider-dot"></div>
+      <div class="rg-divider-line"></div>
+    </div>
+    <!-- 3 Cards -->
+    <div class="rg-cards r d2">
+      <div class="rg-card">
+        <div class="rg-card-num">01</div>
+        <h3>When's the last time you checked your ranking?</h3>
+        <div class="rg-card-bar"></div>
+        <p>Most hosts obsess over nightly rates. But Airbnb's algorithm weighs conversion velocity, response time, and booking momentum. A well-priced listing on page three still loses.</p>
+      </div>
+      <div class="rg-card">
+        <div class="rg-card-num">02</div>
+        <h3>Did you adjust when the algorithm changed?</h3>
+        <div class="rg-card-bar"></div>
+        <p>Airbnb overhauled its ranking system in 2025. The new listing boost is gone. Conversion-based weighting replaced it. Hosts who didn't adapt are being quietly buried, and most of them don't know it yet.</p>
+      </div>
+      <div class="rg-card">
+        <div class="rg-card-num">03</div>
+        <h3>Your competition isn't other hosts anymore.</h3>
+        <div class="rg-card-bar"></div>
+        <p>Revenue management companies now run dynamic pricing, automated messaging, and A/B-tested listing copy across thousands of properties. The bar moved. The question is whether your listing moved with it.</p>
+      </div>
+    </div>
+    <!-- Closing CTA -->
+    <div class="rg-closing r d3">
+      <p class="rg-closing-line">You don't need to work harder.</p>
+      <p class="rg-closing-em">You need to see what you're missing.</p>
+      <a href="https://revwhisper.fillout.com/discovery" target="_blank" rel="noopener noreferrer" class="rg-cta">
+        Book your free strategy call <span class="rg-cta-arrow">→</span>
+      </a>
     </div>
 
   </div>
@@ -1012,11 +1146,11 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
         <div class="hiw-img-wrap">
           <img src="../images/properties/livingroom-after.webp" alt="Beautiful vacation rental living room managed by RevWhisper" loading="lazy">
 
-          <!-- Floating calendar card -->
+          <!-- Floating calendar card (dynamic) -->
           <div class="hiw-cal-card">
             <div class="hiw-cal-header">
-              <span class="hiw-cal-month">March 2026</span>
-              <span class="hiw-cal-badge">29 nights booked</span>
+              <span class="hiw-cal-month"></span>
+              <span class="hiw-cal-badge"><span class="hiw-cal-count">0</span> nights booked</span>
             </div>
             <div class="hiw-cal-grid">
               <span class="hiw-cal-dh">S</span>
@@ -1026,41 +1160,7 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
               <span class="hiw-cal-dh">T</span>
               <span class="hiw-cal-dh">F</span>
               <span class="hiw-cal-dh">S</span>
-              <span class="hiw-cal-cell booked">1</span>
-              <span class="hiw-cal-cell booked">2</span>
-              <span class="hiw-cal-cell booked">3</span>
-              <span class="hiw-cal-cell booked">4</span>
-              <span class="hiw-cal-cell booked">5</span>
-              <span class="hiw-cal-cell booked">6</span>
-              <span class="hiw-cal-cell booked">7</span>
-              <span class="hiw-cal-cell booked">8</span>
-              <span class="hiw-cal-cell booked">9</span>
-              <span class="hiw-cal-cell booked">10</span>
-              <span class="hiw-cal-cell">11</span>
-              <span class="hiw-cal-cell booked">12</span>
-              <span class="hiw-cal-cell booked">13</span>
-              <span class="hiw-cal-cell booked">14</span>
-              <span class="hiw-cal-cell booked">15</span>
-              <span class="hiw-cal-cell booked">16</span>
-              <span class="hiw-cal-cell booked">17</span>
-              <span class="hiw-cal-cell booked">18</span>
-              <span class="hiw-cal-cell booked">19</span>
-              <span class="hiw-cal-cell booked">20</span>
-              <span class="hiw-cal-cell booked">21</span>
-              <span class="hiw-cal-cell booked">22</span>
-              <span class="hiw-cal-cell booked">23</span>
-              <span class="hiw-cal-cell">24</span>
-              <span class="hiw-cal-cell booked">25</span>
-              <span class="hiw-cal-cell booked">26</span>
-              <span class="hiw-cal-cell booked">27</span>
-              <span class="hiw-cal-cell booked">28</span>
-              <span class="hiw-cal-cell booked">29</span>
-              <span class="hiw-cal-cell booked">30</span>
-              <span class="hiw-cal-cell booked">31</span>
-              <span class="hiw-cal-cell empty"></span>
-              <span class="hiw-cal-cell empty"></span>
-              <span class="hiw-cal-cell empty"></span>
-              <span class="hiw-cal-cell empty"></span>
+              <!-- Days populated by JS -->
             </div>
           </div>
         </div>
@@ -1073,10 +1173,10 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
         <div class="hiw-vstep r">
           <div class="hiw-vstep-icon">
             <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="17" cy="17" r="9"/>
-              <line x1="23.5" y1="23.5" x2="32" y2="32"/>
-              <line x1="28" y1="14" x2="28" y2="22"/>
-              <line x1="24" y1="18" x2="32" y2="18"/>
+              <circle cx="16" cy="16" r="9"/>
+              <line x1="23" y1="23" x2="32" y2="32"/>
+              <line x1="16" y1="11" x2="16" y2="21"/>
+              <line x1="11" y1="16" x2="21" y2="16"/>
             </svg>
           </div>
           <div class="hiw-vstep-body">
@@ -1098,7 +1198,7 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
           <div class="hiw-vstep-body">
             <span class="hiw-vstep-n">STEP 02</span>
             <h3 class="hiw-vstep-title">Onboarding</h3>
-            <p class="hiw-vstep-desc">A guided setup that connects your accounts, aligns on goals, and establishes the strategy — without disrupting a single booking.</p>
+            <p class="hiw-vstep-desc">A guided setup that connects your accounts, aligns on goals, and establishes the strategy without disrupting a single booking.</p>
           </div>
         </div>
 
@@ -1145,8 +1245,8 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
   <div class="w cred-inner">
 
     <div class="eyebrow r">Why trust us</div>
-    <h2 class="h2 r d1">We use RevWhisper on our own portfolio</h2>
-    <p class="sub r d2">We're not just building tools — we're hosts who depend on them. Our team manages properties, competes in real markets, and stakes our own revenue on every feature we ship.</p>
+    <h2 class="h2 r d1">We use <em class="em-mark" style="font-style:italic;color:var(--accent)">RevWhisper</em> on our own portfolio</h2>
+    <p class="sub r d2">We're not just building tools. We're hosts who depend on them. Our team manages properties, competes in real markets, and stakes our own revenue on every feature we ship.</p>
     <div class="r d3" style="text-align:center"><a href="/get-started" class="btn-accent">Book a call →</a></div>
 
     <div class="cred-carousel-shell r d3" aria-label="RevWhisper team divisions">
@@ -1255,20 +1355,26 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
      GUARANTEE
      ════════════════════════════════════════════════ -->
 <section id="guarantee" class="guarantee">
-  <svg class="guar-bg-pattern" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <pattern id="guar-topo" x="0" y="0" width="200" height="200" patternUnits="userSpaceOnUse">
-        <circle cx="100" cy="100" r="30" fill="none" stroke="rgba(255,255,255,.04)" stroke-width=".8"/>
-        <circle cx="100" cy="100" r="55" fill="none" stroke="rgba(255,255,255,.03)" stroke-width=".6"/>
-        <circle cx="100" cy="100" r="80" fill="none" stroke="rgba(255,255,255,.025)" stroke-width=".5"/>
-        <circle cx="0" cy="0" r="40" fill="none" stroke="rgba(255,255,255,.03)" stroke-width=".6"/>
-        <circle cx="200" cy="200" r="45" fill="none" stroke="rgba(255,255,255,.03)" stroke-width=".6"/>
-        <circle cx="200" cy="0" r="35" fill="none" stroke="rgba(255,255,255,.025)" stroke-width=".5"/>
-        <circle cx="0" cy="200" r="50" fill="none" stroke="rgba(255,255,255,.025)" stroke-width=".5"/>
-      </pattern>
-    </defs>
-    <rect width="100%" height="100%" fill="url(#guar-topo)"/>
-  </svg>
+  <div class="guar-circle gc-bill"><svg viewBox="0 0 120 60" fill="none"><rect x="2" y="2" width="116" height="56" rx="6" stroke="currentColor" stroke-width="2"/><rect x="10" y="10" width="100" height="40" rx="3" stroke="currentColor" stroke-width="1" stroke-dasharray="4 3"/><circle cx="60" cy="30" r="14" stroke="currentColor" stroke-width="1.5"/><text x="60" y="36" text-anchor="middle" fill="currentColor" font-size="18" font-weight="600">$</text></svg></div>
+  <div class="guar-circle gc-coin"><svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="17" stroke="currentColor" stroke-width="2"/><circle cx="20" cy="20" r="12" stroke="currentColor" stroke-width="1"/><text x="20" y="26" text-anchor="middle" fill="currentColor" font-size="16" font-weight="600">$</text></svg></div>
+  <div class="guar-circle gc-bill"><svg viewBox="0 0 120 60" fill="none"><rect x="2" y="2" width="116" height="56" rx="6" stroke="currentColor" stroke-width="2"/><rect x="10" y="10" width="100" height="40" rx="3" stroke="currentColor" stroke-width="1" stroke-dasharray="4 3"/><circle cx="60" cy="30" r="14" stroke="currentColor" stroke-width="1.5"/><text x="60" y="36" text-anchor="middle" fill="currentColor" font-size="18" font-weight="600">$</text></svg></div>
+  <div class="guar-circle gc-coin"><svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="17" stroke="currentColor" stroke-width="2"/><circle cx="20" cy="20" r="12" stroke="currentColor" stroke-width="1"/><text x="20" y="26" text-anchor="middle" fill="currentColor" font-size="16" font-weight="600">$</text></svg></div>
+  <div class="guar-circle gc-bill"><svg viewBox="0 0 120 60" fill="none"><rect x="2" y="2" width="116" height="56" rx="6" stroke="currentColor" stroke-width="2"/><rect x="10" y="10" width="100" height="40" rx="3" stroke="currentColor" stroke-width="1" stroke-dasharray="4 3"/><circle cx="60" cy="30" r="14" stroke="currentColor" stroke-width="1.5"/><text x="60" y="36" text-anchor="middle" fill="currentColor" font-size="18" font-weight="600">$</text></svg></div>
+  <div class="guar-circle gc-coin"><svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="17" stroke="currentColor" stroke-width="2"/><circle cx="20" cy="20" r="12" stroke="currentColor" stroke-width="1"/><text x="20" y="26" text-anchor="middle" fill="currentColor" font-size="16" font-weight="600">$</text></svg></div>
+  <div class="guar-circle gc-bill"><svg viewBox="0 0 120 60" fill="none"><rect x="2" y="2" width="116" height="56" rx="6" stroke="currentColor" stroke-width="2"/><rect x="10" y="10" width="100" height="40" rx="3" stroke="currentColor" stroke-width="1" stroke-dasharray="4 3"/><circle cx="60" cy="30" r="14" stroke="currentColor" stroke-width="1.5"/><text x="60" y="36" text-anchor="middle" fill="currentColor" font-size="18" font-weight="600">$</text></svg></div>
+  <div class="guar-circle gc-coin"><svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="17" stroke="currentColor" stroke-width="2"/><circle cx="20" cy="20" r="12" stroke="currentColor" stroke-width="1"/><text x="20" y="26" text-anchor="middle" fill="currentColor" font-size="16" font-weight="600">$</text></svg></div>
+  <div class="guar-circle gc-bill"><svg viewBox="0 0 120 60" fill="none"><rect x="2" y="2" width="116" height="56" rx="6" stroke="currentColor" stroke-width="2"/><rect x="10" y="10" width="100" height="40" rx="3" stroke="currentColor" stroke-width="1" stroke-dasharray="4 3"/><circle cx="60" cy="30" r="14" stroke="currentColor" stroke-width="1.5"/><text x="60" y="36" text-anchor="middle" fill="currentColor" font-size="18" font-weight="600">$</text></svg></div>
+  <div class="guar-circle gc-coin"><svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="17" stroke="currentColor" stroke-width="2"/><circle cx="20" cy="20" r="12" stroke="currentColor" stroke-width="1"/><text x="20" y="26" text-anchor="middle" fill="currentColor" font-size="16" font-weight="600">$</text></svg></div>
+  <div class="guar-circle gc-bill"><svg viewBox="0 0 120 60" fill="none"><rect x="2" y="2" width="116" height="56" rx="6" stroke="currentColor" stroke-width="2"/><rect x="10" y="10" width="100" height="40" rx="3" stroke="currentColor" stroke-width="1" stroke-dasharray="4 3"/><circle cx="60" cy="30" r="14" stroke="currentColor" stroke-width="1.5"/><text x="60" y="36" text-anchor="middle" fill="currentColor" font-size="18" font-weight="600">$</text></svg></div>
+  <div class="guar-circle gc-coin"><svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="17" stroke="currentColor" stroke-width="2"/><circle cx="20" cy="20" r="12" stroke="currentColor" stroke-width="1"/><text x="20" y="26" text-anchor="middle" fill="currentColor" font-size="16" font-weight="600">$</text></svg></div>
+  <div class="guar-circle gc-bill"><svg viewBox="0 0 120 60" fill="none"><rect x="2" y="2" width="116" height="56" rx="6" stroke="currentColor" stroke-width="2"/><rect x="10" y="10" width="100" height="40" rx="3" stroke="currentColor" stroke-width="1" stroke-dasharray="4 3"/><circle cx="60" cy="30" r="14" stroke="currentColor" stroke-width="1.5"/><text x="60" y="36" text-anchor="middle" fill="currentColor" font-size="18" font-weight="600">$</text></svg></div>
+  <div class="guar-circle gc-coin"><svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="17" stroke="currentColor" stroke-width="2"/><circle cx="20" cy="20" r="12" stroke="currentColor" stroke-width="1"/><text x="20" y="26" text-anchor="middle" fill="currentColor" font-size="16" font-weight="600">$</text></svg></div>
+  <div class="guar-circle gc-bill"><svg viewBox="0 0 120 60" fill="none"><rect x="2" y="2" width="116" height="56" rx="6" stroke="currentColor" stroke-width="2"/><rect x="10" y="10" width="100" height="40" rx="3" stroke="currentColor" stroke-width="1" stroke-dasharray="4 3"/><circle cx="60" cy="30" r="14" stroke="currentColor" stroke-width="1.5"/><text x="60" y="36" text-anchor="middle" fill="currentColor" font-size="18" font-weight="600">$</text></svg></div>
+  <div class="guar-circle gc-coin"><svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="17" stroke="currentColor" stroke-width="2"/><circle cx="20" cy="20" r="12" stroke="currentColor" stroke-width="1"/><text x="20" y="26" text-anchor="middle" fill="currentColor" font-size="16" font-weight="600">$</text></svg></div>
+  <div class="guar-circle gc-bill"><svg viewBox="0 0 120 60" fill="none"><rect x="2" y="2" width="116" height="56" rx="6" stroke="currentColor" stroke-width="2"/><rect x="10" y="10" width="100" height="40" rx="3" stroke="currentColor" stroke-width="1" stroke-dasharray="4 3"/><circle cx="60" cy="30" r="14" stroke="currentColor" stroke-width="1.5"/><text x="60" y="36" text-anchor="middle" fill="currentColor" font-size="18" font-weight="600">$</text></svg></div>
+  <div class="guar-circle gc-coin"><svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="17" stroke="currentColor" stroke-width="2"/><circle cx="20" cy="20" r="12" stroke="currentColor" stroke-width="1"/><text x="20" y="26" text-anchor="middle" fill="currentColor" font-size="16" font-weight="600">$</text></svg></div>
+  <div class="guar-circle gc-bill"><svg viewBox="0 0 120 60" fill="none"><rect x="2" y="2" width="116" height="56" rx="6" stroke="currentColor" stroke-width="2"/><rect x="10" y="10" width="100" height="40" rx="3" stroke="currentColor" stroke-width="1" stroke-dasharray="4 3"/><circle cx="60" cy="30" r="14" stroke="currentColor" stroke-width="1.5"/><text x="60" y="36" text-anchor="middle" fill="currentColor" font-size="18" font-weight="600">$</text></svg></div>
+  <div class="guar-circle gc-coin"><svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="17" stroke="currentColor" stroke-width="2"/><circle cx="20" cy="20" r="12" stroke="currentColor" stroke-width="1"/><text x="20" y="26" text-anchor="middle" fill="currentColor" font-size="16" font-weight="600">$</text></svg></div>
 
   <div class="w" style="position:relative;z-index:2">
 
@@ -1287,9 +1393,9 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
       <span class="guar-period">risk</span>
     </div>
 
-    <h2 class="guar-headline r d2">We'll put our money where our mouth is.</h2>
+    <h2 class="guar-headline r d2">Money follows results. We make sure of it.</h2>
 
-    <p class="guar-copy r d2">We're so confident RevWhisper will increase your revenue that we guarantee at least <strong>$500/month in additional earnings</strong> — or we'll refund the difference. No hoops. No fine print. If we don't deliver, you don't pay.</p>
+    <p class="guar-copy r d2">We're so confident RevWhisper will increase your revenue that we guarantee at least <strong>$500/month in additional earnings</strong>, or we'll refund the difference. No hoops. No fine print. If we don't deliver, you don't pay.</p>
 
     <div class="guar-divider r d3"></div>
 
@@ -1329,8 +1435,9 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
       <div class="price-card">
         <div class="price-badge">&nbsp;</div>
         <div class="price-name">Monthly</div>
-        <div class="price-amt">$750<span>/mo</span></div>
+        <div class="price-amt" data-price="750">$750<span>/mo</span></div>
         <div class="price-term">3-month minimum commitment</div>
+        <div class="price-divider"></div>
         <div class="price-features">
           <div class="price-feat">Full revenue optimization engine</div>
           <div class="price-feat">Full listing optimization engine</div>
@@ -1344,8 +1451,9 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
       <div class="price-card featured">
         <div class="price-badge">Best Value</div>
         <div class="price-name">Annual</div>
-        <div class="price-amt">$500<span>/mo</span></div>
+        <div class="price-amt" data-price="500">$500<span>/mo</span></div>
         <div class="price-term">Billed annually · Save $3,000/year</div>
+        <div class="price-divider"></div>
         <div class="price-features">
           <div class="price-feat">Everything in Monthly</div>
           <div class="price-feat">Full revenue optimization engine</div>
@@ -1361,6 +1469,7 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
         <div class="price-name">Enterprise</div>
         <div class="price-amt" style="font-size:36px;padding-top:6px">Custom</div>
         <div class="price-term">Custom pricing for portfolios</div>
+        <div class="price-divider"></div>
         <div class="price-features">
           <div class="price-feat">Everything in Annual</div>
           <div class="price-feat">Unified portfolio dashboard</div>
@@ -1379,6 +1488,9 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
      STAKES
      ════════════════════════════════════════════════ -->
 <section id="stakes" class="stakes">
+  <div class="stakes-fill">
+    <svg class="stakes-fill-wave" viewBox="0 0 1200 14" preserveAspectRatio="none"><path d="M0,7 C150,2 300,12 450,7 C600,2 750,12 900,7 C1050,2 1200,12 1200,7 L1200,14 L0,14 Z" fill="#f5f4f1"/></svg>
+  </div>
   <svg class="stakes-bg" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <pattern id="stakes-topo" x="0" y="0" width="240" height="240" patternUnits="userSpaceOnUse">
@@ -1402,19 +1514,29 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
         <span class="stakes-eyebrow r">The Market Is Moving</span>
         <h2 class="stakes-h2 r d1">The bar is rising.<br>Every month you wait,<br>it rises without you.</h2>
         <div class="stakes-body r d2">
-          <p>Two years ago, your listing competed against other individual hosts. People like you&mdash;adjusting prices by feel, refreshing photos when they remembered, writing descriptions once and hoping for the best.</p>
-          <p>That market is gone.</p>
-          <p>Institutional operators now manage over 30% of top-performing short-term rentals in most major markets. They deploy revenue management teams, professional photographers on retainer, algorithmic pricing that updates 340+ times per day, and A/B-tested listing copy refined across thousands of properties. They treat search ranking like a growth metric, not a mystery.</p>
-          <p>Meanwhile, Airbnb has quietly restructured its algorithm. Static listings&mdash;ones that don&rsquo;t demonstrate consistent conversion momentum, fresh content signals, and competitive pricing responsiveness&mdash;are being deprioritized. Not penalized. Just... gently lowered. A fraction of a position per week. Invisible until you check your bookings three months from now and wonder what changed.</p>
-          <p>Nothing changed. Everything around you did.</p>
+          <div class="stakes-block stakes-block--red">
+            <h4 class="stakes-block-label">The old game is over</h4>
+            <p>Two years ago, your listing competed against other individual hosts. People adjusting prices by feel, refreshing photos when they remembered, writing descriptions once and hoping for the best. <span class="stakes-highlight">That market is gone.</span></p>
+          </div>
+          <div class="stakes-block">
+            <h4 class="stakes-block-label">The new competition</h4>
+            <p>Institutional operators now manage <span class="stakes-highlight">over 30% of top-performing short-term rentals</span> in most major markets. They deploy revenue management teams, professional photographers on retainer, algorithmic pricing that updates <span class="stakes-highlight">340+ times per day</span>, and A/B-tested listing copy refined across thousands of properties.</p>
+          </div>
+          <div class="stakes-block">
+            <h4 class="stakes-block-label">The algorithm shifted</h4>
+            <p>Airbnb restructured its algorithm. Static listings that don't demonstrate consistent conversion momentum, fresh content signals, and competitive pricing responsiveness are being <span class="stakes-highlight">deprioritized</span>. A fraction of a position per week. Invisible until you check your bookings three months later and realize what happened.</p>
+          </div>
         </div>
       </div>
 
       <!-- Ranking Decay Visualization -->
       <div class="stakes-viz r d2">
+        <div class="stakes-callout">
+          <p>Nothing changed. <span>Everything around you did.</span></p>
+        </div>
         <div class="stakes-card">
           <div class="stakes-card-header">
-            <span>Search Results &mdash; Poconos, PA</span>
+            <span>Search Results · Poconos, PA</span>
             <span class="stakes-live"><span class="stakes-live-dot"></span>Live</span>
           </div>
           <div class="stakes-list" id="stakesRankList">
@@ -1542,7 +1664,17 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
 <section id="cta">
   <div class="w">
     <div class="cta-card r">
-      <div class="cta-ey">Start now</div>
+      <span class="cta-money"><svg viewBox="0 0 120 60" fill="none"><rect x="2" y="2" width="116" height="56" rx="6" stroke="currentColor" stroke-width="2"/><rect x="10" y="10" width="100" height="40" rx="3" stroke="currentColor" stroke-width="1" stroke-dasharray="4 3"/><circle cx="60" cy="30" r="14" stroke="currentColor" stroke-width="1.5"/><text x="60" y="36" text-anchor="middle" fill="currentColor" font-size="18" font-weight="600">$</text></svg></span>
+      <span class="cta-money"><svg viewBox="0 0 120 60" fill="none"><rect x="2" y="2" width="116" height="56" rx="6" stroke="currentColor" stroke-width="2"/><rect x="10" y="10" width="100" height="40" rx="3" stroke="currentColor" stroke-width="1" stroke-dasharray="4 3"/><circle cx="60" cy="30" r="14" stroke="currentColor" stroke-width="1.5"/><text x="60" y="36" text-anchor="middle" fill="currentColor" font-size="18" font-weight="600">$</text></svg></span>
+      <span class="cta-money"><svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="17" stroke="currentColor" stroke-width="2"/><circle cx="20" cy="20" r="12" stroke="currentColor" stroke-width="1"/><text x="20" y="26" text-anchor="middle" fill="currentColor" font-size="16" font-weight="600">$</text></svg></span>
+      <span class="cta-money"><svg viewBox="0 0 120 60" fill="none"><rect x="2" y="2" width="116" height="56" rx="6" stroke="currentColor" stroke-width="2"/><rect x="10" y="10" width="100" height="40" rx="3" stroke="currentColor" stroke-width="1" stroke-dasharray="4 3"/><circle cx="60" cy="30" r="14" stroke="currentColor" stroke-width="1.5"/><text x="60" y="36" text-anchor="middle" fill="currentColor" font-size="18" font-weight="600">$</text></svg></span>
+      <span class="cta-money"><svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="17" stroke="currentColor" stroke-width="2"/><circle cx="20" cy="20" r="12" stroke="currentColor" stroke-width="1"/><text x="20" y="26" text-anchor="middle" fill="currentColor" font-size="16" font-weight="600">$</text></svg></span>
+      <span class="cta-money"><svg viewBox="0 0 120 60" fill="none"><rect x="2" y="2" width="116" height="56" rx="6" stroke="currentColor" stroke-width="2"/><rect x="10" y="10" width="100" height="40" rx="3" stroke="currentColor" stroke-width="1" stroke-dasharray="4 3"/><circle cx="60" cy="30" r="14" stroke="currentColor" stroke-width="1.5"/><text x="60" y="36" text-anchor="middle" fill="currentColor" font-size="18" font-weight="600">$</text></svg></span>
+      <span class="cta-money"><svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="17" stroke="currentColor" stroke-width="2"/><circle cx="20" cy="20" r="12" stroke="currentColor" stroke-width="1"/><text x="20" y="26" text-anchor="middle" fill="currentColor" font-size="16" font-weight="600">$</text></svg></span>
+      <span class="cta-money"><svg viewBox="0 0 120 60" fill="none"><rect x="2" y="2" width="116" height="56" rx="6" stroke="currentColor" stroke-width="2"/><rect x="10" y="10" width="100" height="40" rx="3" stroke="currentColor" stroke-width="1" stroke-dasharray="4 3"/><circle cx="60" cy="30" r="14" stroke="currentColor" stroke-width="1.5"/><text x="60" y="36" text-anchor="middle" fill="currentColor" font-size="18" font-weight="600">$</text></svg></span>
+      <span class="cta-money"><svg viewBox="0 0 120 60" fill="none"><rect x="2" y="2" width="116" height="56" rx="6" stroke="currentColor" stroke-width="2"/><rect x="10" y="10" width="100" height="40" rx="3" stroke="currentColor" stroke-width="1" stroke-dasharray="4 3"/><circle cx="60" cy="30" r="14" stroke="currentColor" stroke-width="1.5"/><text x="60" y="36" text-anchor="middle" fill="currentColor" font-size="18" font-weight="600">$</text></svg></span>
+      <span class="cta-money"><svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="17" stroke="currentColor" stroke-width="2"/><circle cx="20" cy="20" r="12" stroke="currentColor" stroke-width="1"/><text x="20" y="26" text-anchor="middle" fill="currentColor" font-size="16" font-weight="600">$</text></svg></span>
+      <a href="https://revwhisper.fillout.com/discovery" target="_blank" rel="noopener noreferrer" class="cta-ey">Start now</a>
       <h2 class="cta-h2">Stop guessing. Start <em class="em-mark-w">earning.</em></h2>
       <p class="cta-sub">Book a free strategy call. We will show you exactly where your listing is leaking revenue and walk you through what we would fix first.</p>
       <a href="/get-started" class="btn-white">Book your free strategy call &rarr;</a>
@@ -1587,11 +1719,13 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
       if (entry.isIntersecting) {
         entry.target.classList.add('in');
 
-        /* Problem stat count-up trigger */
-        var numEl = entry.target.querySelector('.problem-stat-num[data-target]');
-        if (numEl && !numEl.dataset.counted) {
-          numEl.dataset.counted = '1';
-          animateCount(numEl, parseInt(numEl.dataset.target, 10), 2000);
+        /* Revenue Gap counter trigger */
+        if (entry.target.id === 'rg-section' && !entry.target.dataset.counted) {
+          entry.target.dataset.counted = '1';
+          animateRevenueGap();
+          /* Trigger divider line draw */
+          var rgDiv = document.querySelector('.rg-divider');
+          if (rgDiv) setTimeout(function(){ rgDiv.classList.add('rg-anim'); }, 600);
         }
       }
     });
@@ -1608,65 +1742,45 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
   var track = document.querySelector('.logo-track');
   if (track) track.innerHTML += track.innerHTML;
 
-  /* ── 3. Problem section dramatic stat reveal ── */
-  function animateCount(el, target, duration) {
-    var scrambleDuration = 700;
-    var scrambleStartRate = 40;
-    var scrambleEndRate = 100;
-    var lockScaleDuration = 250;
-    var underlineDelay = 80;
-
-    /* Reduced motion: skip straight to final value */
-    if (reducedMotion) {
-      el.textContent = '$' + target.toLocaleString();
-      el.classList.add('visible');
-      var wrap = el.closest('.problem-stat-num-wrap');
-      if (wrap) { wrap.classList.add('underline-in'); wrap.classList.add('glow-in'); }
-      return;
-    }
-
-    /* Make number visible and start glow */
-    el.classList.add('visible');
-    var glowWrap = el.closest('.problem-stat-num-wrap');
-    if (glowWrap) glowWrap.classList.add('glow-in');
-
-    var scrambleStart = performance.now();
-    var lastFlip = 0;
-
-    /* Phase 1: Scramble — rapid random numbers with deceleration */
-    function scramble(now) {
-      var elapsed = now - scrambleStart;
-      var progress = Math.min(elapsed / scrambleDuration, 1);
-      var currentRate = scrambleStartRate +
-        (scrambleEndRate - scrambleStartRate) * progress;
-
-      if (elapsed < scrambleDuration) {
-        if (now - lastFlip >= currentRate) {
-          var rand = Math.floor(Math.random() * 72000) + 8000;
-          el.textContent = '$' + rand.toLocaleString();
-          lastFlip = now;
-        }
-        requestAnimationFrame(scramble);
+  /* ── 3. Revenue Gap animated counter ── */
+  function renderDigits(n, settle) {
+    var digitsEl = document.getElementById('rg-digits');
+    if (!digitsEl) return;
+    var str = n.toLocaleString('en-US');
+    var html = '';
+    for (var i = 0; i < str.length; i++) {
+      if (settle) {
+        html += '<span class="rg-digit" style="animation:digitSettle .6s cubic-bezier(.16,1,.3,1) ' + (i * 0.05) + 's both">' + str[i] + '</span>';
       } else {
-        /* Phase 2: Lock-in — snap to final value with scale bump */
-        el.textContent = '$' + target.toLocaleString();
-        el.style.transition = 'transform ' + lockScaleDuration +
-          'ms cubic-bezier(0.16, 1, 0.3, 1)';
-        el.style.transform = 'scale(1.04)';
-
-        setTimeout(function() {
-          el.style.transform = 'scale(1)';
-        }, Math.round(lockScaleDuration * 0.4));
-
-        /* Phase 3: Underline sweep after lock-in settles */
-        setTimeout(function() {
-          var wrap = el.closest('.problem-stat-num-wrap');
-          if (wrap) wrap.classList.add('underline-in');
-        }, lockScaleDuration + underlineDelay);
+        html += '<span class="rg-digit">' + str[i] + '</span>';
       }
     }
+    digitsEl.innerHTML = html;
+  }
+  /* Init with 0 */
+  renderDigits(0, false);
 
-    requestAnimationFrame(scramble);
+  function animateRevenueGap() {
+    var glowEl = document.getElementById('rg-glow');
+    /* Reduced motion: skip straight to final value */
+    if (reducedMotion) {
+      renderDigits(30000, false);
+      if (glowEl) glowEl.classList.add('show');
+      return;
+    }
+    var end = 30000, dur = 2800, step = 16, totalSteps = dur / step;
+    var currentStep = 0;
+    var timer = setInterval(function() {
+      currentStep++;
+      var progress = 1 - Math.pow(1 - currentStep / totalSteps, 3);
+      if (currentStep >= totalSteps) {
+        clearInterval(timer);
+        renderDigits(end, true);
+        if (glowEl) glowEl.classList.add('show');
+      } else {
+        renderDigits(Math.floor(end * progress), false);
+      }
+    }, step);
   }
 
   /* ── 4. Solution bento grid animations ── */
@@ -1887,14 +2001,681 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
     guarObs.observe(document.querySelector('.guarantee'));
   })();
 
+  /* ── 5b. Guarantee circles – ball pit physics ── */
+  (function() {
+    var section = document.querySelector('.guarantee');
+    if (!section || reducedMotion) return;
+    var circleEls = section.querySelectorAll('.guar-circle');
+    if (!circleEls.length) return;
+
+    /* bill=wider rect, coin=square — alternating bill/coin, 28 total */
+    var sizes = [100,36,85,32,110,38,90,34,95,40,80,30,105,42,88,36,100,34,92,38,85,32,110,40,95,36,80,34];
+    var balls = [];
+    var mouseX = -9999, mouseY = -9999, mouseIn = false;
+    var sW, sH, running = false, rafId = null;
+
+    function measure() {
+      sW = section.offsetWidth;
+      sH = section.offsetHeight;
+    }
+
+    // Place circles randomly without overlapping
+    function init() {
+      measure();
+      balls = [];
+      circleEls.forEach(function(el, i) {
+        var d = sizes[i] || 60;
+        var r = d / 2;
+        var isBill = (i % 2 === 0);
+        el.style.width = d + 'px';
+        el.style.height = (isBill ? Math.round(d / 2) : d) + 'px';
+
+        // Find non-overlapping position
+        var x, y, attempts = 0, ok;
+        do {
+          x = r + Math.random() * (sW - d);
+          y = r + Math.random() * (sH - d);
+          ok = true;
+          for (var j = 0; j < balls.length; j++) {
+            var b = balls[j];
+            var dx = x - b.x, dy = y - b.y;
+            if (Math.sqrt(dx*dx + dy*dy) < r + b.r + 10) { ok = false; break; }
+          }
+          attempts++;
+        } while (!ok && attempts < 200);
+
+        balls.push({ el: el, x: x, y: y, vx: 0, vy: 0, r: r });
+      });
+      render();
+    }
+
+    function render() {
+      for (var i = 0; i < balls.length; i++) {
+        var b = balls[i];
+        b.el.style.left = '0px';
+        b.el.style.top = '0px';
+        b.el.style.transform = 'translate(' + (b.x - b.r).toFixed(1) + 'px,' + (b.y - b.r).toFixed(1) + 'px)';
+      }
+    }
+
+    function tick() {
+      if (!running) return;
+      measure();
+      var friction = 0.94;
+      var mouseForce = 0.15;
+      var driftForce = 0.02;
+
+      for (var i = 0; i < balls.length; i++) {
+        var b = balls[i];
+
+        // Mouse attraction – gently follow cursor
+        if (mouseIn) {
+          var dx = mouseX - b.x;
+          var dy = mouseY - b.y;
+          var dist = Math.sqrt(dx*dx + dy*dy) || 1;
+          // Stronger pull when closer, but capped
+          var pull = Math.min(mouseForce, 200 / (dist + 50) * mouseForce);
+          b.vx += (dx / dist) * pull;
+          b.vy += (dy / dist) * pull;
+        } else {
+          // Gentle idle drift – slow random wander
+          b.vx += (Math.random() - 0.5) * driftForce;
+          b.vy += (Math.random() - 0.5) * driftForce;
+        }
+
+        // Apply friction
+        b.vx *= friction;
+        b.vy *= friction;
+
+        // Clamp max speed
+        var speed = Math.sqrt(b.vx*b.vx + b.vy*b.vy);
+        if (speed > 3) { b.vx = (b.vx/speed)*3; b.vy = (b.vy/speed)*3; }
+
+        // Move
+        b.x += b.vx;
+        b.y += b.vy;
+
+        // Wall bounce
+        if (b.x - b.r < 0) { b.x = b.r; b.vx = Math.abs(b.vx) * 0.5; }
+        if (b.x + b.r > sW) { b.x = sW - b.r; b.vx = -Math.abs(b.vx) * 0.5; }
+        if (b.y - b.r < 0) { b.y = b.r; b.vy = Math.abs(b.vy) * 0.5; }
+        if (b.y + b.r > sH) { b.y = sH - b.r; b.vy = -Math.abs(b.vy) * 0.5; }
+      }
+
+      // Circle-circle collision resolution
+      for (var i = 0; i < balls.length; i++) {
+        for (var j = i + 1; j < balls.length; j++) {
+          var a = balls[i], c = balls[j];
+          var dx = c.x - a.x, dy = c.y - a.y;
+          var dist = Math.sqrt(dx*dx + dy*dy) || 1;
+          var minDist = a.r + c.r + 10;
+          if (dist < minDist) {
+            // Push apart
+            var overlap = (minDist - dist) / 2;
+            var nx = dx / dist, ny = dy / dist;
+            a.x -= nx * overlap;
+            a.y -= ny * overlap;
+            c.x += nx * overlap;
+            c.y += ny * overlap;
+            // Exchange some velocity along collision normal
+            var dvx = a.vx - c.vx, dvy = a.vy - c.vy;
+            var dot = dvx * nx + dvy * ny;
+            if (dot > 0) {
+              a.vx -= nx * dot * 0.4;
+              a.vy -= ny * dot * 0.4;
+              c.vx += nx * dot * 0.4;
+              c.vy += ny * dot * 0.4;
+            }
+          }
+        }
+      }
+
+      render();
+      rafId = requestAnimationFrame(tick);
+    }
+
+    // Track mouse relative to section
+    section.addEventListener('mousemove', function(e) {
+      var rect = section.getBoundingClientRect();
+      mouseX = e.clientX - rect.left;
+      mouseY = e.clientY - rect.top;
+      mouseIn = true;
+    });
+    section.addEventListener('mouseleave', function() {
+      mouseIn = false;
+    });
+
+    // Only run when section is visible
+    var visObs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting && !running) {
+          running = true;
+          rafId = requestAnimationFrame(tick);
+        } else if (!entry.isIntersecting && running) {
+          running = false;
+          if (rafId) cancelAnimationFrame(rafId);
+        }
+      });
+    }, { threshold: 0.05 });
+    visObs.observe(section);
+
+    // Init on load
+    init();
+    window.addEventListener('resize', function() { measure(); });
+  })();
+
+  /* ── 5b2. CTA floating money – random drift, collision, gradual spawn ── */
+  (function() {
+    var card = document.querySelector('.cta-card');
+    if (!card || reducedMotion) return;
+    var els = Array.from(card.querySelectorAll('.cta-money'));
+    if (!els.length) return;
+
+    /* [w, h] for each element — bills 2:1, coins square */
+    var dims = [[110,55],[90,45],[40,40],[100,50],[35,35],[120,60],[32,32],[95,48],[80,40],[38,38]];
+    /* SVG templates for spawning new ones */
+    var billSvg = '<svg viewBox="0 0 120 60" fill="none"><rect x="2" y="2" width="116" height="56" rx="6" stroke="currentColor" stroke-width="2"/><rect x="10" y="10" width="100" height="40" rx="3" stroke="currentColor" stroke-width="1" stroke-dasharray="4 3"/><circle cx="60" cy="30" r="14" stroke="currentColor" stroke-width="1.5"/><text x="60" y="36" text-anchor="middle" fill="currentColor" font-size="18" font-weight="600">$</text></svg>';
+    var coinSvg = '<svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="17" stroke="currentColor" stroke-width="2"/><circle cx="20" cy="20" r="12" stroke="currentColor" stroke-width="1"/><text x="20" y="26" text-anchor="middle" fill="currentColor" font-size="16" font-weight="600">$</text></svg>';
+
+    var items = [];
+    var spawnTimer = null;
+    var running = false, rafId = null;
+    var cW, cH;
+    var PAD = 6;
+    var MAX_SPAWN = 60;
+    var GRAVITY = 0.012;
+    var SWAY_STRENGTH = 0.003;
+    var phase = 'filling'; /* filling | draining | resetting */
+    var drainStart = 0;
+    var DRAIN_DURATION = 1200; /* ms to fade out */
+
+    function measure() {
+      var r = card.getBoundingClientRect();
+      cW = r.width; cH = r.height;
+    }
+
+    /* Drop a new item from the top */
+    function dropItem(el, w, h) {
+      var x = 20 + Math.random() * (cW - w - 40);
+      return {
+        el: el, x: x, y: -h - Math.random() * 60, w: w, h: h,
+        cx: x + w / 2, cy: -h / 2,
+        r: Math.max(w, h) / 2,
+        vx: (Math.random() - 0.5) * 0.6,
+        vy: 0.3 + Math.random() * 0.3,
+        rot: (Math.random() - 0.5) * 40,
+        vr: (Math.random() - 0.5) * 0.4,
+        swayPhase: Math.random() * Math.PI * 2,
+        swaySpeed: 0.008 + Math.random() * 0.012,
+        opacity: 0,
+        active: true,
+        spawned: false /* true if dynamically created (not from original HTML) */
+      };
+    }
+
+    /* Spawn a new money element dynamically */
+    function spawnNew() {
+      if (items.length >= MAX_SPAWN) return;
+      var isCoin = Math.random() < 0.35;
+      var w, h;
+      if (isCoin) {
+        var sz = 28 + Math.floor(Math.random() * 18);
+        w = sz; h = sz;
+      } else {
+        w = 70 + Math.floor(Math.random() * 60);
+        h = Math.round(w / 2);
+      }
+      var el = document.createElement('span');
+      el.className = 'cta-money';
+      el.innerHTML = isCoin ? coinSvg : billSvg;
+      el.style.width = w + 'px';
+      el.style.height = h + 'px';
+      el.style.opacity = '0';
+      card.insertBefore(el, card.firstChild);
+      var item = dropItem(el, w, h);
+      item.spawned = true;
+      items.push(item);
+    }
+
+    /* Check if the section is "full" — most items settled */
+    function isFull() {
+      if (items.length < MAX_SPAWN) return false;
+      var settled = 0;
+      for (var i = 0; i < items.length; i++) {
+        if (items[i].active && Math.abs(items[i].vy) < 0.15 && items[i].y > 0) settled++;
+      }
+      return settled >= items.length * 0.7;
+    }
+
+    /* Start the drain — fade everything out */
+    function startDrain() {
+      phase = 'draining';
+      drainStart = Date.now();
+      if (spawnTimer) { clearInterval(spawnTimer); spawnTimer = null; }
+    }
+
+    /* Reset — remove spawned elements, re-hide originals, restart */
+    function resetCycle() {
+      phase = 'resetting';
+      /* Remove dynamically spawned elements */
+      for (var i = items.length - 1; i >= 0; i--) {
+        if (items[i].spawned) {
+          items[i].el.remove();
+        } else {
+          items[i].el.style.opacity = '0';
+        }
+      }
+      items = [];
+
+      /* Brief pause then restart filling */
+      setTimeout(function() {
+        phase = 'filling';
+        startFilling();
+      }, 600);
+    }
+
+    function startFilling() {
+      var idx = 0;
+      spawnTimer = setInterval(function() {
+        if (phase !== 'filling') return;
+        if (idx < els.length) {
+          var d = dims[idx] || [60, 30];
+          els[idx].style.width = d[0] + 'px';
+          els[idx].style.height = d[1] + 'px';
+          items.push(dropItem(els[idx], d[0], d[1]));
+          idx++;
+        } else {
+          spawnNew();
+        }
+      }, 500);
+    }
+
+    function init() {
+      measure();
+      items = [];
+      for (var i = 0; i < els.length; i++) {
+        els[i].style.opacity = '0';
+        var d = dims[i] || [60, 30];
+        els[i].style.width = d[0] + 'px';
+        els[i].style.height = d[1] + 'px';
+      }
+    }
+
+    function tick() {
+      var now = Date.now();
+
+      /* Drain phase — fade all out then reset */
+      if (phase === 'draining') {
+        var elapsed = now - drainStart;
+        var progress = Math.min(1, elapsed / DRAIN_DURATION);
+        for (var i = 0; i < items.length; i++) {
+          var p = items[i];
+          /* Drop everything fast downward during drain */
+          p.vy += 0.08;
+          p.x += p.vx;
+          p.y += p.vy;
+          p.rot += p.vr * 2;
+          p.opacity = Math.max(0, 1 - progress);
+          p.el.style.transform = 'translate(' + p.x.toFixed(1) + 'px,' + p.y.toFixed(1) + 'px) rotate(' + p.rot.toFixed(1) + 'deg)';
+          p.el.style.opacity = p.opacity.toFixed(3);
+        }
+        if (progress >= 1) resetCycle();
+        if (running) rafId = requestAnimationFrame(tick);
+        return;
+      }
+
+      if (phase === 'resetting') {
+        if (running) rafId = requestAnimationFrame(tick);
+        return;
+      }
+
+      /* Normal filling phase */
+      for (var i = 0; i < items.length; i++) {
+        var p = items[i];
+        if (!p.active) continue;
+
+        /* Gravity pulls down */
+        p.vy += GRAVITY;
+
+        /* Gentle side-to-side sway */
+        p.swayPhase += p.swaySpeed;
+        p.vx += Math.sin(p.swayPhase) * SWAY_STRENGTH;
+
+        /* Clamp speeds */
+        if (p.vx > 0.8) p.vx = 0.8;
+        if (p.vx < -0.8) p.vx = -0.8;
+        if (p.vy > 1.5) p.vy = 1.5;
+
+        /* Move */
+        p.x += p.vx;
+        p.y += p.vy;
+        p.rot += p.vr;
+        p.cx = p.x + p.w / 2;
+        p.cy = p.y + p.h / 2;
+
+        /* Fade in */
+        if (p.opacity < 1) {
+          p.opacity = Math.min(1, p.opacity + 0.025);
+        }
+
+        /* Slow rotation as it settles */
+        p.vr *= 0.998;
+
+        /* Side walls */
+        if (p.x < 0) { p.x = 0; p.vx *= -0.5; }
+        if (p.x > cW - p.w) { p.x = cW - p.w; p.vx *= -0.5; }
+
+        /* Floor */
+        if (p.y > cH - p.h) {
+          p.y = cH - p.h;
+          p.vy *= -0.2;
+          p.vx *= 0.9;
+          p.vr *= 0.8;
+          if (Math.abs(p.vy) < 0.05) p.vy = 0;
+        }
+
+        /* Collision */
+        for (var j = i + 1; j < items.length; j++) {
+          var q = items[j];
+          if (!q.active) continue;
+          var dx = q.cx - p.cx;
+          var dy = q.cy - p.cy;
+          var dist = Math.sqrt(dx * dx + dy * dy);
+          var minDist = p.r + q.r + PAD;
+          if (dist < minDist && dist > 0.1) {
+            var nx = dx / dist;
+            var ny = dy / dist;
+            var overlap = (minDist - dist) * 0.35;
+            p.x -= nx * overlap;
+            p.y -= ny * overlap;
+            q.x += nx * overlap;
+            q.y += ny * overlap;
+            p.cx = p.x + p.w / 2;
+            p.cy = p.y + p.h / 2;
+            q.cx = q.x + q.w / 2;
+            q.cy = q.y + q.h / 2;
+            p.vx -= nx * 0.12;
+            p.vy -= ny * 0.12;
+            q.vx += nx * 0.12;
+            q.vy += ny * 0.12;
+          }
+        }
+
+        /* Render */
+        p.el.style.transform = 'translate(' + p.x.toFixed(1) + 'px,' + p.y.toFixed(1) + 'px) rotate(' + p.rot.toFixed(1) + 'deg)';
+        p.el.style.opacity = p.opacity.toFixed(3);
+      }
+
+      /* Check if full — trigger drain */
+      if (phase === 'filling' && isFull()) {
+        startDrain();
+      }
+
+      if (running) rafId = requestAnimationFrame(tick);
+    }
+
+    var started = false;
+    var visObs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting && !running) {
+          running = true;
+          rafId = requestAnimationFrame(tick);
+          if (!started) { started = true; startFilling(); }
+        } else if (!entry.isIntersecting && running) {
+          running = false;
+          if (rafId) cancelAnimationFrame(rafId);
+        }
+      });
+    }, { threshold: 0.05 });
+    visObs.observe(card);
+
+    init();
+    window.addEventListener('resize', function() { measure(); });
+  })();
+
+  /* ── 5c. Pricing section animations ── */
+  (function() {
+    var section = document.querySelector('#pricing');
+    if (!section) return;
+    var cards = section.querySelectorAll('.price-card');
+    var animated = false;
+
+    function animateCards() {
+      if (animated) return;
+      animated = true;
+
+      // Stagger card reveal
+      cards.forEach(function(card, i) {
+        var delay = reducedMotion ? 0 : 200 * i;
+        setTimeout(function() {
+          card.classList.add('in');
+
+          // Count up price number
+          var amtEl = card.querySelector('.price-amt');
+          if (amtEl && amtEl.dataset.price && !reducedMotion) {
+            var target = parseInt(amtEl.dataset.price);
+            var spanEl = amtEl.querySelector('span');
+            var spanHtml = spanEl ? spanEl.outerHTML : '';
+            var duration = 800;
+            var start = performance.now();
+            function countUp(now) {
+              var elapsed = now - start;
+              var progress = Math.min(elapsed / duration, 1);
+              var eased = 1 - Math.pow(1 - progress, 3);
+              var current = Math.round(eased * target);
+              amtEl.innerHTML = '$' + current + spanHtml;
+              if (progress < 1) requestAnimationFrame(countUp);
+            }
+            requestAnimationFrame(countUp);
+          }
+        }, delay);
+      });
+
+      // Collect ALL features across all cards sequentially
+      var allFeats = [];
+      cards.forEach(function(card) {
+        var feats = card.querySelectorAll('.price-feat');
+        feats.forEach(function(f) { allFeats.push(f); });
+      });
+
+      // Animate each feature one by one across all cards
+      var featStartDelay = reducedMotion ? 0 : 500;
+      var featInterval = reducedMotion ? 0 : 100;
+      allFeats.forEach(function(feat, i) {
+        setTimeout(function() {
+          feat.classList.add('in');
+        }, featStartDelay + i * featInterval);
+      });
+    }
+
+    var pricingObs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          animateCards();
+          pricingObs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+    pricingObs.observe(section);
+  })();
+
+  /* ── 5d. Stakes section animations ── */
+  (function() {
+    var section = document.getElementById('stakes');
+    if (!section) return;
+    var blocks = section.querySelectorAll('.stakes-block');
+    var callout = section.querySelector('.stakes-callout');
+    var card = section.querySelector('.stakes-card');
+    var rows = section.querySelectorAll('.stakes-row');
+
+    function animateStakes() {
+      /* Card slides up at the same time as text */
+      if (card) {
+        setTimeout(function() { card.classList.add('in'); }, 80);
+      }
+
+      /* Blocks stagger in from left */
+      blocks.forEach(function(b, i) {
+        setTimeout(function() { b.classList.add('in'); }, i * 200);
+      });
+
+      /* Callout springs in after blocks */
+      if (callout) {
+        setTimeout(function() { callout.classList.add('in'); }, blocks.length * 200 + 150);
+      }
+
+      /* Rows slide in one by one after card appears */
+      rows.forEach(function(r, i) {
+        setTimeout(function() { r.classList.add('in'); }, 400 + i * 100);
+      });
+    }
+
+    var stakesObs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          animateStakes();
+          stakesObs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    stakesObs.observe(section);
+  })();
+
+  /* ── 5e. Stakes slow water fill (time-based) ── */
+  (function() {
+    var section = document.getElementById('stakes');
+    if (!section || reducedMotion) return;
+    var fill = section.querySelector('.stakes-fill');
+    if (!fill) return;
+
+    var DURATION = 8000;   /* ms to fill from 0 → 100 % */
+    var startTime = null;
+    var rafId = null;
+    var started = false;
+
+    function tick(now) {
+      if (!startTime) startTime = now;
+      var elapsed = now - startTime;
+      var pct = Math.min(100, (elapsed / DURATION) * 100);
+      fill.style.height = pct + '%';
+      if (pct < 100) {
+        rafId = requestAnimationFrame(tick);
+      }
+    }
+
+    var obs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting && !started) {
+          started = true;
+          rafId = requestAnimationFrame(tick);
+        }
+      });
+    }, { threshold: 0.15 });
+    obs.observe(section);
+  })();
+
   /* ── 6. How-it-works step stagger + vertical line ── */
   (function() {
     var stepsAnimated = false;
+
+    /* ── Dynamic calendar build ── */
+    (function() {
+      var now = new Date();
+      var year = now.getFullYear();
+      var month = now.getMonth(); // 0-indexed
+      var monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+      var daysInMonth = new Date(year, month + 1, 0).getDate();
+      var firstDay = new Date(year, month, 1).getDay(); // 0=Sun
+
+      // Set month label
+      var monthEl = document.querySelector('.hiw-cal-month');
+      if (monthEl) monthEl.textContent = monthNames[month] + ' ' + year;
+
+      // Pick which days are booked (~90% occupancy, leave 2-3 random gaps)
+      var unbookedCount = Math.max(2, Math.floor(daysInMonth * 0.08));
+      var unbookedDays = {};
+      while (Object.keys(unbookedDays).length < unbookedCount) {
+        var rDay = Math.floor(Math.random() * daysInMonth) + 1;
+        unbookedDays[rDay] = true;
+      }
+      var totalBooked = daysInMonth - unbookedCount;
+
+      // Build grid cells
+      var grid = document.querySelector('.hiw-cal-grid');
+      if (!grid) return;
+
+      // Empty cells for offset
+      for (var e = 0; e < firstDay; e++) {
+        var empty = document.createElement('span');
+        empty.className = 'hiw-cal-cell empty';
+        grid.appendChild(empty);
+      }
+
+      // Day cells
+      var bookedCells = [];
+      for (var d = 1; d <= daysInMonth; d++) {
+        var cell = document.createElement('span');
+        cell.className = 'hiw-cal-cell';
+        cell.textContent = d;
+        if (!unbookedDays[d]) {
+          cell.classList.add('booked');
+          bookedCells.push(cell);
+        }
+        grid.appendChild(cell);
+      }
+
+      // Trailing empty cells
+      var totalCells = firstDay + daysInMonth;
+      var trailing = (7 - (totalCells % 7)) % 7;
+      for (var t = 0; t < trailing; t++) {
+        var te = document.createElement('span');
+        te.className = 'hiw-cal-cell empty';
+        grid.appendChild(te);
+      }
+
+      // Store for animation trigger
+      window._hiwCalData = { bookedCells: bookedCells, totalBooked: totalBooked };
+    })();
 
     /* Observe header and visual column */
     document.querySelectorAll('.hiw-header.r, .hiw-visual.r').forEach(function(el) {
       revealIO.observe(el);
     });
+
+    /* ── Calendar fill animation on visual reveal ── */
+    var calAnimated = false;
+    var calObs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting && !calAnimated) {
+          calAnimated = true;
+          var data = window._hiwCalData;
+          if (!data) return;
+          var countEl = document.querySelector('.hiw-cal-count');
+          var cells = data.bookedCells;
+          var total = data.totalBooked;
+          var count = 0;
+          var delay = reducedMotion ? 0 : 150;
+          var startDelay = reducedMotion ? 0 : 800; // wait for card slide-in
+
+          if (reducedMotion) {
+            cells.forEach(function(c) { c.classList.add('filled'); });
+            if (countEl) countEl.textContent = total;
+          } else {
+            cells.forEach(function(cell, i) {
+              setTimeout(function() {
+                cell.classList.add('filled');
+                count++;
+                if (countEl) countEl.textContent = count;
+              }, startDelay + i * delay);
+            });
+          }
+          calObs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    var visual = document.querySelector('.hiw-visual');
+    if (visual) calObs.observe(visual);
 
     var stepsObs = new IntersectionObserver(function(entries) {
       entries.forEach(function(entry) {
@@ -1938,6 +2719,23 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
           stepsCol.querySelectorAll('.hiw-vstep.r').forEach(function(s, i) {
             setTimeout(function() { s.classList.add('in'); }, i * 150);
           });
+        }
+      }
+      /* Calendar fallback */
+      if (!calAnimated && visual) {
+        var vRect = visual.getBoundingClientRect();
+        if (vRect.top < window.innerHeight && vRect.bottom > 0) {
+          calAnimated = true;
+          var data = window._hiwCalData;
+          if (data) {
+            var countEl = document.querySelector('.hiw-cal-count');
+            data.bookedCells.forEach(function(cell, i) {
+              setTimeout(function() {
+                cell.classList.add('filled');
+                if (countEl) countEl.textContent = i + 1;
+              }, 800 + i * 150);
+            });
+          }
         }
       }
     }, 100);
