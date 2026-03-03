@@ -509,6 +509,7 @@ body::before{
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="var(--accent)" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
           <span>Report sent to <strong id="confirm-email">your email</strong></span>
         </div>
+        <a id="report-link" href="#" target="_blank" rel="noopener noreferrer" class="btn-next accent" style="display:none;margin:24px auto 0;text-decoration:none">View Your Report <span class="arrow">→</span></a>
       </div>
     </div>
 
@@ -649,16 +650,21 @@ function submitEmail() {
   email.classList.remove('error');
 
   var listingUrl = document.getElementById('listing-url').value;
-  var revenue = document.getElementById('annual-revenue').value.trim();
+  var revenue = parseInt(document.getElementById('annual-revenue').value.trim().replace(/[^0-9]/g, '')) || 0;
 
   rwTrack('revenue_lift_email', { page: 'revenue-lift', email: val });
 
-  // Send to Make.com webhook
-  fetch('https://hook.us2.make.com/23rh699yc1ob5tcetd6ionr18431yvyr', {
+  // Send to RevWhisper analysis API
+  fetch('https://rev-whisper-seven.vercel.app/api/public/create-analysis', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ listingUrl: listingUrl, annualRevenue: revenue, email: val, source: 'revenue-lift-calculator' })
-  });
+    body: JSON.stringify({ email: val, airbnbUrl: listingUrl, revenue: revenue })
+  }).then(function(res){ return res.json(); }).then(function(data){
+    if (data.analysis && data.analysis.reportUrl) {
+      var link = document.getElementById('report-link');
+      if (link) { link.href = data.analysis.reportUrl; link.style.display = 'inline-flex'; }
+    }
+  }).catch(function(err){ console.error('Analysis API error:', err); });
 
   // Show confirmation email
   document.getElementById('confirm-email').textContent = val;
