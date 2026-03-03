@@ -99,7 +99,7 @@ module.exports = async function handler(req, res) {
   params.set('line_items[0][price]', stripePriceOnboarding);
   params.set('line_items[0][quantity]', String(listingCount));
   params.set('line_items[1][price]', recurringPrice);
-  params.set('line_items[1][quantity]', '1');
+  params.set('line_items[1][quantity]', String(listingCount));
 
   params.set('metadata[email]', email);
   params.set('metadata[plan]', plan);

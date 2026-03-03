@@ -25,7 +25,7 @@
 - Onboarding fee must be a one-time Price.
 - Monthly plan must be a recurring monthly Price.
 - Annual plan must be a recurring yearly Price.
-- The checkout API sets onboarding quantity equal to `listing_count`.
+- The checkout API sets both onboarding and selected plan quantity equal to `listing_count`.
 
 ## Webhook Endpoint
 - Endpoint: `/api/stripe-webhook`
