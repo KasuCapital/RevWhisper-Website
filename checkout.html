@@ -69,31 +69,49 @@ body{
 .w{max-width:1120px;margin:0 auto;padding:0 24px}
 section{padding:100px 0}
 
-/* ── Pricing Header ── */
-.pricing-header{text-align:center;max-width:620px;margin:0 auto 68px}
+/* ── Pricing Section ── */
+#pricing{background:var(--g50);padding:100px 0;position:relative;overflow:hidden}
+.pricing-header{text-align:center;max-width:620px;margin:0 auto 56px}
+.pricing-header .sub{margin:24px auto 0}
 .eyebrow{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
 .h2{font-family:var(--heading);font-size:clamp(30px,4vw,44px);font-weight:400;letter-spacing:-.03em;line-height:1.15;margin-bottom:14px;color:var(--black)}
 .em-mark{font-style:italic;color:var(--accent);position:relative}
 .sub{font-size:15px;color:var(--g500);line-height:1.7;font-weight:300;max-width:480px;margin:0 auto}
 
 /* ── Pricing Grid ── */
-.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:960px;margin:0 auto}
-.price-card{background:var(--g50);border:1.5px solid var(--g200);border-radius:var(--radius);padding:36px 30px;text-align:center;transition:border-color .2s,box-shadow .2s;display:flex;flex-direction:column}
-.price-card:hover{box-shadow:var(--sh);border-color:var(--g300)}
-.price-card.featured{border-color:var(--accent);background:#fff;box-shadow:var(--sh),0 0 0 4px rgba(74,103,65,.07)}
-.price-badge{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);margin-bottom:14px;min-height:18px}
-.price-name{font-family:var(--heading);font-size:20px;font-weight:400;letter-spacing:-.01em;margin-bottom:6px}
-.price-amt{font-family:var(--heading);font-size:48px;font-weight:700;letter-spacing:-.04em;color:var(--black);line-height:1;margin-bottom:4px}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:980px;margin:0 auto;align-items:start}
+.price-card{background:#fff;border:1.5px solid var(--g200);border-radius:14px;padding:40px 32px;text-align:center;display:flex;flex-direction:column;position:relative;opacity:0;transform:translateY(30px);transition:transform .45s cubic-bezier(.34,1.56,.64,1),box-shadow .35s ease,border-color .3s ease,opacity .4s ease}
+.price-card.in{opacity:1;transform:translateY(0)}
+.price-card:hover{box-shadow:0 8px 32px rgba(50,48,47,.1),0 2px 8px rgba(50,48,47,.06);border-color:var(--g300);transform:translateY(-4px)}
+.price-card.in:hover{transform:translateY(-4px)}
+.price-card.featured{border-color:var(--accent);background:var(--accent);color:#fff;box-shadow:0 8px 32px rgba(74,103,65,.1),0 2px 8px rgba(74,103,65,.06);transform:translateY(30px) scale(1.03)}
+.price-card.featured.in{transform:scale(1.03)}
+.price-card.featured:hover{box-shadow:0 16px 48px rgba(74,103,65,.15),0 4px 12px rgba(74,103,65,.08);transform:scale(1.05) translateY(-4px)}
+.price-card.featured .price-name,.price-card.featured .price-amt{color:#fff}
+.price-card.featured .price-amt span{color:rgba(255,255,255,.6)}
+.price-card.featured .price-term{color:rgba(255,255,255,.7)}
+.price-card.featured .price-feat{color:rgba(255,255,255,.85);border-bottom-color:rgba(255,255,255,.12)}
+.price-card.featured .price-feat::before{background:rgba(255,255,255,.15) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-6' fill='none' stroke='%23ffffff' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center/10px}
+.price-card.featured .price-divider{background:rgba(255,255,255,.15)}
+.price-card.featured .btn-primary{background:#fff;color:var(--accent)}
+.price-badge{font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:var(--accent);display:inline-block;padding:4px 12px;border-radius:20px;margin:0 auto 16px;min-height:18px}
+.price-badge:empty,.price-badge-empty{background:transparent;color:transparent}
+.price-card:not(.featured) .price-badge{background:transparent;color:var(--accent)}
+.price-name{font-family:var(--heading);font-size:22px;font-weight:500;letter-spacing:-.01em;margin-bottom:8px;color:var(--black)}
+.price-amt{font-family:var(--heading);font-size:52px;font-weight:700;letter-spacing:-.04em;color:var(--black);line-height:1;margin-bottom:4px}
 .price-amt span{font-size:18px;font-weight:600;color:var(--g400);letter-spacing:0}
-.price-term{font-size:13px;color:var(--g400);margin-bottom:24px}
-.price-features{text-align:left;margin-bottom:28px;flex:1}
-.price-feat{font-size:13px;color:var(--g500);padding:8px 0;border-bottom:1px solid var(--g200);display:flex;align-items:center;gap:8px}
+.price-term{font-size:13px;color:var(--g400);margin-bottom:28px}
+.price-divider{width:0;height:1px;background:var(--g200);margin:0 auto 28px;transition:width .6s .2s ease}
+.price-card.in .price-divider{width:100%}
+.price-features{text-align:left;margin-bottom:32px;flex:1}
+.price-feat{font-size:13px;color:var(--g500);padding:9px 0;border-bottom:1px solid var(--g200);display:flex;align-items:center;gap:8px;opacity:0;transform:translateX(-14px);transition:opacity .35s ease,transform .35s cubic-bezier(.34,1.56,.64,1)}
+.price-feat.in{opacity:1;transform:translateX(0)}
 .price-feat:last-child{border-bottom:none}
-.price-feat::before{content:'✓';color:var(--accent);font-weight:700;font-size:12px}
-.price-card .btn-primary,.price-card .btn-outline{width:100%;justify-content:center}
+.price-feat::before{content:'';display:inline-block;width:16px;height:16px;border-radius:50%;background:var(--accent-light) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-6' fill='none' stroke='%234A6741' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center/10px;flex-shrink:0;transform:scale(0) rotate(-45deg);transition:transform .4s cubic-bezier(.34,1.56,.64,1)}
+.price-feat.in::before{transform:scale(1) rotate(0deg)}
+.price-card .btn-primary,.price-card .btn-outline{width:100%;justify-content:center;transition:transform .25s ease,box-shadow .25s ease,background .2s ease,color .2s ease,border-color .2s ease}
+.price-card .btn-primary:hover,.price-card .btn-outline:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(74,103,65,.2)}
 
-.price-note{text-align:center;margin-top:28px;max-width:640px;margin-left:auto;margin-right:auto}
-.price-note-text{font-size:13px;color:var(--g400);line-height:1.6}
 .pricing-fine-print{text-align:center;margin-top:14px}
 .pricing-fine-print-text{font-size:12px;color:var(--g400);line-height:1.6}
 .pricing-fine-print-text strong{color:var(--g700);font-weight:500}
@@ -117,36 +135,32 @@ section{padding:100px 0}
 .site-footer{padding:48px 0;border-top:1px solid var(--g200);text-align:center}
 .footer-text{font-size:12px;color:var(--g400)}
 
-/* ── Animations ── */
-.r{opacity:0;transform:translateY(24px);transition:opacity .7s var(--ease-out-expo),transform .7s var(--ease-out-expo)}
-.r.v{opacity:1;transform:translateY(0)}
-.d1{transition-delay:.15s}
-.d2{transition-delay:.3s}
-
 /* ── Responsive ── */
 @media(max-width:768px){
-  section{padding:72px 0}
+  #pricing{padding:80px 0}
   .pricing-grid{grid-template-columns:1fr;max-width:400px}
-  .nav-inner{padding:0 16px}
+  .price-card.featured{order:-1}
+  .price-card.featured,.price-card.featured.in{transform:scale(1)}
 }
 </style>
 </head>
 <body>
 
 <!-- Pricing Section -->
-<section id="pricing" style="padding-top:60px">
+<section id="pricing">
   <div class="w">
-    <div class="pricing-header r">
-      <span class="eyebrow">Choose Your Plan</span>
-      <h2 class="h2">Simple pricing.<br>Serious <em class="em-mark">results.</em></h2>
+    <div class="pricing-header">
+      <span class="eyebrow">Pricing</span>
+      <h2 class="h2">Simple pricing.<br>Serious <em class="em-mark" style="font-style:italic;color:var(--accent)">results.</em></h2>
       <p class="sub">One program. Two ways to pay. Portfolio hosts, reach out for custom pricing.</p>
     </div>
-    <div class="pricing-grid r d1">
+    <div class="pricing-grid">
       <div class="price-card">
         <div class="price-badge">&nbsp;</div>
         <div class="price-name">Monthly</div>
-        <div class="price-amt">$750<span>/mo</span></div>
+        <div class="price-amt" data-price="750">$750<span>/mo</span></div>
         <div class="price-term">3-month minimum commitment</div>
+        <div class="price-divider"></div>
         <div class="price-features">
           <div class="price-feat">Full revenue optimization engine</div>
           <div class="price-feat">Full listing optimization engine</div>
@@ -155,13 +169,14 @@ section{padding:100px 0}
           <div class="price-feat">Revwhisper dashboard access</div>
           <div class="price-feat">Cancel anytime after 3 months</div>
         </div>
-        <a href="checkout-form.html?plan=monthly" class="btn-outline">Enroll now →</a>
+        <a href="/checkout-form.html?plan=monthly" class="btn-outline">Enroll now &rarr;</a>
       </div>
       <div class="price-card featured">
-        <div class="price-badge">BEST VALUE</div>
+        <div class="price-badge">Best Value</div>
         <div class="price-name">Annual</div>
-        <div class="price-amt">$500<span>/mo</span></div>
+        <div class="price-amt" data-price="500">$500<span>/mo</span></div>
         <div class="price-term">Billed annually · Save $3,000/year</div>
+        <div class="price-divider"></div>
         <div class="price-features">
           <div class="price-feat">Everything in Monthly</div>
           <div class="price-feat">Full revenue optimization engine</div>
@@ -170,13 +185,14 @@ section{padding:100px 0}
           <div class="price-feat">Monthly performance report</div>
           <div class="price-feat">Priority support</div>
         </div>
-        <a href="checkout-form.html?plan=annual" class="btn-primary">Enroll now →</a>
+        <a href="/checkout-form.html?plan=annual" class="btn-primary">Enroll now &rarr;</a>
       </div>
       <div class="price-card">
-        <div class="price-badge">10+ PROPERTIES</div>
+        <div class="price-badge">10+ Properties</div>
         <div class="price-name">Enterprise</div>
         <div class="price-amt" style="font-size:36px;padding-top:6px">Custom</div>
         <div class="price-term">Custom pricing for portfolios</div>
+        <div class="price-divider"></div>
         <div class="price-features">
           <div class="price-feat">Everything in Annual</div>
           <div class="price-feat">Unified portfolio dashboard</div>
@@ -185,19 +201,19 @@ section{padding:100px 0}
           <div class="price-feat">Custom reporting</div>
           <div class="price-feat">Volume pricing</div>
         </div>
-        <a href="get-started" class="btn-outline">Contact us →</a>
+        <a href="/get-started" class="btn-outline">Contact us &rarr;</a>
       </div>
     </div>
-    <div class="pricing-fine-print r d2">
-      <p class="pricing-fine-print-text">* One-time onboarding fee of <strong>$1,000.00 per listing</strong> applies to all plans.</p>
+    <div class="pricing-fine-print">
+      <p class="pricing-fine-print-text">* One-time onboarding fee of <strong>$1,000 per listing</strong> applies to all plans.</p>
     </div>
 
-    <div class="onboarding-note r d2">
+    <div class="onboarding-note">
       <div class="onboarding-note-title">One-Time Onboarding Fee: $1,000</div>
       <div class="onboarding-note-desc">Covers your full listing audit, competitive set identification, photo editing pass, keyword audit, and setup of all monitoring systems. Onboarding takes approximately 10 business days.</div>
     </div>
 
-    <div class="price-guarantee r d2">
+    <div class="price-guarantee">
       <div class="price-guarantee-title">Revenue-Backed Guarantee</div>
       <div class="price-guarantee-desc">If our revenue uplift doesn't at least cover your service fee, we credit you back. We only win when you do.</div>
     </div>
@@ -212,11 +228,68 @@ section{padding:100px 0}
 </footer>
 
 <script>
-// Scroll-reveal
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('v'); observer.unobserve(e.target); } });
-}, { threshold: 0.1 });
-document.querySelectorAll('.r').forEach(el => observer.observe(el));
+// Pricing card animations
+(function() {
+  var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var section = document.querySelector('#pricing');
+  if (!section) return;
+  var cards = section.querySelectorAll('.price-card');
+
+  function animateCards() {
+    // Stagger card reveal
+    cards.forEach(function(card, i) {
+      var delay = reducedMotion ? 0 : 200 * i;
+      setTimeout(function() {
+        card.classList.add('in');
+
+        // Count up price number
+        var amtEl = card.querySelector('.price-amt');
+        if (amtEl && amtEl.dataset.price && !reducedMotion) {
+          var target = parseInt(amtEl.dataset.price);
+          var spanEl = amtEl.querySelector('span');
+          var spanHtml = spanEl ? spanEl.outerHTML : '';
+          var duration = 800;
+          var start = performance.now();
+          function countUp(now) {
+            var elapsed = now - start;
+            var progress = Math.min(elapsed / duration, 1);
+            var eased = 1 - Math.pow(1 - progress, 3);
+            var current = Math.round(eased * target);
+            amtEl.innerHTML = '$' + current + spanHtml;
+            if (progress < 1) requestAnimationFrame(countUp);
+          }
+          requestAnimationFrame(countUp);
+        }
+      }, delay);
+    });
+
+    // Collect ALL features across all cards sequentially
+    var allFeats = [];
+    cards.forEach(function(card) {
+      var feats = card.querySelectorAll('.price-feat');
+      feats.forEach(function(f) { allFeats.push(f); });
+    });
+
+    // Animate each feature one by one across all cards
+    var featStartDelay = reducedMotion ? 0 : 500;
+    var featInterval = reducedMotion ? 0 : 100;
+    allFeats.forEach(function(feat, i) {
+      setTimeout(function() {
+        feat.classList.add('in');
+      }, featStartDelay + i * featInterval);
+    });
+  }
+
+  var pricingObs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        animateCards();
+        pricingObs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2 });
+  pricingObs.observe(section);
+})();
 </script>
 <!-- GA4 Custom Events -->
 <script>
