@@ -205,11 +205,11 @@ section{padding:100px 0}
       </div>
     </div>
     <div class="pricing-fine-print">
-      <p class="pricing-fine-print-text">* One-time onboarding fee of <strong>$1,000 per listing</strong> applies to all plans.</p>
+      <p class="pricing-fine-print-text">* One-time onboarding fee of <strong>$998 per listing</strong> applies to all plans.</p>
     </div>
 
     <div class="onboarding-note">
-      <div class="onboarding-note-title">One-Time Onboarding Fee: $1,000</div>
+      <div class="onboarding-note-title">One-Time Onboarding Fee: $998</div>
       <div class="onboarding-note-desc">Covers your full listing audit, competitive set identification, photo editing pass, keyword audit, and setup of all monitoring systems. Onboarding takes approximately 10 business days.</div>
     </div>
 
@@ -241,25 +241,6 @@ section{padding:100px 0}
       var delay = reducedMotion ? 0 : 200 * i;
       setTimeout(function() {
         card.classList.add('in');
-
-        // Count up price number
-        var amtEl = card.querySelector('.price-amt');
-        if (amtEl && amtEl.dataset.price && !reducedMotion) {
-          var target = parseInt(amtEl.dataset.price);
-          var spanEl = amtEl.querySelector('span');
-          var spanHtml = spanEl ? spanEl.outerHTML : '';
-          var duration = 800;
-          var start = performance.now();
-          function countUp(now) {
-            var elapsed = now - start;
-            var progress = Math.min(elapsed / duration, 1);
-            var eased = 1 - Math.pow(1 - progress, 3);
-            var current = Math.round(eased * target);
-            amtEl.innerHTML = '$' + current + spanHtml;
-            if (progress < 1) requestAnimationFrame(countUp);
-          }
-          requestAnimationFrame(countUp);
-        }
       }, delay);
     });
 
