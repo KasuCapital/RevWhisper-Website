@@ -737,6 +737,7 @@ function submitForm() {
   fetch('https://hook.us2.make.com/23rh699yc1ob5tcetd6ionr18431yvyr', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
+    keepalive: true,
     body: JSON.stringify(data)
   });
 
