@@ -40,11 +40,12 @@ function rwTrack(e,p){if(localStorage.getItem('rw_cookie_consent')==='accepted')
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=DM+Sans:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;height:100%}
 body{
   font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;
   background:#fff;color:#32302F;line-height:1.5;
   -webkit-font-smoothing:antialiased;
+  height:100%;overflow:hidden;
 }
 :root{
   --black:#32302F;
@@ -70,7 +71,7 @@ body{
 section{padding:100px 0}
 
 /* ── Pricing Section ── */
-#pricing{background:var(--g50);padding:100px 0;position:relative;overflow:hidden}
+#pricing{background:var(--g50);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px 0}
 .pricing-header{text-align:center;max-width:620px;margin:0 auto 56px}
 .pricing-header .sub{margin:24px auto 0}
 .eyebrow{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
@@ -112,28 +113,11 @@ section{padding:100px 0}
 .price-card .btn-primary,.price-card .btn-outline{width:100%;justify-content:center;transition:transform .25s ease,box-shadow .25s ease,background .2s ease,color .2s ease,border-color .2s ease}
 .price-card .btn-primary:hover,.price-card .btn-outline:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(74,103,65,.2)}
 
-.pricing-fine-print{text-align:center;margin-top:14px}
-.pricing-fine-print-text{font-size:12px;color:var(--g400);line-height:1.6}
-.pricing-fine-print-text strong{color:var(--g700);font-weight:500}
-
-.price-guarantee{text-align:center;margin-top:36px;padding:20px;background:var(--green-bg);border:1px solid var(--green-bd);border-radius:var(--radius-sm);max-width:640px;margin-left:auto;margin-right:auto}
-.price-guarantee-title{font-size:15px;font-weight:700;color:var(--green);margin-bottom:4px}
-.price-guarantee-desc{font-size:13px;color:var(--g500);line-height:1.6}
-
 /* ── Buttons ── */
 .btn-primary{display:inline-flex;align-items:center;gap:6px;background:var(--black);color:#fff;font-size:13px;font-weight:400;letter-spacing:0;padding:12px 24px;border-radius:var(--radius-sm);text-decoration:none;transition:opacity .15s,transform .15s}
 .btn-primary:hover{opacity:.82;transform:translateY(-2px)}
 .btn-outline{display:inline-flex;align-items:center;gap:6px;background:#fff;color:var(--black);font-size:13px;font-weight:400;padding:11px 22px;border-radius:var(--radius-sm);text-decoration:none;border:1.5px solid var(--g200);transition:border-color .15s,box-shadow .15s}
 .btn-outline:hover{border-color:var(--g300);box-shadow:var(--sh-sm)}
-
-/* ── Onboarding Fee ── */
-.onboarding-note{text-align:center;margin-top:48px;max-width:640px;margin-left:auto;margin-right:auto;padding:24px;background:var(--g50);border:1.5px solid var(--g200);border-radius:var(--radius)}
-.onboarding-note-title{font-family:var(--heading);font-size:18px;font-weight:500;letter-spacing:-.01em;margin-bottom:6px;color:var(--black)}
-.onboarding-note-desc{font-size:13px;color:var(--g500);line-height:1.6}
-
-/* ── Footer ── */
-.site-footer{padding:48px 0;border-top:1px solid var(--g200);text-align:center}
-.footer-text{font-size:12px;color:var(--g400)}
 
 /* ── Responsive ── */
 @media(max-width:768px){
@@ -204,28 +188,8 @@ section{padding:100px 0}
         <a href="/get-started" class="btn-outline">Contact us &rarr;</a>
       </div>
     </div>
-    <div class="pricing-fine-print">
-      <p class="pricing-fine-print-text">* One-time onboarding fee of <strong>$998 per listing</strong> applies to all plans.</p>
-    </div>
-
-    <div class="onboarding-note">
-      <div class="onboarding-note-title">One-Time Onboarding Fee: $998</div>
-      <div class="onboarding-note-desc">Covers your full listing audit, competitive set identification, photo editing pass, keyword audit, and setup of all monitoring systems. Onboarding takes approximately 10 business days.</div>
-    </div>
-
-    <div class="price-guarantee">
-      <div class="price-guarantee-title">Revenue-Backed Guarantee</div>
-      <div class="price-guarantee-desc">If our revenue uplift doesn't at least cover your service fee, we credit you back. We only win when you do.</div>
-    </div>
   </div>
 </section>
-
-<!-- Footer -->
-<footer class="site-footer">
-  <div class="w">
-    <p class="footer-text">© 2025 MNW Holdings LLC d/b/a RevWhisper. All rights reserved.</p>
-  </div>
-</footer>
 
 <script>
 // Pricing card animations
