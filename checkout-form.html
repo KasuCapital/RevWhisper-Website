@@ -40,7 +40,7 @@ function rwTrack(e,p){if(localStorage.getItem('rw_cookie_consent')==='accepted')
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=DM+Sans:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{height:100%;overflow:hidden}
+html{height:100%;overflow:hidden;overflow-x:hidden}
 body{
   font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;
   background:#fff;color:#32302F;line-height:1.5;
@@ -463,9 +463,9 @@ body.terms-expanded .step[data-step="2"] .form-actions{
 
 /* ── Responsive ── */
 @media(max-width:640px){
-  html,body{overflow-y:auto}
+  html,body{overflow-x:hidden;overflow-y:auto}
   body{padding:20px}
-  .form-shell{max-width:100%}
+  .form-shell{max-width:100%;padding:20px}
   .step-title{font-size:26px}
   .phone-wrap{flex-direction:column}
   .phone-code{width:100%}
