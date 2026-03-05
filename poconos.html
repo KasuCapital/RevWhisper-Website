@@ -565,6 +565,14 @@ body{
 .btn-cta-book svg{transition:transform .2s}
 .btn-cta-book:hover svg{transform:translateX(3px)}
 
+.calc-widget{margin-top:24px;text-align:center}
+.calc-label{font-size:13px;color:var(--g400);margin-bottom:12px;font-weight:500}
+.calc-input-wrap{display:flex;align-items:stretch;max-width:540px;margin:0 auto;border-radius:var(--radius);overflow:hidden;box-shadow:var(--sh);border:1.5px solid var(--g200);background:#fff}
+.calc-input{flex:1;border:none;padding:14px 18px;font-size:15px;font-family:var(--body);color:var(--black);outline:none;background:transparent;min-width:0}
+.calc-input::placeholder{color:var(--g300)}
+.calc-btn{background:var(--accent);color:#fff;border:none;padding:14px 24px;font-family:var(--body);font-size:14px;font-weight:500;cursor:pointer;white-space:nowrap;transition:background .15s}
+.calc-btn:hover{background:#3d5736}
+
 .btn-cta-learn{
   display:inline-flex;align-items:center;gap:6px;
   padding:12px 24px;border-radius:var(--radius-sm);
@@ -712,6 +720,9 @@ body{
   .s-body{font-size:16px;margin-bottom:0;line-height:1.65}
   .s-logo{margin-bottom:0}
   .slide-actions{margin-top:0}
+  .calc-widget{margin-top:0}
+  .calc-input-wrap{flex-direction:column}
+  .calc-btn{padding:12px 18px}
   .promo-badge{margin-top:0}
   .hero-svg{width:clamp(180px,65vw,280px);margin-bottom:0}
   .audit-card-wrap{margin-bottom:0}
@@ -820,11 +831,12 @@ body{
       <h1 class="s-title">Your AirBnb could be making <em>more money.</em></h1>
       <p class="s-body">Our team tracks your search position daily, deploys algorithm-timed pricing, and optimizes every part of your listing. Fully managed.</p>
 
-      <div class="slide-actions">
-        <button class="btn-cta-book" data-cal-link="rev-whisper/discovery-poconos" data-cal-config='{"layout":"month_view"}'>
-          Book A Call
-          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-        </button>
+      <div class="calc-widget">
+        <p class="calc-label">See your revenue potential</p>
+        <div class="calc-input-wrap">
+          <input type="url" class="calc-input" placeholder="Paste your Airbnb listing URL" aria-label="Airbnb listing URL">
+          <button class="calc-btn" type="button">Calculate My Revenue Lift</button>
+        </div>
       </div>
       <div class="promo-badge">
         <span class="promo-label">Conference Special</span>
@@ -1879,6 +1891,13 @@ Cal("on", {
       if (current === 0) nextSlide();
     }, 1500);
   }
+});
+</script>
+<!-- Calculator redirect -->
+<script>
+document.querySelector('.calc-btn').addEventListener('click',function(){
+  var u=document.querySelector('.calc-input').value.trim();
+  window.location.href='/revenue-lift'+(u?'?url='+encodeURIComponent(u):'');
 });
 </script>
 <!-- GA4 Custom Events -->
