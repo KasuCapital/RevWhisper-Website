@@ -281,17 +281,19 @@ body{
 .hero-svg-1 .chart-bar{transform:scaleY(0);transform-box:fill-box;transform-origin:bottom center}
 .slide[data-slide="1"].active .chart-bar,
 .slide[data-slide="1"].enter-from-below .chart-bar,
-.slide[data-slide="1"].enter-from-above .chart-bar{animation:barGrow .6s var(--ease-out-expo) forwards}
-.slide[data-slide="1"].active .bar-1,.slide[data-slide="1"].enter-from-below .bar-1,.slide[data-slide="1"].enter-from-above .bar-1{animation-delay:.25s}
-.slide[data-slide="1"].active .bar-2,.slide[data-slide="1"].enter-from-below .bar-2,.slide[data-slide="1"].enter-from-above .bar-2{animation-delay:.35s}
-.slide[data-slide="1"].active .bar-3,.slide[data-slide="1"].enter-from-below .bar-3,.slide[data-slide="1"].enter-from-above .bar-3{animation-delay:.45s}
-.slide[data-slide="1"].active .bar-4,.slide[data-slide="1"].enter-from-below .bar-4,.slide[data-slide="1"].enter-from-above .bar-4{animation-delay:.55s}
-.slide[data-slide="1"].active .bar-5,.slide[data-slide="1"].enter-from-below .bar-5,.slide[data-slide="1"].enter-from-above .bar-5{animation-delay:.65s}
-.slide[data-slide="1"].active .trend-line,.slide[data-slide="1"].enter-from-below .trend-line,.slide[data-slide="1"].enter-from-above .trend-line{animation:strokeDraw .8s var(--ease-out-expo) .85s forwards}
-.slide[data-slide="1"].active .trend-dot,.slide[data-slide="1"].enter-from-below .trend-dot,.slide[data-slide="1"].enter-from-above .trend-dot{animation:fadeIn .3s ease 1.5s forwards,pulse 2s ease-in-out 1.8s infinite}
-.slide[data-slide="1"].active .chart-label,.slide[data-slide="1"].enter-from-below .chart-label,.slide[data-slide="1"].enter-from-above .chart-label{animation:fadeSlideUp .4s var(--ease-out-expo) 1.6s forwards}
+.slide[data-slide="1"].enter-from-above .chart-bar,
+.slide[data-slide="1"].enter-from-left .chart-bar,
+.slide[data-slide="1"].enter-from-right .chart-bar{animation:barGrow .6s var(--ease-out-expo) forwards}
+.slide[data-slide="1"].active .bar-1,.slide[data-slide="1"].enter-from-below .bar-1,.slide[data-slide="1"].enter-from-above .bar-1,.slide[data-slide="1"].enter-from-left .bar-1,.slide[data-slide="1"].enter-from-right .bar-1{animation-delay:.25s}
+.slide[data-slide="1"].active .bar-2,.slide[data-slide="1"].enter-from-below .bar-2,.slide[data-slide="1"].enter-from-above .bar-2,.slide[data-slide="1"].enter-from-left .bar-2,.slide[data-slide="1"].enter-from-right .bar-2{animation-delay:.35s}
+.slide[data-slide="1"].active .bar-3,.slide[data-slide="1"].enter-from-below .bar-3,.slide[data-slide="1"].enter-from-above .bar-3,.slide[data-slide="1"].enter-from-left .bar-3,.slide[data-slide="1"].enter-from-right .bar-3{animation-delay:.45s}
+.slide[data-slide="1"].active .bar-4,.slide[data-slide="1"].enter-from-below .bar-4,.slide[data-slide="1"].enter-from-above .bar-4,.slide[data-slide="1"].enter-from-left .bar-4,.slide[data-slide="1"].enter-from-right .bar-4{animation-delay:.55s}
+.slide[data-slide="1"].active .bar-5,.slide[data-slide="1"].enter-from-below .bar-5,.slide[data-slide="1"].enter-from-above .bar-5,.slide[data-slide="1"].enter-from-left .bar-5,.slide[data-slide="1"].enter-from-right .bar-5{animation-delay:.65s}
+.slide[data-slide="1"].active .trend-line,.slide[data-slide="1"].enter-from-below .trend-line,.slide[data-slide="1"].enter-from-above .trend-line,.slide[data-slide="1"].enter-from-left .trend-line,.slide[data-slide="1"].enter-from-right .trend-line{animation:strokeDraw .8s var(--ease-out-expo) .85s forwards}
+.slide[data-slide="1"].active .trend-dot,.slide[data-slide="1"].enter-from-below .trend-dot,.slide[data-slide="1"].enter-from-above .trend-dot,.slide[data-slide="1"].enter-from-left .trend-dot,.slide[data-slide="1"].enter-from-right .trend-dot{animation:fadeIn .3s ease 1.5s forwards,pulse 2s ease-in-out 1.8s infinite}
+.slide[data-slide="1"].active .chart-label,.slide[data-slide="1"].enter-from-below .chart-label,.slide[data-slide="1"].enter-from-above .chart-label,.slide[data-slide="1"].enter-from-left .chart-label,.slide[data-slide="1"].enter-from-right .chart-label{animation:fadeSlideUp .4s var(--ease-out-expo) 1.6s forwards}
 .hero-svg-1 .grid-line{opacity:0}
-.slide[data-slide="1"].active .grid-line,.slide[data-slide="1"].enter-from-below .grid-line,.slide[data-slide="1"].enter-from-above .grid-line{animation:fadeIn .4s ease .15s forwards}
+.slide[data-slide="1"].active .grid-line,.slide[data-slide="1"].enter-from-below .grid-line,.slide[data-slide="1"].enter-from-above .grid-line,.slide[data-slide="1"].enter-from-left .grid-line,.slide[data-slide="1"].enter-from-right .grid-line{animation:fadeIn .4s ease .15s forwards}
 
 /* ── (Audit card animations moved to HTML/CSS section above) ── */
 
@@ -306,7 +308,8 @@ body{
 }
 .slide[data-slide="2"].active .audit-card,
 .slide[data-slide="2"].enter-from-right .audit-card,
-.slide[data-slide="2"].enter-from-left .audit-card{
+.slide[data-slide="2"].enter-from-left .audit-card,
+.slide[data-slide="2"].enter-reveal .audit-card{
   animation:auditCardIn .6s var(--ease-out-expo) .15s forwards;
 }
 @keyframes auditCardIn{to{opacity:1;transform:translateY(0) scale(1)}}
@@ -328,14 +331,15 @@ body{
 .audit-row-item:last-child{border-bottom:none}
 .slide[data-slide="2"].active .audit-row-item,
 .slide[data-slide="2"].enter-from-right .audit-row-item,
-.slide[data-slide="2"].enter-from-left .audit-row-item{
+.slide[data-slide="2"].enter-from-left .audit-row-item,
+.slide[data-slide="2"].enter-reveal .audit-row-item{
   animation:auditRowSlide .45s var(--ease-out-expo) forwards;
 }
-.slide[data-slide="2"].active .row-1,.slide[data-slide="2"].enter-from-right .row-1,.slide[data-slide="2"].enter-from-left .row-1{animation-delay:.5s}
-.slide[data-slide="2"].active .row-2,.slide[data-slide="2"].enter-from-right .row-2,.slide[data-slide="2"].enter-from-left .row-2{animation-delay:.62s}
-.slide[data-slide="2"].active .row-3,.slide[data-slide="2"].enter-from-right .row-3,.slide[data-slide="2"].enter-from-left .row-3{animation-delay:.74s}
-.slide[data-slide="2"].active .row-4,.slide[data-slide="2"].enter-from-right .row-4,.slide[data-slide="2"].enter-from-left .row-4{animation-delay:.86s}
-.slide[data-slide="2"].active .row-5,.slide[data-slide="2"].enter-from-right .row-5,.slide[data-slide="2"].enter-from-left .row-5{animation-delay:.98s}
+.slide[data-slide="2"].active .row-1,.slide[data-slide="2"].enter-from-right .row-1,.slide[data-slide="2"].enter-from-left .row-1,.slide[data-slide="2"].enter-reveal .row-1{animation-delay:.5s}
+.slide[data-slide="2"].active .row-2,.slide[data-slide="2"].enter-from-right .row-2,.slide[data-slide="2"].enter-from-left .row-2,.slide[data-slide="2"].enter-reveal .row-2{animation-delay:.62s}
+.slide[data-slide="2"].active .row-3,.slide[data-slide="2"].enter-from-right .row-3,.slide[data-slide="2"].enter-from-left .row-3,.slide[data-slide="2"].enter-reveal .row-3{animation-delay:.74s}
+.slide[data-slide="2"].active .row-4,.slide[data-slide="2"].enter-from-right .row-4,.slide[data-slide="2"].enter-from-left .row-4,.slide[data-slide="2"].enter-reveal .row-4{animation-delay:.86s}
+.slide[data-slide="2"].active .row-5,.slide[data-slide="2"].enter-from-right .row-5,.slide[data-slide="2"].enter-from-left .row-5,.slide[data-slide="2"].enter-reveal .row-5{animation-delay:.98s}
 @keyframes auditRowSlide{to{opacity:1;transform:translateX(0)}}
 .audit-check{
   width:22px;height:22px;border-radius:50%;flex-shrink:0;
@@ -398,9 +402,16 @@ body{
 }
 .s-title em{font-style:italic;color:var(--accent);position:relative;white-space:nowrap}
 .s-title em::after{
-  content:'';position:absolute;bottom:-3px;left:-2%;width:104%;height:2px;
-  background:var(--accent);border-radius:2px;
-  transform:scaleX(0) rotate(-1.5deg);transform-origin:left;
+  content:'';position:absolute;bottom:-4px;left:-2%;width:104%;height:8px;
+  background:transparent;
+  -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 10' preserveAspectRatio='none'%3E%3Cpath d='M2 8 Q100 0,198 6' stroke='black' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  -webkit-mask-size:100% 100%;
+  -webkit-mask-repeat:no-repeat;
+  mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 10' preserveAspectRatio='none'%3E%3Cpath d='M2 8 Q100 0,198 6' stroke='black' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  mask-size:100% 100%;
+  mask-repeat:no-repeat;
+  background-color:var(--accent);
+  transform:scaleX(0);transform-origin:left;
 }
 .slide.active .s-title em::after,
 .slide.enter-from-below .s-title em::after,
@@ -461,15 +472,17 @@ body{
 
 /* ── Photo Compare (Slide 3) ── */
 .photo-compare{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;width:100%}
-.photo-compare-card{border-radius:var(--radius);overflow:hidden;border:1.5px solid var(--g200);background:#fff}
+.photo-compare-card{border-radius:var(--radius);overflow:hidden;border:1.5px solid var(--g200);background:#fff;display:flex;flex-direction:column}
 .photo-compare-card.after{border-color:var(--accent-border)}
 .photo-compare-label{
   font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
   padding:10px 14px;text-align:center;
+  display:flex;align-items:center;justify-content:center;
+  min-height:42px;
 }
 .photo-compare-label.before{color:var(--g400);background:var(--g50)}
 .photo-compare-label.after{color:var(--accent);background:rgba(74,103,65,.06)}
-.photo-img-wrap{overflow:hidden;height:220px}
+.photo-img-wrap{overflow:hidden;height:220px;flex:1}
 .photo-compare-img{
   display:block;width:100%;height:100%;
   object-fit:cover;object-position:center;
@@ -664,43 +677,77 @@ body{
 
 /* ── Responsive ── */
 @media(max-width:640px){
-  .slide{padding:12px 20px 64px}
-  .s-title{font-size:clamp(28px,7vw,44px);margin-bottom:12px}
-  .s-eyebrow{margin-bottom:12px}
-  .s-body{font-size:13px;margin-bottom:16px}
-  .s-logo{margin-bottom:12px}
+  .slide{padding:12px 20px 64px;align-items:stretch}
+  .slide-inner{
+    display:flex;flex-direction:column;align-items:center;
+    justify-content:center;gap:clamp(12px,2.5vh,24px);
+  }
+  /* Let flex gap handle vertical distribution */
+  .s-title{font-size:clamp(32px,8vw,48px);margin-bottom:0}
+  .s-eyebrow{margin-bottom:0;font-size:14px}
+  .s-body{font-size:16px;margin-bottom:0;line-height:1.65}
+  .s-logo{margin-bottom:0}
+  .slide-actions{margin-top:0}
+  .promo-badge{margin-top:0}
+  .hero-svg{width:clamp(180px,65vw,280px);margin-bottom:0}
+  .audit-card-wrap{margin-bottom:0}
+  .s-detail{margin-top:0}
   .detail-grid{grid-template-columns:1fr;gap:8px}
-  .metric-row{gap:12px;margin-bottom:16px}
+  .detail-card .dc-title{font-size:15px}
+  .detail-card .dc-desc{font-size:14px}
+  .metric-row{gap:14px;margin-bottom:16px}
+  .metric-val{font-size:clamp(26px,6vw,34px)}
+  .metric-label{font-size:12px}
   .feature-list{margin-bottom:16px}
-  .feature-item{padding:6px 0}
-  .feature-text{font-size:12px}
+  .feature-item{padding:8px 0}
+  .feature-text{font-size:15px;line-height:1.55}
   .before-after{grid-template-columns:1fr}
+  .ba-list li{font-size:14px}
+  .ba-label{font-size:11px}
+  .audit-row-label{font-size:15px}
+  .audit-row-badge{font-size:12px}
+  .audit-card-title{font-size:15px}
+  .audit-card-score{font-size:16px}
+  .cta-headline{font-size:clamp(20px,5vw,26px)}
+  .cta-desc{font-size:16px}
+  .cta-trust-item{font-size:13px}
+  .promo-badge{font-size:14px}
+  .photo-compare-label{font-size:12px}
   .nav-bar{padding:12px 16px}
   .nav-logo{display:none}
-  .hero-svg{width:clamp(180px,65vw,280px);margin-bottom:12px}
   .mountain-scenery{height:240px}
   .team-bubble{border-width:2px}
+  .btn-cta-book{font-size:16px;padding:14px 28px}
+  .btn-next{font-size:14px;padding:12px 22px}
+  .btn-back{font-size:14px}
+  .btn-book{font-size:16px;padding:12px 26px}
 }
 @media(max-width:400px){
   .metric-row{flex-direction:column;gap:8px}
 }
 /* Short viewports */
 @media(max-height:700px){
-  .s-title{font-size:clamp(24px,5.5vw,36px);margin-bottom:8px}
-  .s-eyebrow{margin-bottom:8px;font-size:11px;padding:4px 14px}
-  .s-body{font-size:12px;margin-bottom:12px;line-height:1.6}
+  .s-title{font-size:clamp(26px,6vw,38px);margin-bottom:8px}
+  .s-eyebrow{margin-bottom:8px;font-size:12px;padding:4px 14px}
+  .s-body{font-size:14px;margin-bottom:12px;line-height:1.55}
   .s-logo{margin-bottom:8px}
   .s-logo svg{width:36px;height:36px}
   .hero-svg{width:clamp(140px,40vw,220px);margin-bottom:8px}
   .photo-img-wrap{height:110px}
   .metric-row{margin-bottom:12px;gap:10px}
-  .metric-val{font-size:clamp(18px,4vw,24px)}
+  .metric-val{font-size:clamp(20px,4.5vw,26px)}
+  .metric-label{font-size:11px}
   .feature-item{padding:4px 0}
-  .feature-text{font-size:11px;line-height:1.5}
+  .feature-text{font-size:13px;line-height:1.5}
   .feature-list{margin-bottom:12px}
   .mountain-scenery{height:180px}
   .slide{padding-top:8px}
   .cta-trust{margin-top:10px}
+}
+/* On mobile + short viewport, keep flex spacing instead of fixed margins */
+@media(max-width:640px) and (max-height:700px){
+  .s-title,.s-eyebrow,.s-body,.s-logo,.hero-svg,.audit-card-wrap,.feature-list,.metric-row{margin-bottom:0}
+  .slide-actions,.promo-badge,.cta-trust{margin-top:0}
 }
 
 /* ── Reduced Motion ── */
@@ -747,7 +794,7 @@ body{
       </div>
       <div class="s-eyebrow"><span class="dot"></span> Poconos STR Conference 2026</div>
       <h1 class="s-title">Your AirBnb could be making <em>more money.</em></h1>
-      <p class="s-body">We increase your Airbnb revenue by tracking your Airbnb search position daily, deploying algorithm-timed pricing, and optimizing every part of your listing. All fully managed by our Revenue experts.</p>
+      <p class="s-body">Our team tracks your search position daily, deploys algorithm-timed pricing, and optimizes every part of your listing. Fully managed.</p>
 
       <div class="slide-actions">
         <button class="btn-cta-book" data-cal-link="rev-whisper/discovery-poconos" data-cal-config='{"layout":"month_view"}'>
@@ -888,7 +935,7 @@ body{
 
       <div class="s-eyebrow"><span class="dot"></span> Dynamic Pricing</div>
       <h1 class="s-title">Pricing powered by <em>Gap Night Detection.</em></h1>
-      <p class="s-body">We built proprietary Gap Night Detection technology that identifies every orphan night in your calendar — then actively prices it to convert. No set-it-and-forget-it tools. A dedicated team adjusting your rates daily.</p>
+      <p class="s-body">We find every orphan night in your calendar and price it to convert. Your rates adjusted daily.</p>
       <div class="s-detail">
         <div class="metric-row">
           <div class="metric">
@@ -907,15 +954,15 @@ body{
         <div class="feature-list">
           <div class="feature-item">
             <div class="feature-check"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
-            <div class="feature-text"><strong>Gap Night Detection</strong> — proprietary tech we developed to spot orphan nights between bookings and price them to fill, not sit empty.</div>
+            <div class="feature-text"><strong>Gap Night Detection</strong>: Fills orphan nights between bookings.</div>
           </div>
           <div class="feature-item">
             <div class="feature-check"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
-            <div class="feature-text"><strong>Daily ranking monitoring</strong> — we track your search position across data points nationwide and adjust pricing so you move up, not down.</div>
+            <div class="feature-text"><strong>Daily ranking monitoring</strong>: Track and adjust to move you up in search.</div>
           </div>
           <div class="feature-item">
             <div class="feature-check"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
-            <div class="feature-text"><strong>Competitor price intelligence</strong> — we monitor every competitor's pricing. When they book up, we raise your rates because demand just shifted to you.</div>
+            <div class="feature-text"><strong>Competitor price intelligence</strong>: Raise your rates when competitors book up.</div>
           </div>
         </div>
       </div>
@@ -965,20 +1012,20 @@ body{
 
       <div class="s-eyebrow"><span class="dot"></span> Listing Optimization</div>
       <h1 class="s-title">Every field tuned for the <em>algorithm.</em></h1>
-      <p class="s-body">Our AI agents scan your entire listing — title, description, amenities, tags, house rules — and surface exactly what's costing you ranking position. Then we fix it.</p>
+      <p class="s-body">We surface what's costing you ranking position. Then we fix it.</p>
       <div class="s-detail">
         <div class="feature-list">
           <div class="feature-item">
             <div class="feature-check"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
-            <div class="feature-text"><strong>Full-field audit</strong> — title, description, amenities, highlights, tags, house rules, and every configurable field Airbnb offers.</div>
+            <div class="feature-text"><strong>Full-field audit</strong>: Every field Airbnb offers, optimized.</div>
           </div>
           <div class="feature-item">
             <div class="feature-check"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
-            <div class="feature-text"><strong>AI-powered scanning</strong> — our agents compare your listing against top performers in your market and identify specific gaps.</div>
+            <div class="feature-text"><strong>AI-powered scanning</strong>: Compare against top performers, identify gaps.</div>
           </div>
           <div class="feature-item">
             <div class="feature-check"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
-            <div class="feature-text"><strong>Continuous monitoring</strong> — Airbnb changes its algorithm. We re-audit regularly so your listing stays ahead.</div>
+            <div class="feature-text"><strong>Continuous monitoring</strong>: Re-audited regularly as the algorithm changes.</div>
           </div>
         </div>
       </div>
@@ -991,21 +1038,21 @@ body{
 
       <div class="s-eyebrow"><span class="dot"></span> Photo Optimization</div>
       <h1 class="s-title">Photos that rank. Not just photos that <em>look good.</em></h1>
-      <p class="s-body">Airbnb's algorithm evaluates your photos for brightness, composition, and quality. We use AI to understand your desired guest's booking behavior and our internal graphic designers edit every image to perform for search conversion.</p>
+      <p class="s-body">Airbnb's algorithm scores your photos. Our designers edit every image to boost brightness, composition, and search conversion.</p>
       <div class="s-detail">
         <div class="photo-compare">
           <!-- Before photo -->
           <div class="photo-compare-card before">
-            <div class="photo-compare-label before">Before</div>
+            <div class="photo-compare-label before">Before Enhancements</div>
             <div class="photo-img-wrap">
               <img src="images/properties/livingroom-before.webp" alt="Living room before AI enhancement" class="photo-compare-img">
             </div>
           </div>
           <!-- After photo -->
           <div class="photo-compare-card after">
-            <div class="photo-compare-label after">After AI Enhancement</div>
+            <div class="photo-compare-label after">After Enhancements</div>
             <div class="photo-img-wrap">
-              <img src="images/properties/livingroom-after.webp" alt="Living room after AI enhancement" class="photo-compare-img">
+              <img src="images/properties/livingroom-after.webp" alt="Living room after enhancements" class="photo-compare-img">
             </div>
           </div>
         </div>
@@ -1021,7 +1068,7 @@ body{
     <div class="slide-inner" style="max-width:480px;position:relative;z-index:2">
       <div class="s-eyebrow"><span class="dot"></span> Let's Talk</div>
       <h1 class="s-title">Ready to see what we'd do with <em>your listing?</em></h1>
-      <p class="s-body">Book a 20-minute discovery call. We'll pull your listing data and walk you through exactly where you're leaving revenue behind.</p>
+      <p class="s-body">Book a 20-minute call. We'll show you exactly where you're leaving revenue behind.</p>
 
       <div class="s-cta" style="text-align:center">
         <a href="https://cal.com/rev-whisper/discovery-poconos" class="btn-book" target="_blank" rel="noopener">
