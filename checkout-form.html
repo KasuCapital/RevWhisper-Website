@@ -733,6 +733,7 @@ body.terms-expanded .step[data-step="2"] .form-actions{
 
 <div class="confetti-wrap" id="confetti-wrap"></div>
 
+<script src="/webhooks.js"></script>
 <script>
 let current = 0;
 const totalSteps = 3;
@@ -1042,7 +1043,7 @@ async function submitForm() {
   submitBtn.innerHTML = 'Securing checkout...';
 
   // Send data to Make.com webhook
-  fetch('https://hook.us2.make.com/jgedj1a6t70wyml2umwaaa73maexffrk', {
+  fetch(WEBHOOKS.checkout, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     keepalive: true,

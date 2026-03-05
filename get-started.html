@@ -597,6 +597,7 @@ body::before{
 <!-- Confetti container (injected on success) -->
 <div class="confetti-wrap" id="confetti-wrap"></div>
 
+<script src="/webhooks.js"></script>
 <script>
 let current = 0;
 const totalSteps = 3;
@@ -734,7 +735,7 @@ function submitForm() {
   rwTrack('generate_lead',{page:'get-started',listings:data.listings});
 
   // Send data to Make.com webhook
-  fetch('https://hook.us2.make.com/23rh699yc1ob5tcetd6ionr18431yvyr', {
+  fetch(WEBHOOKS.getStarted, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     keepalive: true,

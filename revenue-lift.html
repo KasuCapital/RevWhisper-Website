@@ -519,6 +519,7 @@ body::before{
 <!-- Confetti container -->
 <div class="confetti-wrap" id="confetti-wrap"></div>
 
+<script src="/webhooks.js"></script>
 <script>
 let current = 0;
 let isTransitioning = false;
@@ -665,6 +666,14 @@ function submitEmail() {
       if (link) { link.href = data.analysis.reportUrl; link.style.display = 'inline-flex'; }
     }
   }).catch(function(err){ console.error('Analysis API error:', err); });
+
+  // Send to Make.com webhook
+  fetch(WEBHOOKS.revenueLift, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email: val, airbnbUrl: listingUrl, revenue: revenue }),
+    keepalive: true
+  }).catch(function(err){ console.error('Make webhook error:', err); });
 
   // Show confirmation email
   document.getElementById('confirm-email').textContent = val;
