@@ -696,9 +696,6 @@ body.terms-expanded .step[data-step="2"] .form-actions{
           <p style="margin-top:16px;text-align:center;font-size:11px;color:var(--g400)">Notices: Admin@RevWhisper.com</p>
         </div>
 
-        <div style="position:absolute;left:-9999px;opacity:0;height:0;width:0;overflow:hidden" aria-hidden="true" tabindex="-1">
-          <label>Leave this blank <input type="text" id="company-url" name="company_url" autocomplete="off" tabindex="-1"></label>
-        </div>
         <label class="terms-agree" id="terms-agree">
           <input type="checkbox" id="agree-check">
           <div class="terms-checkbox">
@@ -1004,9 +1001,6 @@ async function submitForm() {
     return;
   }
   if (submitInProgress) return;
-
-  // Honeypot check — bots fill hidden fields
-  if (document.getElementById('company-url').value) return;
 
   // Collect listing URLs
   const listingUrls = [];

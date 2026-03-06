@@ -501,9 +501,6 @@ body::before{
         </div>
         <div class="field-error">Please enter a valid email address</div>
       </div>
-      <div style="position:absolute;left:-9999px;opacity:0;height:0;width:0;overflow:hidden" aria-hidden="true" tabindex="-1">
-        <label>Leave this blank <input type="text" id="company-url" name="company_url" autocomplete="off" tabindex="-1"></label>
-      </div>
       <div class="form-actions">
         <button class="btn-next accent" onclick="submitEmail()" id="btn-email">Send My Report <span class="arrow">→</span></button>
       </div>
@@ -663,10 +660,6 @@ function submitEmail() {
   }
   if (webhookSent) return;
   email.classList.remove('error');
-
-  // Honeypot check — bots fill hidden fields
-  if (document.getElementById('company-url').value) return;
-
   webhookSent = true;
 
   var fullName = document.getElementById('full-name').value.trim() || null;
