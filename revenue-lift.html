@@ -528,10 +528,10 @@ body::before{
 <!-- Confetti container -->
 <div class="confetti-wrap" id="confetti-wrap"></div>
 
-<script src="/webhooks.js"></script>
 <script>
 let current = 0;
 let isTransitioning = false;
+const FORM_WEBHOOK_ENDPOINT = '/api/form-webhook';
 
 // Pre-fill URL from query param
 (function(){
@@ -651,7 +651,7 @@ function runAnalysis() {
 }
 
 var webhookSent = false;
-function submitEmail() {
+async function submitEmail() {
   var email = document.getElementById('email');
   var val = email.value.trim();
   if (!val || !val.includes('@') || !val.includes('.')) {
@@ -661,12 +661,51 @@ function submitEmail() {
   if (webhookSent) return;
   email.classList.remove('error');
   webhookSent = true;
+  var submitBtn = document.getElementById('btn-email');
+  var originalLabel = submitBtn.innerHTML;
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Sending...';
 
   var fullName = document.getElementById('full-name').value.trim() || null;
   var listingUrl = document.getElementById('listing-url').value;
   var revenue = parseInt(document.getElementById('annual-revenue').value.trim().replace(/[^0-9]/g, '')) || 0;
+  var webhookPayload = {
+    email: val,
+    fullName: fullName,
+    airbnbUrl: listingUrl,
+    revenue: revenue,
+    source: 'revenue-lift',
+    submittedAt: new Date().toISOString()
+  };
 
   rwTrack('revenue_lift_email', { page: 'revenue-lift', email: val, fullName: fullName });
+
+  try {
+    var webhookResponse = await fetch(FORM_WEBHOOK_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        event_type: 'revenue_lift',
+        payload: webhookPayload
+      })
+    });
+
+    if (!webhookResponse.ok) {
+      var message = 'We could not submit your report request. Please try again.';
+      try {
+        var webhookResult = await webhookResponse.json();
+        if (webhookResult && webhookResult.error) message = webhookResult.error;
+      } catch (error) {}
+      throw new Error(message);
+    }
+  } catch (error) {
+    console.error('Revenue lift webhook failed:', error);
+    webhookSent = false;
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = originalLabel;
+    alert(error.message || 'We could not submit your report request. Please try again.');
+    return;
+  }
 
   // Send to RevWhisper analysis API
   fetch('https://rev-whisper-seven.vercel.app/api/public/create-analysis', {
@@ -679,11 +718,6 @@ function submitEmail() {
       if (link) { link.href = data.analysis.reportUrl; link.style.display = 'inline-flex'; }
     }
   }).catch(function(err){ console.error('Analysis API error:', err); });
-
-  // Send to Make.com webhook
-  var webhookData = JSON.stringify({ email: val, fullName: fullName, airbnbUrl: listingUrl, revenue: revenue, source: 'revenue-lift', submittedAt: new Date().toISOString() });
-  var jsonBlob = new Blob([webhookData], { type: 'application/json' });
-  navigator.sendBeacon(WEBHOOKS.revenueLift, jsonBlob);
 
   // Show confirmation email
   document.getElementById('confirm-email').textContent = val;

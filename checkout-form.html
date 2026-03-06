@@ -733,7 +733,6 @@ body.terms-expanded .step[data-step="2"] .form-actions{
 
 <div class="confetti-wrap" id="confetti-wrap"></div>
 
-<script src="/webhooks.js"></script>
 <script>
 let current = 0;
 const totalSteps = 3;
@@ -743,6 +742,7 @@ let isTransitioning = false;
 const params = new URLSearchParams(window.location.search);
 const requestedPlan = params.get('plan');
 const selectedPlan = requestedPlan === 'annual' ? 'annual' : 'monthly';
+const FORM_WEBHOOK_ENDPOINT = '/api/form-webhook';
 const CREATE_CHECKOUT_ENDPOINT = '/api/create-checkout-session';
 const DEFAULT_ENTERPRISE_URL = '/get-started?plan=enterprise';
 let submitInProgress = false;
@@ -1043,11 +1043,25 @@ async function submitForm() {
   submitBtn.disabled = true;
   submitBtn.innerHTML = 'Securing checkout...';
 
-  // Send data to Make.com webhook
-  var jsonBlob = new Blob([JSON.stringify(data)], { type: 'application/json' });
-  navigator.sendBeacon(WEBHOOKS.checkout, jsonBlob);
-
   try {
+    const webhookResponse = await fetch(FORM_WEBHOOK_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        event_type: 'checkout',
+        payload: data
+      })
+    });
+
+    if (!webhookResponse.ok) {
+      let message = 'We could not submit your enrollment. Please try again.';
+      try {
+        const webhookPayload = await webhookResponse.json();
+        if (webhookPayload && webhookPayload.error) message = webhookPayload.error;
+      } catch (error) {}
+      throw new Error(message);
+    }
+
     const response = await fetch(CREATE_CHECKOUT_ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -1083,8 +1097,8 @@ async function submitForm() {
       'Continue to secure checkout'
     );
   } catch (error) {
-    console.error('Stripe checkout setup failed:', error);
-    alert('Checkout is temporarily unavailable. Please email Admin@RevWhisper.com and we will send your payment link directly.');
+    console.error('Checkout submission failed:', error);
+    alert(error.message || 'Checkout is temporarily unavailable. Please email Admin@RevWhisper.com and we will send your payment link directly.');
     submitInProgress = false;
     submitBtn.disabled = !document.getElementById('agree-check').checked;
     submitBtn.innerHTML = 'Complete Enrollment <span class="arrow">→</span>';

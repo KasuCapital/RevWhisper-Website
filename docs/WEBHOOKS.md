@@ -8,12 +8,17 @@ All webhook URLs and their payloads, organized by event. Use this as a reference
 
 **Trigger:** User completes the get-started form and is redirected to Cal.com to book a discovery call.
 
-**Webhook URL:**
+**Public submit endpoint:**
 ```
-https://hook.us2.make.com/23rh699yc1ob5tcetd6ionr18431yvyr
+/api/form-webhook
 ```
 
-**Source file:** `get-started.html` (line ~737)
+**Make target (env var):**
+```
+MAKE_GET_STARTED_WEBHOOK_URL
+```
+
+**Source file:** `get-started.html`
 
 **Method:** `POST`
 
@@ -46,12 +51,17 @@ https://hook.us2.make.com/23rh699yc1ob5tcetd6ionr18431yvyr
 
 **Trigger:** User fills out the checkout form and clicks submit, right before being redirected to Stripe.
 
-**Webhook URL:**
+**Public submit endpoint:**
 ```
-https://hook.us2.make.com/jgedj1a6t70wyml2umwaaa73maexffrk
+/api/form-webhook
 ```
 
-**Source file:** `checkout-form.html` (line ~1045)
+**Make target (env var):**
+```
+MAKE_CHECKOUT_WEBHOOK_URL
+```
+
+**Source file:** `checkout-form.html`
 
 **Method:** `POST`
 
@@ -185,8 +195,11 @@ These must be set in Vercel (or your hosting platform):
 | `STRIPE_SECRET_KEY`      | `api/create-checkout-session.js` | Stripe API authentication          |
 | `STRIPE_WEBHOOK_SECRET`  | `api/stripe-webhook.js`  | Verifies Stripe webhook signatures       |
 | `MAKE_STRIPE_WEBHOOK_URL`| `api/stripe-webhook.js`  | Forwards Stripe events to Make.com       |
+| `MAKE_GET_STARTED_WEBHOOK_URL` | `api/form-webhook.js` | Forwards get-started submissions to Make |
+| `MAKE_CHECKOUT_WEBHOOK_URL` | `api/form-webhook.js` | Forwards checkout submissions to Make |
+| `MAKE_REVENUE_LIFT_WEBHOOK_URL` | `api/form-webhook.js` | Forwards revenue-lift submissions to Make |
 | `STRIPE_PRICE_ONBOARDING`| `api/create-checkout-session.js` | Stripe price ID for onboarding fee |
 | `STRIPE_PRICE_MONTHLY`   | `api/create-checkout-session.js` | Stripe price ID for monthly plan   |
 | `STRIPE_PRICE_ANNUAL`    | `api/create-checkout-session.js` | Stripe price ID for annual plan    |
 
-**Note:** The webhook URLs for bookings (#1) and checkout form (#2) are hardcoded in the client-side HTML — they are not environment variables. This is normal since they run in the browser.
+**Note:** Form pages now post to `/api/form-webhook`, and the Make webhook URLs live server-side. Rotate the old client-exposed Make URLs after deployment.

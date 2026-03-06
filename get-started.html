@@ -596,11 +596,11 @@ body::before{
 <!-- Confetti container (injected on success) -->
 <div class="confetti-wrap" id="confetti-wrap"></div>
 
-<script src="/webhooks.js"></script>
 <script>
 let current = 0;
 const totalSteps = 3;
 let isTransitioning = false;
+const FORM_WEBHOOK_ENDPOINT = '/api/form-webhook';
 
 // Auto-advance when a listing count is selected
 document.querySelectorAll('input[name="listings"]').forEach(r => {
@@ -745,20 +745,29 @@ async function submitForm() {
   rwTrack('generate_lead',{page:'get-started',listings:data.listings});
 
   try {
-    // text/plain avoids the cross-origin JSON preflight that can produce empty webhook runs in Make.
-    await fetch(WEBHOOKS.getStarted, {
+    const response = await fetch(FORM_WEBHOOK_ENDPOINT, {
       method: 'POST',
-      mode: 'no-cors',
-      keepalive: true,
-      headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
-      body: JSON.stringify(data)
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        event_type: 'get_started',
+        payload: data
+      })
     });
+
+    if (!response.ok) {
+      let message = 'We could not submit your information. Please try again.';
+      try {
+        const payload = await response.json();
+        if (payload && payload.error) message = payload.error;
+      } catch (error) {}
+      throw new Error(message);
+    }
   } catch (error) {
     console.error('Get started webhook failed:', error);
     webhookSent = false;
     btn.disabled = false;
     btn.innerHTML = originalLabel;
-    alert('We could not submit your information. Please try again.');
+    alert(error.message || 'We could not submit your information. Please try again.');
     return;
   }
 
