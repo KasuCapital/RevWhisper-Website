@@ -721,12 +721,14 @@ function launchConfetti() {
 }
 
 var webhookSent = false;
-function submitForm() {
+async function submitForm() {
   if (!validateStep(2)) return;
   if (webhookSent) return;
   webhookSent = true;
   const btn = document.getElementById('btn-step2');
   btn.disabled = true;
+  const originalLabel = btn.innerHTML;
+  btn.textContent = 'Submitting...';
 
   const data = {
     listings: document.querySelector('input[name="listings"]:checked')?.value,
@@ -742,9 +744,23 @@ function submitForm() {
   console.log('Form submitted:', data);
   rwTrack('generate_lead',{page:'get-started',listings:data.listings});
 
-  // Send data to Make.com webhook
-  var jsonBlob = new Blob([JSON.stringify(data)], { type: 'application/json' });
-  navigator.sendBeacon(WEBHOOKS.getStarted, jsonBlob);
+  try {
+    // text/plain avoids the cross-origin JSON preflight that can produce empty webhook runs in Make.
+    await fetch(WEBHOOKS.getStarted, {
+      method: 'POST',
+      mode: 'no-cors',
+      keepalive: true,
+      headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+      body: JSON.stringify(data)
+    });
+  } catch (error) {
+    console.error('Get started webhook failed:', error);
+    webhookSent = false;
+    btn.disabled = false;
+    btn.innerHTML = originalLabel;
+    alert('We could not submit your information. Please try again.');
+    return;
+  }
 
   // Redirect to Cal.com with pre-filled params
   const params = new URLSearchParams({
