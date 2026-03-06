@@ -569,6 +569,9 @@ body::before{
         </div>
         <div class="field-error">Please enter a valid phone number</div>
       </div>
+      <div style="position:absolute;left:-9999px;opacity:0;height:0;width:0;overflow:hidden" aria-hidden="true" tabindex="-1">
+        <label>Leave this blank <input type="text" id="company-url" name="company_url" autocomplete="off" tabindex="-1"></label>
+      </div>
       <div class="form-actions">
         <button class="btn-back" onclick="prevStep()"><span class="arrow">←</span> Back</button>
         <button class="btn-next" onclick="submitForm()" id="btn-step2">Submit <span class="arrow">→</span></button>
@@ -720,9 +723,15 @@ function launchConfetti() {
   setTimeout(() => { wrap.innerHTML = ''; }, 4000);
 }
 
+var webhookSent = false;
 function submitForm() {
   if (!validateStep(2)) return;
+  if (webhookSent) return;
 
+  // Honeypot check — bots fill hidden fields
+  if (document.getElementById('company-url').value) return;
+
+  webhookSent = true;
   const btn = document.getElementById('btn-step2');
   btn.disabled = true;
 
@@ -732,7 +741,9 @@ function submitForm() {
     name: document.getElementById('full-name').value,
     email: document.getElementById('email').value,
     phone: document.getElementById('phone-code').value + ' ' + document.getElementById('phone').value,
-    schedule: 'yes'
+    schedule: 'yes',
+    source: 'get-started',
+    submittedAt: new Date().toISOString()
   };
 
   console.log('Form submitted:', data);

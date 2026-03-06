@@ -501,6 +501,9 @@ body::before{
         </div>
         <div class="field-error">Please enter a valid email address</div>
       </div>
+      <div style="position:absolute;left:-9999px;opacity:0;height:0;width:0;overflow:hidden" aria-hidden="true" tabindex="-1">
+        <label>Leave this blank <input type="text" id="company-url" name="company_url" autocomplete="off" tabindex="-1"></label>
+      </div>
       <div class="form-actions">
         <button class="btn-next accent" onclick="submitEmail()" id="btn-email">Send My Report <span class="arrow">→</span></button>
       </div>
@@ -650,6 +653,7 @@ function runAnalysis() {
   activateStep(0);
 }
 
+var webhookSent = false;
 function submitEmail() {
   var email = document.getElementById('email');
   var val = email.value.trim();
@@ -657,7 +661,13 @@ function submitEmail() {
     email.classList.add('error');
     return;
   }
+  if (webhookSent) return;
   email.classList.remove('error');
+
+  // Honeypot check — bots fill hidden fields
+  if (document.getElementById('company-url').value) return;
+
+  webhookSent = true;
 
   var fullName = document.getElementById('full-name').value.trim() || null;
   var listingUrl = document.getElementById('listing-url').value;
@@ -678,8 +688,7 @@ function submitEmail() {
   }).catch(function(err){ console.error('Analysis API error:', err); });
 
   // Send to Make.com webhook
-  // sendBeacon ensures delivery even if the page is closed mid-submit
-  var webhookData = JSON.stringify({ email: val, fullName: fullName, airbnbUrl: listingUrl, revenue: revenue });
+  var webhookData = JSON.stringify({ email: val, fullName: fullName, airbnbUrl: listingUrl, revenue: revenue, source: 'revenue-lift', submittedAt: new Date().toISOString() });
   var jsonBlob = new Blob([webhookData], { type: 'application/json' });
   navigator.sendBeacon(WEBHOOKS.revenueLift, jsonBlob);
 
