@@ -1043,14 +1043,8 @@ async function submitForm() {
   submitBtn.innerHTML = 'Securing checkout...';
 
   // Send data to Make.com webhook
-  fetch(WEBHOOKS.checkout, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    keepalive: true,
-    body: JSON.stringify(data)
-  }).catch((error) => {
-    console.error('Webhook delivery failed:', error);
-  });
+  var jsonBlob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+  navigator.sendBeacon(WEBHOOKS.checkout, jsonBlob);
 
   try {
     const response = await fetch(CREATE_CHECKOUT_ENDPOINT, {

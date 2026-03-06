@@ -344,7 +344,7 @@ body::before{
 .form-actions{display:flex;align-items:center;gap:12px;margin-top:8px}
 .btn-next{
   display:inline-flex;align-items:center;gap:8px;
-  background:var(--black);color:#fff;font-size:14px;font-weight:400;letter-spacing:0;
+  background:var(--accent);color:#fff;font-size:14px;font-weight:400;letter-spacing:0;
   padding:14px 28px;border-radius:var(--radius-sm);border:none;cursor:pointer;
   font-family:var(--body);position:relative;overflow:hidden;
   transition:transform .25s var(--ease-out-back), box-shadow .3s, opacity .3s;
@@ -360,7 +360,6 @@ body::before{
 .btn-next:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:none}
 .btn-next:disabled:hover{transform:none;box-shadow:none}
 .btn-next:disabled::before{display:none}
-.btn-next.accent{background:var(--accent)}
 .btn-next .arrow{display:inline-block;transition:transform .25s var(--ease-out-expo)}
 .btn-next:hover:not(:disabled) .arrow{transform:translateX(3px)}
 
@@ -523,7 +522,7 @@ body::before{
       </div>
       <div class="form-actions">
         <button class="btn-back" onclick="prevStep()"><span class="arrow">←</span> Back</button>
-        <button class="btn-next" onclick="nextStep()" id="btn-step1">Next <span class="arrow">→</span></button>
+        <button class="btn-next" onclick="nextStep()" id="btn-step1">Skip <span class="arrow">→</span></button>
       </div>
     </div>
 
@@ -572,7 +571,7 @@ body::before{
       </div>
       <div class="form-actions">
         <button class="btn-back" onclick="prevStep()"><span class="arrow">←</span> Back</button>
-        <button class="btn-next accent" onclick="submitForm()" id="btn-step2">Submit <span class="arrow">→</span></button>
+        <button class="btn-next" onclick="submitForm()" id="btn-step2">Submit <span class="arrow">→</span></button>
       </div>
     </div>
 
@@ -603,11 +602,12 @@ let current = 0;
 const totalSteps = 3;
 let isTransitioning = false;
 
-// Enable/disable next based on selection
+// Auto-advance when a listing count is selected
 document.querySelectorAll('input[name="listings"]').forEach(r => {
   r.addEventListener('change', () => {
     document.getElementById('btn-step0').disabled = false;
     rwTrack('select_portfolio_size',{size:r.value,page:'get-started'});
+    nextStep();
   });
 });
 
@@ -659,7 +659,8 @@ function validateStep(step) {
   if (step === 1) {
     const url = document.getElementById('airbnb-url');
     const val = url.value.trim();
-    if (!val || (!val.includes('airbnb.com') && !val.includes('airbnb.'))) {
+    // URL is optional — only validate format if something was entered
+    if (val && !val.includes('airbnb.com') && !val.includes('airbnb.')) {
       url.classList.add('error');
       valid = false;
     } else {
@@ -722,6 +723,9 @@ function launchConfetti() {
 function submitForm() {
   if (!validateStep(2)) return;
 
+  const btn = document.getElementById('btn-step2');
+  btn.disabled = true;
+
   const data = {
     listings: document.querySelector('input[name="listings"]:checked')?.value,
     airbnbUrl: document.getElementById('airbnb-url').value,
@@ -735,12 +739,8 @@ function submitForm() {
   rwTrack('generate_lead',{page:'get-started',listings:data.listings});
 
   // Send data to Make.com webhook
-  fetch(WEBHOOKS.getStarted, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    keepalive: true,
-    body: JSON.stringify(data)
-  });
+  var jsonBlob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+  navigator.sendBeacon(WEBHOOKS.getStarted, jsonBlob);
 
   // Redirect to Cal.com with pre-filled params
   const params = new URLSearchParams({
@@ -749,6 +749,13 @@ function submitForm() {
   });
   window.location.href = `https://cal.com/rev-whisper/discovery?${params.toString()}`;
 }
+
+// Toggle step 1 button between Skip / Next based on URL input
+document.getElementById('airbnb-url').addEventListener('input', function() {
+  var btn = document.getElementById('btn-step1');
+  var label = this.value.trim() ? 'Next' : 'Skip';
+  btn.innerHTML = label + ' <span class="arrow">→</span>';
+});
 
 // Clear error on input
 document.querySelectorAll('.field-input').forEach(input => {

@@ -481,7 +481,16 @@ body::before{
     <div class="step" data-step="2">
       <div class="step-eyebrow">Report Ready</div>
       <h1 class="step-title">Your report is <em>ready.</em></h1>
-      <p class="step-desc">Enter your email and we'll send you a detailed Revenue Lift report with actionable insights for your listing.</p>
+      <p class="step-desc">Enter your details and we'll send you a detailed Revenue Lift report with actionable insights for your listing.</p>
+      <div class="field">
+        <label class="field-label" for="full-name">Full Name</label>
+        <div class="input-icon-wrap">
+          <div class="input-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+          </div>
+          <input type="text" class="field-input" id="full-name" placeholder="Jane Doe" autocomplete="name">
+        </div>
+      </div>
       <div class="field">
         <label class="field-label" for="email">Email Address</label>
         <div class="input-icon-wrap">
@@ -650,16 +659,17 @@ function submitEmail() {
   }
   email.classList.remove('error');
 
+  var fullName = document.getElementById('full-name').value.trim() || null;
   var listingUrl = document.getElementById('listing-url').value;
   var revenue = parseInt(document.getElementById('annual-revenue').value.trim().replace(/[^0-9]/g, '')) || 0;
 
-  rwTrack('revenue_lift_email', { page: 'revenue-lift', email: val });
+  rwTrack('revenue_lift_email', { page: 'revenue-lift', email: val, fullName: fullName });
 
   // Send to RevWhisper analysis API
   fetch('https://rev-whisper-seven.vercel.app/api/public/create-analysis', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email: val, airbnbUrl: listingUrl, revenue: revenue })
+    body: JSON.stringify({ email: val, fullName: fullName, airbnbUrl: listingUrl, revenue: revenue })
   }).then(function(res){ return res.json(); }).then(function(data){
     if (data.analysis && data.analysis.reportUrl) {
       var link = document.getElementById('report-link');
@@ -668,12 +678,10 @@ function submitEmail() {
   }).catch(function(err){ console.error('Analysis API error:', err); });
 
   // Send to Make.com webhook
-  fetch(WEBHOOKS.revenueLift, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email: val, airbnbUrl: listingUrl, revenue: revenue }),
-    keepalive: true
-  }).catch(function(err){ console.error('Make webhook error:', err); });
+  // sendBeacon ensures delivery even if the page is closed mid-submit
+  var webhookData = JSON.stringify({ email: val, fullName: fullName, airbnbUrl: listingUrl, revenue: revenue });
+  var jsonBlob = new Blob([webhookData], { type: 'application/json' });
+  navigator.sendBeacon(WEBHOOKS.revenueLift, jsonBlob);
 
   // Show confirmation email
   document.getElementById('confirm-email').textContent = val;
