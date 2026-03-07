@@ -3240,12 +3240,13 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
 </script>
 <!-- GA4 Custom Events -->
 <script>
+function normalizeAirbnbUrl(raw){var s=raw.trim().replace(/^["'<]+|["'>]+$/g,'');if(!/^https?:\/\//i.test(s))s='https://'+s.replace(/^\/\//,'');var url;try{url=new URL(s)}catch(e){return null}var host=url.hostname.replace(/^www\./,'');if(!/^airbnb\.[a-z.]+$/i.test(host))return null;var path=url.pathname.replace(/\/+$/,'');if(/^\/rooms\/\d+/.test(path))return url.href;if(/^\/h\/[a-zA-Z0-9_-]+/.test(path))return url.href;if(/^\/users\/show\/\d+/.test(path))return url.href;if(/^\/p\/[a-zA-Z0-9_-]+/.test(path))return url.href;var sys=['hosting','login','signup','help','account','settings','experiences','s','luxury','wishlists','messages','trips','notifications','manage-listing','resources'];var seg=path.split('/')[1];if(seg&&sys.indexOf(seg)===-1&&/^[a-zA-Z0-9_-]+$/.test(seg))return url.href;return null}
 document.addEventListener('click',function(e){
   var link=e.target.closest('a,button');
   if(!link)return;
   var text=(link.textContent||'').trim().substring(0,60);
   var href=link.getAttribute('href')||'';
-  if(link.classList.contains('calc-btn')){rwTrack('calculator_click',{page:'homepage'});var u=document.querySelector('.calc-input');var v=u?u.value.trim():'';window.location.href='/revenue-lift'+(v?'?url='+encodeURIComponent(v):'');return;}
+  if(link.classList.contains('calc-btn')){rwTrack('calculator_click',{page:'homepage'});var u=document.querySelector('.calc-input');var v=u?u.value.trim():'';if(v){var nv=normalizeAirbnbUrl(v);window.location.href='/revenue-lift?url='+encodeURIComponent(nv||v);}else{window.location.href='/revenue-lift';}return;}
   if(href.indexOf('checkout-form.html?plan=monthly')!==-1){rwTrack('select_plan',{plan:'monthly',page:'homepage',cta_text:text});return;}
   if(href.indexOf('checkout-form.html?plan=annual')!==-1){rwTrack('select_plan',{plan:'annual',page:'homepage',cta_text:text});return;}
   if(href==='/get-started'){rwTrack('cta_click',{destination:'get-started',cta_text:text,page:'homepage'});return;}

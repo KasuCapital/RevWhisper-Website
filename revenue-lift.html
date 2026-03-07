@@ -233,6 +233,69 @@ body::before{
 .btn-next .arrow{display:inline-block;transition:transform .25s var(--ease-out-expo)}
 .btn-next:hover:not(:disabled) .arrow{transform:translateX(3px)}
 
+.btn-back{
+  display:inline-flex;align-items:center;gap:6px;
+  background:transparent;color:var(--g500);font-size:13px;font-weight:400;
+  padding:14px 16px;border-radius:var(--radius-sm);border:1.5px solid var(--g200);
+  cursor:pointer;font-family:var(--body);
+  transition:border-color .25s,color .25s,transform .2s var(--ease-out-back),box-shadow .25s;
+}
+.btn-back .arrow{display:inline-block;transition:transform .25s var(--ease-out-expo)}
+.btn-back:hover{border-color:var(--g300);color:var(--black);transform:translateY(-1px);box-shadow:var(--sh-sm)}
+.btn-back:hover .arrow{transform:translateX(-3px)}
+.btn-back:active{transform:scale(.97)}
+
+/* ── Listing Preview Card ── */
+.listing-preview{
+  display:flex;align-items:center;gap:14px;
+  padding:12px;margin-bottom:24px;
+  border:1.5px solid var(--g200);border-radius:var(--radius);
+  background:var(--g50);
+  animation:fadeSlideUp .5s var(--ease-out-expo) .2s both;
+}
+.preview-img{
+  width:64px;height:48px;border-radius:6px;object-fit:cover;flex-shrink:0;
+  background:var(--g200);
+}
+.preview-info{display:flex;flex-direction:column;gap:2px;min-width:0}
+.preview-title{font-size:14px;font-weight:500;color:var(--black);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.preview-meta{font-size:12px;color:var(--g400);font-weight:300}
+
+/* ── Open Airbnb Helper ── */
+.open-airbnb-wrap{margin-top:28px}
+.open-airbnb-divider{
+  display:block;font-size:12px;color:var(--g400);font-weight:400;
+  text-align:center;margin-bottom:12px;position:relative;
+}
+.open-airbnb-divider::before,.open-airbnb-divider::after{
+  content:'';position:absolute;top:50%;width:calc(50% - 80px);height:1px;background:var(--g200);
+}
+.open-airbnb-divider::before{left:0}
+.open-airbnb-divider::after{right:0}
+.open-airbnb-btn{
+  display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
+  padding:12px 16px;border-radius:var(--radius);
+  border:1.5px solid var(--g200);background:var(--g50);
+  font-size:13px;font-weight:400;color:var(--g500);font-family:var(--body);
+  text-decoration:none;cursor:pointer;
+  transition:border-color .25s, color .25s, background .25s, transform .2s var(--ease-out-back), box-shadow .25s;
+}
+.open-airbnb-btn:hover{border-color:var(--g300);color:var(--black);background:#fff;transform:translateY(-1px);box-shadow:var(--sh-sm)}
+.open-airbnb-btn:active{transform:scale(.98)}
+.open-airbnb-btn .airbnb-logo{flex-shrink:0;display:flex;align-items:center}
+.open-airbnb-btn svg{flex-shrink:0;opacity:.6;transition:opacity .25s}
+.open-airbnb-btn .airbnb-logo svg{opacity:1}
+.open-airbnb-btn:hover svg{opacity:1}
+.paste-btn{border-color:var(--accent-border)!important;background:var(--accent-light)!important;color:var(--accent)!important;font-weight:500!important;animation:fadeSlideUp .4s var(--ease-out-expo) both}
+.paste-btn:hover{background:#fff!important;border-color:var(--accent)!important}
+.paste-btn svg{opacity:.8!important;color:var(--accent)}
+.paste-btn:hover svg{opacity:1!important}
+
+/* stagger animation for open-airbnb-wrap */
+.step.active .open-airbnb-wrap,
+.step.enter-from-below .open-airbnb-wrap,
+.step.enter-from-above .open-airbnb-wrap{animation:fadeSlideUp .5s var(--ease-out-expo) .54s both}
+
 /* ── Analysis Loading ── */
 .analysis-wrap{text-align:center;padding:20px 0}
 .analysis-ring-wrap{position:relative;width:140px;height:140px;margin:0 auto 36px}
@@ -398,9 +461,41 @@ body::before{
 <div class="form-shell">
   <div class="steps-viewport">
 
-    <!-- Step 1: Annual Revenue -->
+    <!-- Step 0: Airbnb URL -->
     <div class="step active" data-step="0">
-      <input type="hidden" id="listing-url" value="">
+      <div class="step-eyebrow">Revenue Analysis</div>
+      <h1 class="step-title">Paste your Airbnb <em>listing URL.</em></h1>
+      <p class="step-desc">We'll pull your listing data directly from Airbnb to build your personalized Revenue Lift report.</p>
+      <div class="field">
+        <label class="field-label" for="listing-url">Airbnb Listing URL</label>
+        <div class="input-icon-wrap">
+          <div class="input-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+          </div>
+          <input type="url" class="field-input" id="listing-url" placeholder="airbnb.com/rooms/12345678" autocomplete="off">
+        </div>
+        <div class="field-hint">Paste the full URL from your listing page — we'll clean it up</div>
+        <div class="field-error" id="url-error">Please enter a valid Airbnb listing URL</div>
+      </div>
+      <div class="form-actions">
+        <button class="btn-next accent" onclick="submitUrl()" id="btn-url">Next <span class="arrow">→</span></button>
+      </div>
+      <div class="open-airbnb-wrap">
+        <span class="open-airbnb-divider">Don't have it handy?</span>
+        <a href="https://www.airbnb.com" target="_blank" rel="noopener" class="open-airbnb-btn" id="open-airbnb-btn">
+          Open Airbnb — copy your listing URL, then come back
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6m4-3h6m0 0v6m0-6L10 14"/></svg>
+        </a>
+        <!-- Shown after returning from Airbnb -->
+        <button class="open-airbnb-btn paste-btn" id="paste-btn" style="display:none" onclick="pasteFromClipboard()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          <span id="paste-btn-text">Click to paste your copied URL</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Step 1: Annual Revenue -->
+    <div class="step" data-step="1">
       <div class="step-eyebrow">Revenue Analysis</div>
       <h1 class="step-title">What's your estimated <em>annual revenue?</em></h1>
       <p class="step-desc">Enter your current or estimated yearly earnings so we can calculate your revenue lift potential.</p>
@@ -416,12 +511,13 @@ body::before{
         <div class="field-error">Please enter your estimated annual revenue</div>
       </div>
       <div class="form-actions">
+        <button class="btn-back" onclick="prevStep()"><span class="arrow">←</span> Back</button>
         <button class="btn-next accent" onclick="startAnalysis()" id="btn-analyze">Calculate My Revenue Lift <span class="arrow">→</span></button>
       </div>
     </div>
 
     <!-- Step 2: Analysis Loading -->
-    <div class="step" data-step="1">
+    <div class="step" data-step="2">
       <div class="analysis-wrap">
         <h2 class="analysis-title">Analyzing your <em>listing...</em></h2>
         <p class="analysis-sub">This usually takes a few seconds</p>
@@ -478,10 +574,18 @@ body::before{
     </div>
 
     <!-- Step 3: Email Capture -->
-    <div class="step" data-step="2">
+    <div class="step" data-step="3">
       <div class="step-eyebrow">Report Ready</div>
       <h1 class="step-title">Your report is <em>ready.</em></h1>
       <p class="step-desc">Enter your details and we'll send you a detailed Revenue Lift report with actionable insights for your listing.</p>
+      <!-- Listing preview (populated by scraper) -->
+      <div class="listing-preview" id="listing-preview" style="display:none">
+        <img class="preview-img" src="" alt="Listing photo">
+        <div class="preview-info">
+          <div class="preview-title"></div>
+          <div class="preview-meta"></div>
+        </div>
+      </div>
       <div class="field">
         <label class="field-label" for="full-name">Full Name</label>
         <div class="input-icon-wrap">
@@ -507,7 +611,7 @@ body::before{
     </div>
 
     <!-- Step 4: Success -->
-    <div class="step" data-step="3">
+    <div class="step" data-step="4">
       <div class="success-state" id="success-state">
         <div class="success-icon">
           <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="#4A6741" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
@@ -529,15 +633,73 @@ body::before{
 <div class="confetti-wrap" id="confetti-wrap"></div>
 
 <script>
-let current = 0;
-let isTransitioning = false;
-const FORM_WEBHOOK_ENDPOINT = '/api/form-webhook';
+var current = 0;
+var isTransitioning = false;
+var FORM_WEBHOOK_ENDPOINT = '/api/form-webhook';
 
-// Pre-fill URL from query param
+// ── URL normalization & validation ──
+function normalizeAirbnbUrl(raw) {
+  var s = raw.trim();
+  if (!s) return null;
+
+  // Strip leading/trailing quotes or angle brackets
+  s = s.replace(/^["'<]+|["'>]+$/g, '');
+
+  // Add protocol if missing
+  if (!/^https?:\/\//i.test(s)) {
+    // Handle "www.airbnb..." or "airbnb..."
+    s = 'https://' + s.replace(/^\/\//, '');
+  }
+
+  // Try to parse as URL
+  var url;
+  try { url = new URL(s); } catch (e) { return null; }
+
+  // Must be an airbnb domain (airbnb.com, airbnb.co.uk, airbnb.ca, etc.)
+  var host = url.hostname.replace(/^www\./, '');
+  if (!/^airbnb\.[a-z.]+$/i.test(host)) return null;
+
+  // Must have a meaningful path: /rooms/ID, /h/slug, /users/show/ID, or custom /slug
+  var path = url.pathname.replace(/\/+$/, '');
+
+  // /rooms/12345 — standard listing
+  if (/^\/rooms\/\d+/.test(path)) return url.href;
+
+  // /h/some-slug — custom listing URL
+  if (/^\/h\/[a-zA-Z0-9_-]+/.test(path)) return url.href;
+
+  // /users/show/12345 — host profile
+  if (/^\/users\/show\/\d+/.test(path)) return url.href;
+
+  // /p/some-slug — place page
+  if (/^\/p\/[a-zA-Z0-9_-]+/.test(path)) return url.href;
+
+  // Bare custom link: airbnb.com/something (single segment, not a system path)
+  var systemPaths = ['hosting','login','signup','help','account','settings','experiences','s','luxury','wishlists','messages','trips','notifications','manage-listing','resources'];
+  var firstSegment = path.split('/')[1];
+  if (firstSegment && !systemPaths.includes(firstSegment) && /^[a-zA-Z0-9_-]+$/.test(firstSegment)) {
+    return url.href;
+  }
+
+  return null;
+}
+
+// ── Pre-fill from query param and skip URL step if valid ──
 (function(){
   var params = new URLSearchParams(window.location.search);
-  var url = params.get('url');
-  if (url) document.getElementById('listing-url').value = url;
+  var rawUrl = params.get('url');
+  if (rawUrl) {
+    var normalized = normalizeAirbnbUrl(rawUrl);
+    if (normalized) {
+      document.getElementById('listing-url').value = normalized;
+      // Skip URL step — start on annual revenue (step 1)
+      current = 1;
+      document.querySelector('.step[data-step="0"]').classList.remove('active');
+      document.querySelector('.step[data-step="1"]').classList.add('active');
+      // Fire scrape immediately so data is ready by email step
+      scrapeListing(normalized);
+    }
+  }
 })();
 
 function transitionStep(from, to, direction) {
@@ -578,6 +740,93 @@ function transitionStep(from, to, direction) {
   }, 500);
 }
 
+function nextStep() {
+  var from = current;
+  current++;
+  transitionStep(from, current, 'forward');
+}
+
+function prevStep() {
+  if (current > 0) {
+    var from = current;
+    current--;
+    transitionStep(from, current, 'backward');
+  }
+}
+
+// ── Listing scrape (fires immediately on URL submit) ──
+var scrapePromise = null;
+var scrapeData = null;
+
+function scrapeListing(url) {
+  scrapePromise = fetch('/api/scrape-listing', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ url: url })
+  })
+  .then(function(res) { return res.ok ? res.json() : null; })
+  .then(function(data) { scrapeData = data; return data; })
+  .catch(function(err) { console.error('Scrape failed:', err); scrapeData = null; return null; });
+}
+
+function applyScrapeData() {
+  if (!scrapeData) return;
+
+  // Pre-fill host name
+  if (scrapeData.hostName) {
+    var nameInput = document.getElementById('full-name');
+    if (nameInput && !nameInput.value.trim()) {
+      nameInput.value = scrapeData.hostName;
+    }
+  }
+
+  // Show hero image + listing title
+  var heroWrap = document.getElementById('listing-preview');
+  if (heroWrap && scrapeData.heroImage) {
+    var img = heroWrap.querySelector('.preview-img');
+    var title = heroWrap.querySelector('.preview-title');
+    var meta = heroWrap.querySelector('.preview-meta');
+
+    if (img) img.src = scrapeData.heroImage;
+    if (title) title.textContent = scrapeData.title || '';
+
+    var metaParts = [];
+    if (scrapeData.location) metaParts.push(scrapeData.location);
+    if (scrapeData.rating) metaParts.push('\u2605 ' + scrapeData.rating);
+    if (meta) meta.textContent = metaParts.join(' · ');
+
+    heroWrap.style.display = 'flex';
+  }
+}
+
+function submitUrl() {
+  var input = document.getElementById('listing-url');
+  var errorEl = document.getElementById('url-error');
+  var raw = input.value.trim();
+
+  if (!raw) {
+    input.classList.add('error');
+    errorEl.textContent = 'Please enter your Airbnb listing URL';
+    return;
+  }
+
+  var normalized = normalizeAirbnbUrl(raw);
+  if (!normalized) {
+    input.classList.add('error');
+    errorEl.textContent = 'That doesn\u2019t look like an Airbnb URL \u2014 try pasting the full link from your listing page';
+    return;
+  }
+
+  input.classList.remove('error');
+  input.value = normalized;
+  rwTrack('revenue_lift_url', { page: 'revenue-lift', url: normalized });
+
+  // Fire scrape immediately in background
+  scrapeListing(normalized);
+
+  nextStep();
+}
+
 function startAnalysis() {
   var rev = document.getElementById('annual-revenue');
   var val = rev.value.trim().replace(/[^0-9]/g, '');
@@ -589,10 +838,10 @@ function startAnalysis() {
 
   rwTrack('revenue_lift_analyze', { page: 'revenue-lift', revenue: val });
 
-  current = 1;
-  transitionStep(0, 1, 'forward');
+  current = 2;
+  transitionStep(1, 2, 'forward');
 
-  // Start the fake analysis sequence
+  // Start the analysis sequence
   setTimeout(runAnalysis, 600);
 }
 
@@ -600,31 +849,34 @@ function runAnalysis() {
   var steps = document.querySelectorAll('.analysis-step');
   var ring = document.getElementById('ring-progress');
   var pctEl = document.getElementById('pct-num');
-  var circumference = 2 * Math.PI * 65; // ~408
+  var circumference = 2 * Math.PI * 65;
   var totalSteps = steps.length;
-  var stepDuration = 2000; // 2s per step
+  var stepDuration = 2000;
   var currentStep = 0;
   var targetPct = 0;
   var currentPct = 0;
 
   function activateStep(idx) {
     if (idx >= totalSteps) {
-      // All done — advance to email step
-      setTimeout(function(){
-        current = 2;
-        transitionStep(1, 2, 'forward');
-      }, 600);
+      // Wait for scrape to finish (if still running), then show email step
+      var proceed = function() {
+        applyScrapeData();
+        current = 3;
+        transitionStep(2, 3, 'forward');
+      };
+      if (scrapePromise) {
+        scrapePromise.then(function() { setTimeout(proceed, 600); });
+      } else {
+        setTimeout(proceed, 600);
+      }
       return;
     }
 
-    // Mark current step active
     steps[idx].classList.add('active');
 
-    // Animate percentage
     targetPct = Math.round(((idx + 1) / totalSteps) * 100);
     animatePct();
 
-    // After duration, mark done and move to next
     setTimeout(function(){
       steps[idx].classList.remove('active');
       steps[idx].classList.add('done');
@@ -638,7 +890,6 @@ function runAnalysis() {
     currentPct++;
     pctEl.textContent = currentPct;
 
-    // Update ring
     var offset = circumference - (circumference * currentPct / 100);
     ring.style.strokeDashoffset = offset;
 
@@ -723,8 +974,8 @@ async function submitEmail() {
   document.getElementById('confirm-email').textContent = val;
 
   // Transition to success
-  current = 3;
-  transitionStep(2, 3, 'forward');
+  current = 4;
+  transitionStep(3, 4, 'forward');
 
   // Trigger success animations
   setTimeout(function(){
@@ -756,6 +1007,59 @@ function launchConfetti() {
   }
 
   setTimeout(function(){ wrap.innerHTML = ''; }, 4000);
+}
+
+// ── Clipboard auto-detect on return from Airbnb ──
+var openedAirbnb = false;
+
+document.getElementById('open-airbnb-btn').addEventListener('click', function() {
+  openedAirbnb = true;
+});
+
+document.addEventListener('visibilitychange', function() {
+  if (document.visibilityState !== 'visible') return;
+  if (!openedAirbnb) return;
+  if (current !== 0) return;
+
+  // Try to read clipboard automatically (works in Chrome with permission)
+  navigator.clipboard.readText().then(function(text) {
+    var normalized = normalizeAirbnbUrl(text);
+    if (normalized) {
+      document.getElementById('listing-url').value = normalized;
+      document.getElementById('listing-url').classList.remove('error');
+      // Auto-advance after a brief moment so they see it filled in
+      setTimeout(function() { submitUrl(); }, 600);
+    } else {
+      // Clipboard didn't have an Airbnb URL — show paste button
+      showPasteButton();
+    }
+  }).catch(function() {
+    // Permission denied — show paste button so they can click to grant access
+    showPasteButton();
+  });
+});
+
+function showPasteButton() {
+  document.getElementById('open-airbnb-btn').style.display = 'none';
+  document.getElementById('paste-btn').style.display = 'flex';
+}
+
+function pasteFromClipboard() {
+  navigator.clipboard.readText().then(function(text) {
+    var normalized = normalizeAirbnbUrl(text);
+    if (normalized) {
+      document.getElementById('listing-url').value = normalized;
+      document.getElementById('listing-url').classList.remove('error');
+      setTimeout(function() { submitUrl(); }, 400);
+    } else {
+      // They copied something that isn't an Airbnb URL
+      document.getElementById('paste-btn-text').textContent = 'That doesn\u2019t look like an Airbnb URL \u2014 try copying again';
+      document.getElementById('listing-url').focus();
+    }
+  }).catch(function() {
+    // Fallback — just focus the input for manual paste
+    document.getElementById('listing-url').focus();
+  });
 }
 
 // Clear error on input
