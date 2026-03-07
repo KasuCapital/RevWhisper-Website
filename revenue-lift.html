@@ -246,35 +246,31 @@ body::before{
 .btn-back:active{transform:scale(.97)}
 
 /* ── Listing Card (Airbnb style) ── */
-.listing-card{margin-bottom:28px}
+.listing-card{margin-bottom:24px;max-width:260px}
 .listing-card-img{
-  width:100%;aspect-ratio:1/1;object-fit:cover;display:block;
+  width:100%;aspect-ratio:20/19;object-fit:cover;display:block;
   border-radius:12px;background:var(--g100);
 }
-.listing-card-body{padding:10px 2px 0}
-.listing-card-row1{display:flex;align-items:center;justify-content:space-between;margin-bottom:2px}
-.listing-card-location{font-size:15px;font-weight:500;color:var(--black)}
+.listing-card-body{padding:8px 2px 0}
+.listing-card-row1{display:flex;align-items:center;justify-content:space-between;margin-bottom:1px}
+.listing-card-location{font-size:13px;font-weight:500;color:var(--black)}
 .listing-card-rating{
   display:inline-flex;align-items:center;gap:3px;
-  font-size:14px;font-weight:400;color:var(--black);
+  font-size:13px;font-weight:400;color:var(--black);
 }
 .listing-card-rating .star{color:var(--black);display:flex}
 .listing-card-title{
-  font-size:14px;font-weight:300;color:var(--g500);line-height:1.4;margin-bottom:2px;
+  font-size:13px;font-weight:300;color:var(--g500);line-height:1.4;margin-bottom:1px;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
-.listing-card-detail{font-size:14px;color:var(--g400);font-weight:300}
-.listing-card-price{margin-top:4px;font-size:14px;color:var(--black)}
+.listing-card-detail{font-size:13px;color:var(--g400);font-weight:300}
+.listing-card-price{margin-top:3px;font-size:13px;color:var(--black)}
 .listing-card-price strong{font-weight:600}
 .listing-card-price span{font-weight:300;color:var(--g500)}
 
 /* stagger listing card animation */
 .step.enter-from-below .listing-card,
 .step.enter-from-above .listing-card{animation:fadeSlideUp .5s var(--ease-out-expo) .2s both}
-
-@media(max-width:640px){
-  .listing-card-img{max-height:240px}
-}
 
 /* ── Open Airbnb Helper ── */
 .open-airbnb-wrap{margin-top:28px}
