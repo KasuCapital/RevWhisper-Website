@@ -248,7 +248,7 @@ body::before{
 /* ── Listing Card (Airbnb style) ── */
 .listing-card{margin-bottom:28px}
 .listing-card-img{
-  width:100%;aspect-ratio:1/1;max-height:280px;object-fit:cover;display:block;
+  width:100%;aspect-ratio:1/1;object-fit:cover;display:block;
   border-radius:12px;background:var(--g100);
 }
 .listing-card-body{padding:10px 2px 0}
@@ -817,13 +817,22 @@ function applyScrapeData() {
     document.getElementById('lc-img').style.display = 'none';
   }
 
-  // Row 1: Location (left) + Rating (right)
-  if (scrapeData.location) {
-    document.getElementById('lc-location').textContent = scrapeData.location;
+  // Safe string helper — never show [object Object]
+  function safeStr(val) {
+    if (val == null) return null;
+    if (typeof val === 'object') return null;
+    return String(val);
   }
 
-  if (scrapeData.rating) {
-    document.getElementById('lc-rating-val').textContent = scrapeData.rating;
+  // Row 1: Location (left) + Rating (right)
+  var loc = safeStr(scrapeData.location);
+  if (loc) {
+    document.getElementById('lc-location').textContent = loc;
+  }
+
+  var rat = safeStr(scrapeData.rating);
+  if (rat) {
+    document.getElementById('lc-rating-val').textContent = rat;
     document.getElementById('lc-rating').style.display = 'inline-flex';
   }
 
@@ -835,14 +844,18 @@ function applyScrapeData() {
 
   // Detail line: bedrooms · bathrooms · reviews
   var details = [];
-  if (scrapeData.bedrooms) details.push(scrapeData.bedrooms + ' bedroom' + (scrapeData.bedrooms > 1 ? 's' : ''));
-  if (scrapeData.bathrooms) details.push(scrapeData.bathrooms + ' bathroom' + (scrapeData.bathrooms > 1 ? 's' : ''));
-  if (scrapeData.reviewCount) details.push(scrapeData.reviewCount + ' reviews');
+  var beds = safeStr(scrapeData.bedrooms);
+  var baths = safeStr(scrapeData.bathrooms);
+  var revs = safeStr(scrapeData.reviewCount);
+  if (beds) details.push(beds + ' bedroom' + (Number(beds) > 1 ? 's' : ''));
+  if (baths) details.push(baths + ' bathroom' + (Number(baths) > 1 ? 's' : ''));
+  if (revs) details.push(revs + ' reviews');
   if (details.length) document.getElementById('lc-detail').textContent = details.join(' \u00b7 ');
 
   // Price
-  if (scrapeData.price) {
-    var priceVal = typeof scrapeData.price === 'number' ? '$' + scrapeData.price : scrapeData.price;
+  var price = safeStr(scrapeData.price);
+  if (price) {
+    var priceVal = !isNaN(Number(price)) ? '$' + price : price;
     document.getElementById('lc-price-val').textContent = priceVal;
     document.getElementById('lc-price').style.display = '';
   }
