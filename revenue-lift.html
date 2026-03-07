@@ -597,7 +597,6 @@ body::before{
               <span id="lc-rating-val"></span>
             </span>
           </div>
-          <div class="listing-card-title" id="lc-title"></div>
           <div class="listing-card-detail" id="lc-detail"></div>
           <div class="listing-card-price" id="lc-price" style="display:none"><strong id="lc-price-val"></strong> <span>night</span></div>
         </div>
@@ -820,10 +819,14 @@ function applyScrapeData() {
     return String(val);
   }
 
-  // Row 1: Location (left) + Rating (right)
+  // Row 1: "Home in Location" (left) + rating (right)
   var loc = safeStr(scrapeData.location);
   if (loc) {
-    document.getElementById('lc-location').textContent = loc;
+    document.getElementById('lc-location').textContent = 'Home in ' + loc;
+    hasContent = true;
+  } else if (scrapeData.title) {
+    document.getElementById('lc-location').textContent = safeStr(scrapeData.title) || '';
+    hasContent = true;
   }
 
   var rat = safeStr(scrapeData.rating);
@@ -832,21 +835,11 @@ function applyScrapeData() {
     document.getElementById('lc-rating').style.display = 'inline-flex';
   }
 
-  // Title
-  if (scrapeData.title) {
-    document.getElementById('lc-title').textContent = scrapeData.title;
-    hasContent = true;
-  }
-
-  // Detail line: bedrooms · bathrooms · reviews
-  var details = [];
+  // Detail line: beds
   var beds = safeStr(scrapeData.bedrooms);
-  var baths = safeStr(scrapeData.bathrooms);
-  var revs = safeStr(scrapeData.reviewCount);
-  if (beds) details.push(beds + ' bedroom' + (Number(beds) > 1 ? 's' : ''));
-  if (baths) details.push(baths + ' bathroom' + (Number(baths) > 1 ? 's' : ''));
-  if (revs) details.push(revs + ' reviews');
-  if (details.length) document.getElementById('lc-detail').textContent = details.join(' \u00b7 ');
+  if (beds) {
+    document.getElementById('lc-detail').textContent = beds + ' bed' + (Number(beds) > 1 ? 's' : '');
+  }
 
   // Price
   var price = safeStr(scrapeData.price);
