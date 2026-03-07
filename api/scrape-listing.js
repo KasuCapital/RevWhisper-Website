@@ -75,22 +75,48 @@ module.exports = async function handler(req, res) {
       return sendJson(res, 404, { error: 'Could not find listing data.' });
     }
 
-    // Return only the fields we need — field names vary by actor, check multiple
+    // Log raw keys so we can see exact structure
+    console.log('Apify listing keys:', Object.keys(listing));
+    console.log('Apify listing sample:', JSON.stringify(listing).slice(0, 2000));
+
+    // Extract rating — could be a number, string, or object like {value: 4.5}
+    let rating = listing.rating || listing.stars || listing.guestSatisfactionOverall || null;
+    if (rating && typeof rating === 'object') {
+      rating = rating.value || rating.accuracy || rating.overall || Object.values(rating).find(v => typeof v === 'number') || null;
+    }
+    if (typeof rating === 'number') rating = Math.round(rating * 100) / 100;
+
+    // Extract hero image — try every known field pattern
+    let heroImage = null;
+    if (listing.images && listing.images.length > 0) {
+      const img = listing.images[0];
+      heroImage = typeof img === 'string' ? img : (img.url || img.pictureUrl || img.large || img.original || img.baseUrl || null);
+    }
+    if (!heroImage && listing.photos && listing.photos.length > 0) {
+      const p = listing.photos[0];
+      heroImage = typeof p === 'string' ? p : (p.url || p.pictureUrl || p.large || p.original || p.baseUrl || null);
+    }
+    if (!heroImage) heroImage = listing.heroImage || listing.thumbnailUrl || listing.pictureUrl || listing.image || listing.thumbnail || null;
+
+    // Extract location
+    let location = null;
+    if (listing.location && typeof listing.location === 'object') {
+      location = listing.location.city || listing.location.name || listing.location.address || null;
+    } else {
+      location = listing.location || listing.address || listing.city || null;
+    }
+
     return sendJson(res, 200, {
       hostName: listing.hostName || listing.host?.name || listing.primaryHost?.name || null,
       title: listing.name || listing.title || null,
-      heroImage: listing.heroImage
-        || (listing.photos && listing.photos[0] && (listing.photos[0].pictureUrl || listing.photos[0].large || listing.photos[0]))
-        || listing.thumbnailUrl
-        || listing.pictureUrl
-        || listing.image
-        || null,
-      location: listing.location || listing.address || listing.city || null,
-      rating: listing.rating || listing.stars || listing.guestSatisfactionOverall || null,
-      reviewCount: listing.reviewsCount || listing.reviews_count || null,
+      heroImage,
+      location,
+      rating,
+      reviewCount: listing.reviewsCount || listing.reviews_count || listing.numberOfReviews || null,
       bedrooms: listing.bedrooms || null,
       bathrooms: listing.bathrooms || null,
-      price: listing.price || listing.pricing?.rate?.amount || null
+      price: listing.price || listing.pricing?.rate?.amount || null,
+      _debug_keys: Object.keys(listing)
     });
   } catch (error) {
     clearTimeout(timeout);
