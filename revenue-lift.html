@@ -904,14 +904,72 @@ function runAnalysis() {
   var pctEl = document.getElementById('pct-num');
   var circumference = 2 * Math.PI * 65;
   var totalSteps = steps.length;
-  var stepDuration = 2000;
   var currentStep = 0;
-  var targetPct = 0;
   var currentPct = 0;
+
+  // Each step has a different duration to feel real
+  // Some fast (already cached), some slow (heavy compute)
+  var stepDurations = [1400, 2400, 3200, 1800, 2200];
+  // Percentage targets per step (not evenly spaced — first steps feel quick)
+  var pctTargets = [15, 38, 65, 85, 100];
+
+  function updateRing(pct) {
+    var offset = circumference - (circumference * pct / 100);
+    ring.style.strokeDashoffset = offset;
+    pctEl.textContent = pct;
+  }
+
+  // Animate percentage with realistic variable speed:
+  // fast bursts, slow crawls, micro-pauses
+  function animatePctTo(target, duration, cb) {
+    var start = currentPct;
+    var range = target - start;
+    if (range <= 0) { if (cb) cb(); return; }
+
+    // Pre-generate a timing curve with random stalls
+    // Break the range into chunks with varying speeds
+    var ticks = [];
+    var pct = start;
+    while (pct < target) {
+      // Random burst: advance 1-4% at a time
+      var burst = Math.min(1 + Math.floor(Math.random() * 3), target - pct);
+      // Random delay: mostly fast, occasional stall
+      var roll = Math.random();
+      var delay;
+      if (roll < 0.12) {
+        // 12% chance: micro-pause (feels like waiting for data)
+        delay = 300 + Math.random() * 500;
+      } else if (roll < 0.3) {
+        // 18% chance: slow tick
+        delay = 120 + Math.random() * 200;
+      } else {
+        // 70% chance: fast tick
+        delay = 30 + Math.random() * 80;
+      }
+      ticks.push({ pct: pct + burst, delay: delay });
+      pct += burst;
+    }
+
+    // Scale all delays so total ≈ duration
+    var totalDelay = 0;
+    for (var i = 0; i < ticks.length; i++) totalDelay += ticks[i].delay;
+    var scale = duration / totalDelay;
+    for (var j = 0; j < ticks.length; j++) ticks[j].delay *= scale;
+
+    var idx = 0;
+    function tick() {
+      if (idx >= ticks.length) { if (cb) cb(); return; }
+      var t = ticks[idx];
+      currentPct = t.pct;
+      updateRing(currentPct);
+      idx++;
+      setTimeout(tick, t.delay);
+    }
+    tick();
+  }
 
   function activateStep(idx) {
     if (idx >= totalSteps) {
-      // Wait for scrape to finish (if still running), then show email step
       var proceed = function() {
         applyScrapeData();
         current = 3;
@@ -927,28 +985,19 @@ function runAnalysis() {
 
     steps[idx].classList.add('active');
 
-    targetPct = Math.round(((idx + 1) / totalSteps) * 100);
-    animatePct();
+    var target = pctTargets[idx];
+    var duration = stepDurations[idx];
 
-    setTimeout(function(){
+    animatePctTo(target, duration, function() {
       steps[idx].classList.remove('active');
       steps[idx].classList.add('done');
-      currentStep++;
-      activateStep(currentStep);
-    }, stepDuration);
-  }
-
-  function animatePct() {
-    if (currentPct >= targetPct) return;
-    currentPct++;
-    pctEl.textContent = currentPct;
-
-    var offset = circumference - (circumference * currentPct / 100);
-    ring.style.strokeDashoffset = offset;
-
-    if (currentPct < targetPct) {
-      setTimeout(animatePct, stepDuration / ((targetPct - (currentPct - 1)) || 1));
-    }
+      // Small pause between steps (like the system is switching tasks)
+      var gap = 200 + Math.random() * 400;
+      setTimeout(function() {
+        currentStep++;
+        activateStep(currentStep);
+      }, gap);
+    });
   }
 
   activateStep(0);
