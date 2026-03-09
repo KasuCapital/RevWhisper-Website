@@ -11,9 +11,7 @@
   if(hasUtm||!sessionStorage.getItem(key)){
     var data={};
     utmFields.forEach(function(f){if(params.get(f))data[f]=params.get(f);});
-    if(document.referrer){
-      try{data.referrer=new URL(document.referrer).hostname;}catch(e){data.referrer=document.referrer;}
-    }
+    try{data.referrer=document.referrer?new URL(document.referrer).hostname:null;}catch(e){data.referrer=document.referrer||null;}
     data.landing_page=window.location.pathname;
     data.arrived_at=new Date().toISOString();
     sessionStorage.setItem(key,JSON.stringify(data));
