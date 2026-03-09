@@ -1,6 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- Attribution tracking (cookie-free) -->
+<script>
+(function(){
+  var key='rw_attribution';
+  var params=new URLSearchParams(window.location.search);
+  var utmFields=['utm_source','utm_medium','utm_campaign','utm_term','utm_content'];
+  var hasUtm=utmFields.some(function(f){return params.has(f);});
+  if(hasUtm||!sessionStorage.getItem(key)){
+    var data={};
+    utmFields.forEach(function(f){if(params.get(f))data[f]=params.get(f);});
+    if(document.referrer){
+      try{data.referrer=new URL(document.referrer).hostname;}catch(e){data.referrer=document.referrer;}
+    }
+    data.landing_page=window.location.pathname;
+    data.arrived_at=new Date().toISOString();
+    sessionStorage.setItem(key,JSON.stringify(data));
+  }
+})();
+</script>
 <!-- Cookie Consent + GA4 (consent-gated) -->
 <script>
 window.dataLayer=window.dataLayer||[];
