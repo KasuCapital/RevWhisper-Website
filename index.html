@@ -792,6 +792,9 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
 .compare-table.in .compare-row:nth-child(7){transition-delay:.85s}
 .compare-table.in .compare-row:nth-child(8){transition-delay:.95s}
 .compare-table.in .compare-row:nth-child(9){transition-delay:1.05s}
+.compare-table.in .compare-row:nth-child(10){transition-delay:1.15s}
+.compare-table.in .compare-row:nth-child(11){transition-delay:1.25s}
+.compare-table.in .compare-row:nth-child(12){transition-delay:1.35s}
 /* Checkmark pop */
 .compare-yes,.compare-no,.compare-partial{opacity:0;transform:scale(.3);transition:opacity .35s cubic-bezier(.34,1.56,.64,1),transform .35s cubic-bezier(.34,1.56,.64,1)}
 .compare-table.in .compare-row:nth-child(1) .compare-yes,.compare-table.in .compare-row:nth-child(1) .compare-no,.compare-table.in .compare-row:nth-child(1) .compare-partial{opacity:1;transform:scale(1);transition-delay:.45s}
@@ -803,6 +806,9 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
 .compare-table.in .compare-row:nth-child(7) .compare-yes,.compare-table.in .compare-row:nth-child(7) .compare-no,.compare-table.in .compare-row:nth-child(7) .compare-partial{opacity:1;transform:scale(1);transition-delay:1.05s}
 .compare-table.in .compare-row:nth-child(8) .compare-yes,.compare-table.in .compare-row:nth-child(8) .compare-no,.compare-table.in .compare-row:nth-child(8) .compare-partial{opacity:1;transform:scale(1);transition-delay:1.15s}
 .compare-table.in .compare-row:nth-child(9) .compare-yes,.compare-table.in .compare-row:nth-child(9) .compare-no,.compare-table.in .compare-row:nth-child(9) .compare-partial{opacity:1;transform:scale(1);transition-delay:1.25s}
+.compare-table.in .compare-row:nth-child(10) .compare-yes,.compare-table.in .compare-row:nth-child(10) .compare-no,.compare-table.in .compare-row:nth-child(10) .compare-partial{opacity:1;transform:scale(1);transition-delay:1.35s}
+.compare-table.in .compare-row:nth-child(11) .compare-yes,.compare-table.in .compare-row:nth-child(11) .compare-no,.compare-table.in .compare-row:nth-child(11) .compare-partial{opacity:1;transform:scale(1);transition-delay:1.45s}
+.compare-table.in .compare-row:nth-child(12) .compare-yes,.compare-table.in .compare-row:nth-child(12) .compare-no,.compare-table.in .compare-row:nth-child(12) .compare-partial{opacity:1;transform:scale(1);transition-delay:1.55s}
 /* Row hover highlight */
 .compare-row:not(.compare-head){transition:background .25s ease,opacity .45s cubic-bezier(.22,1,.36,1),transform .45s cubic-bezier(.22,1,.36,1)}
 .compare-row:not(.compare-head):hover{background:rgba(74,103,65,.03)}
@@ -1903,7 +1909,7 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
         <div class="compare-col compare-ours"><span class="compare-yes">&#10003;</span></div>
       </div>
       <div class="compare-row">
-        <div class="compare-feat">Professional photo direction</div>
+        <div class="compare-feat">Professional image editing</div>
         <div class="compare-col"><span class="compare-no">&mdash;</span></div>
         <div class="compare-col"><span class="compare-no">&mdash;</span></div>
         <div class="compare-col compare-ours"><span class="compare-yes">&#10003;</span></div>
@@ -1928,6 +1934,24 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
       </div>
       <div class="compare-row">
         <div class="compare-feat">Performance-backed guarantee</div>
+        <div class="compare-col"><span class="compare-no">&mdash;</span></div>
+        <div class="compare-col"><span class="compare-no">&mdash;</span></div>
+        <div class="compare-col compare-ours"><span class="compare-yes">&#10003;</span></div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-feat">Ranking by unbooked dates</div>
+        <div class="compare-col"><span class="compare-no">&mdash;</span></div>
+        <div class="compare-col"><span class="compare-no">&mdash;</span></div>
+        <div class="compare-col compare-ours"><span class="compare-yes">&#10003;</span></div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-feat">View volume insights for unbooked dates</div>
+        <div class="compare-col"><span class="compare-no">&mdash;</span></div>
+        <div class="compare-col"><span class="compare-no">&mdash;</span></div>
+        <div class="compare-col compare-ours"><span class="compare-yes">&#10003;</span></div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-feat">Optimal guest insights</div>
         <div class="compare-col"><span class="compare-no">&mdash;</span></div>
         <div class="compare-col"><span class="compare-no">&mdash;</span></div>
         <div class="compare-col compare-ours"><span class="compare-yes">&#10003;</span></div>
@@ -3256,5 +3280,6 @@ document.addEventListener('click',function(e){
 });
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
+<img src="https://tracker.metricool.com/c3po.jpg?hash=75df2c2b89fa3a69e39a2fae0e13bd91" style="position:absolute;left:-9999px" alt="" />
 </body>
 </html>
