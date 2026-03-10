@@ -1005,40 +1005,52 @@ function runAnalysis() {
         if (prefillName && prefillEmail) {
           var listingUrl = document.getElementById('listing-url').value;
           var revenue = parseInt(document.getElementById('annual-revenue').value.trim().replace(/[^0-9]/g, '')) || 0;
+          var autoPayload = {
+            email: prefillEmail, fullName: prefillName, airbnbUrl: listingUrl,
+            revenue: revenue, source: 'revenue-lift',
+            submittedAt: new Date().toISOString(), attribution: rwAttribution()
+          };
 
-          // Fire webhook (non-blocking)
           webhookSent = true;
+
+          // Wait for webhook to succeed before showing confirmation
           fetch(FORM_WEBHOOK_ENDPOINT, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ event_type: 'revenue_lift', payload: {
-              email: prefillEmail, fullName: prefillName, airbnbUrl: listingUrl,
-              revenue: revenue, source: 'revenue-lift',
-              submittedAt: new Date().toISOString(), attribution: rwAttribution()
-            }})
-          }).catch(function(err){ console.error('Auto-submit webhook failed:', err); });
+            body: JSON.stringify({ event_type: 'revenue_lift', payload: autoPayload })
+          }).then(function(res){
+            if (!res.ok) throw new Error('Webhook failed');
 
-          // Fire analysis API (non-blocking)
-          fetch('https://rev-whisper-seven.vercel.app/api/public/create-analysis', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: prefillEmail, fullName: prefillName, airbnbUrl: listingUrl, revenue: revenue })
-          }).then(function(res){ return res.json(); }).then(function(data){
-            if (data.analysis && data.analysis.reportUrl) {
-              var link = document.getElementById('report-link');
-              if (link) { link.href = data.analysis.reportUrl; link.style.display = 'inline-flex'; }
-            }
-          }).catch(function(err){ console.error('Analysis API error:', err); });
+            // Webhook succeeded — fire analysis API (non-blocking)
+            fetch('https://rev-whisper-seven.vercel.app/api/public/create-analysis', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email: prefillEmail, fullName: prefillName, airbnbUrl: listingUrl, revenue: revenue })
+            }).then(function(r){ return r.json(); }).then(function(data){
+              if (data.analysis && data.analysis.reportUrl) {
+                var link = document.getElementById('report-link');
+                if (link) { link.href = data.analysis.reportUrl; link.style.display = 'inline-flex'; }
+              }
+            }).catch(function(err){ console.error('Analysis API error:', err); });
 
-          // Jump to success
-          document.getElementById('confirm-email').textContent = prefillEmail;
-          current = 4;
-          transitionStep(2, 4, 'forward');
-          setTimeout(function(){
-            document.getElementById('success-state').classList.add('revealed');
-            launchConfetti();
-          }, 400);
-          rwTrack('revenue_lift_email', { page: 'revenue-lift', email: prefillEmail, fullName: prefillName, auto: true });
+            // Show success
+            document.getElementById('confirm-email').textContent = prefillEmail;
+            current = 4;
+            transitionStep(2, 4, 'forward');
+            setTimeout(function(){
+              document.getElementById('success-state').classList.add('revealed');
+              launchConfetti();
+            }, 400);
+            rwTrack('revenue_lift_email', { page: 'revenue-lift', email: prefillEmail, fullName: prefillName, auto: true });
+          }).catch(function(err){
+            // Webhook failed — fall back to showing email step so user can retry manually
+            console.error('Auto-submit webhook failed:', err);
+            webhookSent = false;
+            document.getElementById('full-name').value = prefillName;
+            document.getElementById('email').value = prefillEmail;
+            current = 3;
+            transitionStep(2, 3, 'forward');
+          });
           return;
         }
         current = 3;
