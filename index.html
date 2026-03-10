@@ -105,15 +105,25 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
 /* ── Layout ── */
 .w{max-width:1100px;margin:0 auto;padding:0 28px}
 
-/* ── Floating Nav ── */
-.float-nav{position:fixed;top:20px;left:0;right:0;z-index:200;pointer-events:none;padding:0 28px;display:flex;align-items:center;justify-content:space-between;max-width:1100px;margin:0 auto}
-.float-logo{pointer-events:auto;display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--black);background:#fff;padding:10px 18px 10px 14px;border-radius:var(--radius);box-shadow:0 2px 12px rgba(50,48,47,.1),0 0 0 1px rgba(50,48,47,.04);transition:box-shadow .2s ease,transform .2s ease}
-.float-logo:hover{box-shadow:0 4px 20px rgba(50,48,47,.14),0 0 0 1px rgba(50,48,47,.06);transform:translateY(-1px)}
-.lm{width:32px;height:32px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+/* ── Floating Nav Bar ── */
+@keyframes fbSlideIn{from{opacity:0;transform:translate(-50%,-20px)}to{opacity:1;transform:translate(-50%,0)}}
+.float-bar{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:200;display:flex;align-items:center;max-width:1060px;width:calc(100% - 56px);background:var(--white);padding:8px 8px 8px 22px;border-radius:var(--radius);box-shadow:0 2px 20px rgba(50,48,47,.08),0 0 0 1px rgba(50,48,47,.04);animation:fbSlideIn .6s cubic-bezier(.34,1.56,.64,1) both;transition:box-shadow .3s ease,padding .3s ease}
+.float-bar.scrolled{box-shadow:0 4px 28px rgba(50,48,47,.12),0 0 0 1px rgba(50,48,47,.06)}
+.fb-logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--black);flex-shrink:0;transition:opacity .2s ease}
+.fb-logo:hover{opacity:.7}
+.lm{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--accent)}
 .ln{font-family:var(--heading);font-size:15px;font-weight:600;letter-spacing:-.02em}
-.float-cta{pointer-events:auto}
-.btn-pill{background:var(--accent);color:#fff;padding:10px 22px;border-radius:var(--radius);font-size:13px;font-weight:500;text-decoration:none;transition:transform .25s ease,box-shadow .25s ease;white-space:nowrap;box-shadow:0 2px 12px rgba(74,103,65,.15),0 0 0 1px rgba(74,103,65,.08)}
-.btn-pill:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(74,103,65,.2)}
+.fb-links{display:flex;align-items:center;gap:2px;margin:0 auto}
+.fb-link{font-family:var(--body);font-size:13px;font-weight:400;color:var(--g500);text-decoration:none;padding:8px 16px;border-radius:var(--radius-sm);transition:color .2s ease,background .2s ease;white-space:nowrap}
+.fb-link:hover{color:var(--black);background:var(--g50)}
+.fb-link.active{color:var(--accent);background:var(--accent-light);font-weight:500}
+.fb-cta{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#fff;padding:10px 24px;border-radius:var(--radius);font-family:var(--body);font-size:13px;font-weight:500;text-decoration:none;white-space:nowrap;flex-shrink:0;transition:transform .25s ease,box-shadow .25s ease;box-shadow:0 2px 8px rgba(74,103,65,.15)}
+.fb-cta:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(74,103,65,.25)}
+.fb-hamburger{display:none;background:none;border:none;cursor:pointer;padding:10px;flex-direction:column;gap:5px;align-items:center;justify-content:center}
+.fb-ham-line{display:block;width:18px;height:2px;background:var(--black);border-radius:1px;transition:transform .3s ease,opacity .3s ease}
+.fb-hamburger.open .fb-ham-line:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.fb-hamburger.open .fb-ham-line:nth-child(2){opacity:0}
+.fb-hamburger.open .fb-ham-line:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
 
 /* ── Buttons ── */
 .btn-primary{display:inline-flex;align-items:center;gap:6px;background:var(--black);color:#fff;font-size:13px;font-weight:400;letter-spacing:0;padding:12px 24px;border-radius:var(--radius-sm);text-decoration:none;transition:transform .25s ease,box-shadow .25s ease}
@@ -130,7 +140,7 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
 .em-mark-hi{font-style:italic;background:linear-gradient(to top,var(--accent-light) 32%,transparent 32%);padding:0 2px}
 
 /* ── Hero ── */
-#hero{padding:150px 0 100px;text-align:center;position:relative;overflow:hidden}
+#hero{padding:160px 0 100px;text-align:center;position:relative;overflow:hidden}
 .hero-glow{position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:800px;max-width:100vw;height:500px;background:radial-gradient(ellipse at 50% 40%,rgba(74,103,65,.07) 0%,transparent 65%);pointer-events:none}
 .hero-badge-wrap{display:inline-flex;align-items:center;gap:10px;margin-bottom:28px}
 .hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--accent-light);border:1px solid var(--accent-border);color:var(--accent);font-size:12px;font-weight:600;padding:5px 14px 5px 10px;border-radius:var(--radius-sm)}
@@ -336,7 +346,7 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
 @keyframes calFloatBefore{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
 @keyframes calFloatAfter{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 .hiw-steps-col{position:relative;padding-left:0}
-.hiw-vline{position:absolute;left:21px;top:42px;bottom:42px;width:0;border-left:2px dashed var(--accent-border);z-index:0;transform:scaleY(0);transform-origin:top;transition:transform .8s cubic-bezier(0.25,0.1,0.25,1)}
+.hiw-vline{position:absolute;left:21px;top:22px;bottom:22px;width:0;border-left:2px dashed var(--accent-border);z-index:0;transform:scaleY(0);transform-origin:top;transition:transform .8s cubic-bezier(0.25,0.1,0.25,1)}
 .hiw-vline.in{transform:scaleY(1)}
 .hiw-img-wrap img{transition:transform .6s ease,box-shadow .6s ease}
 .hiw-img-wrap:hover img{transform:scale(1.02);box-shadow:0 12px 40px rgba(0,0,0,.12)}
@@ -577,14 +587,10 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
 .stakes-thumb{
   width:36px;height:36px;border-radius:var(--radius-sm);flex-shrink:0;position:relative;
   border:1px solid rgba(255,255,255,.12);overflow:hidden;
-  background:linear-gradient(145deg,var(--thumb-bg,#8B7355),var(--thumb-bg-dark,#6f5a4b));
+  background:#2a2520;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.14);
-  display:grid;place-items:center;
 }
-.stakes-thumb svg{width:24px;height:24px;display:block}
-.stakes-thumb .house-roof{fill:var(--thumb-roof,#F3E6D1)}
-.stakes-thumb .house-body{fill:var(--thumb-wall,#E7D2B4)}
-.stakes-thumb .house-door,.stakes-thumb .house-window{fill:var(--thumb-ink,#6A5443)}
+.stakes-thumb img{width:100%;height:100%;object-fit:cover;display:block}
 .stakes-row.yours .stakes-thumb{border:1.5px solid rgba(184,82,82,.35);box-shadow:0 0 0 2px rgba(184,82,82,.12),inset 0 1px 0 rgba(255,255,255,.16)}
 .stakes-info{flex:1;min-width:0}
 .stakes-name{font-family:var(--body);font-size:12px;font-weight:400;color:var(--g300);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3;margin-bottom:3px}
@@ -847,11 +853,14 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
 /* ── Responsive ── */
 @media(max-width:900px){
   .w{padding:0 20px}
-  .float-nav{padding:0 16px;top:14px}
-  .float-logo{padding:8px 14px 8px 10px}
+  .float-bar{top:14px;width:calc(100% - 32px);padding:8px 8px 8px 16px}
+  .fb-links{display:none;position:absolute;top:calc(100% + 10px);left:0;right:0;background:var(--white);border-radius:16px;padding:8px;flex-direction:column;gap:0;box-shadow:0 8px 32px rgba(50,48,47,.12),0 0 0 1px rgba(50,48,47,.04)}
+  .fb-links.open{display:flex}
+  .fb-link{padding:12px 16px;border-radius:12px;font-size:14px;width:100%}
+  .fb-hamburger{display:flex}
+  .fb-cta{font-size:12px;padding:8px 18px}
   .ln{font-size:13px}
   .lm{width:28px;height:28px}
-  .btn-pill{font-size:12px;padding:8px 16px}
   #hero{padding:100px 0 72px}
   .hero-h1{font-size:42px}
   .calc-input-wrap{flex-direction:column}
@@ -932,6 +941,7 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
 
 /* ── Reduced Motion ── */
 @media(prefers-reduced-motion:reduce){
+  .float-bar{animation:none;opacity:1;transform:translateX(-50%)}
   .r{opacity:1;transform:none;transition:none}
   .hiw-vline{transform:scaleY(1);transition:none}
   .hiw-ba-float{animation:none!important}
@@ -962,15 +972,24 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
 <!-- ════════════════════════════════════════════════
      NAV
      ════════════════════════════════════════════════ -->
-<div class="float-nav">
-  <a href="/" class="float-logo">
-    <div class="lm"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24" fill="none"><path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="#32302F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="#32302F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+<nav class="float-bar" id="float-bar">
+  <a href="/" class="fb-logo">
+    <div class="lm"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24" fill="none"><path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
     <span class="ln">RevWhisper</span>
   </a>
-  <div class="float-cta">
-    <a href="/get-started" class="btn-pill">Book a Strategy Call</a>
+  <div class="fb-links" id="fb-links">
+    <a href="#solution" class="fb-link" data-section="solution">What We Do</a>
+    <a href="#how-it-works" class="fb-link" data-section="how-it-works">How It Works</a>
+    <a href="#credibility" class="fb-link" data-section="credibility">Results</a>
+    <a href="#pricing" class="fb-link" data-section="pricing">Pricing</a>
   </div>
-</div>
+  <a href="/get-started" class="fb-cta">Book a Strategy Call</a>
+  <button class="fb-hamburger" id="fb-hamburger" aria-label="Toggle navigation" aria-expanded="false">
+    <span class="fb-ham-line"></span>
+    <span class="fb-ham-line"></span>
+    <span class="fb-ham-line"></span>
+  </button>
+</nav>
 
 <!-- ════════════════════════════════════════════════
      HERO
@@ -1771,14 +1790,8 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
           <div class="stakes-list" id="stakesRankList">
             <div class="stakes-row managed" data-drift="-0.09">
               <div class="stakes-pos">1</div>
-              <div class="stakes-thumb" style="--thumb-bg:#8B7355;--thumb-bg-dark:#6f5b47;--thumb-roof:#F3E6D1;--thumb-wall:#E6D0B1;--thumb-ink:#5A4637">
-                <svg viewBox="0 0 36 36" aria-hidden="true" focusable="false">
-                  <path class="house-roof" d="M8 17.5L18 10L28 17.5V19H8z"/>
-                  <rect class="house-body" x="10" y="18" width="16" height="11" rx="2"/>
-                  <rect class="house-door" x="16.4" y="22.2" width="3.2" height="6.8" rx=".8"/>
-                  <rect class="house-window" x="12.3" y="20.7" width="2.7" height="2.3" rx=".5"/>
-                  <rect class="house-window" x="21" y="20.7" width="2.7" height="2.3" rx=".5"/>
-                </svg>
+              <div class="stakes-thumb">
+                <img src="images/airbnbs/creekstone-lodge.png" alt="Creekstone Lodge">
               </div>
               <div class="stakes-info">
                 <div class="stakes-name">Creekstone Lodge</div>
@@ -1787,14 +1800,8 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
             </div>
             <div class="stakes-row managed" data-drift="-0.06">
               <div class="stakes-pos">2</div>
-              <div class="stakes-thumb" style="--thumb-bg:#6B8E7B;--thumb-bg-dark:#577466;--thumb-roof:#E4EFEA;--thumb-wall:#D3E4DB;--thumb-ink:#3F5A4C">
-                <svg viewBox="0 0 36 36" aria-hidden="true" focusable="false">
-                  <path class="house-roof" d="M8 17.5L18 10L28 17.5V19H8z"/>
-                  <rect class="house-body" x="10" y="18" width="16" height="11" rx="2"/>
-                  <rect class="house-door" x="16.4" y="22.2" width="3.2" height="6.8" rx=".8"/>
-                  <rect class="house-window" x="12.3" y="20.7" width="2.7" height="2.3" rx=".5"/>
-                  <rect class="house-window" x="21" y="20.7" width="2.7" height="2.3" rx=".5"/>
-                </svg>
+              <div class="stakes-thumb">
+                <img src="images/airbnbs/timber-ridge-retreat.png" alt="Timber Ridge Retreat">
               </div>
               <div class="stakes-info">
                 <div class="stakes-name">Timber Ridge Retreat</div>
@@ -1803,14 +1810,8 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
             </div>
             <div class="stakes-row" data-drift="0.025">
               <div class="stakes-pos">3</div>
-              <div class="stakes-thumb" style="--thumb-bg:#A0887A;--thumb-bg-dark:#826c5f;--thumb-roof:#F2E9DE;--thumb-wall:#E6D9CC;--thumb-ink:#5E4B40">
-                <svg viewBox="0 0 36 36" aria-hidden="true" focusable="false">
-                  <path class="house-roof" d="M8 17.5L18 10L28 17.5V19H8z"/>
-                  <rect class="house-body" x="10" y="18" width="16" height="11" rx="2"/>
-                  <rect class="house-door" x="16.4" y="22.2" width="3.2" height="6.8" rx=".8"/>
-                  <rect class="house-window" x="12.3" y="20.7" width="2.7" height="2.3" rx=".5"/>
-                  <rect class="house-window" x="21" y="20.7" width="2.7" height="2.3" rx=".5"/>
-                </svg>
+              <div class="stakes-thumb">
+                <img src="images/airbnbs/pine-valley-cabin.png" alt="Pine Valley Cabin">
               </div>
               <div class="stakes-info">
                 <div class="stakes-name">Pine Valley Cabin</div>
@@ -1819,14 +1820,8 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
             </div>
             <div class="stakes-row yours" data-drift="0.14">
               <div class="stakes-pos">4</div>
-              <div class="stakes-thumb" style="--thumb-bg:#7A9B8E;--thumb-bg-dark:#5f7e73;--thumb-roof:#EAF2EE;--thumb-wall:#D9E7DF;--thumb-ink:#456152">
-                <svg viewBox="0 0 36 36" aria-hidden="true" focusable="false">
-                  <path class="house-roof" d="M8 17.5L18 10L28 17.5V19H8z"/>
-                  <rect class="house-body" x="10" y="18" width="16" height="11" rx="2"/>
-                  <rect class="house-door" x="16.4" y="22.2" width="3.2" height="6.8" rx=".8"/>
-                  <rect class="house-window" x="12.3" y="20.7" width="2.7" height="2.3" rx=".5"/>
-                  <rect class="house-window" x="21" y="20.7" width="2.7" height="2.3" rx=".5"/>
-                </svg>
+              <div class="stakes-thumb">
+                <img src="images/airbnbs/your-listing.png" alt="Your Listing">
               </div>
               <div class="stakes-info">
                 <div class="stakes-name">Your Listing</div>
@@ -1835,14 +1830,8 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
             </div>
             <div class="stakes-row managed" data-drift="-0.08">
               <div class="stakes-pos">5</div>
-              <div class="stakes-thumb" style="--thumb-bg:#8B6F5E;--thumb-bg-dark:#6f584b;--thumb-roof:#F1E4D8;--thumb-wall:#E3D1C0;--thumb-ink:#5B473D">
-                <svg viewBox="0 0 36 36" aria-hidden="true" focusable="false">
-                  <path class="house-roof" d="M8 17.5L18 10L28 17.5V19H8z"/>
-                  <rect class="house-body" x="10" y="18" width="16" height="11" rx="2"/>
-                  <rect class="house-door" x="16.4" y="22.2" width="3.2" height="6.8" rx=".8"/>
-                  <rect class="house-window" x="12.3" y="20.7" width="2.7" height="2.3" rx=".5"/>
-                  <rect class="house-window" x="21" y="20.7" width="2.7" height="2.3" rx=".5"/>
-                </svg>
+              <div class="stakes-thumb">
+                <img src="images/airbnbs/summit-view-chalet.png" alt="Summit View Chalet">
               </div>
               <div class="stakes-info">
                 <div class="stakes-name">Summit View Chalet</div>
@@ -1851,14 +1840,8 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
             </div>
             <div class="stakes-row" data-drift="0.04">
               <div class="stakes-pos">6</div>
-              <div class="stakes-thumb" style="--thumb-bg:#9B8B7A;--thumb-bg-dark:#7e7062;--thumb-roof:#EFE5D9;--thumb-wall:#E1D4C5;--thumb-ink:#5C4B3E">
-                <svg viewBox="0 0 36 36" aria-hidden="true" focusable="false">
-                  <path class="house-roof" d="M8 17.5L18 10L28 17.5V19H8z"/>
-                  <rect class="house-body" x="10" y="18" width="16" height="11" rx="2"/>
-                  <rect class="house-door" x="16.4" y="22.2" width="3.2" height="6.8" rx=".8"/>
-                  <rect class="house-window" x="12.3" y="20.7" width="2.7" height="2.3" rx=".5"/>
-                  <rect class="house-window" x="21" y="20.7" width="2.7" height="2.3" rx=".5"/>
-                </svg>
+              <div class="stakes-thumb">
+                <img src="images/airbnbs/lakeview-hideaway.png" alt="Lakeview Hideaway">
               </div>
               <div class="stakes-info">
                 <div class="stakes-name">Lakeview Hideaway</div>
@@ -1867,14 +1850,8 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
             </div>
             <div class="stakes-row managed" data-drift="-0.11">
               <div class="stakes-pos">7</div>
-              <div class="stakes-thumb" style="--thumb-bg:#6E8B7A;--thumb-bg-dark:#5a7062;--thumb-roof:#E6EFEA;--thumb-wall:#D5E3DB;--thumb-ink:#435B4E">
-                <svg viewBox="0 0 36 36" aria-hidden="true" focusable="false">
-                  <path class="house-roof" d="M8 17.5L18 10L28 17.5V19H8z"/>
-                  <rect class="house-body" x="10" y="18" width="16" height="11" rx="2"/>
-                  <rect class="house-door" x="16.4" y="22.2" width="3.2" height="6.8" rx=".8"/>
-                  <rect class="house-window" x="12.3" y="20.7" width="2.7" height="2.3" rx=".5"/>
-                  <rect class="house-window" x="21" y="20.7" width="2.7" height="2.3" rx=".5"/>
-                </svg>
+              <div class="stakes-thumb">
+                <img src="images/airbnbs/birchwood-estate.png" alt="Birchwood Estate">
               </div>
               <div class="stakes-info">
                 <div class="stakes-name">Birchwood Estate</div>
@@ -3276,6 +3253,69 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
 
     stakesObs.observe(section);
   })();
+
+  /* ── Floating Nav: scroll state ── */
+  var floatBar = document.getElementById('float-bar');
+  if (floatBar) {
+    window.addEventListener('scroll', function() {
+      if (window.pageYOffset > 60) {
+        floatBar.classList.add('scrolled');
+      } else {
+        floatBar.classList.remove('scrolled');
+      }
+    }, { passive: true });
+  }
+
+  /* ── Floating Nav: active section highlighting ── */
+  var navLinks = document.querySelectorAll('.fb-link[data-section]');
+  if (navLinks.length) {
+    var sectionObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          navLinks.forEach(function(l) { l.classList.remove('active'); });
+          var link = document.querySelector('.fb-link[data-section="' + entry.target.id + '"]');
+          if (link) link.classList.add('active');
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '-80px 0px -40% 0px' });
+
+    navLinks.forEach(function(l) {
+      var el = document.getElementById(l.dataset.section);
+      if (el) sectionObserver.observe(el);
+    });
+  }
+
+  /* ── Floating Nav: smooth scroll with offset ── */
+  document.querySelectorAll('.fb-link').forEach(function(link) {
+    link.addEventListener('click', function(e) {
+      var targetId = this.getAttribute('href').substring(1);
+      var target = document.getElementById(targetId);
+      if (target) {
+        e.preventDefault();
+        var offset = (floatBar ? floatBar.offsetHeight : 60) + 28;
+        var top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+        window.scrollTo({ top: top, behavior: 'smooth' });
+      }
+    });
+  });
+
+  /* ── Floating Nav: mobile hamburger ── */
+  var hamburger = document.getElementById('fb-hamburger');
+  var fbLinks = document.getElementById('fb-links');
+  if (hamburger && fbLinks) {
+    hamburger.addEventListener('click', function() {
+      var isOpen = fbLinks.classList.toggle('open');
+      hamburger.classList.toggle('open');
+      hamburger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+    fbLinks.addEventListener('click', function(e) {
+      if (e.target.classList.contains('fb-link')) {
+        fbLinks.classList.remove('open');
+        hamburger.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
 
 })();
 </script>
