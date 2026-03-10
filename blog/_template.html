@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Attribution tracking (cookie-free) -->
+<script>
+(function(){
+  var key='rw_attribution';
+  var params=new URLSearchParams(window.location.search);
+  var utmFields=['utm_source','utm_medium','utm_campaign','utm_term','utm_content'];
+  var hasUtm=utmFields.some(function(f){return params.has(f);});
+  if(hasUtm||!sessionStorage.getItem(key)){
+    var data={};
+    utmFields.forEach(function(f){if(params.get(f))data[f]=params.get(f);});
+    try{data.referrer=document.referrer?new URL(document.referrer).hostname:'direct';}catch(e){data.referrer=document.referrer||'direct';}
+    data.landing_page=window.location.pathname;
+    data.arrived_at=new Date().toISOString();
+    sessionStorage.setItem(key,JSON.stringify(data));
+  }
+})();
+</script>
+<!-- Cookie Consent + GA4 (consent-gated) -->
+<script>
+window.dataLayer=window.dataLayer||[];
+function gtag(){dataLayer.push(arguments);}
+function rwLoadGA(){
+  var s=document.createElement('script');s.async=true;
+  s.src='https://www.googletagmanager.com/gtag/js?id=G-Y1FYZ5849B';
+  document.head.appendChild(s);
+  gtag('js',new Date());gtag('config','G-Y1FYZ5849B');
+}
+function rwTrack(e,p){if(localStorage.getItem('rw_cookie_consent')==='accepted')gtag('event',e,p||{});}
+(function(){
+  var c=localStorage.getItem('rw_cookie_consent');
+  if(c==='accepted'){rwLoadGA();return;}
+  if(c==='declined')return;
+  document.addEventListener('DOMContentLoaded',function(){
+    var b=document.createElement('div');b.id='rw-consent';
+    b.innerHTML='<div style="position:fixed;bottom:0;left:0;right:0;z-index:9999;padding:16px 24px;background:#32302F;color:#fff;font-family:DM Sans,system-ui,sans-serif;font-size:14px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;box-shadow:0 -4px 24px rgba(0,0,0,.15)"><span style="flex:1;min-width:240px;line-height:1.5">We use cookies to analyze site usage and improve your experience.</span><div style="display:flex;gap:10px;flex-shrink:0"><button id="rw-decline" style="background:transparent;color:#ccc8c5;border:1.5px solid #706b68;padding:8px 20px;border-radius:6px;font-size:13px;font-family:inherit;cursor:pointer">Decline</button><button id="rw-accept" style="background:#4A6741;color:#fff;border:none;padding:8px 20px;border-radius:6px;font-size:13px;font-family:inherit;cursor:pointer;font-weight:500">Accept</button></div></div>';
+    document.body.appendChild(b);
+    document.getElementById('rw-accept').addEventListener('click',function(){localStorage.setItem('rw_cookie_consent','accepted');b.remove();rwLoadGA();});
+    document.getElementById('rw-decline').addEventListener('click',function(){localStorage.setItem('rw_cookie_consent','declined');b.remove();});
+  });
+})();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ✏️ EDIT THESE for each post -->
+<title>POST TITLE | RevWhisper Blog</title>
+<meta name="description" content="POST DESCRIPTION">
+<link rel="canonical" href="https://revwhisper.com/blog/POST-SLUG">
+<meta property="og:type" content="article">
+<meta property="og:title" content="POST TITLE | RevWhisper Blog">
+<meta property="og:description" content="POST DESCRIPTION">
+<meta property="og:url" content="https://revwhisper.com/blog/POST-SLUG">
+<meta property="og:site_name" content="RevWhisper">
+<meta property="og:image" content="https://revwhisper.com/POST-IMAGE-PATH">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="POST TITLE | RevWhisper Blog">
+<meta name="twitter:description" content="POST DESCRIPTION">
+<meta name="twitter:image" content="https://revwhisper.com/POST-IMAGE-PATH">
+<!-- /✏️ -->
+
+<link rel="icon" href="/icons/favicon-light.svg" type="image/svg+xml" media="(prefers-color-scheme: light)">
+<link rel="icon" href="/icons/favicon-dark.svg" type="image/svg+xml" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/icons/favicon-light.svg" type="image/svg+xml">
+<!-- ✏️ EDIT the JSON-LD structured data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "POST TITLE",
+  "description": "POST DESCRIPTION",
+  "image": "https://revwhisper.com/POST-IMAGE-PATH",
+  "datePublished": "YYYY-MM-DD",
+  "author": {
+    "@type": "Organization",
+    "name": "RevWhisper",
+    "url": "https://revwhisper.com"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "RevWhisper",
+    "url": "https://revwhisper.com",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://revwhisper.com/icons/favicon-light.svg"
+    }
+  },
+  "mainEntityOfPage": "https://revwhisper.com/blog/POST-SLUG"
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=DM+Sans:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ── Reset & Base ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#fff;color:#32302F;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+/* ── Design Tokens ── */
+:root{
+  --black:#32302F;
+  --white:#ffffff;
+  --accent:#4A6741;
+  --accent-light:#dce6d8;
+  --accent-border:#b3c5ab;
+  --g50:#faf9f8;--g100:#f3f1ef;--g200:#E0DCDA;--g300:#ccc8c5;--g400:#a39e9b;--g500:#706b68;--g600:#58534f;--g700:#48433f;
+  --radius:8px;--radius-sm:6px;
+  --sh-sm:0 1px 3px rgba(50,48,47,.06),0 1px 2px rgba(50,48,47,.04);
+  --sh:0 4px 16px rgba(50,48,47,.07),0 2px 6px rgba(50,48,47,.04);
+  --heading:'Lora','Georgia',serif;
+  --body:'DM Sans','system-ui','Helvetica Neue',sans-serif;
+  --mono:'DM Mono','Consolas',monospace;
+}
+
+/* ── Layout ── */
+.w{max-width:1100px;margin:0 auto;padding:0 28px}
+
+/* ── Floating Nav Bar ── */
+@keyframes fbSlideIn{from{opacity:0;transform:translate(-50%,-20px)}to{opacity:1;transform:translate(-50%,0)}}
+.float-bar{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:200;display:flex;align-items:center;max-width:1060px;width:calc(100% - 56px);background:var(--white);padding:8px 8px 8px 22px;border-radius:var(--radius);box-shadow:0 2px 20px rgba(50,48,47,.08),0 0 0 1px rgba(50,48,47,.04);animation:fbSlideIn .6s cubic-bezier(.34,1.56,.64,1) both;transition:box-shadow .3s ease,padding .3s ease}
+.float-bar.scrolled{box-shadow:0 4px 28px rgba(50,48,47,.12),0 0 0 1px rgba(50,48,47,.06)}
+.fb-logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--black);flex-shrink:0;transition:opacity .2s ease}
+.fb-logo:hover{opacity:.7}
+.lm{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--accent)}
+.ln{font-family:var(--heading);font-size:15px;font-weight:600;letter-spacing:-.02em}
+.fb-links{display:flex;align-items:center;gap:2px;margin:0 auto}
+.fb-link{font-family:var(--body);font-size:13px;font-weight:400;color:var(--g500);text-decoration:none;padding:8px 16px;border-radius:var(--radius-sm);transition:color .2s ease,background .2s ease;white-space:nowrap}
+.fb-link:hover{color:var(--black);background:var(--g50)}
+.fb-link.active{color:var(--accent);background:var(--accent-light);font-weight:500}
+.fb-cta{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#fff;padding:10px 24px;border-radius:var(--radius);font-family:var(--body);font-size:13px;font-weight:500;text-decoration:none;white-space:nowrap;flex-shrink:0;transition:transform .25s ease,box-shadow .25s ease;box-shadow:0 2px 8px rgba(74,103,65,.15)}
+.fb-cta:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(74,103,65,.25)}
+
+/* Hamburger */
+.fb-hamburger{display:none;flex-direction:column;justify-content:center;gap:5px;width:36px;height:36px;padding:6px;cursor:pointer;background:none;border:none;flex-shrink:0}
+.fb-hamburger span{display:block;width:100%;height:2px;background:var(--black);border-radius:2px;transition:transform .3s ease,opacity .3s ease}
+.fb-hamburger.open span:first-child{transform:translateY(3.5px) rotate(45deg)}
+.fb-hamburger.open span:nth-child(2){opacity:0}
+.fb-hamburger.open span:last-child{transform:translateY(-3.5px) rotate(-45deg)}
+
+/* ── Article Layout ── */
+.post-header{padding:140px 0 32px;text-align:center}
+.post-back{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--g400);text-decoration:none;margin-bottom:24px;transition:color .2s}
+.post-back:hover{color:var(--accent)}
+.post-tags{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:14px}
+.post-tag{font-family:var(--mono);font-size:11px;font-weight:500;color:var(--accent);background:var(--accent-light);padding:3px 10px;border-radius:20px}
+.post-header h1{font-family:var(--heading);font-size:clamp(28px,4.5vw,42px);font-weight:600;letter-spacing:-.02em;line-height:1.25;max-width:720px;margin:0 auto 14px}
+.post-meta{font-size:13px;color:var(--g400);font-family:var(--mono)}
+
+.post-hero-img{width:100%;max-width:900px;margin:0 auto 48px;display:block;border-radius:var(--radius);aspect-ratio:16/9;object-fit:cover}
+
+/* ── Article Content ── */
+.post-content{max-width:680px;margin:0 auto;padding-bottom:64px}
+.post-content h2{font-family:var(--heading);font-size:24px;font-weight:600;margin:40px 0 14px;letter-spacing:-.01em}
+.post-content h3{font-family:var(--heading);font-size:19px;font-weight:600;margin:32px 0 10px}
+.post-content p{font-size:16px;line-height:1.75;color:var(--g600);margin-bottom:20px}
+.post-content ul,.post-content ol{margin:0 0 20px 24px;color:var(--g600);font-size:16px;line-height:1.75}
+.post-content li{margin-bottom:6px}
+.post-content blockquote{border-left:3px solid var(--accent);padding:12px 20px;margin:24px 0;background:var(--g50);border-radius:0 var(--radius) var(--radius) 0;font-style:italic;color:var(--g500)}
+.post-content img{width:100%;border-radius:var(--radius);margin:24px 0}
+.post-content a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}
+.post-content a:hover{color:var(--black)}
+.post-content strong{color:var(--black);font-weight:600}
+
+/* ── CTA Banner ── */
+.post-cta{max-width:680px;margin:0 auto 64px;padding:36px 32px;background:var(--g50);border:1px solid var(--g200);border-radius:var(--radius);text-align:center}
+.post-cta h3{font-family:var(--heading);font-size:22px;font-weight:600;margin-bottom:8px}
+.post-cta p{font-size:14px;color:var(--g500);margin-bottom:20px}
+.post-cta a{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#fff;padding:12px 28px;border-radius:var(--radius);font-size:14px;font-weight:500;text-decoration:none;transition:transform .25s,box-shadow .25s;box-shadow:0 2px 8px rgba(74,103,65,.15)}
+.post-cta a:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(74,103,65,.25)}
+
+/* ── Footer ── */
+footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
+.footer-grid{display:grid;grid-template-columns:1fr auto;gap:24px 48px;margin-bottom:36px}
+.footer-logo{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.footer-tag{font-size:13px;color:var(--g400);max-width:420px;line-height:1.6}
+.footer-socials{display:flex;gap:12px;margin-top:14px}
+.footer-socials a{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;background:var(--g100);color:var(--g400);transition:background .2s,color .2s}
+.footer-socials a:hover{background:var(--g200);color:var(--black)}
+.footer-bottom{display:flex;align-items:center;justify-content:space-between;padding-top:24px;border-top:1px solid var(--g200);font-size:12px;color:var(--g400);font-family:var(--mono)}
+
+/* ── Responsive ── */
+@media(max-width:768px){
+  .float-bar{width:calc(100% - 32px);padding:6px 6px 6px 16px}
+  .fb-links{display:none;position:absolute;top:calc(100% + 8px);left:0;right:0;background:var(--white);flex-direction:column;padding:12px;border-radius:var(--radius);box-shadow:var(--sh-lg);gap:2px}
+  .fb-links.open{display:flex}
+  .fb-hamburger{display:flex}
+  .post-header{padding:110px 0 24px}
+  .post-hero-img{border-radius:0}
+  .post-cta{margin-left:16px;margin-right:16px}
+  footer{padding:40px 0 30px}
+  .footer-bottom{flex-direction:column;gap:10px;align-items:flex-start}
+}
+</style>
+</head>
+<body>
+
+<!-- ── Floating Nav ── -->
+<nav class="float-bar" id="float-bar">
+  <a href="/" class="fb-logo">
+    <div class="lm">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="28" height="28" fill="none">
+        <path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <span class="ln">RevWhisper</span>
+  </a>
+  <div class="fb-links" id="fb-links">
+    <a href="/" class="fb-link">Home</a>
+    <a href="/blog" class="fb-link active">Blog</a>
+    <a href="/#solution" class="fb-link">Solution</a>
+    <a href="/#pricing" class="fb-link">Pricing</a>
+  </div>
+  <button class="fb-hamburger" id="fb-hamburger" aria-label="Menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+  <a href="/get-started" class="fb-cta">Book a Strategy Call</a>
+</nav>
+
+<!-- ── Post Header ── -->
+<header class="post-header">
+  <div class="w">
+    <a href="/blog" class="post-back">&larr; Back to Blog</a>
+    <!-- ✏️ EDIT tags, title, meta -->
+    <div class="post-tags">
+      <span class="post-tag">Tag One</span>
+      <span class="post-tag">Tag Two</span>
+    </div>
+    <h1>Your Blog Post Title Goes Here</h1>
+    <div class="post-meta">RevWhisper Team &middot; Mar 10, 2026</div>
+  </div>
+</header>
+
+<!-- ✏️ EDIT hero image -->
+<img class="post-hero-img" src="/images/properties/livingroom-after.webp" alt="Post hero image">
+
+<!-- ✏️ EDIT article content below -->
+<article class="post-content w">
+
+  <p>Your opening paragraph goes here. Set the context for why this topic matters to Airbnb hosts.</p>
+
+  <h2>First Section Heading</h2>
+
+  <p>Explain your first key point. Use data, examples, and concrete advice wherever possible.</p>
+
+  <ul>
+    <li>Bullet point one</li>
+    <li>Bullet point two</li>
+    <li>Bullet point three</li>
+  </ul>
+
+  <h2>Second Section Heading</h2>
+
+  <p>Continue building your argument or sharing your insights.</p>
+
+  <blockquote>
+    Pull quotes or key takeaways look great in blockquotes.
+  </blockquote>
+
+  <h2>Wrap Up</h2>
+
+  <p>Close with a clear takeaway and connect it back to how RevWhisper can help.</p>
+
+</article>
+
+<!-- ── CTA Banner ── -->
+<div class="post-cta">
+  <h3>Ready to Optimize Your Listing?</h3>
+  <p>Our team will analyze your Airbnb and build a custom revenue acceleration plan.</p>
+  <a href="/get-started">Book a Free Strategy Call &rarr;</a>
+</div>
+
+<!-- ── Footer ── -->
+<footer>
+  <div class="w">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">
+          <div class="lm">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24" fill="none">
+              <path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="#32302F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="#32302F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span style="font-family:var(--heading);font-weight:600">RevWhisper</span>
+        </div>
+        <p class="footer-tag">A revenue intelligence team that layers into your Airbnb listing to accelerate performance and maximize earnings.</p>
+        <div class="footer-socials">
+          <a href="https://x.com/RevWhispr" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+          <a href="https://www.instagram.com/rev.whisper/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div>
+        <p style="font-family:var(--heading);font-weight:600;font-size:14px;margin-bottom:10px">Resources</p>
+        <a href="/blog" style="display:block;font-size:13px;color:var(--g400);text-decoration:none;margin-bottom:6px;transition:color .2s" onmouseover="this.style.color='#32302F'" onmouseout="this.style.color='#a39e9b'">Blog</a>
+        <a href="/revenue-lift" style="display:block;font-size:13px;color:var(--g400);text-decoration:none;margin-bottom:6px;transition:color .2s" onmouseover="this.style.color='#32302F'" onmouseout="this.style.color='#a39e9b'">Revenue Calculator</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 MNW Holdings LLC d/b/a RevWhisper. All rights reserved.</span>
+      <span>Stop Guessing. Start Whispering.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ── Nav scroll & hamburger ── -->
+<script>
+(function() {
+  var floatBar = document.getElementById('float-bar');
+  if (floatBar) {
+    window.addEventListener('scroll', function() {
+      floatBar.classList.toggle('scrolled', window.pageYOffset > 60);
+    }, { passive: true });
+  }
+  var hamburger = document.getElementById('fb-hamburger');
+  var fbLinks = document.getElementById('fb-links');
+  if (hamburger && fbLinks) {
+    hamburger.addEventListener('click', function() {
+      var isOpen = fbLinks.classList.toggle('open');
+      hamburger.classList.toggle('open');
+      hamburger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+  }
+})();
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
