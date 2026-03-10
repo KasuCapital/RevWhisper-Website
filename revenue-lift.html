@@ -53,7 +53,11 @@ function rwTrack(e,p){if(localStorage.getItem('rw_cookie_consent')==='accepted')
 <meta property="og:description" content="See how much more your Airbnb listing could earn with RevWhisper's revenue optimization.">
 <meta property="og:url" content="https://revwhisper.com/revenue-lift">
 <meta property="og:site_name" content="RevWhisper">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="https://revwhisper.com/images/properties/livingroom-after.webp">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Revenue Lift Calculator | RevWhisper">
+<meta name="twitter:description" content="See how much more your Airbnb listing could earn with RevWhisper's revenue optimization.">
+<meta name="twitter:image" content="https://revwhisper.com/images/properties/livingroom-after.webp">
 <link rel="icon" href="icons/favicon-light.svg" type="image/svg+xml" media="(prefers-color-scheme: light)">
 <link rel="icon" href="icons/favicon-dark.svg" type="image/svg+xml" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="icons/favicon-light.svg" type="image/svg+xml">
@@ -526,7 +530,7 @@ body::before{
     <!-- Step 1: Annual Revenue -->
     <div class="step" data-step="1">
       <div class="step-eyebrow">Revenue Analysis</div>
-      <h1 class="step-title">What's your estimated <em>annual revenue?</em></h1>
+      <h2 class="step-title">What's your estimated <em>annual revenue?</em></h2>
       <p class="step-desc">Enter your current or estimated yearly earnings so we can calculate your revenue lift potential.</p>
       <div class="field">
         <label class="field-label" for="annual-revenue">Estimated Annual Revenue</label>
@@ -621,7 +625,7 @@ body::before{
       </div>
 
       <div class="step-eyebrow">Report Ready</div>
-      <h1 class="step-title">Your report is <em>ready.</em></h1>
+      <h2 class="step-title">Your report is <em>ready.</em></h2>
       <p class="step-desc">Where should we send your personalized Revenue Lift report?</p>
       <div class="field">
         <label class="field-label" for="full-name">Full Name</label>
@@ -725,18 +729,22 @@ function normalizeAirbnbUrl(raw) {
 (function(){
   var params = new URLSearchParams(window.location.search);
   var rawUrl = params.get('url');
-  if (rawUrl) {
-    var normalized = normalizeAirbnbUrl(rawUrl);
-    if (normalized) {
-      document.getElementById('listing-url').value = normalized;
-      // Skip URL step — start on annual revenue (step 1)
-      current = 1;
-      document.querySelector('.step[data-step="0"]').classList.remove('active');
-      document.querySelector('.step[data-step="1"]').classList.add('active');
-      // Fire scrape immediately so data is ready by email step
-      scrapeListing(normalized);
-    }
+  var normalized = rawUrl ? normalizeAirbnbUrl(rawUrl) : null;
+  var rawName = params.get('name');
+  var rawEmail = params.get('email');
+  var rawRevenue = params.get('revenue');
+
+  // Pre-fill fields and skip URL step if valid
+  if (normalized) {
+    document.getElementById('listing-url').value = normalized;
+    current = 1;
+    document.querySelector('.step[data-step="0"]').classList.remove('active');
+    document.querySelector('.step[data-step="1"]').classList.add('active');
+    scrapeListing(normalized);
   }
+  if (rawName) document.getElementById('full-name').value = rawName;
+  if (rawEmail) document.getElementById('email').value = rawEmail;
+  if (rawRevenue) document.getElementById('annual-revenue').value = '$' + parseInt(rawRevenue.replace(/[^0-9]/g, '')).toLocaleString();
 })();
 
 function transitionStep(from, to, direction) {
@@ -990,6 +998,49 @@ function runAnalysis() {
     if (idx >= totalSteps) {
       var proceed = function() {
         applyScrapeData();
+        // If name + email were passed as URL params, skip email step and auto-submit
+        var prefillParams = new URLSearchParams(window.location.search);
+        var prefillName = prefillParams.get('name');
+        var prefillEmail = prefillParams.get('email');
+        if (prefillName && prefillEmail) {
+          var listingUrl = document.getElementById('listing-url').value;
+          var revenue = parseInt(document.getElementById('annual-revenue').value.trim().replace(/[^0-9]/g, '')) || 0;
+
+          // Fire webhook (non-blocking)
+          webhookSent = true;
+          fetch(FORM_WEBHOOK_ENDPOINT, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ event_type: 'revenue_lift', payload: {
+              email: prefillEmail, fullName: prefillName, airbnbUrl: listingUrl,
+              revenue: revenue, source: 'revenue-lift',
+              submittedAt: new Date().toISOString(), attribution: rwAttribution()
+            }})
+          }).catch(function(err){ console.error('Auto-submit webhook failed:', err); });
+
+          // Fire analysis API (non-blocking)
+          fetch('https://rev-whisper-seven.vercel.app/api/public/create-analysis', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: prefillEmail, fullName: prefillName, airbnbUrl: listingUrl, revenue: revenue })
+          }).then(function(res){ return res.json(); }).then(function(data){
+            if (data.analysis && data.analysis.reportUrl) {
+              var link = document.getElementById('report-link');
+              if (link) { link.href = data.analysis.reportUrl; link.style.display = 'inline-flex'; }
+            }
+          }).catch(function(err){ console.error('Analysis API error:', err); });
+
+          // Jump to success
+          document.getElementById('confirm-email').textContent = prefillEmail;
+          current = 4;
+          transitionStep(2, 4, 'forward');
+          setTimeout(function(){
+            document.getElementById('success-state').classList.add('revealed');
+            launchConfetti();
+          }, 400);
+          rwTrack('revenue_lift_email', { page: 'revenue-lift', email: prefillEmail, fullName: prefillName, auto: true });
+          return;
+        }
         current = 3;
         transitionStep(2, 3, 'forward');
       };
