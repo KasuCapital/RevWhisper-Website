@@ -737,6 +737,12 @@ function normalizeAirbnbUrl(raw) {
       scrapeListing(normalized);
     }
   }
+  var rawName = params.get('name');
+  if (rawName) document.getElementById('full-name').value = rawName;
+  var rawEmail = params.get('email');
+  if (rawEmail) document.getElementById('email').value = rawEmail;
+  var rawRevenue = params.get('revenue');
+  if (rawRevenue) document.getElementById('annual-revenue').value = '$' + parseInt(rawRevenue.replace(/[^0-9]/g, '')).toLocaleString();
 })();
 
 function transitionStep(from, to, direction) {
