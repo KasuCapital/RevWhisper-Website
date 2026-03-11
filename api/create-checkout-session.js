@@ -73,14 +73,11 @@ module.exports = async function handler(req, res) {
 
   const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
   const stripePriceOnboarding = process.env.STRIPE_PRICE_ONBOARDING;
-  const stripePriceMonthly = process.env.STRIPE_PRICE_MONTHLY;
-  const stripePriceAnnual = process.env.STRIPE_PRICE_ANNUAL;
-  const recurringPrice = plan === 'annual' ? stripePriceAnnual : stripePriceMonthly;
 
-  if (!stripeSecretKey || !stripePriceOnboarding || !recurringPrice) {
+  if (!stripeSecretKey || !stripePriceOnboarding) {
     return sendJson(res, 500, {
       error:
-        'Stripe is not fully configured. Required env vars: STRIPE_SECRET_KEY, STRIPE_PRICE_ONBOARDING, STRIPE_PRICE_MONTHLY, STRIPE_PRICE_ANNUAL.'
+        'Stripe is not fully configured. Required env vars: STRIPE_SECRET_KEY, STRIPE_PRICE_ONBOARDING.'
     });
   }
 
@@ -91,22 +88,18 @@ module.exports = async function handler(req, res) {
     `${baseUrl}/checkout-form${plan ? `?plan=${encodeURIComponent(plan)}` : ''}`;
 
   const params = new URLSearchParams();
-  params.set('mode', 'subscription');
+  params.set('mode', 'payment');
   params.set('customer_email', email);
   params.set('success_url', successUrl);
   params.set('cancel_url', cancelUrl);
 
   params.set('line_items[0][price]', stripePriceOnboarding);
   params.set('line_items[0][quantity]', String(listingCount));
-  params.set('line_items[1][price]', recurringPrice);
-  params.set('line_items[1][quantity]', String(listingCount));
 
   params.set('metadata[email]', email);
   params.set('metadata[plan]', plan);
   params.set('metadata[listing_count]', String(listingCount));
   params.set('metadata[source]', 'checkout-form');
-  params.set('subscription_data[metadata][plan]', plan);
-  params.set('subscription_data[metadata][listing_count]', String(listingCount));
 
   if (Array.isArray(payload.listings) && payload.listings.length) {
     const listingUrls = payload.listings
