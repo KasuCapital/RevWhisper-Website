@@ -185,8 +185,7 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
 /* Logo carousel */
 .logo-carousel{position:relative;width:100%;max-width:680px;margin:48px auto 0;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
 .logo-track{display:flex;align-items:center;gap:52px;width:max-content;animation:logoScroll 25s linear infinite}
-.logo-track:hover{animation-play-state:paused}
-.logo-track svg{height:22px;width:auto;flex-shrink:0;filter:brightness(0);opacity:.3;transition:opacity .2s}
+.logo-track svg{height:22px;width:auto;flex-shrink:0;filter:brightness(0);opacity:.45;transition:opacity .25s ease,transform .25s ease}
 .logo-track svg.logo-lg{height:30px}
 .logo-track svg.logo-pricelabs,
 .logo-track svg.logo-wheelhouse{filter:none;color:#000}
@@ -196,8 +195,75 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
 .logo-track svg.logo-wheelhouse path,
 .logo-track svg.logo-wheelhouse polygon,
 .logo-track svg.logo-wheelhouse g{fill:currentColor!important}
-.logo-track svg:hover{opacity:.5}
+.logo-track svg:hover{opacity:.7;transform:scale(1.3)}
 @keyframes logoScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ── Webinar Banner ── */
+.webinar-banner{background:var(--accent);color:#fff;padding:80px 0;text-align:center;position:relative;overflow:hidden}
+.webinar-banner .w{position:relative;z-index:1}
+.webinar-banner::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% -20%,rgba(255,255,255,.1),transparent 50%),radial-gradient(ellipse at 70% 120%,rgba(0,0,0,.15),transparent 50%);pointer-events:none}
+/* Floating particles */
+.wb-particle{position:absolute;width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.12);animation:wbFloat linear infinite;pointer-events:none}
+.wb-particle:nth-child(1){left:10%;top:20%;animation-duration:6s;animation-delay:0s}
+.wb-particle:nth-child(2){left:25%;top:70%;animation-duration:8s;animation-delay:1s;width:3px;height:3px}
+.wb-particle:nth-child(3){left:75%;top:30%;animation-duration:7s;animation-delay:2s;width:5px;height:5px}
+.wb-particle:nth-child(4){left:85%;top:65%;animation-duration:9s;animation-delay:.5s}
+.wb-particle:nth-child(5){left:50%;top:85%;animation-duration:6.5s;animation-delay:3s;width:3px;height:3px}
+.wb-particle:nth-child(6){left:15%;top:50%;animation-duration:7.5s;animation-delay:1.5s;width:6px;height:6px;opacity:.08}
+@keyframes wbFloat{0%{transform:translateY(0) scale(1);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateY(-120px) scale(.5);opacity:0}}
+/* Eyebrow with live dot */
+.wb-eyebrow{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.8);margin-bottom:20px;display:inline-flex;align-items:center;gap:8px}
+.wb-live-dot{width:7px;height:7px;border-radius:50%;background:#fff;box-shadow:0 0 8px rgba(255,255,255,.5);animation:wbPulse 2s ease-in-out infinite}
+@keyframes wbPulse{0%,100%{opacity:1;box-shadow:0 0 8px rgba(255,255,255,.5)}50%{opacity:.5;box-shadow:0 0 16px rgba(255,255,255,.3)}}
+/* Headline */
+.wb-headline{font-family:var(--heading);font-size:clamp(30px,5.5vw,48px);font-weight:400;line-height:1.12;margin-bottom:18px}
+.wb-headline em{font-style:italic;color:#fff;position:relative;display:inline;white-space:nowrap;text-decoration:none}
+.wb-headline em::after{content:'';position:absolute;left:-2%;right:-2%;bottom:-6px;height:14px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 16' preserveAspectRatio='none'%3E%3Cpath d='M2 11 C25 4, 75 4, 98 11' fill='none' stroke='rgba(255,255,255,0.5)' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center/100% 100%;pointer-events:none;transform:rotate(-0.5deg);clip-path:inset(0 100% 0 0)}
+.webinar-banner.in .wb-headline em::after{animation:ctaUnderlineDraw .8s .5s ease both}
+/* Subtitle */
+.wb-sub{font-size:clamp(15px,1.8vw,17px);color:rgba(255,255,255,.75);max-width:520px;margin:0 auto 36px;line-height:1.7;font-weight:300}
+/* Countdown */
+.wb-countdown{margin-bottom:36px}
+.wb-countdown-label{font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:16px}
+.wb-timer{display:flex;align-items:center;justify-content:center;gap:14px}
+.wb-time-unit{display:flex;flex-direction:column;align-items:center;gap:6px}
+.wb-num{font-family:var(--mono);font-size:clamp(34px,5.5vw,52px);font-weight:500;line-height:1;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:14px 20px;min-width:70px;backdrop-filter:blur(8px);transition:transform .15s ease,background .15s ease;position:relative;overflow:hidden}
+.wb-num::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.06),transparent 50%);pointer-events:none;border-radius:12px}
+.wb-num.wb-tick{animation:wbTick .3s ease}
+@keyframes wbTick{0%{transform:scale(1)}40%{transform:scale(1.06)}100%{transform:scale(1)}}
+.wb-unit{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4)}
+.wb-sep{font-size:clamp(28px,4vw,40px);font-weight:300;color:rgba(255,255,255,.25);align-self:flex-start;margin-top:14px;animation:wbBlink 1s step-end infinite}
+@keyframes wbBlink{0%,100%{opacity:1}50%{opacity:.2}}
+/* Spots badge */
+.wb-spots{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:rgba(255,255,255,.7);margin-bottom:20px;padding:6px 14px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:20px}
+.wb-spots-dot{width:6px;height:6px;border-radius:50%;background:#e8584a;animation:wbPulse 1.5s ease-in-out infinite}
+/* CTA */
+.wb-cta{display:inline-flex;align-items:center;gap:8px;padding:16px 36px;background:#fff;color:var(--accent);font-size:16px;font-weight:600;border-radius:var(--radius-sm);text-decoration:none;transition:background .2s,transform .2s,box-shadow .2s;box-shadow:0 4px 16px rgba(0,0,0,.15)}
+.wb-cta:hover{background:#f0f0ee;transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,0,0,.25)}
+.wb-cta svg{transition:transform .2s}.wb-cta:hover svg{transform:translateX(3px)}
+.wb-live-banner{font-size:clamp(20px,3vw,28px);font-weight:600;animation:wbPulse 2s ease-in-out infinite}
+@media(max-width:640px){
+  .webinar-banner{padding:48px 0}
+  .wb-eyebrow{font-size:10px;letter-spacing:.08em;flex-wrap:wrap;justify-content:center;gap:5px}
+  .wb-headline{font-size:42px;line-height:1.15;margin-bottom:16px}
+  .wb-headline em{white-space:normal}
+  .wb-sub{font-size:14px;max-width:100%;margin-bottom:28px;line-height:1.6}
+  .wb-countdown{margin-bottom:28px}
+  .wb-countdown-label{font-size:10px;margin-bottom:10px}
+  .wb-num{font-size:24px;padding:10px 12px;min-width:48px;border-radius:9px}
+  .wb-timer{gap:5px}
+  .wb-sep{font-size:20px;margin-top:10px}
+  .wb-unit{font-size:8px}
+  .wb-spots{font-size:11px;padding:5px 12px;margin-bottom:16px}
+  .wb-cta{padding:14px 28px;font-size:15px}
+  .wb-particle{display:none}
+}
+@media(max-width:480px){
+  .wb-headline{font-size:36px}
+  .wb-num{font-size:22px;padding:8px 10px;min-width:44px;border-radius:8px}
+  .wb-timer{gap:4px}
+  .wb-sep{font-size:18px;margin-top:8px}
+}
 
 /* ── Problem Section ── */
 /* ── Problem / Revenue Gap Section ── */
@@ -1011,7 +1077,7 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
     <a href="#credibility" class="fb-link" data-section="credibility">Results</a>
     <a href="#pricing" class="fb-link" data-section="pricing">Pricing</a>
   </div>
-  <a href="/get-started" class="fb-cta">Book a Strategy Call</a>
+  <a href="https://revwhisper.com/get-started" class="fb-cta">Join the Webinar</a>
   <button class="fb-hamburger" id="fb-hamburger" aria-label="Toggle navigation" aria-expanded="false">
     <span class="fb-ham-line"></span>
     <span class="fb-ham-line"></span>
@@ -1029,7 +1095,7 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
     <p class="hero-sub r d2">Our team tracks your Airbnb search position daily, deploys algorithm-timed pricing, and optimizes every part of your listing so you earn more without lifting a finger.</p>
     <!-- Calculator Widget -->
     <div class="calc-widget r d2">
-      <p class="calc-label">See your revenue potential</p>
+      <p class="calc-label">Get your custom analysis</p>
       <div class="calc-input-wrap">
         <input type="url" class="calc-input" placeholder="Paste your Airbnb listing URL" aria-label="Airbnb listing URL">
         <button class="calc-btn" type="button">Calculate My Revenue Lift</button>
@@ -1060,6 +1126,38 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 94 20"><polygon fill="#FF3B59" points="0 0 0 20 20 20 20 10 10 10 10 0"/><polygon fill="#03EBC3" points="14 6 20 6 20 0 14 0"/><g fill="#333333" fill-rule="nonzero" transform="translate(30, 4)"><path d="M0,1.19230769 L2.71000855,1.19230769 L2.71000855,8.6510989 L7.28143713,8.6510989 L7.28143713,10.8076923 L0,10.8076923 L0,1.19230769 Z M13.1804962,11 C12.1676596,11 11.2574891,10.7848007 10.4499572,10.3543956 C9.64242539,9.92399052 9.00827148,9.32875838 8.54747648,8.56868132 C8.08668147,7.80860426 7.85628743,6.95238571 7.85628743,6 C7.85628743,5.04761429 8.08668147,4.19139574 8.54747648,3.43131868 C9.00827148,2.67124162 9.64242539,2.07600948 10.4499572,1.6456044 C11.2574891,1.21519931 12.1676596,1 13.1804962,1 C14.1933327,1 15.1035032,1.21519931 15.9110351,1.6456044 C16.7185669,2.07600948 17.3527208,2.67124162 17.8135158,3.43131868 C18.2743108,4.19139574 18.5047049,5.04761429 18.5047049,6 C18.5047049,6.95238571 18.2743108,7.80860426 17.8135158,8.56868132 C17.3527208,9.32875838 16.7185669,9.92399052 15.9110351,10.3543956 C15.1035032,10.7848007 14.1933327,11 13.1804962,11 Z M13.1804962,8.74725275 C13.6641028,8.74725275 14.1020796,8.63278503 14.4944397,8.40384615 C14.8867998,8.17490728 15.1970334,7.85210831 15.4251497,7.43543956 C15.653266,7.01877081 15.7673225,6.54029574 15.7673225,6 C15.7673225,5.45970426 15.653266,4.98122919 15.4251497,4.56456044 C15.1970334,4.14789169 14.8867998,3.82509272 14.4944397,3.59615385 C14.1020796,3.36721497 13.6641028,3.25274725 13.1804962,3.25274725 C12.6968895,3.25274725 12.2589127,3.36721497 11.8665526,3.59615385 C11.4741925,3.82509272 11.1639589,4.14789169 10.9358426,4.56456044 C10.7077263,4.98122919 10.5936698,5.45970426 10.5936698,6 C10.5936698,6.54029574 10.7077263,7.01877081 10.9358426,7.43543956 C11.1639589,7.85210831 11.4741925,8.17490728 11.8665526,8.40384615 C12.2589127,8.63278503 12.6968895,8.74725275 13.1804962,8.74725275 Z M19.9281437,1.19230769 L24.4585115,1.19230769 C25.5078467,1.19230769 26.4385474,1.38919217 27.2506416,1.78296703 C28.0627357,2.1767419 28.6923274,2.73534437 29.1394354,3.45879121 C29.5865434,4.18223805 29.8100941,5.02929918 29.8100941,6 C29.8100941,6.97070082 29.5865434,7.81776195 29.1394354,8.54120879 C28.6923274,9.26465563 28.0627357,9.8232581 27.2506416,10.217033 C26.4385474,10.6108078 25.5078467,10.8076923 24.4585115,10.8076923 L19.9281437,10.8076923 L19.9281437,1.19230769 Z M24.3490163,8.63736264 C25.1702351,8.63736264 25.8294814,8.40384849 26.326775,7.93681319 C26.8240686,7.46977788 27.0727117,6.82417995 27.0727117,6 C27.0727117,5.17582005 26.8240686,4.53022212 26.326775,4.06318681 C25.8294814,3.59615151 25.1702351,3.36263736 24.3490163,3.36263736 L22.6381523,3.36263736 L22.6381523,8.63736264 L24.3490163,8.63736264 Z M37.6526946,5.79395604 L40.0479042,5.79395604 L40.0479042,9.77747253 C39.500425,10.1712474 38.8708333,10.4734422 38.1591104,10.6840659 C37.4473874,10.8946897 36.7356751,11 36.0239521,11 C35.0202402,11 34.1169131,10.78709 33.3139435,10.3612637 C32.510974,9.93543743 31.8813824,9.34249464 31.4251497,8.58241758 C30.968917,7.82234052 30.7408041,6.96154327 30.7408041,6 C30.7408041,5.03845673 30.968917,4.17765948 31.4251497,3.41758242 C31.8813824,2.65750536 32.5155363,2.06456257 33.3276305,1.63873626 C34.1397246,1.21290996 35.0567385,1 36.0786997,1 C36.9729158,1 37.7758733,1.15109739 38.4875962,1.4532967 C39.1993192,1.75549602 39.7924128,2.19047335 40.2668948,2.75824176 L38.5423439,4.32417582 C37.8944935,3.60988654 37.1189096,3.25274725 36.2155689,3.25274725 C35.39435,3.25274725 34.7328226,3.50228688 34.2309666,4.00137363 C33.7291107,4.50046037 33.4781865,5.1666625 33.4781865,6 C33.4781865,6.53113819 33.5922429,7.00503455 33.8203593,7.4217033 C34.0484756,7.83837205 34.3678337,8.16346037 34.7784431,8.39697802 C35.1890525,8.63049567 35.6589651,8.74725275 36.188195,8.74725275 C36.7083003,8.74725275 37.1964619,8.64194245 37.6526946,8.43131868 L37.6526946,5.79395604 Z M41.7724551,1.19230769 L44.4824636,1.19230769 L44.4824636,10.8076923 L41.7724551,10.8076923 L41.7724551,1.19230769 Z M49.1223268,3.29395604 L49.1223268,5.40934066 L53.3515825,5.40934066 L53.3515825,7.51098901 L49.1223268,7.51098901 L49.1223268,10.8076923 L46.4123182,10.8076923 L46.4123182,1.19230769 L53.9264328,1.19230769 L53.9264328,3.29395604 L49.1223268,3.29395604 Z M60.3319076,7.35989011 L60.3319076,10.8076923 L57.6218991,10.8076923 L57.6218991,7.31868132 L53.9674936,1.19230769 L56.8280582,1.19230769 L59.1000855,5.01098901 L61.3721129,1.19230769 L64,1.19230769 L60.3319076,7.35989011 Z"/></g></svg>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     WEBINAR BANNER
+     ════════════════════════════════════════════════ -->
+<section class="webinar-banner r">
+  <div class="wb-particle"></div>
+  <div class="wb-particle"></div>
+  <div class="wb-particle"></div>
+  <div class="wb-particle"></div>
+  <div class="wb-particle"></div>
+  <div class="wb-particle"></div>
+  <div class="w">
+    <div class="wb-eyebrow"><span class="wb-live-dot"></span> Live Every Mon, Wed & Fri at 12pm EST</div>
+    <h2 class="wb-headline">Learn How Top Hosts<br><em>Maximize Revenue</em></h2>
+    <p class="wb-sub">Join our free live webinar where we break down proven strategies, share exactly what we do for clients, and give you actionable advice you can implement today.</p>
+    <div class="wb-countdown">
+      <div class="wb-countdown-label">Next webinar starts in</div>
+      <div class="wb-timer" id="wb-timer">
+        <div class="wb-time-unit"><span class="wb-num" id="wb-days">0</span><span class="wb-unit">days</span></div>
+        <span class="wb-sep">:</span>
+        <div class="wb-time-unit"><span class="wb-num" id="wb-hours">0</span><span class="wb-unit">hrs</span></div>
+        <span class="wb-sep">:</span>
+        <div class="wb-time-unit"><span class="wb-num" id="wb-mins">0</span><span class="wb-unit">min</span></div>
+        <span class="wb-sep">:</span>
+        <div class="wb-time-unit"><span class="wb-num" id="wb-secs">0</span><span class="wb-unit">sec</span></div>
+      </div>
+    </div>
+    <div class="wb-spots"><span class="wb-spots-dot"></span> Select listings audited live each session</div>
+    <br>
+    <a href="https://revwhisper.com/get-started" class="wb-cta">Reserve Your Spot <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
   </div>
 </section>
 
@@ -2271,7 +2369,68 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
     if (bg) bentoObs.observe(bg);
   })();
 
-  /* ── 5. Guarantee countdown – removed (no more $500 counter) ── */
+  /* ── 5a. Webinar Countdown Timer ── */
+  (function(){
+    var WEBINAR_DAYS=[1,3,5]; // Mon, Wed, Fri
+    var WEBINAR_HOUR=12; // noon EST
+    var daysEl=document.getElementById('wb-days');
+    var hrsEl=document.getElementById('wb-hours');
+    var minsEl=document.getElementById('wb-mins');
+    var secsEl=document.getElementById('wb-secs');
+    if(!daysEl)return;
+
+    function getNextWebinar(){
+      var now=new Date();
+      var est=new Date(now.toLocaleString('en-US',{timeZone:'America/New_York'}));
+      var day=est.getDay();
+      var hour=est.getHours();
+      var daysAhead=null;
+      for(var i=0;i<7;i++){
+        var check=(day+i)%7;
+        if(WEBINAR_DAYS.indexOf(check)!==-1){
+          if(i===0&&hour>=WEBINAR_HOUR+1)continue;
+          daysAhead=i;break;
+        }
+      }
+      if(daysAhead===null)daysAhead=7;
+      var next=new Date(est);
+      next.setDate(next.getDate()+daysAhead);
+      next.setHours(WEBINAR_HOUR,0,0,0);
+      var diffMs=next.getTime()-est.getTime();
+      return diffMs;
+    }
+
+    // Tick animation helper
+    function setVal(el,val){
+      var v=String(val);
+      if(el.textContent!==v){
+        el.textContent=v;
+        el.classList.remove('wb-tick');
+        void el.offsetWidth; // force reflow
+        el.classList.add('wb-tick');
+      }
+    }
+
+    function update(){
+      var diff=getNextWebinar();
+      if(diff<=0){
+        document.getElementById('wb-timer').innerHTML='<span class="wb-live-banner">Happening Now!</span>';
+        return;
+      }
+      var s=Math.floor(diff/1000);
+      var d=Math.floor(s/86400);s%=86400;
+      var h=Math.floor(s/3600);s%=3600;
+      var m=Math.floor(s/60);s%=60;
+      setVal(daysEl,d);
+      setVal(hrsEl,h);
+      setVal(minsEl,String(m).padStart(2,'0'));
+      setVal(secsEl,String(s).padStart(2,'0'));
+    }
+    update();
+    setInterval(update,1000);
+  })();
+
+  /* ── 5b. Guarantee countdown – removed (no more $500 counter) ── */
   (function() {
     var guarNum = document.querySelector('.guar-number[data-target]');
     if (!guarNum) return; /* Element no longer exists, this safely no-ops */
