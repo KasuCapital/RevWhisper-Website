@@ -1,10 +1,6 @@
 {
   "cleanUrls": true,
   "redirects": [
-    {
-      "source": "/webinar",
-      "destination": "https://riverside.com/webinar/registration/eyJzbHVnIjoiYnJ5YW5zLXN0dWRpby10ajNOcSIsImV2ZW50SWQiOiI2OWFhZWQ4MDhlN2Y3YTllMWYwZWY1ZjciLCJwcm9qZWN0SWQiOiI2OWFhZWQ4MDQyMzgxNDMwYWE0OTU0NDUifQ==",
-      "permanent": false
-    }
+    { "source": "/revenue-lift", "destination": "https://app.revwhisper.com/revenue-lift", "permanent": true }
   ]
 }
