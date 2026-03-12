@@ -631,36 +631,23 @@ body.terms-expanded .step[data-step="2"] .form-actions{
 
           <h3>2. Term and Termination</h3>
           <h4>2.1 Initial Term</h4>
-          <p>This Agreement shall commence on the Effective Date under one of the following term options selected by Client at signing:</p>
-          <ul>
-            <li><strong>3-Month Plan:</strong> An initial term of three (3) months, after which this Agreement shall automatically continue on a month-to-month basis unless terminated in accordance with this Agreement.</li>
-            <li><strong>12-Month Plan:</strong> An initial term of twelve (12) months, after which this Agreement shall automatically renew for additional annual terms unless either Party provides written notice of non-renewal at least thirty (30) days prior to the end of the then-current term.</li>
-          </ul>
+          <div id="terms-2-1"></div>
 
           <h4>2.2 Renewal</h4>
-          <ul>
-            <li><strong>3-Month Plan:</strong> Automatically continues on a month-to-month basis. Either Party may terminate with thirty (30) days written notice.</li>
-            <li><strong>12-Month Plan:</strong> Automatically renews for additional annual terms unless either Party provides written notice of non-renewal at least thirty (30) days prior to the end of the then-current term.</li>
-          </ul>
+          <div id="terms-2-2"></div>
 
           <h4>2.3 Early Termination</h4>
-          <ul>
-            <li><strong>3-Month Plan:</strong> If Client terminates prior to the expiration of the Initial Term, Client shall pay an early termination fee equal to two (2) months of the applicable Monthly Fee, due within fifteen (15) days of the date of termination notice.</li>
-            <li><strong>12-Month Plan:</strong> No early termination is permitted during the Initial Term. Client is committed to the full twelve (12) month term.</li>
-          </ul>
+          <div id="terms-2-3"></div>
 
           <h4>2.4 Effect of Termination</h4>
           <p>Upon termination or expiration: (a) Provider shall cease all services within five (5) business days; (b) Provider shall remove itself from all Client accounts within five (5) business days; (c) Client shall pay all outstanding fees through the effective date of termination; and (d) all work product created during the term shall remain the property of Client pursuant to Section 7.</p>
 
           <h3>3. Fees and Payment</h3>
           <h4>3.1 Listing Optimization Fee</h4>
-          <p>Client shall pay a one-time listing optimization fee of $998.00 per Listing (the &ldquo;Listing Optimization Fee&rdquo;). The Listing Optimization Fee is due upfront upon execution of this Agreement and is non-refundable. Client&rsquo;s monthly subscription shall commence upon completion of the listing optimization period and the start of ongoing revenue management services.</p>
+          <p id="terms-3-1"></p>
 
           <h4>3.2 Monthly Service Fee</h4>
-          <ul>
-            <li><strong>3-Month Plan (Month-to-Month):</strong> $750.00 per month, per Listing. The first Monthly Fee is due upon execution. Subsequent fees are due on the first (1st) of each calendar month.</li>
-            <li><strong>12-Month Plan (Annual, Paid Upfront):</strong> $500.00 per month, per Listing, paid in full upfront at signing ($6,000.00 total).</li>
-          </ul>
+          <div id="terms-3-2"></div>
 
           <h4>3.3 Payment Method</h4>
           <p>All fees shall be paid via Stripe invoice or credit card. Provider may use a third-party payment processor.</p>
@@ -767,7 +754,12 @@ let isTransitioning = false;
 // Read plan from URL params
 const params = new URLSearchParams(window.location.search);
 const requestedPlan = params.get('plan');
-const selectedPlan = requestedPlan === 'annual' ? 'annual' : 'monthly';
+const isEnterprise = requestedPlan === 'enterprise';
+const selectedPlan = isEnterprise ? 'enterprise' : (requestedPlan === 'annual' ? 'annual' : 'monthly');
+const enterpriseMonthly = isEnterprise ? Number(params.get('monthly_cost')) || 0 : 0;
+const enterpriseOnboarding = isEnterprise && params.get('onboarding_fee') ? Number(params.get('onboarding_fee')) : 998;
+const enterpriseTermMonths = isEnterprise ? Number(params.get('term_months')) || 0 : 0;
+const onboardingFee = isEnterprise ? enterpriseOnboarding : 998;
 const FORM_WEBHOOK_ENDPOINT = '/api/form-webhook';
 const CREATE_CHECKOUT_ENDPOINT = '/api/create-checkout-session';
 const DEFAULT_ENTERPRISE_URL = '/get-started?plan=enterprise';
@@ -798,7 +790,10 @@ function showCheckoutTransition(email, destinationUrl, descriptionText, ctaText)
 
 if (requestedPlan) {
   const badge = document.getElementById('plan-badge');
-  if (selectedPlan === 'annual') {
+  if (isEnterprise) {
+    badge.textContent = 'Enterprise Plan' + (enterpriseMonthly ? ' · $' + enterpriseMonthly.toLocaleString() + '/mo' : ' · Custom Pricing');
+    badge.style.display = 'inline-flex';
+  } else if (selectedPlan === 'annual') {
     badge.textContent = '12-Month Annual Plan · $500/mo';
     badge.style.display = 'inline-flex';
   } else if (selectedPlan === 'monthly') {
@@ -806,6 +801,44 @@ if (requestedPlan) {
     badge.style.display = 'inline-flex';
   }
 }
+
+// Update fee note with dynamic onboarding fee
+document.querySelector('.plan-fee-note').innerHTML = 'One-time listing optimization fee: <strong>$' + onboardingFee.toLocaleString() + '.00 per listing</strong> (charged upfront at enrollment). Your subscription begins once optimization is complete.';
+
+// Populate dynamic service agreement sections
+(function() {
+  var feeAmt = '$' + onboardingFee.toLocaleString() + '.00';
+
+  // Section 3.1 — Listing Optimization Fee
+  document.getElementById('terms-3-1').innerHTML = 'Client shall pay a one-time listing optimization fee of ' + feeAmt + ' per Listing (the &ldquo;Listing Optimization Fee&rdquo;). The Listing Optimization Fee is due upfront upon execution of this Agreement and is non-refundable. Client&rsquo;s monthly subscription shall commence upon completion of the listing optimization period and the start of ongoing revenue management services.';
+
+  if (isEnterprise && enterpriseMonthly && enterpriseTermMonths) {
+    var mo = '$' + enterpriseMonthly.toLocaleString() + '.00';
+    var tm = enterpriseTermMonths;
+    var totalAnnual = '$' + (enterpriseMonthly * enterpriseTermMonths).toLocaleString() + '.00';
+
+    // Section 2.1
+    document.getElementById('terms-2-1').innerHTML = '<p>This Agreement shall commence on the Effective Date for an initial term of ' + tm + ' month' + (tm > 1 ? 's' : '') + ' (the &ldquo;Initial Term&rdquo;), after which this Agreement shall automatically continue on a month-to-month basis unless terminated in accordance with this Agreement.</p>';
+
+    // Section 2.2
+    document.getElementById('terms-2-2').innerHTML = '<p>After the Initial Term, this Agreement automatically continues on a month-to-month basis. Either Party may terminate with thirty (30) days written notice.</p>';
+
+    // Section 2.3
+    document.getElementById('terms-2-3').innerHTML = '<p>If Client terminates prior to the expiration of the Initial Term, Client shall pay an early termination fee equal to the remaining Monthly Fees due through the end of the Initial Term, due within fifteen (15) days of the date of termination notice.</p>';
+
+    // Section 3.2
+    document.getElementById('terms-3-2').innerHTML = '<p><strong>Enterprise Plan:</strong> ' + mo + ' per month, per Listing. The first Monthly Fee is due upon execution. Subsequent fees are due on the first (1st) of each calendar month.</p>';
+  } else {
+    // Standard plans
+    document.getElementById('terms-2-1').innerHTML = '<p>This Agreement shall commence on the Effective Date under one of the following term options selected by Client at signing:</p><ul><li><strong>3-Month Plan:</strong> An initial term of three (3) months, after which this Agreement shall automatically continue on a month-to-month basis unless terminated in accordance with this Agreement.</li><li><strong>12-Month Plan:</strong> An initial term of twelve (12) months, after which this Agreement shall automatically renew for additional annual terms unless either Party provides written notice of non-renewal at least thirty (30) days prior to the end of the then-current term.</li></ul>';
+
+    document.getElementById('terms-2-2').innerHTML = '<ul><li><strong>3-Month Plan:</strong> Automatically continues on a month-to-month basis. Either Party may terminate with thirty (30) days written notice.</li><li><strong>12-Month Plan:</strong> Automatically renews for additional annual terms unless either Party provides written notice of non-renewal at least thirty (30) days prior to the end of the then-current term.</li></ul>';
+
+    document.getElementById('terms-2-3').innerHTML = '<ul><li><strong>3-Month Plan:</strong> If Client terminates prior to the expiration of the Initial Term, Client shall pay an early termination fee equal to two (2) months of the applicable Monthly Fee, due within fifteen (15) days of the date of termination notice.</li><li><strong>12-Month Plan:</strong> No early termination is permitted during the Initial Term. Client is committed to the full twelve (12) month term.</li></ul>';
+
+    document.getElementById('terms-3-2').innerHTML = '<ul><li><strong>3-Month Plan (Month-to-Month):</strong> $750.00 per month, per Listing. The first Monthly Fee is due upon execution. Subsequent fees are due on the first (1st) of each calendar month.</li><li><strong>12-Month Plan (Annual, Paid Upfront):</strong> $500.00 per month, per Listing, paid in full upfront at signing ($6,000.00 total).</li></ul>';
+  }
+})();
 
 // Enable submit when terms agreed
 document.getElementById('agree-check').addEventListener('change', function() {
@@ -1061,6 +1094,12 @@ async function submitForm() {
     source_page: window.location.href,
     attribution: rwAttribution()
   };
+
+  if (isEnterprise) {
+    data.onboarding_fee = onboardingFee;
+    if (enterpriseMonthly) data.monthly_cost = enterpriseMonthly;
+    if (enterpriseTermMonths) data.term_months = enterpriseTermMonths;
+  }
 
   console.log('Enrollment submitted:', data);
   rwTrack('checkout_submit',{plan:selectedPlan,listing_count:listingUrls.length,page:'checkout-form'});

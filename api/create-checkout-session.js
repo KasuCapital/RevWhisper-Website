@@ -1,5 +1,5 @@
 const MAX_LISTINGS = 10;
-const VALID_PLANS = new Set(['monthly', 'annual']);
+const VALID_PLANS = new Set(['monthly', 'annual', 'enterprise']);
 
 function sendJson(res, statusCode, payload) {
   res.statusCode = statusCode;
@@ -60,10 +60,14 @@ module.exports = async function handler(req, res) {
   }
 
   const baseUrl = resolveBaseUrl(req);
+  const isEnterprise = plan === 'enterprise';
+  const onboardingFee = isEnterprise && payload.onboarding_fee
+    ? Number(payload.onboarding_fee)
+    : 0;
   const enterpriseRedirectUrl =
     process.env.ENTERPRISE_REDIRECT_URL || `${baseUrl}/get-started?plan=enterprise`;
 
-  if (listingCount > MAX_LISTINGS) {
+  if (!isEnterprise && listingCount > MAX_LISTINGS) {
     return sendJson(res, 200, {
       enterprise: true,
       redirect_url: enterpriseRedirectUrl,
@@ -74,11 +78,15 @@ module.exports = async function handler(req, res) {
   const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
   const stripePriceOnboarding = process.env.STRIPE_PRICE_ONBOARDING;
 
-  if (!stripeSecretKey || !stripePriceOnboarding) {
+  if (!stripeSecretKey || (!isEnterprise && !stripePriceOnboarding)) {
     return sendJson(res, 500, {
       error:
         'Stripe is not fully configured. Required env vars: STRIPE_SECRET_KEY, STRIPE_PRICE_ONBOARDING.'
     });
+  }
+
+  if (isEnterprise && (!onboardingFee || onboardingFee < 1)) {
+    return sendJson(res, 400, { error: 'A valid onboarding fee is required for enterprise plans.' });
   }
 
   const successUrl =
@@ -93,18 +101,32 @@ module.exports = async function handler(req, res) {
   params.set('success_url', successUrl);
   params.set('cancel_url', cancelUrl);
 
-  params.set('line_items[0][price]', stripePriceOnboarding);
-  params.set('line_items[0][quantity]', String(listingCount));
+  if (isEnterprise) {
+    // Dynamic pricing via price_data for enterprise
+    params.set('line_items[0][price_data][currency]', 'usd');
+    params.set('line_items[0][price_data][unit_amount]', String(Math.round(onboardingFee * 100)));
+    params.set('line_items[0][price_data][product_data][name]', 'Listing Optimization Fee (Enterprise)');
+    params.set('line_items[0][quantity]', String(listingCount));
+  } else {
+    params.set('line_items[0][price]', stripePriceOnboarding);
+    params.set('line_items[0][quantity]', String(listingCount));
+  }
 
   params.set('metadata[email]', email);
   params.set('metadata[plan]', plan);
   params.set('metadata[listing_count]', String(listingCount));
   params.set('metadata[source]', 'checkout-form');
 
+  if (isEnterprise) {
+    params.set('metadata[onboarding_fee]', String(onboardingFee));
+    if (payload.monthly_cost) params.set('metadata[monthly_cost]', String(payload.monthly_cost));
+    if (payload.term_months) params.set('metadata[term_months]', String(payload.term_months));
+  }
+
   if (Array.isArray(payload.listings) && payload.listings.length) {
     const listingUrls = payload.listings
       .filter((item) => typeof item === 'string' && item.trim())
-      .slice(0, MAX_LISTINGS)
+      .slice(0, isEnterprise ? 50 : MAX_LISTINGS)
       .join(',');
     if (listingUrls) params.set('metadata[listing_urls]', listingUrls.slice(0, 450));
   }
