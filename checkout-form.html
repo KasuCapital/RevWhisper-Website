@@ -541,7 +541,7 @@ body.terms-expanded .step[data-step="2"] .form-actions{
 <body>
 
 <div class="form-shell">
-  <div class="steps-viewport">
+  <form class="steps-viewport" autocomplete="on" onsubmit="return false;">
 
     <!-- Step 1: Contact Info -->
     <div class="step active" data-step="0">
@@ -585,7 +585,7 @@ body.terms-expanded .step[data-step="2"] .form-actions{
         <div class="field-error">Please enter a valid phone number</div>
       </div>
       <div class="form-actions">
-        <button class="btn-next" onclick="nextStep()" id="btn-step0">Next <span class="arrow">→</span></button>
+        <button type="button" class="btn-next" onclick="nextStep()" id="btn-step0">Next <span class="arrow">→</span></button>
       </div>
     </div>
 
@@ -613,20 +613,20 @@ body.terms-expanded .step[data-step="2"] .form-actions{
         </button>
         <div class="field-error" id="listing-error" style="display:none">Please add at least one Airbnb listing URL</div>
       </div>
+      <div class="form-actions">
+        <button type="button" class="btn-back" onclick="prevStep()"><span class="arrow">←</span> Back</button>
+        <button type="button" class="btn-next" onclick="nextStep()" id="btn-step1">Next <span class="arrow">→</span></button>
+      </div>
       <div class="open-airbnb-wrap">
         <span class="open-airbnb-divider">Don't have it handy?</span>
-        <a href="https://www.airbnb.com/hosting/listings" target="_blank" rel="noopener" class="open-airbnb-btn" id="open-airbnb-btn">
+        <a href="https://www.airbnb.com" target="_blank" rel="noopener" class="open-airbnb-btn" id="open-airbnb-btn">
           Open Airbnb — copy your listing URL, then come back
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6m4-3h6m0 0v6m0-6L10 14"/></svg>
         </a>
-        <button class="open-airbnb-btn paste-btn" id="paste-btn" style="display:none" onclick="pasteFromClipboard()">
+        <button type="button" class="open-airbnb-btn paste-btn" id="paste-btn" style="display:none" onclick="pasteFromClipboard()">
           <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
           <span id="paste-btn-text">Click to paste your copied URL</span>
         </button>
-      </div>
-      <div class="form-actions">
-        <button class="btn-back" onclick="prevStep()"><span class="arrow">←</span> Back</button>
-        <button class="btn-next" onclick="nextStep()" id="btn-step1">Next <span class="arrow">→</span></button>
       </div>
     </div>
 
@@ -760,8 +760,8 @@ body.terms-expanded .step[data-step="2"] .form-actions{
         </label>
       </div>
       <div class="form-actions">
-        <button class="btn-back" onclick="prevStep()"><span class="arrow">←</span> Back</button>
-        <button class="btn-next accent" onclick="submitForm()" disabled id="btn-submit">Complete Enrollment <span class="arrow">→</span></button>
+        <button type="button" class="btn-back" onclick="prevStep()"><span class="arrow">←</span> Back</button>
+        <button type="button" class="btn-next accent" onclick="submitForm()" disabled id="btn-submit">Complete Enrollment <span class="arrow">→</span></button>
       </div>
     </div>
 
@@ -783,7 +783,7 @@ body.terms-expanded .step[data-step="2"] .form-actions{
       </div>
     </div>
 
-  </div>
+  </form>
 </div>
 
 <div class="confetti-wrap" id="confetti-wrap"></div>
