@@ -794,12 +794,21 @@ async function submitForm() {
   const originalLabel = btn.innerHTML;
   btn.textContent = 'Submitting...';
 
+  const fullName = document.getElementById('full-name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const phoneCode = document.getElementById('phone-code').value.trim();
+  const phoneNumber = document.getElementById('phone').value.trim();
+  const phoneFull = (phoneCode + ' ' + phoneNumber).trim();
+
   const data = {
     listings: document.querySelector('input[name="listings"]:checked')?.value,
-    airbnbUrl: document.getElementById('airbnb-url').value,
-    name: document.getElementById('full-name').value,
-    email: document.getElementById('email').value,
-    phone: document.getElementById('phone-code').value + ' ' + document.getElementById('phone').value,
+    airbnbUrl: document.getElementById('airbnb-url').value.trim(),
+    name: fullName,
+    email: email,
+    phone_code: phoneCode,
+    phone_number: phoneNumber,
+    phone_full: phoneFull,
+    phone: phoneFull,
     schedule: 'yes',
     source: 'get-started',
     submittedAt: new Date().toISOString(),
@@ -837,11 +846,12 @@ async function submitForm() {
   }
 
   // Redirect to Cal.com with pre-filled params
-  const params = new URLSearchParams({
-    name: data.name,
-    email: data.email,
+  const calParams = new URLSearchParams({
+    name: fullName,
+    email: email,
+    phone: phoneFull,
   });
-  window.location.href = `https://cal.com/rev-whisper/discovery?${params.toString()}`;
+  window.location.href = `https://cal.com/rev-whisper/discovery?${calParams.toString()}`;
 }
 
 // Toggle step 1 button between Skip / Next based on URL input
