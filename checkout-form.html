@@ -541,7 +541,7 @@ body.terms-expanded .step[data-step="2"] .form-actions{
 <body>
 
 <div class="form-shell">
-  <form class="steps-viewport" autocomplete="on" onsubmit="return false;">
+  <form class="steps-viewport" autocomplete="on" onsubmit="event.preventDefault();">
 
     <!-- Step 1: Contact Info -->
     <div class="step active" data-step="0">
@@ -1233,7 +1233,7 @@ async function submitForm() {
     phone_full: phoneFull,
     listings: listingUrls,
     listing_count: listingUrls.length,
-    agreed_to_terms: true,
+    agreed_to_terms: document.getElementById('agree-check').checked,
     submitted_at: new Date().toISOString(),
     source: 'checkout',
     source_page: window.location.href,
