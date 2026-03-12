@@ -100,6 +100,7 @@ module.exports = async function handler(req, res) {
   params.set('customer_email', email);
   params.set('success_url', successUrl);
   params.set('cancel_url', cancelUrl);
+  params.set('allow_promotion_codes', 'true');
 
   if (isEnterprise) {
     // Dynamic pricing via price_data for enterprise
