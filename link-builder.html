@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout Link Builder | RevWhisper Internal</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="icons/favicon-light.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{height:100%}
+body{
+  font-family:'DM Sans','system-ui',sans-serif;
+  background:#faf9f8;color:#32302F;line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  min-height:100%;display:flex;align-items:center;justify-content:center;
+  padding:24px;
+}
+:root{
+  --black:#32302F;--accent:#4A6741;--accent-light:#dce6d8;--accent-border:#b3c5ab;
+  --g50:#faf9f8;--g100:#f3f1ef;--g200:#E0DCDA;--g300:#ccc8c5;--g400:#a39e9b;--g500:#706b68;--g700:#48433f;
+  --radius:8px;--radius-sm:6px;
+  --heading:'Lora','Georgia',serif;
+  --body:'DM Sans','system-ui',sans-serif;
+}
+.shell{width:100%;max-width:520px}
+.title{font-family:var(--heading);font-size:28px;font-weight:400;letter-spacing:-.02em;margin-bottom:6px}
+.title em{font-style:italic;color:var(--accent)}
+.subtitle{font-size:14px;color:var(--g500);margin-bottom:32px;font-weight:300}
+.field{margin-bottom:20px}
+.field-label{display:block;font-size:13px;font-weight:500;color:var(--black);margin-bottom:6px}
+.field-hint{font-size:12px;color:var(--g400);font-weight:300;margin-left:4px}
+select,input[type="number"],input[type="text"]{
+  width:100%;padding:12px 14px;border:1.5px solid var(--g200);border-radius:var(--radius-sm);
+  font-size:14px;font-family:var(--body);color:var(--black);background:#fff;
+  transition:border-color .2s,box-shadow .2s;outline:none;
+}
+select:focus,input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(74,103,65,.08)}
+.enterprise-fields{display:none;padding:16px;background:var(--accent-light);border:1px solid var(--accent-border);border-radius:var(--radius-sm);margin-bottom:20px}
+.enterprise-fields.visible{display:block}
+.enterprise-fields .field{margin-bottom:14px}
+.enterprise-fields .field:last-child{margin-bottom:0}
+.divider{height:1px;background:var(--g200);margin:24px 0}
+.utm-toggle{
+  font-size:13px;color:var(--g500);cursor:pointer;display:inline-flex;align-items:center;gap:6px;
+  background:none;border:none;font-family:var(--body);padding:0;margin-bottom:16px;
+}
+.utm-toggle:hover{color:var(--black)}
+.utm-toggle .arrow{transition:transform .2s;font-size:10px}
+.utm-toggle .arrow.open{transform:rotate(90deg)}
+.utm-fields{display:none;padding:16px;background:#fff;border:1px solid var(--g200);border-radius:var(--radius-sm);margin-bottom:20px}
+.utm-fields.visible{display:block}
+.utm-fields .field{margin-bottom:14px}
+.utm-fields .field:last-child{margin-bottom:0}
+.output-wrap{margin-top:28px}
+.output-label{font-size:13px;font-weight:500;color:var(--black);margin-bottom:6px;display:block}
+.output-url{
+  width:100%;padding:14px;border:1.5px solid var(--accent-border);border-radius:var(--radius-sm);
+  font-size:13px;font-family:'SF Mono','Fira Code',monospace;color:var(--accent);background:var(--accent-light);
+  word-break:break-all;line-height:1.6;min-height:60px;resize:none;outline:none;
+}
+.btn-row{display:flex;gap:10px;margin-top:12px}
+.btn{
+  display:inline-flex;align-items:center;gap:6px;padding:12px 22px;border-radius:var(--radius-sm);
+  font-size:13px;font-weight:500;font-family:var(--body);cursor:pointer;
+  transition:transform .2s,box-shadow .2s,opacity .2s;border:none;
+}
+.btn:active{transform:scale(.97)}
+.btn-copy{background:var(--accent);color:#fff}
+.btn-copy:hover{opacity:.88;transform:translateY(-1px);box-shadow:0 4px 12px rgba(74,103,65,.2)}
+.btn-open{background:#fff;color:var(--black);border:1.5px solid var(--g200)}
+.btn-open:hover{border-color:var(--g300);box-shadow:0 2px 8px rgba(50,48,47,.06)}
+.copied{position:fixed;top:24px;left:50%;transform:translateX(-50%) translateY(-10px);
+  background:var(--accent);color:#fff;padding:10px 20px;border-radius:var(--radius-sm);
+  font-size:13px;font-weight:500;opacity:0;transition:opacity .25s,transform .25s;pointer-events:none;z-index:99}
+.copied.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <h1 class="title">Checkout <em>link builder.</em></h1>
+  <p class="subtitle">Build a custom checkout URL to send to a client.</p>
+
+  <div class="field">
+    <label class="field-label" for="plan">Plan</label>
+    <select id="plan">
+      <option value="monthly">Monthly &mdash; $750/mo (3-month minimum)</option>
+      <option value="annual">Annual &mdash; $500/mo (billed upfront)</option>
+      <option value="enterprise">Enterprise &mdash; Custom pricing</option>
+    </select>
+  </div>
+
+  <div class="enterprise-fields" id="enterprise-fields">
+    <div class="field">
+      <label class="field-label" for="monthly_cost">Monthly Cost <span class="field-hint">(per listing)</span></label>
+      <input type="number" id="monthly_cost" placeholder="e.g. 400" min="0" step="1">
+    </div>
+    <div class="field">
+      <label class="field-label" for="onboarding_fee">Onboarding Fee <span class="field-hint">(per listing, default $998)</span></label>
+      <input type="number" id="onboarding_fee" placeholder="998" min="0" step="1">
+    </div>
+    <div class="field">
+      <label class="field-label" for="term_months">Term Length <span class="field-hint">(months)</span></label>
+      <input type="number" id="term_months" placeholder="e.g. 12" min="1" step="1">
+    </div>
+  </div>
+
+  <button type="button" class="utm-toggle" id="utm-toggle">
+    <span class="arrow" id="utm-arrow">&#9654;</span> Add UTM parameters
+  </button>
+
+  <div class="utm-fields" id="utm-fields">
+    <div class="field">
+      <label class="field-label" for="utm_source">utm_source</label>
+      <input type="text" id="utm_source" placeholder="e.g. email, slack, direct">
+    </div>
+    <div class="field">
+      <label class="field-label" for="utm_medium">utm_medium</label>
+      <input type="text" id="utm_medium" placeholder="e.g. referral, outbound">
+    </div>
+    <div class="field">
+      <label class="field-label" for="utm_campaign">utm_campaign</label>
+      <input type="text" id="utm_campaign" placeholder="e.g. q1-portfolio-outreach">
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="output-wrap">
+    <label class="output-label">Generated URL</label>
+    <textarea class="output-url" id="output" readonly rows="3"></textarea>
+    <div class="btn-row">
+      <button type="button" class="btn btn-copy" id="btn-copy">Copy link</button>
+      <button type="button" class="btn btn-open" id="btn-open">Open in new tab</button>
+    </div>
+  </div>
+</div>
+
+<div class="copied" id="toast">Copied to clipboard</div>
+
+<script>
+const BASE = 'https://revwhisper.com/checkout-form';
+const planEl = document.getElementById('plan');
+const enterpriseWrap = document.getElementById('enterprise-fields');
+const monthlyCostEl = document.getElementById('monthly_cost');
+const onboardingFeeEl = document.getElementById('onboarding_fee');
+const termMonthsEl = document.getElementById('term_months');
+const utmSource = document.getElementById('utm_source');
+const utmMedium = document.getElementById('utm_medium');
+const utmCampaign = document.getElementById('utm_campaign');
+const output = document.getElementById('output');
+
+function buildUrl() {
+  const params = new URLSearchParams();
+  params.set('plan', planEl.value);
+
+  if (planEl.value === 'enterprise') {
+    if (monthlyCostEl.value) params.set('monthly_cost', monthlyCostEl.value);
+    if (onboardingFeeEl.value) params.set('onboarding_fee', onboardingFeeEl.value);
+    if (termMonthsEl.value) params.set('term_months', termMonthsEl.value);
+  }
+
+  if (utmSource.value.trim()) params.set('utm_source', utmSource.value.trim());
+  if (utmMedium.value.trim()) params.set('utm_medium', utmMedium.value.trim());
+  if (utmCampaign.value.trim()) params.set('utm_campaign', utmCampaign.value.trim());
+
+  output.value = BASE + '?' + params.toString();
+}
+
+planEl.addEventListener('change', function() {
+  enterpriseWrap.classList.toggle('visible', this.value === 'enterprise');
+  buildUrl();
+});
+
+document.querySelectorAll('input, select').forEach(function(el) {
+  el.addEventListener('input', buildUrl);
+});
+
+// UTM toggle
+document.getElementById('utm-toggle').addEventListener('click', function() {
+  var fields = document.getElementById('utm-fields');
+  var arrow = document.getElementById('utm-arrow');
+  var open = !fields.classList.contains('visible');
+  fields.classList.toggle('visible', open);
+  arrow.classList.toggle('open', open);
+});
+
+// Copy
+document.getElementById('btn-copy').addEventListener('click', function() {
+  navigator.clipboard.writeText(output.value).then(function() {
+    var toast = document.getElementById('toast');
+    toast.classList.add('show');
+    setTimeout(function() { toast.classList.remove('show'); }, 1800);
+  });
+});
+
+// Open
+document.getElementById('btn-open').addEventListener('click', function() {
+  window.open(output.value, '_blank');
+});
+
+// Init
+buildUrl();
+</script>
+</body>
+</html>
