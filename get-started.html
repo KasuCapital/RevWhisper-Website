@@ -341,6 +341,14 @@ body::before{
 .field-error{font-size:12px;color:#B85252;margin-top:5px;font-weight:400;display:none}
 .field-input.error ~ .field-error{display:block;animation:fadeSlideUp .3s var(--ease-out-expo)}
 .field-input.error ~ .field-hint{display:none}
+.listing-help{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:12px;color:var(--g400);text-decoration:none;
+  padding:4px 0;margin-top:2px;transition:color .2s;
+}
+.listing-help:hover{color:var(--accent)}
+.listing-help .arrow{transition:transform .2s var(--ease-out-expo)}
+.listing-help:hover .arrow{transform:translateX(2px)}
 
 /* ── URL Input with icon ── */
 .input-icon-wrap{position:relative}
@@ -541,6 +549,7 @@ body::before{
         </div>
         <div class="field-hint">Paste your full Airbnb profile page link</div>
         <div class="field-error">Please enter a valid Airbnb URL</div>
+        <a href="https://www.airbnb.com/users/show" target="_blank" rel="noopener noreferrer" class="listing-help">Don't have your URL? Find it on Airbnb <span class="arrow">→</span></a>
       </div>
       <div class="form-actions">
         <button class="btn-back" onclick="prevStep()"><span class="arrow">←</span> Back</button>
