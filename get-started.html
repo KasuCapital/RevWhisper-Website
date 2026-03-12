@@ -341,14 +341,37 @@ body::before{
 .field-error{font-size:12px;color:#B85252;margin-top:5px;font-weight:400;display:none}
 .field-input.error ~ .field-error{display:block;animation:fadeSlideUp .3s var(--ease-out-expo)}
 .field-input.error ~ .field-hint{display:none}
-.listing-help{
-  display:inline-flex;align-items:center;gap:5px;
-  font-size:12px;color:var(--g400);text-decoration:none;
-  padding:4px 0;margin-top:2px;transition:color .2s;
+/* ── Open Airbnb Helper ── */
+.open-airbnb-wrap{margin-top:16px}
+.open-airbnb-divider{
+  display:block;font-size:12px;color:var(--g400);font-weight:400;
+  text-align:center;margin-bottom:12px;position:relative;
 }
-.listing-help:hover{color:var(--accent)}
-.listing-help .arrow{transition:transform .2s var(--ease-out-expo)}
-.listing-help:hover .arrow{transform:translateX(2px)}
+.open-airbnb-divider::before,.open-airbnb-divider::after{
+  content:'';position:absolute;top:50%;width:calc(50% - 80px);height:1px;background:var(--g200);
+}
+.open-airbnb-divider::before{left:0}
+.open-airbnb-divider::after{right:0}
+.open-airbnb-btn{
+  display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
+  padding:12px 16px;border-radius:var(--radius);
+  border:1.5px solid var(--g200);background:var(--g50);
+  font-size:13px;font-weight:400;color:var(--g500);font-family:var(--body);
+  text-decoration:none;cursor:pointer;
+  transition:border-color .25s, color .25s, background .25s, transform .2s var(--ease-out-back), box-shadow .25s;
+}
+.open-airbnb-btn:hover{border-color:var(--g300);color:var(--black);background:#fff;transform:translateY(-1px);box-shadow:var(--sh-sm)}
+.open-airbnb-btn:active{transform:scale(.98)}
+.open-airbnb-btn svg{flex-shrink:0;opacity:.6;transition:opacity .25s}
+.open-airbnb-btn:hover svg{opacity:1}
+.paste-btn{border-color:var(--accent-border)!important;background:var(--accent-light)!important;color:var(--accent)!important;font-weight:500!important;animation:fadeSlideUp .4s var(--ease-out-expo) both}
+.paste-btn:hover{background:#fff!important;border-color:var(--accent)!important}
+.paste-btn svg{opacity:.8!important;color:var(--accent)}
+.paste-btn:hover svg{opacity:1!important}
+
+.step.active .open-airbnb-wrap,
+.step.enter-from-below .open-airbnb-wrap,
+.step.enter-from-above .open-airbnb-wrap{animation:fadeSlideUp .5s var(--ease-out-expo) .54s both}
 
 /* ── URL Input with icon ── */
 .input-icon-wrap{position:relative}
@@ -549,7 +572,17 @@ body::before{
         </div>
         <div class="field-hint">Paste your full Airbnb profile page link</div>
         <div class="field-error">Please enter a valid Airbnb URL</div>
-        <a href="https://www.airbnb.com/users/show" target="_blank" rel="noopener noreferrer" class="listing-help">Don't have your URL? Find it on Airbnb <span class="arrow">→</span></a>
+      </div>
+      <div class="open-airbnb-wrap">
+        <span class="open-airbnb-divider">Don't have it handy?</span>
+        <a href="https://www.airbnb.com/users/show" target="_blank" rel="noopener" class="open-airbnb-btn" id="open-airbnb-btn">
+          Open Airbnb — copy your profile URL, then come back
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6m4-3h6m0 0v6m0-6L10 14"/></svg>
+        </a>
+        <button class="open-airbnb-btn paste-btn" id="paste-btn" style="display:none" onclick="pasteFromClipboard()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          <span id="paste-btn-text">Click to paste your copied URL</span>
+        </button>
       </div>
       <div class="form-actions">
         <button class="btn-back" onclick="prevStep()"><span class="arrow">←</span> Back</button>
@@ -824,6 +857,66 @@ document.querySelectorAll('.field-input').forEach(input => {
     input.classList.remove('error');
   });
 });
+
+// ── Enter key advances to next step ──
+document.addEventListener('keydown', function(e) {
+  if (e.key !== 'Enter') return;
+  if (e.target.tagName === 'TEXTAREA') return;
+  if (current === totalSteps - 1) {
+    e.preventDefault();
+    submitForm();
+    return;
+  }
+  if (current < totalSteps) {
+    e.preventDefault();
+    nextStep();
+  }
+});
+
+// ── Clipboard auto-detect on return from Airbnb ──
+var openedAirbnb = false;
+
+document.getElementById('open-airbnb-btn').addEventListener('click', function() {
+  openedAirbnb = true;
+});
+
+document.addEventListener('visibilitychange', function() {
+  if (document.visibilityState !== 'visible') return;
+  if (!openedAirbnb) return;
+  if (current !== 1) return; // Airbnb URL step
+
+  navigator.clipboard.readText().then(function(text) {
+    text = text.trim();
+    if (text && (text.includes('airbnb.com') || text.includes('airbnb.'))) {
+      document.getElementById('airbnb-url').value = text;
+      document.getElementById('airbnb-url').classList.remove('error');
+    } else {
+      showPasteButton();
+    }
+  }).catch(function() {
+    showPasteButton();
+  });
+});
+
+function showPasteButton() {
+  document.getElementById('open-airbnb-btn').style.display = 'none';
+  document.getElementById('paste-btn').style.display = 'flex';
+}
+
+function pasteFromClipboard() {
+  navigator.clipboard.readText().then(function(text) {
+    text = text.trim();
+    if (text && (text.includes('airbnb.com') || text.includes('airbnb.'))) {
+      document.getElementById('airbnb-url').value = text;
+      document.getElementById('airbnb-url').classList.remove('error');
+    } else {
+      document.getElementById('paste-btn-text').textContent = 'That doesn\u2019t look like an Airbnb URL \u2014 try copying again';
+      document.getElementById('airbnb-url').focus();
+    }
+  }).catch(function() {
+    document.getElementById('airbnb-url').focus();
+  });
+}
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
 </body>
