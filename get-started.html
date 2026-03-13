@@ -573,6 +573,10 @@ body::before{
         <div class="field-hint">Paste your full Airbnb profile page link</div>
         <div class="field-error">Please enter a valid Airbnb URL</div>
       </div>
+      <div class="form-actions">
+        <button class="btn-back" onclick="prevStep()"><span class="arrow">←</span> Back</button>
+        <button class="btn-next" onclick="nextStep()" id="btn-step1">Skip <span class="arrow">→</span></button>
+      </div>
       <div class="open-airbnb-wrap">
         <span class="open-airbnb-divider">Don't have it handy?</span>
         <a href="https://www.airbnb.com/users/show" target="_blank" rel="noopener" class="open-airbnb-btn" id="open-airbnb-btn">
@@ -584,21 +588,13 @@ body::before{
           <span id="paste-btn-text">Click to paste your copied URL</span>
         </button>
       </div>
-      <div class="form-actions">
-        <button class="btn-back" onclick="prevStep()"><span class="arrow">←</span> Back</button>
-        <button class="btn-next" onclick="nextStep()" id="btn-step1">Skip <span class="arrow">→</span></button>
-      </div>
     </div>
 
     <!-- Step 3: Contact Info -->
     <div class="step" data-step="2">
-      <div class="step-eyebrow">Enrollment</div>
-      <h2 class="step-title">Let's get you <em>started.</em></h2>
-      <p class="step-desc">Tell us who you are so we can set up your account and begin listing optimization.</p>
-      <div class="fee-badges">
-        <div class="fee-badge">12-Month Annual Plan · <span class="fee-amount">$500/mo</span></div>
-        <div class="fee-badge">One-Time Listing Optimization Fee · <span class="fee-amount">$998</span></div>
-      </div>
+      <div class="step-eyebrow">Book a Call</div>
+      <h2 class="step-title">Let's <em>connect.</em></h2>
+      <p class="step-desc">Tell us who you are and we'll set up a time to talk with our team about your listings.</p>
       <div class="field">
         <label class="field-label" for="full-name">Full Name</label>
         <input type="text" class="field-input" id="full-name" placeholder="Jane Doe" autocomplete="name">
