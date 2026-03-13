@@ -7,7 +7,10 @@ const WEBHOOK_URLS = {
     'https://hook.us2.make.com/jgedj1a6t70wyml2umwaaa73maexffrk',
   revenue_lift:
     process.env.MAKE_REVENUE_LIFT_WEBHOOK_URL ||
-    'https://hook.us2.make.com/4wpxqhppekskm9448ggsndhovimtji71'
+    'https://hook.us2.make.com/4wpxqhppekskm9448ggsndhovimtji71',
+  webinar_registration:
+    process.env.MAKE_WEBINAR_WEBHOOK_URL ||
+    'https://hook.us2.make.com/33fat6fwbl6ad1jt13b7kqcpgbybka59'
 };
 
 function sendJson(res, statusCode, payload) {
