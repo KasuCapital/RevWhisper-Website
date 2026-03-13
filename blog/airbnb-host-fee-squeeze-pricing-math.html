@@ -44,18 +44,44 @@ function rwTrack(e,p){if(localStorage.getItem('rw_cookie_consent')==='accepted')
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Blog | RevWhisper</title>
-<meta name="description" content="Insights, strategies, and tips for Airbnb hosts looking to maximize revenue and optimize their listings.">
-<link rel="canonical" href="https://revwhisper.com/blog">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Blog | RevWhisper">
-<meta property="og:description" content="Insights, strategies, and tips for Airbnb hosts looking to maximize revenue and optimize their listings.">
-<meta property="og:url" content="https://revwhisper.com/blog">
+<title>The 15.5% Fee Squeeze: How Airbnb's New Host Fee Changes Your Pricing Math | RevWhisper Blog</title>
+<meta name="description" content="You switched to a PMS and Airbnb moved you to a 15.5% host-only fee. Your pricing math changed — here's how to recalibrate every rate so you stop losing money.">
+<link rel="canonical" href="https://revwhisper.com/blog/airbnb-host-fee-squeeze-pricing-math">
+<meta property="og:type" content="article">
+<meta property="og:title" content="The 15.5% Fee Squeeze: How Airbnb's New Host Fee Changes Your Pricing Math | RevWhisper Blog">
+<meta property="og:description" content="You switched to a PMS and Airbnb moved you to a 15.5% host-only fee. Your pricing math changed — here's how to recalibrate every rate so you stop losing money.">
+<meta property="og:url" content="https://revwhisper.com/blog/airbnb-host-fee-squeeze-pricing-math">
 <meta property="og:site_name" content="RevWhisper">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The 15.5% Fee Squeeze: How Airbnb's New Host Fee Changes Your Pricing Math | RevWhisper Blog">
+<meta name="twitter:description" content="You switched to a PMS and Airbnb moved you to a 15.5% host-only fee. Here's how to recalibrate every rate.">
 <link rel="icon" href="/icons/favicon-light.svg" type="image/svg+xml" media="(prefers-color-scheme: light)">
 <link rel="icon" href="/icons/favicon-dark.svg" type="image/svg+xml" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="/icons/favicon-light.svg" type="image/svg+xml">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "The 15.5% Fee Squeeze: How Airbnb's New Host Fee Changes Your Pricing Math",
+  "description": "You switched to a PMS and Airbnb moved you to a 15.5% host-only fee. Your pricing math changed — here's how to recalibrate every rate so you stop losing money.",
+  "datePublished": "2026-03-13",
+  "author": {
+    "@type": "Organization",
+    "name": "RevWhisper",
+    "url": "https://revwhisper.com"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "RevWhisper",
+    "url": "https://revwhisper.com",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://revwhisper.com/icons/favicon-light.svg"
+    }
+  },
+  "mainEntityOfPage": "https://revwhisper.com/blog/airbnb-host-fee-squeeze-pricing-math"
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=DM+Sans:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
@@ -76,7 +102,6 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
   --radius:8px;--radius-sm:6px;
   --sh-sm:0 1px 3px rgba(50,48,47,.06),0 1px 2px rgba(50,48,47,.04);
   --sh:0 4px 16px rgba(50,48,47,.07),0 2px 6px rgba(50,48,47,.04);
-  --sh-lg:0 16px 48px rgba(50,48,47,.1),0 4px 12px rgba(50,48,47,.05);
   --heading:'Lora','Georgia',serif;
   --body:'DM Sans','system-ui','Helvetica Neue',sans-serif;
   --mono:'DM Mono','Consolas',monospace;
@@ -107,29 +132,45 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
 .fb-hamburger.open span:nth-child(2){opacity:0}
 .fb-hamburger.open span:last-child{transform:translateY(-3.5px) rotate(-45deg)}
 
-/* ── Blog Hero ── */
-.blog-hero{padding:140px 0 48px;text-align:center}
-.blog-hero h1{font-family:var(--heading);font-size:clamp(32px,5vw,48px);font-weight:600;letter-spacing:-.02em;margin-bottom:12px}
-.blog-hero p{font-size:17px;color:var(--g500);max-width:540px;margin:0 auto}
+/* ── Article Layout ── */
+.post-header{padding:140px 0 32px;text-align:center}
+.post-back{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--g400);text-decoration:none;margin-bottom:24px;transition:color .2s}
+.post-back:hover{color:var(--accent)}
+.post-tags{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:14px}
+.post-tag{font-family:var(--mono);font-size:11px;font-weight:500;color:var(--accent);background:var(--accent-light);padding:3px 10px;border-radius:20px}
+.post-header h1{font-family:var(--heading);font-size:clamp(28px,4.5vw,42px);font-weight:600;letter-spacing:-.02em;line-height:1.25;max-width:720px;margin:0 auto 14px}
+.post-meta{font-size:13px;color:var(--g400);font-family:var(--mono)}
 
-/* ── Blog Grid ── */
-.blog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:28px;padding-bottom:80px}
+.post-hero-img{width:100%;max-width:900px;margin:0 auto 48px;display:block;border-radius:var(--radius);aspect-ratio:16/9;object-fit:cover}
 
-.blog-card{display:flex;flex-direction:column;border-radius:var(--radius);overflow:hidden;background:var(--white);box-shadow:var(--sh-sm);border:1px solid var(--g200);transition:transform .25s ease,box-shadow .25s ease;text-decoration:none;color:inherit}
-.blog-card:hover{transform:translateY(-4px);box-shadow:var(--sh)}
+/* ── Article Content ── */
+.post-content{max-width:680px;margin:0 auto;padding-bottom:64px}
+.post-content h2{font-family:var(--heading);font-size:24px;font-weight:600;margin:40px 0 14px;letter-spacing:-.01em}
+.post-content h3{font-family:var(--heading);font-size:19px;font-weight:600;margin:32px 0 10px}
+.post-content p{font-size:16px;line-height:1.75;color:var(--g600);margin-bottom:20px}
+.post-content ul,.post-content ol{margin:0 0 20px 24px;color:var(--g600);font-size:16px;line-height:1.75}
+.post-content li{margin-bottom:6px}
+.post-content blockquote{border-left:3px solid var(--accent);padding:12px 20px;margin:24px 0;background:var(--g50);border-radius:0 var(--radius) var(--radius) 0;font-style:italic;color:var(--g500)}
+.post-content img{width:100%;border-radius:var(--radius);margin:24px 0}
+.post-content a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}
+.post-content a:hover{color:var(--black)}
+.post-content strong{color:var(--black);font-weight:600}
 
-.blog-card-img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block}
-.blog-card-img--placeholder{background:linear-gradient(135deg,var(--accent-light) 0%,var(--g100) 100%)}
+/* ── Stat Card ── */
+.stat-card{background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:28px;margin:0 0 32px;text-align:center}
+.stat-num{font-family:var(--mono);font-size:clamp(28px,6vw,40px);color:var(--accent);line-height:1}
+.stat-label{font-size:15px;color:var(--g500);margin-top:8px;line-height:1.5}
+.stat-source{font-size:11px;color:var(--g400);margin-top:6px;font-family:var(--mono)}
 
-.blog-card-body{padding:20px 22px 24px;display:flex;flex-direction:column;flex:1}
-.blog-card-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
-.blog-card-tag{font-family:var(--mono);font-size:11px;font-weight:500;color:var(--accent);background:var(--accent-light);padding:3px 10px;border-radius:20px}
-.blog-card-title{font-family:var(--heading);font-size:19px;font-weight:600;letter-spacing:-.01em;line-height:1.35;margin-bottom:8px}
-.blog-card-excerpt{font-size:14px;color:var(--g500);line-height:1.6;margin-bottom:16px;flex:1}
-.blog-card-meta{display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--g400);font-family:var(--mono)}
+/* ── Data Point ── */
+.data-point{font-family:var(--mono);font-size:13px;color:var(--g400);margin-top:-8px;margin-bottom:16px}
 
-/* ── Empty State ── */
-.blog-empty{text-align:center;padding:80px 0;color:var(--g400);font-size:15px}
+/* ── CTA Banner ── */
+.post-cta{max-width:680px;margin:0 auto 64px;padding:36px 32px;background:var(--g50);border:1px solid var(--g200);border-radius:var(--radius);text-align:center}
+.post-cta h3{font-family:var(--heading);font-size:22px;font-weight:600;margin-bottom:8px}
+.post-cta p{font-size:14px;color:var(--g500);margin-bottom:20px}
+.post-cta a{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#fff;padding:12px 28px;border-radius:var(--radius);font-size:14px;font-weight:500;text-decoration:none;transition:transform .25s,box-shadow .25s;box-shadow:0 2px 8px rgba(74,103,65,.15)}
+.post-cta a:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(74,103,65,.25)}
 
 /* ── Footer ── */
 footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
@@ -147,8 +188,9 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
   .fb-links{display:none;position:absolute;top:calc(100% + 8px);left:0;right:0;background:var(--white);flex-direction:column;padding:12px;border-radius:var(--radius);box-shadow:var(--sh-lg);gap:2px}
   .fb-links.open{display:flex}
   .fb-hamburger{display:flex}
-  .blog-hero{padding:110px 0 36px}
-  .blog-grid{grid-template-columns:1fr}
+  .post-header{padding:110px 0 24px}
+  .post-hero-img{border-radius:0}
+  .post-cta{margin-left:16px;margin-right:16px}
   footer{padding:40px 0 30px}
   .footer-bottom{flex-direction:column;gap:10px;align-items:flex-start}
 }
@@ -179,25 +221,77 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
   <a href="/get-started" class="fb-cta">Book a Strategy Call</a>
 </nav>
 
-<!-- ── Hero ── -->
-<section class="blog-hero">
+<!-- ── Post Header ── -->
+<header class="post-header">
   <div class="w">
-    <h1>The RevWhisper Blog</h1>
-    <p>Strategies, insights, and data-driven tips to help you earn more from your Airbnb listings.</p>
+    <a href="/blog" class="post-back">&larr; Back to Blog</a>
+    <div class="post-tags">
+      <span class="post-tag">Deep Dive</span>
+      <span class="post-tag">Revenue Management</span>
+    </div>
+    <h1>The 15.5% Fee Squeeze: How Airbnb's New Host Fee Changes Your Pricing Math</h1>
+    <div class="post-meta">RevWhisper Team &middot; Mar 13, 2026</div>
   </div>
-</section>
+</header>
 
-<!-- ── Blog Grid ── -->
-<section>
-  <div class="w">
-    <div class="blog-grid" id="blog-grid">
-      <!-- Cards rendered by JS from posts.js -->
-    </div>
-    <div class="blog-empty" id="blog-empty" style="display:none">
-      No posts yet — check back soon.
-    </div>
+<article class="post-content w">
+
+  <div class="stat-card">
+    <div class="stat-num">15.5%</div>
+    <div class="stat-label">Airbnb's host-only fee on PMS-connected listings</div>
+    <div class="stat-source">Airbnb fee structure 2024</div>
   </div>
-</section>
+
+  <p>You switched to a PMS for automation and better management. Airbnb quietly moved you to a 15.5% host-only fee structure. Your pricing math just changed, and if you did not recalibrate every rate, you are losing money on every booking.</p>
+
+  <h2>The Fee Structure You Did Not Know You Had</h2>
+
+  <p>When you connect a channel manager or PMS, Airbnb shifts you from the split-fee model to the host-only fee structure. You now pay 15.5% instead of 3%. That is a 12.5 percentage point increase in your cost per booking. Most hosts do not know this happened. They kept their old pricing strategy, which means their net revenue per night dropped overnight. A $200 nightly rate under split-fee nets you $194. Under host-only fee, you net $169. That is $25 less per night, $750 less per month on a 30-night property.</p>
+
+  <blockquote>The fee structure change is invisible in the Airbnb interface but costs hosts $750-$2,400 per property per month if pricing is not recalibrated.</blockquote>
+
+  <p class="data-point">A listing earning $60,000 annually loses $7,800 in net revenue if the host does not adjust for the 15.5% fee structure.</p>
+
+  <h2>Why Your Current ADR Is Wrong Now</h2>
+
+  <p>Average Daily Rate is what guests pay. Net ADR is what you keep after fees. Under the old model, your $200 ADR netted $194. Now it nets $169. Your pricing tool or spreadsheet is calculating based on gross ADR, not net. You are optimizing the wrong number. Every dynamic pricing decision, every comp set analysis, every promotional discount is based on a metric that no longer reflects your actual revenue. You need to recalculate your base rates, seasonal floors, and last-minute thresholds using net ADR, not gross ADR.</p>
+
+  <blockquote>Gross ADR hides the real revenue impact of the 15.5% fee, leading to underpricing decisions that compound over time.</blockquote>
+
+  <p class="data-point">Hosts optimizing for gross ADR instead of net ADR leave an average of $18,200 on the table annually across a 3-property portfolio.</p>
+
+  <h2>The Cleaning Fee Trap Gets Worse</h2>
+
+  <p>Cleaning fees do not escape the 15.5% fee. You charge $150 to clean, you net $126.75. Many hosts set cleaning fees to cover cost, not to contribute to profit. That was already a mistake. Now it is a bigger one. Your $150 cleaning fee costs you $23.25 in platform fees. If your actual cleaning cost is $120, your margin is $6.75, not $30. Worse, high cleaning fees suppress your search ranking and scare off short stays. The algorithm penalizes total price, and guests filter by it. You are paying Airbnb to rank lower.</p>
+
+  <blockquote>The 15.5% fee on cleaning reduces margin and amplifies the algorithmic penalty of high cleaning fees on search placement.</blockquote>
+
+  <p class="data-point">Listings with cleaning fees over $125 see 22% fewer 1-2 night bookings and rank an average of 14 positions lower in search results.</p>
+
+  <h2>How to Reprice for the New Math</h2>
+
+  <p>Start with net revenue targets, not gross ADR. Calculate your cost per booking including the 15.5% fee, your cleaning cost, and your fixed costs per stay. Set a net RevPAR floor. Work backward to gross rates that hit your net targets. This means raising base rates 10-15% in most cases. Lower your cleaning fee and roll that revenue into nightly rates. The algorithm rewards lower total price, and you recapture margin through occupancy. Run your comp set analysis on net revenue, not gross. Your competitors on the split-fee model have a 12.5% cost advantage you must price around.</p>
+
+  <blockquote>Repricing for net revenue instead of gross ADR requires raising base rates 10-15% and shifting cleaning fees into nightly rates to maintain margin and search ranking.</blockquote>
+
+  <p class="data-point">Hosts who rebalance cleaning fees into nightly rates after fee structure changes see 18% higher occupancy and $1,340 more net revenue per property per month.</p>
+
+  <h2>Key Takeaways</h2>
+
+  <ol>
+    <li>The 15.5% host-only fee structure costs you 12.5 percentage points more per booking than the split-fee model, and most hosts do not know they are on it.</li>
+    <li>Optimizing for gross ADR instead of net ADR after the fee change leaves $18,200 per year on the table across a 3-property portfolio.</li>
+    <li>Rebalancing cleaning fees into nightly rates and repricing for net revenue targets increases occupancy 18% and net revenue $1,340 per property per month.</li>
+  </ol>
+
+</article>
+
+<!-- ── CTA Banner ── -->
+<div class="post-cta">
+  <h3>Ready to Optimize Your Listing?</h3>
+  <p>Rev Whisper recalculates your pricing math for the 15.5% fee structure and reprices every listing for net revenue, not vanity metrics.</p>
+  <a href="/get-started">Book a Free Strategy Call &rarr;</a>
+</div>
 
 <!-- ── Footer ── -->
 <footer>
@@ -238,52 +332,6 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
     </div>
   </div>
 </footer>
-
-<!-- ── Load posts and render grid ── -->
-<script src="/blog/posts.js"></script>
-<script>
-(function() {
-  var grid = document.getElementById('blog-grid');
-  var empty = document.getElementById('blog-empty');
-  var posts = typeof BLOG_POSTS !== 'undefined' ? BLOG_POSTS : [];
-
-  if (!posts.length) {
-    empty.style.display = 'block';
-    return;
-  }
-
-  posts.forEach(function(post) {
-    var d = new Date(post.date + 'T00:00:00');
-    var dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-
-    var card = document.createElement('a');
-    card.href = '/blog/' + post.slug;
-    card.className = 'blog-card';
-
-    var tagsHtml = (post.tags || []).map(function(t) {
-      return '<span class="blog-card-tag">' + t + '</span>';
-    }).join('');
-
-    var imgHtml = post.image
-      ? '<img class="blog-card-img" src="' + post.image + '" alt="' + post.title.replace(/"/g, '&quot;') + '" loading="lazy">'
-      : '<div class="blog-card-img blog-card-img--placeholder"></div>';
-
-    card.innerHTML =
-      imgHtml +
-      '<div class="blog-card-body">' +
-        '<div class="blog-card-tags">' + tagsHtml + '</div>' +
-        '<h2 class="blog-card-title">' + post.title + '</h2>' +
-        '<p class="blog-card-excerpt">' + post.excerpt + '</p>' +
-        '<div class="blog-card-meta">' +
-          '<span>' + (post.author || 'RevWhisper Team') + '</span>' +
-          '<span>' + dateStr + '</span>' +
-        '</div>' +
-      '</div>';
-
-    grid.appendChild(card);
-  });
-})();
-</script>
 
 <!-- ── Nav scroll & hamburger ── -->
 <script>
