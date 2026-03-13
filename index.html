@@ -1069,8 +1069,9 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
     <a href="#how-it-works" class="fb-link" data-section="how-it-works">How It Works</a>
     <a href="#credibility" class="fb-link" data-section="credibility">Results</a>
     <a href="#pricing" class="fb-link" data-section="pricing">Pricing</a>
+    <a href="#webinar" class="fb-link" data-section="webinar">Webinar</a>
   </div>
-  <a href="https://revwhisper.com/get-started" class="fb-cta">Join the Webinar</a>
+  <a href="https://revwhisper.com/get-started" class="fb-cta">Book Your Free Strategy Call</a>
   <button class="fb-hamburger" id="fb-hamburger" aria-label="Toggle navigation" aria-expanded="false">
     <span class="fb-ham-line"></span>
     <span class="fb-ham-line"></span>
@@ -1499,8 +1500,8 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
           </div>
           <div class="hiw-vstep-body">
             <span class="hiw-vstep-n">STEP 02</span>
-            <h3 class="hiw-vstep-title">Listing Optimization</h3>
-            <p class="hiw-vstep-desc">We audit your listing, optimize photos, rewrite copy, and set up pricing algorithms &mdash; all without disrupting a single booking.</p>
+            <h3 class="hiw-vstep-title">Onboarding</h3>
+            <p class="hiw-vstep-desc">We audit your listing, optimize photos, rewrite copy, and set up pricing algorithms, all without disrupting a single booking.</p>
           </div>
         </div>
 
@@ -1799,7 +1800,7 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
       <div class="onboard-step">
         <div class="onboard-num">1</div>
         <h3 class="onboard-title">Sign Up & Pay Listing Optimization Fee</h3>
-        <p class="onboard-desc">$998 one-time fee per listing covers your full listing audit, market analysis, and account setup. Paid upfront &mdash; your subscription starts once optimization is complete.</p>
+        <p class="onboard-desc">$998 one-time fee per listing covers your full listing audit, market analysis, and account setup. Paid upfront. Your subscription starts once optimization is complete.</p>
       </div>
       <div class="onboard-step">
         <div class="onboard-num">2</div>
@@ -2045,7 +2046,7 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
 <!-- ════════════════════════════════════════════════
      WEBINAR BANNER
      ════════════════════════════════════════════════ -->
-<section class="webinar-banner r">
+<section class="webinar-banner r" id="webinar">
   <div class="wb-particle"></div>
   <div class="wb-particle"></div>
   <div class="wb-particle"></div>
@@ -2053,7 +2054,7 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
   <div class="wb-particle"></div>
   <div class="wb-particle"></div>
   <div class="w">
-    <div class="wb-eyebrow"><span class="wb-live-dot"></span> Live Every Mon, Wed & Fri at 12pm EST</div>
+    <div class="wb-eyebrow"><span class="wb-live-dot"></span> Live Every Wednesday at 12pm EST</div>
     <h2 class="wb-headline">Learn How Top Hosts<br><em>Maximize Revenue</em></h2>
     <p class="wb-sub">Join our free live webinar where we break down proven strategies, share exactly what we do for clients, and give you actionable advice you can implement today.</p>
     <div class="wb-countdown">
@@ -2071,6 +2072,18 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
     <div class="wb-spots"><span class="wb-spots-dot"></span> Select listings audited live each session</div>
     <br>
     <a href="/webinar" class="wb-cta">Reserve Your Spot <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+  </div>
+</section>
+
+<section id="community" class="r" style="display:none">
+  <div class="w" style="max-width:620px;padding:80px 24px 40px;text-align:center">
+    <p style="font-family:var(--mono);font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin-bottom:12px">By hosts, for hosts</p>
+    <h2 style="font-family:var(--heading);font-size:clamp(28px,4vw,40px);font-weight:400;letter-spacing:-.02em;color:var(--black);line-height:1.25;margin-bottom:20px">Join Our Free Airbnb Host Community</h2>
+    <p style="font-size:15px;color:var(--g500);line-height:1.75;font-weight:300;margin-bottom:32px">We're Airbnb owners who got obsessed with what actually moves the needle on listing performance. A place to share real strategies, data-backed tips, and honest conversations about growing your revenue.</p>
+    <a href="https://www.facebook.com/share/g/1CN9cPC877/" target="_blank" rel="noopener" class="btn-accent" style="display:inline-flex;align-items:center;gap:8px">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+      Join Our Facebook Group
+    </a>
   </div>
 </section>
 
@@ -2368,7 +2381,7 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
 
   /* ── 5a. Webinar Countdown Timer ── */
   (function(){
-    var WEBINAR_DAYS=[1,3,5];
+    var WEBINAR_DAYS=[3];
     var WEBINAR_HOUR=12;
     var daysEl=document.getElementById('wb-days');
     var hrsEl=document.getElementById('wb-hours');
