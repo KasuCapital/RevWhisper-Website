@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Attribution tracking (cookie-free) -->
+<script>
+(function(){
+  var key='rw_attribution';
+  var params=new URLSearchParams(window.location.search);
+  var utmFields=['utm_source','utm_medium','utm_campaign','utm_term','utm_content'];
+  var hasUtm=utmFields.some(function(f){return params.has(f);});
+  if(hasUtm||!sessionStorage.getItem(key)){
+    var data={};
+    utmFields.forEach(function(f){if(params.get(f))data[f]=params.get(f);});
+    try{data.referrer=document.referrer?new URL(document.referrer).hostname:'direct';}catch(e){data.referrer=document.referrer||'direct';}
+    data.landing_page=window.location.pathname;
+    data.arrived_at=new Date().toISOString();
+    sessionStorage.setItem(key,JSON.stringify(data));
+  }
+})();
+function rwAttribution(){try{return JSON.parse(sessionStorage.getItem('rw_attribution'))||{};}catch(e){return {};}}
+</script>
+<!-- Cookie Consent + GA4 (consent-gated) -->
+<script>
+window.dataLayer=window.dataLayer||[];
+function gtag(){dataLayer.push(arguments);}
+function rwLoadGA(){
+  var s=document.createElement('script');s.async=true;
+  s.src='https://www.googletagmanager.com/gtag/js?id=G-Y1FYZ5849B';
+  document.head.appendChild(s);
+  gtag('js',new Date());gtag('config','G-Y1FYZ5849B');
+}
+function rwTrack(e,p){if(localStorage.getItem('rw_cookie_consent')==='accepted')gtag('event',e,p||{});}
+(function(){
+  var c=localStorage.getItem('rw_cookie_consent');
+  if(c==='accepted'){rwLoadGA();return;}
+  if(c==='declined')return;
+  document.addEventListener('DOMContentLoaded',function(){
+    var b=document.createElement('div');b.id='rw-consent';
+    b.innerHTML='<div style="position:fixed;bottom:0;left:0;right:0;z-index:9999;padding:16px 24px;background:#32302F;color:#fff;font-family:DM Sans,system-ui,sans-serif;font-size:14px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;box-shadow:0 -4px 24px rgba(0,0,0,.15)"><span style="flex:1;min-width:240px;line-height:1.5">We use cookies to analyze site usage and improve your experience.</span><div style="display:flex;gap:10px;flex-shrink:0"><button id="rw-decline" style="background:transparent;color:#ccc8c5;border:1.5px solid #706b68;padding:8px 20px;border-radius:6px;font-size:13px;font-family:inherit;cursor:pointer">Decline</button><button id="rw-accept" style="background:#4A6741;color:#fff;border:none;padding:8px 20px;border-radius:6px;font-size:13px;font-family:inherit;cursor:pointer;font-weight:500">Accept</button></div></div>';
+    document.body.appendChild(b);
+    document.getElementById('rw-accept').addEventListener('click',function(){localStorage.setItem('rw_cookie_consent','accepted');b.remove();rwLoadGA();});
+    document.getElementById('rw-decline').addEventListener('click',function(){localStorage.setItem('rw_cookie_consent','declined');b.remove();});
+  });
+})();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Live Webinar | RevWhisper</title>
+<meta name="description" content="Register for RevWhisper's free live webinar. Learn proven strategies top Airbnb hosts use to maximize revenue — live every Mon, Wed & Fri at 12pm EST.">
+<link rel="canonical" href="https://revwhisper.com/webinar">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Free Live Webinar | RevWhisper">
+<meta property="og:description" content="Join our free live webinar and learn proven strategies to maximize your Airbnb revenue.">
+<meta property="og:url" content="https://revwhisper.com/webinar">
+<meta property="og:site_name" content="RevWhisper">
+<meta property="og:image" content="https://revwhisper.com/images/properties/livingroom-after.webp">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Free Live Webinar | RevWhisper">
+<meta name="twitter:description" content="Join our free live webinar and learn proven strategies to maximize your Airbnb revenue.">
+<meta name="twitter:image" content="https://revwhisper.com/images/properties/livingroom-after.webp">
+<link rel="icon" href="icons/favicon-light.svg" type="image/svg+xml" media="(prefers-color-scheme: light)">
+<link rel="icon" href="icons/favicon-dark.svg" type="image/svg+xml" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="icons/favicon-light.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=DM+Sans:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{height:100%;overflow:hidden;overflow-x:hidden}
+body{
+  font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;
+  background:#fff;color:#32302F;line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  height:100%;display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+}
+:root{
+  --black:#32302F;
+  --white:#ffffff;
+  --accent:#4A6741;
+  --accent-light:#dce6d8;
+  --accent-border:#b3c5ab;
+  --g50:#faf9f8;--g100:#f3f1ef;--g200:#E0DCDA;--g300:#ccc8c5;--g400:#a39e9b;--g500:#706b68;--g700:#48433f;
+  --radius:8px;--radius-sm:6px;
+  --sh-sm:0 1px 3px rgba(50,48,47,.06),0 1px 2px rgba(50,48,47,.04);
+  --sh:0 4px 16px rgba(50,48,47,.07),0 2px 6px rgba(50,48,47,.04);
+  --sh-lg:0 16px 48px rgba(50,48,47,.1),0 4px 12px rgba(50,48,47,.05);
+  --heading:'Lora','Georgia',serif;
+  --body:'DM Sans','system-ui','Helvetica Neue',sans-serif;
+  --ease-out-expo:cubic-bezier(.16,1,.3,1);
+  --ease-out-back:cubic-bezier(.34,1.56,.64,1);
+  --ease-spring:cubic-bezier(.25,.1,.25,1.4);
+}
+
+/* ── Ambient Background ── */
+body::before{
+  content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%;
+  background:
+    radial-gradient(ellipse at 30% 20%, rgba(74,103,65,.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 80%, rgba(74,103,65,.03) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(74,103,65,.02) 0%, transparent 70%);
+  animation:ambientDrift 20s ease-in-out infinite alternate;
+  pointer-events:none;z-index:0;
+}
+@keyframes ambientDrift{
+  0%{transform:translate(0,0) rotate(0deg)}
+  100%{transform:translate(30px,-20px) rotate(2deg)}
+}
+
+/* ── Form Container ── */
+.form-shell{width:100%;max-width:560px;padding:28px;position:relative;z-index:1;margin:auto}
+
+/* ── Step Container ── */
+.steps-viewport{position:relative}
+.step{
+  position:absolute;top:0;left:0;right:0;
+  opacity:0;visibility:hidden;
+  transform:translateY(20px);
+  transition:none;
+  pointer-events:none;
+}
+.step.active{
+  position:relative;
+  opacity:1;visibility:visible;
+  transform:translateY(0);
+  pointer-events:auto;
+}
+
+/* ── Transition States ── */
+.step.exit-up{
+  position:absolute;
+  opacity:0;visibility:visible;
+  transform:translateY(-30px) scale(.98);
+  transition:opacity .35s var(--ease-out-expo), transform .35s var(--ease-out-expo), visibility 0s .35s;
+  pointer-events:none;
+}
+.step.exit-down{
+  position:absolute;
+  opacity:0;visibility:visible;
+  transform:translateY(30px) scale(.98);
+  transition:opacity .35s var(--ease-out-expo), transform .35s var(--ease-out-expo), visibility 0s .35s;
+  pointer-events:none;
+}
+.step.enter-from-below{
+  position:relative;
+  opacity:1;visibility:visible;
+  transform:translateY(0);
+  transition:opacity .5s var(--ease-out-expo) .1s, transform .5s var(--ease-out-expo) .1s;
+  pointer-events:auto;
+}
+.step.enter-from-above{
+  position:relative;
+  opacity:1;visibility:visible;
+  transform:translateY(0);
+  transition:opacity .5s var(--ease-out-expo) .1s, transform .5s var(--ease-out-expo) .1s;
+  pointer-events:auto;
+}
+
+/* ── Staggered Child Reveal ── */
+.step.active .step-eyebrow,
+.step.enter-from-below .step-eyebrow,
+.step.enter-from-above .step-eyebrow{animation:fadeSlideUp .5s var(--ease-out-expo) .15s both}
+
+.step.active .step-title,
+.step.enter-from-below .step-title,
+.step.enter-from-above .step-title{animation:fadeSlideUp .55s var(--ease-out-expo) .22s both}
+
+.step.active .step-desc,
+.step.enter-from-below .step-desc,
+.step.enter-from-above .step-desc{animation:fadeSlideUp .55s var(--ease-out-expo) .3s both}
+
+.step.active .wb-countdown,
+.step.enter-from-below .wb-countdown,
+.step.enter-from-above .wb-countdown{animation:fadeSlideUp .5s var(--ease-out-expo) .34s both}
+
+.step.active .field,
+.step.enter-from-below .field,
+.step.enter-from-above .field{animation:fadeSlideUp .5s var(--ease-out-expo) .38s both}
+
+.step.active .field ~ .field,
+.step.enter-from-below .field ~ .field,
+.step.enter-from-above .field ~ .field{animation-delay:.44s}
+
+.step.active .field ~ .field ~ .field,
+.step.enter-from-below .field ~ .field ~ .field,
+.step.enter-from-above .field ~ .field ~ .field{animation-delay:.50s}
+
+.step.active .form-actions,
+.step.enter-from-below .form-actions,
+.step.enter-from-above .form-actions{animation:fadeSlideUp .5s var(--ease-out-expo) .46s both}
+
+@keyframes fadeSlideUp{
+  from{opacity:0;transform:translateY(16px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* ── Step Header ── */
+.step-eyebrow{font-size:11px;font-weight:500;color:var(--accent);letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px;display:inline-flex;align-items:center;gap:8px}
+.step-title{font-family:var(--heading);font-size:clamp(28px,4vw,36px);font-weight:400;letter-spacing:-.02em;line-height:1.15;color:var(--black);margin-bottom:10px}
+.step-title em{font-style:italic;color:var(--accent);position:relative}
+.step-title em::after{
+  content:'';position:absolute;bottom:-2px;left:-2%;width:104%;height:2px;
+  background:var(--accent);border-radius:2px;
+  transform:scaleX(0) rotate(-1.5deg);transform-origin:left;
+  animation:underlineDraw .6s var(--ease-out-expo) .55s forwards;
+}
+.step-desc{font-size:15px;color:var(--g500);line-height:1.7;font-weight:300;margin-bottom:36px;max-width:440px}
+
+/* ── Webinar Countdown (inline) ── */
+.wb-countdown{margin-bottom:32px}
+.wb-countdown-label{font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--g400);margin-bottom:14px}
+.wb-timer{display:flex;align-items:center;gap:10px}
+.wb-time-unit{display:flex;flex-direction:column;align-items:center;gap:5px}
+.wb-num{font-family:var(--body);font-size:clamp(28px,4.5vw,40px);font-weight:500;line-height:1;background:var(--g50);border:1.5px solid var(--g200);border-radius:var(--radius);padding:12px 16px;min-width:58px;text-align:center;color:var(--black);transition:transform .15s ease,border-color .15s ease}
+.wb-num.wb-tick{animation:wbTick .3s ease}
+@keyframes wbTick{0%{transform:scale(1)}40%{transform:scale(1.06)}100%{transform:scale(1)}}
+.wb-unit{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--g400)}
+.wb-sep{font-size:clamp(22px,3.5vw,32px);font-weight:300;color:var(--g300);align-self:flex-start;margin-top:12px;animation:wbBlink 1s step-end infinite}
+@keyframes wbBlink{0%,100%{opacity:1}50%{opacity:.2}}
+.wb-live-banner{font-size:clamp(18px,3vw,24px);font-weight:600;color:var(--accent);animation:wbPulse 2s ease-in-out infinite}
+@keyframes wbPulse{0%,100%{opacity:1}50%{opacity:.5}}
+.wb-live-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px rgba(74,103,65,.4);animation:wbDotPulse 2s ease-in-out infinite}
+@keyframes wbDotPulse{0%,100%{opacity:1;box-shadow:0 0 8px rgba(74,103,65,.4)}50%{opacity:.5;box-shadow:0 0 16px rgba(74,103,65,.2)}}
+
+/* ── Text Inputs ── */
+.field{margin-bottom:20px}
+.field-label{display:block;font-size:13px;font-weight:500;color:var(--black);margin-bottom:7px;transition:color .2s}
+.field-input{
+  width:100%;padding:13px 16px;
+  border:1.5px solid var(--g200);border-radius:var(--radius);
+  font-size:15px;font-family:var(--body);color:var(--black);background:#fff;
+  outline:none;
+  transition:border-color .3s, box-shadow .3s var(--ease-out-expo), transform .2s var(--ease-out-expo);
+}
+.field-input::placeholder{color:var(--g400);font-weight:300}
+.field-input:hover{border-color:var(--g300)}
+.field-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(74,103,65,.1);transform:translateY(-1px)}
+.field:focus-within .field-label{color:var(--accent)}
+.field-input.error{border-color:#B85252;box-shadow:0 0 0 3px rgba(184,82,82,.08);animation:inputShake .4s var(--ease-out-expo)}
+@keyframes inputShake{
+  0%,100%{transform:translateX(0)}
+  20%{transform:translateX(-6px)}
+  40%{transform:translateX(5px)}
+  60%{transform:translateX(-3px)}
+  80%{transform:translateX(2px)}
+}
+.field-hint{font-size:12px;color:var(--g400);margin-top:5px;font-weight:300}
+.field-error{font-size:12px;color:#B85252;margin-top:5px;font-weight:400;display:none}
+.field-input.error ~ .field-error{display:block;animation:fadeSlideUp .3s var(--ease-out-expo)}
+.field-input.error ~ .field-hint{display:none}
+
+/* ── URL Input with icon ── */
+.input-icon-wrap{position:relative}
+.input-icon-wrap .field-input{padding-left:42px}
+.input-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--g400);display:flex;align-items:center;transition:color .3s;z-index:2;pointer-events:none}
+.field:focus-within .input-icon{color:var(--accent)}
+
+/* ── Buttons ── */
+.form-actions{display:flex;align-items:center;gap:12px;margin-top:8px}
+.btn-next{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--accent);color:#fff;font-size:14px;font-weight:400;letter-spacing:0;
+  padding:14px 28px;border-radius:var(--radius-sm);border:none;cursor:pointer;
+  font-family:var(--body);position:relative;overflow:hidden;
+  transition:transform .25s var(--ease-out-back), box-shadow .3s, opacity .3s;
+}
+.btn-next::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.15) 0%,transparent 60%);
+  opacity:0;transition:opacity .3s;
+}
+.btn-next:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(50,48,47,.15)}
+.btn-next:hover::before{opacity:1}
+.btn-next:active{transform:translateY(0) scale(.97);box-shadow:var(--sh-sm)}
+.btn-next:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-next:disabled:hover{transform:none;box-shadow:none}
+.btn-next:disabled::before{display:none}
+.btn-next .arrow{display:inline-block;transition:transform .25s var(--ease-out-expo)}
+.btn-next:hover:not(:disabled) .arrow{transform:translateX(3px)}
+
+/* ── Underline draw animation on em ── */
+@keyframes underlineDraw{
+  from{transform:scaleX(0) rotate(-1.5deg)}
+  to{transform:scaleX(1) rotate(-1.5deg)}
+}
+
+/* ── Success State ── */
+.success-state{text-align:center;padding:32px 0}
+.success-icon{
+  width:80px;height:80px;border-radius:50%;
+  background:var(--accent-light);border:2px solid var(--accent-border);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 28px;position:relative;
+}
+.success-icon svg{opacity:0}
+.success-state.revealed .success-icon{animation:iconBounceIn .6s var(--ease-out-back) forwards}
+.success-state.revealed .success-icon svg{animation:checkDraw .4s var(--ease-out-expo) .4s forwards}
+.success-state.revealed .success-icon::after{
+  content:'';position:absolute;inset:-8px;border-radius:50%;
+  border:2px solid var(--accent-border);opacity:0;
+  animation:ringPulse .8s var(--ease-out-expo) .3s forwards;
+}
+@keyframes iconBounceIn{
+  0%{opacity:0;transform:scale(0)}
+  50%{transform:scale(1.12)}
+  70%{transform:scale(.95)}
+  100%{opacity:1;transform:scale(1)}
+}
+@keyframes checkDraw{
+  from{opacity:0;transform:scale(.5) rotate(-10deg)}
+  to{opacity:1;transform:scale(1) rotate(0deg)}
+}
+@keyframes ringPulse{
+  0%{opacity:0;transform:scale(.8)}
+  50%{opacity:.4}
+  100%{opacity:0;transform:scale(1.3)}
+}
+
+.success-title{
+  font-family:var(--heading);font-size:clamp(26px,4vw,32px);font-weight:400;
+  letter-spacing:-.02em;color:var(--black);margin-bottom:10px;
+  opacity:0;
+}
+.success-title em{font-style:italic;color:var(--accent)}
+.success-state.revealed .success-title{animation:fadeSlideUp .5s var(--ease-out-expo) .5s forwards}
+
+.success-desc{
+  font-size:15px;color:var(--g500);line-height:1.7;font-weight:300;
+  max-width:400px;margin:0 auto 32px;opacity:0;
+}
+.success-state.revealed .success-desc{animation:fadeSlideUp .5s var(--ease-out-expo) .6s forwards}
+
+.success-detail{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:12px 20px;background:var(--g50);border:1px solid var(--g200);
+  border-radius:var(--radius);font-size:13px;color:var(--g500);opacity:0;
+}
+.success-detail strong{color:var(--black);font-weight:600}
+.success-state.revealed .success-detail{animation:fadeSlideUp .5s var(--ease-out-expo) .72s forwards}
+
+/* ── Confetti Particles ── */
+.confetti-wrap{position:fixed;inset:0;pointer-events:none;z-index:100;overflow:hidden}
+.confetti{
+  position:absolute;width:8px;height:8px;border-radius:2px;
+  opacity:0;
+}
+.confetti.go{animation:confettiFall var(--fall-dur, 2.5s) var(--ease-out-expo) forwards}
+@keyframes confettiFall{
+  0%{opacity:1;transform:translateY(0) rotate(0deg) scale(1)}
+  20%{opacity:1}
+  100%{opacity:0;transform:translateY(calc(100vh + 50px)) rotate(var(--spin, 720deg)) scale(.3)}
+}
+
+/* ── Page Load Animation ── */
+.form-shell{opacity:0;transform:translateY(16px);animation:initialLoad .7s var(--ease-out-expo) .1s forwards}
+@keyframes initialLoad{
+  from{opacity:0;transform:translateY(16px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* ── Responsive ── */
+@media(max-width:640px){
+  html,body{overflow-x:hidden;overflow-y:auto}
+  body{padding:20px}
+  .form-shell{max-width:100%;padding:20px}
+  .step-title{font-size:26px}
+  .wb-num{font-size:22px;padding:10px 12px;min-width:44px;border-radius:6px}
+  .wb-timer{gap:6px}
+  .wb-sep{font-size:18px;margin-top:10px}
+  .wb-unit{font-size:8px}
+}
+</style>
+</head>
+<body>
+
+<div class="form-shell">
+  <div class="steps-viewport">
+
+    <!-- Step 1: Registration -->
+    <div class="step active" data-step="0">
+      <div class="step-eyebrow"><span class="wb-live-dot"></span> Live Every Mon, Wed & Fri at 12pm EST</div>
+      <h1 class="step-title">Reserve your spot at our <em>free webinar.</em></h1>
+      <p class="step-desc">Join us live as we break down proven strategies, share exactly what we do for clients, and audit select listings on-air.</p>
+
+      <div class="wb-countdown">
+        <div class="wb-countdown-label">Next webinar starts in</div>
+        <div class="wb-timer" id="wb-timer">
+          <div class="wb-time-unit"><span class="wb-num" id="wb-days">0</span><span class="wb-unit">days</span></div>
+          <span class="wb-sep">:</span>
+          <div class="wb-time-unit"><span class="wb-num" id="wb-hours">0</span><span class="wb-unit">hrs</span></div>
+          <span class="wb-sep">:</span>
+          <div class="wb-time-unit"><span class="wb-num" id="wb-mins">0</span><span class="wb-unit">min</span></div>
+          <span class="wb-sep">:</span>
+          <div class="wb-time-unit"><span class="wb-num" id="wb-secs">0</span><span class="wb-unit">sec</span></div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="full-name">Full Name</label>
+        <input type="text" class="field-input" id="full-name" placeholder="Jane Doe" autocomplete="name">
+        <div class="field-error">Please enter your name</div>
+      </div>
+      <div class="field">
+        <label class="field-label" for="email">Email</label>
+        <div class="input-icon-wrap">
+          <div class="input-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          </div>
+          <input type="email" class="field-input" id="email" placeholder="jane@example.com" autocomplete="email">
+        </div>
+        <div class="field-error">Please enter a valid email</div>
+      </div>
+      <div class="field">
+        <label class="field-label" for="airbnb-url">Airbnb Listing Link</label>
+        <div class="input-icon-wrap">
+          <div class="input-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+          </div>
+          <input type="url" class="field-input" id="airbnb-url" placeholder="https://www.airbnb.com/rooms/..." autocomplete="off">
+        </div>
+        <div class="field-hint">Share a listing link to get it audited live on the webinar</div>
+        <div class="field-error">Please enter a valid Airbnb URL</div>
+      </div>
+      <div class="form-actions">
+        <button class="btn-next" onclick="submitForm()" id="btn-submit">Register <span class="arrow">→</span></button>
+      </div>
+    </div>
+
+    <!-- Success State -->
+    <div class="step" data-step="1">
+      <div class="success-state" id="success-state">
+        <div class="success-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="#4A6741" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <h2 class="success-title">You're <em>registered.</em></h2>
+        <p class="success-desc">We've saved your spot. Check your inbox for the webinar link and details on how to join.</p>
+        <div class="success-detail">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="var(--accent)" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          <span>Confirmation sent to <strong id="confirm-email">your email</strong></span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Confetti container (injected on success) -->
+<div class="confetti-wrap" id="confetti-wrap"></div>
+
+<script>
+let current = 0;
+let isTransitioning = false;
+const FORM_WEBHOOK_ENDPOINT = '/api/form-webhook';
+
+/* ── Webinar Countdown ── */
+(function(){
+  var WEBINAR_DAYS=[1,3,5]; // Mon, Wed, Fri
+  var WEBINAR_HOUR=12; // noon EST
+  var daysEl=document.getElementById('wb-days');
+  var hrsEl=document.getElementById('wb-hours');
+  var minsEl=document.getElementById('wb-mins');
+  var secsEl=document.getElementById('wb-secs');
+  if(!daysEl)return;
+
+  function getNextWebinar(){
+    var now=new Date();
+    var est=new Date(now.toLocaleString('en-US',{timeZone:'America/New_York'}));
+    var day=est.getDay();
+    var hour=est.getHours();
+    var daysAhead=null;
+    for(var i=0;i<7;i++){
+      var check=(day+i)%7;
+      if(WEBINAR_DAYS.indexOf(check)!==-1){
+        if(i===0&&hour>=WEBINAR_HOUR+1)continue;
+        daysAhead=i;break;
+      }
+    }
+    if(daysAhead===null)daysAhead=7;
+    var next=new Date(est);
+    next.setDate(next.getDate()+daysAhead);
+    next.setHours(WEBINAR_HOUR,0,0,0);
+    var diffMs=next.getTime()-est.getTime();
+    return diffMs;
+  }
+
+  function setVal(el,val){
+    var v=String(val);
+    if(el.textContent!==v){
+      el.textContent=v;
+      el.classList.remove('wb-tick');
+      void el.offsetWidth;
+      el.classList.add('wb-tick');
+    }
+  }
+
+  function update(){
+    var diff=getNextWebinar();
+    if(diff<=0){
+      document.getElementById('wb-timer').innerHTML='<span class="wb-live-banner">Happening Now!</span>';
+      return;
+    }
+    var s=Math.floor(diff/1000);
+    var d=Math.floor(s/86400);s%=86400;
+    var h=Math.floor(s/3600);s%=3600;
+    var m=Math.floor(s/60);s%=60;
+    setVal(daysEl,d);
+    setVal(hrsEl,h);
+    setVal(minsEl,String(m).padStart(2,'0'));
+    setVal(secsEl,String(s).padStart(2,'0'));
+  }
+  update();
+  setInterval(update,1000);
+})();
+
+/* ── Step Transitions ── */
+function transitionStep(from, to, direction) {
+  if (isTransitioning) return;
+  isTransitioning = true;
+
+  const fromEl = document.querySelector(`.step[data-step="${from}"]`);
+  const toEl = document.querySelector(`.step[data-step="${to}"]`);
+  if (!fromEl || !toEl) { isTransitioning = false; return; }
+
+  fromEl.classList.remove('active', 'enter-from-below', 'enter-from-above');
+  fromEl.classList.add(direction === 'forward' ? 'exit-up' : 'exit-down');
+
+  toEl.classList.remove('active', 'exit-up', 'exit-down');
+  toEl.style.position = 'relative';
+  toEl.style.opacity = '0';
+  toEl.style.visibility = 'visible';
+  toEl.style.transform = direction === 'forward' ? 'translateY(24px)' : 'translateY(-24px)';
+  toEl.style.transition = 'none';
+  toEl.style.pointerEvents = 'auto';
+
+  void toEl.offsetHeight;
+
+  requestAnimationFrame(() => {
+    toEl.style.transition = '';
+    toEl.classList.add(direction === 'forward' ? 'enter-from-below' : 'enter-from-above');
+    toEl.style.position = '';
+    toEl.style.opacity = '';
+    toEl.style.visibility = '';
+    toEl.style.transform = '';
+    toEl.style.pointerEvents = '';
+  });
+
+  setTimeout(() => {
+    fromEl.classList.remove('exit-up', 'exit-down');
+    fromEl.style.position = '';
+    isTransitioning = false;
+  }, 500);
+}
+
+/* ── Validation ── */
+function validateForm() {
+  let valid = true;
+  const name = document.getElementById('full-name');
+  const email = document.getElementById('email');
+  const url = document.getElementById('airbnb-url');
+
+  if (!name.value.trim()) { name.classList.add('error'); valid = false; } else { name.classList.remove('error'); }
+  if (!email.value.trim() || !email.value.includes('@')) { email.classList.add('error'); valid = false; } else { email.classList.remove('error'); }
+
+  const urlVal = url.value.trim();
+  if (urlVal && !urlVal.includes('airbnb.com') && !urlVal.includes('airbnb.')) {
+    url.classList.add('error');
+    valid = false;
+  } else {
+    url.classList.remove('error');
+  }
+
+  return valid;
+}
+
+/* ── Confetti ── */
+function launchConfetti() {
+  const wrap = document.getElementById('confetti-wrap');
+  const colors = ['#4A6741','#dce6d8','#b3c5ab','#32302F','#E0DCDA','#706b68','#8aab7f','#c5d6bf'];
+  const count = 60;
+
+  for (let i = 0; i < count; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti';
+    el.style.background = colors[Math.floor(Math.random() * colors.length)];
+    el.style.left = (Math.random() * 100) + '%';
+    el.style.top = (-10 - Math.random() * 20) + '%';
+    el.style.width = (5 + Math.random() * 6) + 'px';
+    el.style.height = (5 + Math.random() * 6) + 'px';
+    el.style.borderRadius = Math.random() > .5 ? '50%' : '2px';
+    el.style.setProperty('--fall-dur', (1.8 + Math.random() * 1.5) + 's');
+    el.style.setProperty('--spin', (360 + Math.random() * 720) + 'deg');
+    wrap.appendChild(el);
+
+    setTimeout(() => el.classList.add('go'), Math.random() * 400);
+  }
+
+  setTimeout(() => { wrap.innerHTML = ''; }, 4000);
+}
+
+/* ── Submit ── */
+var webhookSent = false;
+async function submitForm() {
+  if (!validateForm()) return;
+  if (webhookSent) return;
+  webhookSent = true;
+  const btn = document.getElementById('btn-submit');
+  btn.disabled = true;
+  const originalLabel = btn.innerHTML;
+  btn.textContent = 'Registering...';
+
+  const data = {
+    name: document.getElementById('full-name').value,
+    email: document.getElementById('email').value,
+    airbnbUrl: document.getElementById('airbnb-url').value,
+    source: 'webinar',
+    submittedAt: new Date().toISOString(),
+    attribution: rwAttribution()
+  };
+
+  console.log('Webinar registration submitted:', data);
+  rwTrack('generate_lead',{page:'webinar'});
+
+  try {
+    const response = await fetch(FORM_WEBHOOK_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        event_type: 'webinar_registration',
+        payload: data
+      })
+    });
+
+    if (!response.ok) {
+      let message = 'We could not complete your registration. Please try again.';
+      try {
+        const payload = await response.json();
+        if (payload && payload.error) message = payload.error;
+      } catch (error) {}
+      throw new Error(message);
+    }
+  } catch (error) {
+    console.error('Webinar registration webhook failed:', error);
+    webhookSent = false;
+    btn.disabled = false;
+    btn.innerHTML = originalLabel;
+    alert(error.message || 'We could not complete your registration. Please try again.');
+    return;
+  }
+
+  // Show success
+  document.getElementById('confirm-email').textContent = data.email;
+  transitionStep(0, 1, 'forward');
+  setTimeout(() => {
+    document.getElementById('success-state').classList.add('revealed');
+    launchConfetti();
+  }, 400);
+}
+
+// Clear error on input
+document.querySelectorAll('.field-input').forEach(input => {
+  input.addEventListener('input', () => {
+    input.classList.remove('error');
+  });
+});
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
