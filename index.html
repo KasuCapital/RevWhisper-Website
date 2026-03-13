@@ -198,7 +198,65 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
 .logo-track svg:hover{opacity:.7;transform:scale(1.3)}
 @keyframes logoScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 
-/* ── Webinar Banner – temporarily hidden (see dev-webinar-section branch) ── */
+/* ── Webinar Banner ── */
+.webinar-banner{background:var(--accent);color:#fff;padding:80px 0;text-align:center;position:relative;overflow:hidden}
+.webinar-banner .w{position:relative;z-index:1}
+.webinar-banner::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% -20%,rgba(255,255,255,.1),transparent 50%),radial-gradient(ellipse at 70% 120%,rgba(0,0,0,.15),transparent 50%);pointer-events:none}
+.wb-particle{position:absolute;width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.12);animation:wbFloat linear infinite;pointer-events:none}
+.wb-particle:nth-child(1){left:10%;top:20%;animation-duration:6s;animation-delay:0s}
+.wb-particle:nth-child(2){left:25%;top:70%;animation-duration:8s;animation-delay:1s;width:3px;height:3px}
+.wb-particle:nth-child(3){left:75%;top:30%;animation-duration:7s;animation-delay:2s;width:5px;height:5px}
+.wb-particle:nth-child(4){left:85%;top:65%;animation-duration:9s;animation-delay:.5s}
+.wb-particle:nth-child(5){left:50%;top:85%;animation-duration:6.5s;animation-delay:3s;width:3px;height:3px}
+.wb-particle:nth-child(6){left:15%;top:50%;animation-duration:7.5s;animation-delay:1.5s;width:6px;height:6px;opacity:.08}
+@keyframes wbFloat{0%{transform:translateY(0) scale(1);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateY(-120px) scale(.5);opacity:0}}
+.wb-eyebrow{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.8);margin-bottom:20px;display:inline-flex;align-items:center;gap:8px}
+.wb-live-dot{width:7px;height:7px;border-radius:50%;background:#fff;box-shadow:0 0 8px rgba(255,255,255,.5);animation:wbPulse 2s ease-in-out infinite}
+@keyframes wbPulse{0%,100%{opacity:1;box-shadow:0 0 8px rgba(255,255,255,.5)}50%{opacity:.5;box-shadow:0 0 16px rgba(255,255,255,.3)}}
+.wb-headline{font-family:var(--heading);font-size:clamp(30px,5.5vw,48px);font-weight:400;line-height:1.12;margin-bottom:18px}
+.wb-headline em{font-style:italic;color:#fff;position:relative;display:inline;white-space:nowrap;text-decoration:none}
+.wb-headline em::after{content:'';position:absolute;left:-2%;right:-2%;bottom:-6px;height:14px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 16' preserveAspectRatio='none'%3E%3Cpath d='M2 11 C25 4, 75 4, 98 11' fill='none' stroke='rgba(255,255,255,0.5)' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center/100% 100%;pointer-events:none;transform:rotate(-0.5deg);clip-path:inset(0 100% 0 0)}
+.webinar-banner.in .wb-headline em::after{animation:ctaUnderlineDraw .8s .5s ease both}
+.wb-sub{font-size:clamp(15px,1.8vw,17px);color:rgba(255,255,255,.75);max-width:520px;margin:0 auto 36px;line-height:1.7;font-weight:300}
+.wb-countdown{margin-bottom:36px}
+.wb-countdown-label{font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:16px}
+.wb-timer{display:flex;align-items:center;justify-content:center;gap:14px}
+.wb-time-unit{display:flex;flex-direction:column;align-items:center;gap:6px}
+.wb-num{font-family:var(--body);font-size:clamp(34px,5.5vw,52px);font-weight:500;line-height:1;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:14px 20px;min-width:70px;backdrop-filter:blur(8px);transition:transform .15s ease,background .15s ease;position:relative;overflow:hidden}
+.wb-num::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.06),transparent 50%);pointer-events:none;border-radius:12px}
+.wb-num.wb-tick{animation:wbTick .3s ease}
+@keyframes wbTick{0%{transform:scale(1)}40%{transform:scale(1.06)}100%{transform:scale(1)}}
+.wb-unit{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4)}
+.wb-sep{font-size:clamp(28px,4vw,40px);font-weight:300;color:rgba(255,255,255,.25);align-self:flex-start;margin-top:14px;animation:wbBlink 1s step-end infinite}
+@keyframes wbBlink{0%,100%{opacity:1}50%{opacity:.2}}
+.wb-spots{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:rgba(255,255,255,.7);margin-bottom:20px;padding:6px 14px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:20px}
+.wb-spots-dot{width:6px;height:6px;border-radius:50%;background:#e8584a;animation:wbPulse 1.5s ease-in-out infinite}
+.wb-cta{display:inline-flex;align-items:center;gap:8px;padding:16px 36px;background:#fff;color:var(--accent);font-size:16px;font-weight:600;border-radius:var(--radius-sm);text-decoration:none;transition:background .2s,transform .2s,box-shadow .2s;box-shadow:0 4px 16px rgba(0,0,0,.15)}
+.wb-cta:hover{background:#f0f0ee;transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,0,0,.25)}
+.wb-cta svg{transition:transform .2s}.wb-cta:hover svg{transform:translateX(3px)}
+.wb-live-banner{font-size:clamp(20px,3vw,28px);font-weight:600;animation:wbPulse 2s ease-in-out infinite}
+@media(max-width:640px){
+  .webinar-banner{padding:48px 0}
+  .wb-eyebrow{font-size:10px;letter-spacing:.08em;flex-wrap:wrap;justify-content:center;gap:5px}
+  .wb-headline{font-size:42px;line-height:1.15;margin-bottom:16px}
+  .wb-headline em{white-space:normal}
+  .wb-sub{font-size:14px;max-width:100%;margin-bottom:28px;line-height:1.6}
+  .wb-countdown{margin-bottom:28px}
+  .wb-countdown-label{font-size:10px;margin-bottom:10px}
+  .wb-num{font-size:24px;padding:10px 12px;min-width:48px;border-radius:9px}
+  .wb-timer{gap:5px}
+  .wb-sep{font-size:20px;margin-top:10px}
+  .wb-unit{font-size:8px}
+  .wb-spots{font-size:11px;padding:5px 12px;margin-bottom:16px}
+  .wb-cta{padding:14px 28px;font-size:15px}
+  .wb-particle{display:none}
+}
+@media(max-width:480px){
+  .wb-headline{font-size:36px}
+  .wb-num{font-size:22px;padding:8px 10px;min-width:44px;border-radius:8px}
+  .wb-timer{gap:4px}
+  .wb-sep{font-size:18px;margin-top:8px}
+}
 
 /* ── Problem Section ── */
 /* ── Problem / Revenue Gap Section ── */
@@ -1064,10 +1122,6 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
   </div>
 </section>
 
-<!-- ════════════════════════════════════════════════
-     WEBINAR BANNER (temporarily hidden – landing page not ready)
-     See dev-webinar-section branch for full code
-     ════════════════════════════════════════════════ -->
 
 <!-- ════════════════════════════════════════════════
      PROBLEM
@@ -1988,6 +2042,38 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
   </div>
 </section>
 
+<!-- ════════════════════════════════════════════════
+     WEBINAR BANNER
+     ════════════════════════════════════════════════ -->
+<section class="webinar-banner r">
+  <div class="wb-particle"></div>
+  <div class="wb-particle"></div>
+  <div class="wb-particle"></div>
+  <div class="wb-particle"></div>
+  <div class="wb-particle"></div>
+  <div class="wb-particle"></div>
+  <div class="w">
+    <div class="wb-eyebrow"><span class="wb-live-dot"></span> Live Every Mon, Wed & Fri at 12pm EST</div>
+    <h2 class="wb-headline">Learn How Top Hosts<br><em>Maximize Revenue</em></h2>
+    <p class="wb-sub">Join our free live webinar where we break down proven strategies, share exactly what we do for clients, and give you actionable advice you can implement today.</p>
+    <div class="wb-countdown">
+      <div class="wb-countdown-label">Next webinar starts in</div>
+      <div class="wb-timer" id="wb-timer">
+        <div class="wb-time-unit"><span class="wb-num" id="wb-days">0</span><span class="wb-unit">days</span></div>
+        <span class="wb-sep">:</span>
+        <div class="wb-time-unit"><span class="wb-num" id="wb-hours">0</span><span class="wb-unit">hrs</span></div>
+        <span class="wb-sep">:</span>
+        <div class="wb-time-unit"><span class="wb-num" id="wb-mins">0</span><span class="wb-unit">min</span></div>
+        <span class="wb-sep">:</span>
+        <div class="wb-time-unit"><span class="wb-num" id="wb-secs">0</span><span class="wb-unit">sec</span></div>
+      </div>
+    </div>
+    <div class="wb-spots"><span class="wb-spots-dot"></span> Select listings audited live each session</div>
+    <br>
+    <a href="/webinar" class="wb-cta">Reserve Your Spot <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+  </div>
+</section>
+
 <section id="cta">
   <div class="w">
     <div class="cta-card r">
@@ -2280,7 +2366,64 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
     if (bg) bentoObs.observe(bg);
   })();
 
-  /* ── 5a. Webinar Countdown Timer – temporarily hidden (see dev-webinar-section branch) ── */
+  /* ── 5a. Webinar Countdown Timer ── */
+  (function(){
+    var WEBINAR_DAYS=[1,3,5];
+    var WEBINAR_HOUR=12;
+    var daysEl=document.getElementById('wb-days');
+    var hrsEl=document.getElementById('wb-hours');
+    var minsEl=document.getElementById('wb-mins');
+    var secsEl=document.getElementById('wb-secs');
+    if(!daysEl)return;
+
+    function getNextWebinar(){
+      var now=new Date();
+      var est=new Date(now.toLocaleString('en-US',{timeZone:'America/New_York'}));
+      var day=est.getDay();
+      var hour=est.getHours();
+      var daysAhead=null;
+      for(var i=0;i<7;i++){
+        var check=(day+i)%7;
+        if(WEBINAR_DAYS.indexOf(check)!==-1){
+          if(i===0&&hour>=WEBINAR_HOUR+1)continue;
+          daysAhead=i;break;
+        }
+      }
+      if(daysAhead===null)daysAhead=7;
+      var next=new Date(est);
+      next.setDate(next.getDate()+daysAhead);
+      next.setHours(WEBINAR_HOUR,0,0,0);
+      return next.getTime()-est.getTime();
+    }
+
+    function setVal(el,val){
+      var v=String(val);
+      if(el.textContent!==v){
+        el.textContent=v;
+        el.classList.remove('wb-tick');
+        void el.offsetWidth;
+        el.classList.add('wb-tick');
+      }
+    }
+
+    function update(){
+      var diff=getNextWebinar();
+      if(diff<=0){
+        document.getElementById('wb-timer').innerHTML='<span class="wb-live-banner">Happening Now!</span>';
+        return;
+      }
+      var s=Math.floor(diff/1000);
+      var d=Math.floor(s/86400);s%=86400;
+      var h=Math.floor(s/3600);s%=3600;
+      var m=Math.floor(s/60);s%=60;
+      setVal(daysEl,d);
+      setVal(hrsEl,h);
+      setVal(minsEl,String(m).padStart(2,'0'));
+      setVal(secsEl,String(s).padStart(2,'0'));
+    }
+    update();
+    setInterval(update,1000);
+  })();
 
   /* ── 5b. Guarantee countdown – removed (no more $500 counter) ── */
   (function() {
