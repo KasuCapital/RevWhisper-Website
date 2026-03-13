@@ -2116,7 +2116,7 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
       <div>
         <p style="font-family:var(--heading);font-weight:600;font-size:14px;margin-bottom:10px">Resources</p>
         <a href="/blog" style="display:block;font-size:13px;color:var(--g400);text-decoration:none;margin-bottom:6px;transition:color .2s" onmouseover="this.style.color='#32302F'" onmouseout="this.style.color='#a39e9b'">Blog</a>
-        <a href="https://app.revwhisper.com/revenue-lift" style="display:block;font-size:13px;color:var(--g400);text-decoration:none;margin-bottom:6px;transition:color .2s" onmouseover="this.style.color='#32302F'" onmouseout="this.style.color='#a39e9b'">Search Ranking Report</a>
+        <a href="https://app.revwhisper.com/search-ranking" style="display:block;font-size:13px;color:var(--g400);text-decoration:none;margin-bottom:6px;transition:color .2s" onmouseover="this.style.color='#32302F'" onmouseout="this.style.color='#a39e9b'">Search Ranking Report</a>
       </div>
     </div>
     <div class="footer-bottom">
@@ -3514,7 +3514,7 @@ document.addEventListener('click',function(e){
   if(!link)return;
   var text=(link.textContent||'').trim().substring(0,60);
   var href=link.getAttribute('href')||'';
-  if(link.classList.contains('calc-btn')){rwTrack('calculator_click',{page:'homepage'});var u=document.querySelector('.calc-input');var v=u?u.value.trim():'';if(v){var nv=normalizeAirbnbUrl(v);window.location.href='https://app.revwhisper.com/revenue-lift?url='+encodeURIComponent(nv||v);}else{window.location.href='https://app.revwhisper.com/revenue-lift';}return;}
+  if(link.classList.contains('calc-btn')){rwTrack('calculator_click',{page:'homepage'});var u=document.querySelector('.calc-input');var v=u?u.value.trim():'';if(v){var nv=normalizeAirbnbUrl(v);window.location.href='https://app.revwhisper.com/search-ranking?url='+encodeURIComponent(nv||v);}else{window.location.href='https://app.revwhisper.com/search-ranking';}return;}
   if(href.indexOf('checkout-form.html?plan=monthly')!==-1){rwTrack('select_plan',{plan:'monthly',page:'homepage',cta_text:text});return;}
   if(href.indexOf('checkout-form.html?plan=annual')!==-1){rwTrack('select_plan',{plan:'annual',page:'homepage',cta_text:text});return;}
   if(href==='/get-started'){rwTrack('cta_click',{destination:'get-started',cta_text:text,page:'homepage'});return;}

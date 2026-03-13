@@ -1,6 +1,7 @@
 {
   "cleanUrls": true,
   "redirects": [
-    { "source": "/revenue-lift", "destination": "https://app.revwhisper.com/revenue-lift", "permanent": true }
+    { "source": "/search-ranking", "destination": "https://app.revwhisper.com/search-ranking", "permanent": true },
+    { "source": "/revenue-lift", "destination": "/search-ranking", "permanent": true }
   ]
 }
