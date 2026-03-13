@@ -2,6 +2,7 @@ const crypto = require('crypto');
 
 const RELEVANT_EVENTS = new Set([
   'checkout.session.completed',
+  'checkout.session.async_payment_failed',
   'invoice.paid',
   'invoice.payment_failed'
 ]);
