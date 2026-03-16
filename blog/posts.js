@@ -22,7 +22,7 @@ var BLOG_POSTS = [
     title: "The 15.5% Fee Squeeze: How Airbnb's New Host Fee Changes Your Pricing Math",
     excerpt: "You switched to a PMS and Airbnb moved you to a 15.5% host-only fee. Your pricing math changed — here's how to recalibrate every rate so you stop losing money.",
     date: "2026-03-13",
-    image: "",
+    image: "/images/beforeafter/2-after.jpg",
     tags: ["Deep Dive", "Revenue Management"],
     author: "RevWhisper Team"
   },
