@@ -44,18 +44,46 @@ function rwTrack(e,p){if(localStorage.getItem('rw_cookie_consent')==='accepted')
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Blog | RevWhisper</title>
-<meta name="description" content="Insights, strategies, and tips for Airbnb hosts looking to maximize revenue and optimize their listings.">
-<link rel="canonical" href="https://revwhisper.com/blog">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Blog | RevWhisper">
-<meta property="og:description" content="Insights, strategies, and tips for Airbnb hosts looking to maximize revenue and optimize their listings.">
-<meta property="og:url" content="https://revwhisper.com/blog">
+<title>Reserve Now, Pay Later Has 70% Adoption. Here's How It Changes Your Revenue Strategy. | RevWhisper Blog</title>
+<meta name="description" content="Airbnb's Reserve Now Pay Later feature hit 70% adoption in Q4 2025. More bookings, but different guest behavior. Here's what hosts need to know.">
+<link rel="canonical" href="https://revwhisper.com/blog/reserve-now-pay-later-revenue-strategy">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Reserve Now, Pay Later Has 70% Adoption. Here's How It Changes Your Revenue Strategy. | RevWhisper Blog">
+<meta property="og:description" content="Airbnb's Reserve Now Pay Later feature hit 70% adoption in Q4 2025. More bookings, but different guest behavior. Here's what hosts need to know.">
+<meta property="og:url" content="https://revwhisper.com/blog/reserve-now-pay-later-revenue-strategy">
 <meta property="og:site_name" content="RevWhisper">
+<meta property="og:image" content="https://revwhisper.com/images/blog/reserve-now-pay-later-hero.jpg">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Reserve Now, Pay Later Has 70% Adoption. Here's How It Changes Your Revenue Strategy. | RevWhisper Blog">
+<meta name="twitter:description" content="Airbnb's Reserve Now Pay Later hit 70% adoption. More bookings, different guest behavior. Here's what hosts need to know.">
+<meta name="twitter:image" content="https://revwhisper.com/images/blog/reserve-now-pay-later-hero.jpg">
 <link rel="icon" href="/icons/favicon-light.svg" type="image/svg+xml" media="(prefers-color-scheme: light)">
 <link rel="icon" href="/icons/favicon-dark.svg" type="image/svg+xml" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="/icons/favicon-light.svg" type="image/svg+xml">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Reserve Now, Pay Later Has 70% Adoption. Here's How It Changes Your Revenue Strategy.",
+  "description": "Airbnb's Reserve Now Pay Later feature hit 70% adoption in Q4 2025. More bookings, but different guest behavior. Here's what hosts need to know.",
+  "datePublished": "2026-03-18",
+  "author": {
+    "@type": "Organization",
+    "name": "RevWhisper",
+    "url": "https://revwhisper.com"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "RevWhisper",
+    "url": "https://revwhisper.com",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://revwhisper.com/icons/favicon-light.svg"
+    }
+  },
+  "mainEntityOfPage": "https://revwhisper.com/blog/reserve-now-pay-later-revenue-strategy"
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=DM+Sans:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
@@ -76,7 +104,6 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
   --radius:8px;--radius-sm:6px;
   --sh-sm:0 1px 3px rgba(50,48,47,.06),0 1px 2px rgba(50,48,47,.04);
   --sh:0 4px 16px rgba(50,48,47,.07),0 2px 6px rgba(50,48,47,.04);
-  --sh-lg:0 16px 48px rgba(50,48,47,.1),0 4px 12px rgba(50,48,47,.05);
   --heading:'Lora','Georgia',serif;
   --body:'DM Sans','system-ui','Helvetica Neue',sans-serif;
   --mono:'DM Mono','Consolas',monospace;
@@ -107,29 +134,42 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
 .fb-hamburger.open span:nth-child(2){opacity:0}
 .fb-hamburger.open span:last-child{transform:translateY(-3.5px) rotate(-45deg)}
 
-/* ── Blog Hero ── */
-.blog-hero{padding:140px 0 48px;text-align:center}
-.blog-hero h1{font-family:var(--heading);font-size:clamp(32px,5vw,48px);font-weight:600;letter-spacing:-.02em;margin-bottom:12px}
-.blog-hero p{font-size:17px;color:var(--g500);max-width:540px;margin:0 auto}
+/* ── Article Layout ── */
+.post-header{padding:140px 0 32px;text-align:center}
+.post-back{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--g400);text-decoration:none;margin-bottom:24px;transition:color .2s}
+.post-back:hover{color:var(--accent)}
+.post-tags{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:14px}
+.post-tag{font-family:var(--mono);font-size:11px;font-weight:500;color:var(--accent);background:var(--accent-light);padding:3px 10px;border-radius:20px}
+.post-header h1{font-family:var(--heading);font-size:clamp(28px,4.5vw,42px);font-weight:600;letter-spacing:-.02em;line-height:1.25;max-width:720px;margin:0 auto 14px}
+.post-meta{font-size:13px;color:var(--g400);font-family:var(--mono)}
 
-/* ── Blog Grid ── */
-.blog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:28px;padding-bottom:80px}
+.post-hero-img{width:100%;max-width:900px;margin:0 auto 48px;display:block;border-radius:var(--radius);aspect-ratio:16/9;object-fit:cover}
 
-.blog-card{display:flex;flex-direction:column;border-radius:var(--radius);overflow:hidden;background:var(--white);box-shadow:var(--sh-sm);border:1px solid var(--g200);transition:transform .25s ease,box-shadow .25s ease;text-decoration:none;color:inherit}
-.blog-card:hover{transform:translateY(-4px);box-shadow:var(--sh)}
+/* ── Article Content ── */
+.post-content{max-width:680px;margin:0 auto;padding-bottom:64px}
+.post-content h2{font-family:var(--heading);font-size:24px;font-weight:600;margin:40px 0 14px;letter-spacing:-.01em}
+.post-content h3{font-family:var(--heading);font-size:19px;font-weight:600;margin:32px 0 10px}
+.post-content p{font-size:16px;line-height:1.75;color:var(--g600);margin-bottom:20px}
+.post-content ul,.post-content ol{margin:0 0 20px 24px;color:var(--g600);font-size:16px;line-height:1.75}
+.post-content li{margin-bottom:6px}
+.post-content blockquote{border-left:3px solid var(--accent);padding:12px 20px;margin:24px 0;background:var(--g50);border-radius:0 var(--radius) var(--radius) 0;font-style:italic;color:var(--g500)}
+.post-content img{width:100%;border-radius:var(--radius);margin:24px 0}
+.post-content a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}
+.post-content a:hover{color:var(--black)}
+.post-content strong{color:var(--black);font-weight:600}
 
-.blog-card-img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block}
-.blog-card-img--placeholder{background:linear-gradient(135deg,var(--accent-light) 0%,var(--g100) 100%)}
+/* ── Stat Card ── */
+.stat-card{background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:28px;margin:0 0 32px;text-align:center}
+.stat-num{font-family:var(--mono);font-size:clamp(28px,6vw,40px);color:var(--accent);line-height:1}
+.stat-label{font-size:15px;color:var(--g500);margin-top:8px;line-height:1.5}
+.stat-source{font-size:11px;color:var(--g400);margin-top:6px;font-family:var(--mono)}
 
-.blog-card-body{padding:20px 22px 24px;display:flex;flex-direction:column;flex:1}
-.blog-card-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
-.blog-card-tag{font-family:var(--mono);font-size:11px;font-weight:500;color:var(--accent);background:var(--accent-light);padding:3px 10px;border-radius:20px}
-.blog-card-title{font-family:var(--heading);font-size:19px;font-weight:600;letter-spacing:-.01em;line-height:1.35;margin-bottom:8px}
-.blog-card-excerpt{font-size:14px;color:var(--g500);line-height:1.6;margin-bottom:16px;flex:1}
-.blog-card-meta{display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--g400);font-family:var(--mono)}
-
-/* ── Empty State ── */
-.blog-empty{text-align:center;padding:80px 0;color:var(--g400);font-size:15px}
+/* ── CTA Banner ── */
+.post-cta{max-width:680px;margin:0 auto 64px;padding:36px 32px;background:var(--g50);border:1px solid var(--g200);border-radius:var(--radius);text-align:center}
+.post-cta h3{font-family:var(--heading);font-size:22px;font-weight:600;margin-bottom:8px}
+.post-cta p{font-size:14px;color:var(--g500);margin-bottom:20px}
+.post-cta a{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#fff;padding:12px 28px;border-radius:var(--radius);font-size:14px;font-weight:500;text-decoration:none;transition:transform .25s,box-shadow .25s;box-shadow:0 2px 8px rgba(74,103,65,.15)}
+.post-cta a:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(74,103,65,.25)}
 
 /* ── Footer ── */
 footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
@@ -147,8 +187,9 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
   .fb-links{display:none;position:absolute;top:calc(100% + 8px);left:0;right:0;background:var(--white);flex-direction:column;padding:12px;border-radius:var(--radius);box-shadow:var(--sh-lg);gap:2px}
   .fb-links.open{display:flex}
   .fb-hamburger{display:flex}
-  .blog-hero{padding:110px 0 36px}
-  .blog-grid{grid-template-columns:1fr}
+  .post-header{padding:110px 0 24px}
+  .post-hero-img{border-radius:0}
+  .post-cta{margin-left:16px;margin-right:16px}
   footer{padding:40px 0 30px}
   .footer-bottom{flex-direction:column;gap:10px;align-items:flex-start}
 }
@@ -179,25 +220,69 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
   <a href="/get-started" class="fb-cta">Book a Strategy Call</a>
 </nav>
 
-<!-- ── Hero ── -->
-<section class="blog-hero">
+<!-- ── Post Header ── -->
+<header class="post-header">
   <div class="w">
-    <h1>The RevWhisper Blog</h1>
-    <p>Strategies, insights, and data-driven tips to help you earn more from your Airbnb listings.</p>
+    <a href="/blog" class="post-back">&larr; Back to Blog</a>
+    <div class="post-tags">
+      <span class="post-tag">Platform Changes</span>
+      <span class="post-tag">Booking Psychology</span>
+    </div>
+    <h1>Reserve Now, Pay Later Has 70% Adoption. Here's How It Changes Your Revenue Strategy.</h1>
+    <div class="post-meta">RevWhisper Team &middot; Mar 18, 2026</div>
   </div>
-</section>
+</header>
+<img class="post-hero-img" src="/images/blog/paylater2-cropped.png" alt="Airbnb reservation confirmation screen showing Reserve Now Pay Later with zero due today and full payment charged closer to check-in.">
 
-<!-- ── Blog Grid ── -->
-<section>
-  <div class="w">
-    <div class="blog-grid" id="blog-grid">
-      <!-- Cards rendered by JS from posts.js -->
-    </div>
-    <div class="blog-empty" id="blog-empty" style="display:none">
-      No posts yet — check back soon.
-    </div>
+<article class="post-content w">
+
+  <div class="stat-card">
+    <div class="stat-num">70%+</div>
+    <div class="stat-label">adoption rate of Reserve Now, Pay Later among eligible US bookings in Q4 2025</div>
+    <div class="stat-source">Airbnb Q4 2025 Shareholder Letter</div>
   </div>
-</section>
+
+  <p>In Q4 2025, Airbnb launched Reserve Now, Pay Later in the US. Guests can book eligible stays with zero dollars upfront and pay closer to check-in. Within one quarter, over 70% of eligible bookings adopted the feature. Airbnb credited it as a direct driver of the booking acceleration they saw in Q4 &mdash; their strongest growth quarter of the year at 10% year-over-year.</p>
+
+  <p>For hosts, this is not just a payment feature. It fundamentally changes booking psychology, cancellation risk, and how you should think about your calendar 60&ndash;90 days out.</p>
+
+  <h2>Why 70% Adoption Matters</h2>
+
+  <p>When seven out of ten guests choose the zero-upfront option, it tells you something important about booking friction. The number one reason guests hesitate on Airbnb is financial commitment. They want to lock in the dates, but they don't want to pay $1,500 today for a trip that is three months away.</p>
+
+  <p>Reserve Now, Pay Later removes that friction entirely. <strong>More guests are booking earlier, further out, with less hesitation.</strong> Airbnb's data confirms this: lead times continued to lengthen in Q4 2025, meaning guests are reserving stays further in advance than they were a year ago.</p>
+
+  <h2>What This Means for Your Calendar</h2>
+
+  <p>If guests are booking further out, your pricing 60&ndash;90 days from now matters more than it used to. Many hosts focus on the next 2&ndash;3 weeks &mdash; adjusting rates for upcoming gaps, running last-minute promotions. That still matters. But the guests who are now filling your calendar months in advance are doing so because the financial barrier is gone.</p>
+
+  <p>This creates a new risk: <strong>your calendar fills early at rates you set months ago</strong>. If you don't have a forward-looking pricing strategy &mdash; one that accounts for seasonal demand, events, and comp set movement &mdash; you lock in revenue at today's rate for peak-season nights that should command a premium.</p>
+
+  <h2>The Cancellation Question</h2>
+
+  <p>Zero upfront cost lowers the commitment bar. Guests who would have waited to be sure are now booking speculatively &mdash; "lock it in, decide later." Combined with Airbnb's new Limited cancellation policy (free cancellation up to 14 days before check-in), you should expect cancellation rates to shift.</p>
+
+  <p>This doesn't mean your net bookings will drop. Airbnb's Q4 data shows the opposite &mdash; bookings accelerated. But it means your <strong>confirmed-to-stayed ratio</strong> may change. The practical implication: don't panic when you see a cancellation on a booking that was made months ago. The guest likely replaced themselves by rebooking a different property. And your newly opened night will often rebook at a higher rate if you're in peak season.</p>
+
+  <h2>How to Adapt Your Strategy</h2>
+
+  <ul>
+    <li><strong>Price forward, not backward:</strong> Review your rates 60&ndash;120 days out. Are they set for peak demand, or are they still at your base rate? Guests are booking that far out now.</li>
+    <li><strong>Use minimum stay rules strategically:</strong> If speculative bookings concern you, consider slightly longer minimum stays during high-demand periods to filter for committed guests.</li>
+    <li><strong>Monitor your cancellation rate:</strong> Track it monthly. A small increase is normal with RNPL. A large increase means your pricing or cancellation policy needs adjustment.</li>
+    <li><strong>Don't underprice peak nights:</strong> The biggest risk of RNPL is that early bookings lock in rates before you realize demand is higher than expected. Set forward rates aggressively for known peak periods.</li>
+  </ul>
+
+  <blockquote>Reserve Now, Pay Later is good for your business. More bookings, longer lead times, less friction. But only if you price your forward calendar like a revenue manager instead of a host who checks rates once a month.</blockquote>
+
+</article>
+
+<!-- ── CTA Banner ── -->
+<div class="post-cta">
+  <h3>Is Your Forward Calendar Priced Right?</h3>
+  <p>We'll analyze your pricing 30, 60, and 90 days out and show you where you're leaving money on the table.</p>
+  <a href="/get-started">Book a Free Strategy Call &rarr;</a>
+</div>
 
 <!-- ── Footer ── -->
 <footer>
@@ -238,52 +323,6 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
     </div>
   </div>
 </footer>
-
-<!-- ── Load posts and render grid ── -->
-<script src="/blog/posts.js?v=3"></script>
-<script>
-(function() {
-  var grid = document.getElementById('blog-grid');
-  var empty = document.getElementById('blog-empty');
-  var posts = typeof BLOG_POSTS !== 'undefined' ? BLOG_POSTS : [];
-
-  if (!posts.length) {
-    empty.style.display = 'block';
-    return;
-  }
-
-  posts.forEach(function(post) {
-    var d = new Date(post.date + 'T00:00:00');
-    var dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-
-    var card = document.createElement('a');
-    card.href = '/blog/' + post.slug;
-    card.className = 'blog-card';
-
-    var tagsHtml = (post.tags || []).map(function(t) {
-      return '<span class="blog-card-tag">' + t + '</span>';
-    }).join('');
-
-    var imgHtml = post.image
-      ? '<img class="blog-card-img" src="' + post.image + '" alt="' + post.title.replace(/"/g, '&quot;') + '" loading="lazy">'
-      : '<div class="blog-card-img blog-card-img--placeholder"></div>';
-
-    card.innerHTML =
-      imgHtml +
-      '<div class="blog-card-body">' +
-        '<div class="blog-card-tags">' + tagsHtml + '</div>' +
-        '<h2 class="blog-card-title">' + post.title + '</h2>' +
-        '<p class="blog-card-excerpt">' + post.excerpt + '</p>' +
-        '<div class="blog-card-meta">' +
-          '<span>' + (post.author || 'RevWhisper Team') + '</span>' +
-          '<span>' + dateStr + '</span>' +
-        '</div>' +
-      '</div>';
-
-    grid.appendChild(card);
-  });
-})();
-</script>
 
 <!-- ── Nav scroll & hamburger ── -->
 <script>
