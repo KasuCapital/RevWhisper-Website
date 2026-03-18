@@ -13,6 +13,74 @@ const WEBHOOK_URLS = {
     'https://hook.us2.make.com/33fat6fwbl6ad1jt13b7kqcpgbybka59'
 };
 
+const INTAKE_WEBHOOK_URL = 'https://hook.us2.make.com/9x8k27nrk3ll6rfrjtfrn469cnslxpuj';
+const RESEND_API_KEY = process.env.RESEND_API_KEY;
+
+async function sendConfirmationEmail(name, email) {
+  if (!RESEND_API_KEY) {
+    console.warn('RESEND_API_KEY not set — skipping confirmation email.');
+    return;
+  }
+
+  const firstName = String(name).split(' ')[0] || 'there';
+
+  try {
+    const res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${RESEND_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        from: 'RevWhisper <hello@revwhisper.com>',
+        to: [email],
+        subject: 'We received your inquiry — RevWhisper',
+        html: `
+          <div style="font-family:'DM Sans',Helvetica,Arial,sans-serif;max-width:560px;margin:0 auto;color:#32302F;">
+            <div style="padding:32px 24px;">
+              <h1 style="font-family:Georgia,serif;font-size:24px;font-weight:400;margin:0 0 16px;color:#32302F;">
+                Thanks for reaching out, ${firstName}.
+              </h1>
+              <p style="font-size:15px;line-height:1.7;color:#706b68;margin:0 0 24px;">
+                We've received your information and a member of our team will be in touch shortly to discuss how RevWhisper can help optimize your listings.
+              </p>
+              <p style="font-size:15px;line-height:1.7;color:#706b68;margin:0 0 24px;">
+                In the meantime, feel free to explore our site or reply to this email with any questions.
+              </p>
+              <a href="https://revwhisper.com" style="display:inline-block;background:#4A6741;color:#fff;text-decoration:none;padding:12px 24px;border-radius:6px;font-size:14px;font-weight:500;">
+                Visit RevWhisper
+              </a>
+              <hr style="border:none;border-top:1px solid #E0DCDA;margin:32px 0 16px;">
+              <p style="font-size:12px;color:#a39e9b;margin:0;">
+                RevWhisper — Revenue optimization for short-term rental hosts.
+              </p>
+            </div>
+          </div>
+        `
+      })
+    });
+
+    if (!res.ok) {
+      const text = await res.text();
+      console.error('Resend email failed:', res.status, text);
+    }
+  } catch (err) {
+    console.error('Resend email error:', err);
+  }
+}
+
+async function sendIntakeWebhook(name, email) {
+  try {
+    await fetch(INTAKE_WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email })
+    });
+  } catch (err) {
+    console.error('Intake webhook error:', err);
+  }
+}
+
 function sendJson(res, statusCode, payload) {
   res.statusCode = statusCode;
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
@@ -123,6 +191,18 @@ module.exports = async function handler(req, res) {
 
     console.error(`Webhook ${eventType} failed with ${makeResponse.status}:`, responseText);
     return sendJson(res, 502, { error: 'Notification webhook rejected the request.' });
+  }
+
+  // For get_started submissions: send confirmation email + intake webhook
+  if (eventType === 'get_started') {
+    const name = String(payload.name || '').trim();
+    const email = String(payload.email || '').trim();
+
+    // Fire both in parallel — don't block the response on them
+    await Promise.allSettled([
+      sendConfirmationEmail(name, email),
+      sendIntakeWebhook(name, email)
+    ]);
   }
 
   return sendJson(res, 200, { received: true });
