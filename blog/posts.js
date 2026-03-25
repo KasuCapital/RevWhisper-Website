@@ -18,6 +18,15 @@
 
 var BLOG_POSTS = [
   {
+    slug: "comp-set-analysis-30-minutes",
+    title: "How to Run a Comp Set Analysis in 30 Minutes",
+    excerpt: "Your listing is invisible because you don't know who you're competing against. A comp set analysis shows you the 5-10 listings stealing your bookings. Here's how to do it in 30 minutes.",
+    date: "2026-03-25",
+    image: "/images/analytics/analytical1.png",
+    tags: ["How-To Guide", "Listing Optimization"],
+    author: "RevWhisper Team"
+  },
+  {
     slug: "reserve-now-pay-later-revenue-strategy",
     title: "Reserve Now, Pay Later Has 70% Adoption. Here's How It Changes Your Revenue Strategy.",
     excerpt: "Airbnb's Reserve Now Pay Later feature hit 70% adoption in Q4 2025. More bookings, but different guest behavior. Here's what hosts need to know.",
