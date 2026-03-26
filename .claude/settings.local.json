@@ -44,7 +44,26 @@
       "WebFetch(domain:website-redesign-tau.vercel.app)",
       "WebFetch(domain:website-redesign.vercel.app)",
       "mcp__Claude_Preview__preview_start",
-      "Bash(wc -l /Users/bryan/Coding/website-redesign/*.html)"
+      "Bash(wc -l /Users/bryan/Coding/website-redesign/*.html)",
+      "Bash(git checkout -b add-fee-squeeze-blog-post)",
+      "Bash(git add blog/airbnb-host-fee-squeeze-pricing-math.html blog/posts.js blog/index.html)",
+      "Bash(git push -u origin add-fee-squeeze-blog-post)",
+      "Bash(git diff:*)",
+      "Bash(git push:*)",
+      "Bash(gh pr:*)",
+      "Bash(grep -r \"get_started\\\\|checkout\\\\|form submission\\\\|addEventListener.*submit\" /Users/yonatan/Desktop/GA4/RevWhisper-Website/*.html)",
+      "Bash(grep -l \"input\\\\|textarea\\\\|button\" /Users/yonatan/Desktop/GA4/RevWhisper-Website/*.html)",
+      "Bash(git checkout:*)",
+      "Bash(sips -g pixelHeight -g pixelWidth /Users/yonatan/Desktop/GA4/RevWhisper-Website/images/blog/paylater2.png)",
+      "Bash(sips -c 530 826 /Users/yonatan/Desktop/GA4/RevWhisper-Website/images/blog/paylater2.png --out /Users/yonatan/Desktop/GA4/RevWhisper-Website/images/blog/paylater2-cropped.png)",
+      "Bash(git add:*)",
+      "Bash(Call\" or \"Check My Search Ranking\" buttons.:*)",
+      "WebFetch(domain:revwhisper.com)",
+      "Bash(git pull:*)",
+      "Bash(find . -name \"*.html\" -exec grep -l \"595257495497929\" {})",
+      "Bash(while read:*)",
+      "Bash(do sed:*)",
+      "Bash(done)"
     ]
   }
 }
