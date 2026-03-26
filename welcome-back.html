@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- Attribution tracking (cookie-free) -->
+<script>
+(function(){
+  var key='rw_attribution';
+  var params=new URLSearchParams(window.location.search);
+  var utmFields=['utm_source','utm_medium','utm_campaign','utm_term','utm_content'];
+  var hasUtm=utmFields.some(function(f){return params.has(f);});
+  if(hasUtm||!sessionStorage.getItem(key)){
+    var data={};
+    utmFields.forEach(function(f){if(params.get(f))data[f]=params.get(f);});
+    try{data.referrer=document.referrer?new URL(document.referrer).hostname:'direct';}catch(e){data.referrer=document.referrer||'direct';}
+    data.landing_page=window.location.pathname;
+    data.arrived_at=new Date().toISOString();
+    sessionStorage.setItem(key,JSON.stringify(data));
+  }
+})();
+function rwAttribution(){try{return JSON.parse(sessionStorage.getItem('rw_attribution'))||{};}catch(e){return {};}}
+</script>
+<!-- Cookie Consent + GA4 (consent-gated) -->
+<script>
+window.dataLayer=window.dataLayer||[];
+function gtag(){dataLayer.push(arguments);}
+function rwLoadGA(){
+  var s=document.createElement('script');s.async=true;
+  s.src='https://www.googletagmanager.com/gtag/js?id=G-Y1FYZ5849B';
+  document.head.appendChild(s);
+  gtag('js',new Date());gtag('config','G-Y1FYZ5849B');
+}
+function rwTrack(e,p){if(localStorage.getItem('rw_cookie_consent')==='accepted')gtag('event',e,p||{});}
+(function(){
+  var c=localStorage.getItem('rw_cookie_consent');
+  if(c==='accepted'){rwLoadGA();return;}
+  if(c==='declined')return;
+  document.addEventListener('DOMContentLoaded',function(){
+    var b=document.createElement('div');b.id='rw-consent';
+    b.innerHTML='<div style="position:fixed;bottom:0;left:0;right:0;z-index:9999;padding:16px 24px;background:#32302F;color:#fff;font-family:DM Sans,system-ui,sans-serif;font-size:14px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;box-shadow:0 -4px 24px rgba(0,0,0,.15)"><span style="flex:1;min-width:240px;line-height:1.5">We use cookies to analyze site usage and improve your experience.</span><div style="display:flex;gap:10px;flex-shrink:0"><button id="rw-decline" style="background:transparent;color:#ccc8c5;border:1.5px solid #706b68;padding:8px 20px;border-radius:6px;font-size:13px;font-family:inherit;cursor:pointer">Decline</button><button id="rw-accept" style="background:#4A6741;color:#fff;border:none;padding:8px 20px;border-radius:6px;font-size:13px;font-family:inherit;cursor:pointer;font-weight:500">Accept</button></div></div>';
+    document.body.appendChild(b);
+    document.getElementById('rw-accept').addEventListener('click',function(){localStorage.setItem('rw_cookie_consent','accepted');b.remove();rwLoadGA();});
+    document.getElementById('rw-decline').addEventListener('click',function(){localStorage.setItem('rw_cookie_consent','declined');b.remove();});
+  });
+})();
+</script>
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '959022406709300');
+fbq('track', 'PageView');
+fbq('track', 'Lead', {content_name:'Welcome Back Page',content_category:'Retarget'});
+</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=959022406709300&ev=PageView&noscript=1"/></noscript>
+<!-- End Meta Pixel -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Welcome Back | RevWhisper</title>
+<meta name="description" content="You were close to optimizing your Airbnb revenue. Pick up where you left off &mdash; book a free strategy call with RevWhisper.">
+<link rel="canonical" href="https://revwhisper.com/welcome-back">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Welcome Back | RevWhisper">
+<meta property="og:description" content="You were close to optimizing your Airbnb revenue. Pick up where you left off.">
+<meta property="og:url" content="https://revwhisper.com/welcome-back">
+<meta property="og:site_name" content="RevWhisper">
+<meta property="og:image" content="https://revwhisper.com/images/properties/livingroom-after.webp">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Welcome Back | RevWhisper">
+<meta name="twitter:description" content="You were close to optimizing your Airbnb revenue. Pick up where you left off.">
+<meta name="twitter:image" content="https://revwhisper.com/images/properties/livingroom-after.webp">
+<link rel="icon" href="icons/favicon-light.svg" type="image/svg+xml" media="(prefers-color-scheme: light)">
+<link rel="icon" href="icons/favicon-dark.svg" type="image/svg+xml" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="icons/favicon-light.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=DM+Sans:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{height:100%;overflow-x:hidden}
+body{
+  font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;
+  background:#fff;color:#32302F;line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  min-height:100%;display:flex;flex-direction:column;align-items:center;
+  position:relative;overflow-x:hidden;
+}
+:root{
+  --black:#32302F;
+  --white:#ffffff;
+  --accent:#4A6741;
+  --accent-light:#dce6d8;
+  --accent-border:#b3c5ab;
+  --g50:#faf9f8;--g100:#f3f1ef;--g200:#E0DCDA;--g300:#ccc8c5;--g400:#a39e9b;--g500:#706b68;--g700:#48433f;
+  --radius:8px;--radius-sm:6px;
+  --sh-sm:0 1px 3px rgba(50,48,47,.06),0 1px 2px rgba(50,48,47,.04);
+  --sh:0 4px 16px rgba(50,48,47,.07),0 2px 6px rgba(50,48,47,.04);
+  --sh-lg:0 16px 48px rgba(50,48,47,.1),0 4px 12px rgba(50,48,47,.05);
+  --heading:'Lora','Georgia',serif;
+  --body:'DM Sans','system-ui','Helvetica Neue',sans-serif;
+  --ease-out-expo:cubic-bezier(.16,1,.3,1);
+  --ease-out-back:cubic-bezier(.34,1.56,.64,1);
+}
+
+/* ── Ambient Background ── */
+body::before{
+  content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%;
+  background:
+    radial-gradient(ellipse at 30% 20%, rgba(74,103,65,.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 80%, rgba(74,103,65,.03) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(74,103,65,.02) 0%, transparent 70%);
+  animation:ambientDrift 20s ease-in-out infinite alternate;
+  pointer-events:none;z-index:0;
+}
+@keyframes ambientDrift{
+  0%{transform:translate(0,0) rotate(0deg)}
+  100%{transform:translate(30px,-20px) rotate(2deg)}
+}
+
+/* ── Main Shell ── */
+.page-shell{width:100%;max-width:560px;padding:48px 28px 80px;position:relative;z-index:1;margin:auto}
+
+/* ── Welcome Hero ── */
+.welcome-hero{text-align:center;margin-bottom:48px;opacity:0;animation:fadeSlideUp .7s var(--ease-out-expo) .1s forwards}
+.welcome-eyebrow{font-size:11px;font-weight:500;color:var(--accent);letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px}
+.welcome-title{font-family:var(--heading);font-size:clamp(28px,5vw,40px);font-weight:400;letter-spacing:-.02em;line-height:1.15;color:var(--black);margin-bottom:14px}
+.welcome-title em{font-style:italic;color:var(--accent);position:relative}
+.welcome-title em::after{
+  content:'';position:absolute;bottom:-2px;left:-2%;width:104%;height:2px;
+  background:var(--accent);border-radius:2px;
+  transform:scaleX(0) rotate(-1.5deg);transform-origin:left;
+  animation:underlineDraw .6s var(--ease-out-expo) .7s forwards;
+}
+.welcome-desc{font-size:16px;color:var(--g500);line-height:1.7;font-weight:300;max-width:440px;margin:0 auto}
+
+/* ── Trust Bar ── */
+.trust-bar{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:44px;
+  opacity:0;animation:fadeSlideUp .6s var(--ease-out-expo) .3s forwards;
+}
+.trust-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:8px 14px;border-radius:100px;
+  font-size:12px;font-weight:500;letter-spacing:.01em;
+  border:1.5px solid var(--accent-border);
+  background:var(--accent-light);color:var(--accent);
+}
+.trust-badge svg{flex-shrink:0}
+
+
+/* ── Form Section ── */
+.form-section{opacity:0;animation:fadeSlideUp .6s var(--ease-out-expo) .55s forwards}
+.form-section-title{
+  font-family:var(--heading);font-size:clamp(22px,3.5vw,28px);font-weight:400;
+  letter-spacing:-.02em;color:var(--black);margin-bottom:8px;text-align:center;
+}
+.form-section-title em{font-style:italic;color:var(--accent)}
+.form-section-desc{font-size:14px;color:var(--g500);text-align:center;margin-bottom:28px;font-weight:300;line-height:1.6}
+
+/* ── Text Inputs ── */
+.field{margin-bottom:20px}
+.field-label{display:block;font-size:13px;font-weight:500;color:var(--black);margin-bottom:7px;transition:color .2s}
+.field-input{
+  width:100%;padding:13px 16px;
+  border:1.5px solid var(--g200);border-radius:var(--radius);
+  font-size:15px;font-family:var(--body);color:var(--black);background:#fff;
+  outline:none;
+  transition:border-color .3s, box-shadow .3s var(--ease-out-expo), transform .2s var(--ease-out-expo);
+}
+.field-input::placeholder{color:var(--g400);font-weight:300}
+.field-input:hover{border-color:var(--g300)}
+.field-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(74,103,65,.1);transform:translateY(-1px)}
+.field:focus-within .field-label{color:var(--accent)}
+.field-input.error{border-color:#B85252;box-shadow:0 0 0 3px rgba(184,82,82,.08);animation:inputShake .4s var(--ease-out-expo)}
+@keyframes inputShake{
+  0%,100%{transform:translateX(0)}
+  20%{transform:translateX(-6px)}
+  40%{transform:translateX(5px)}
+  60%{transform:translateX(-3px)}
+  80%{transform:translateX(2px)}
+}
+.field-error{font-size:12px;color:#B85252;margin-top:5px;font-weight:400;display:none}
+.field-input.error ~ .field-error{display:block;animation:fadeSlideUp .3s var(--ease-out-expo)}
+
+/* ── Email Input Icon ── */
+.input-icon-wrap{position:relative}
+.input-icon-wrap .field-input{padding-left:42px}
+.input-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--g400);display:flex;align-items:center;transition:color .3s;z-index:2;pointer-events:none}
+.field:focus-within .input-icon{color:var(--accent)}
+
+/* ── Phone Input ── */
+.phone-wrap{display:flex;gap:8px}
+.phone-code{
+  width:90px;padding:13px 12px;
+  border:1.5px solid var(--g200);border-radius:var(--radius);
+  font-size:14px;font-family:var(--body);color:var(--black);background:#fff;
+  outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23a39e9b' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 10px center;
+  transition:border-color .3s,box-shadow .3s var(--ease-out-expo);
+}
+.phone-code:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(74,103,65,.1)}
+.phone-input{flex:1}
+
+/* ── CTA Button ── */
+.btn-cta{
+  display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
+  background:var(--accent);color:#fff;font-size:15px;font-weight:500;letter-spacing:0;
+  padding:16px 28px;border-radius:var(--radius-sm);border:none;cursor:pointer;
+  font-family:var(--body);position:relative;overflow:hidden;margin-top:8px;
+  transition:transform .25s var(--ease-out-back), box-shadow .3s, opacity .3s;
+}
+.btn-cta::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.15) 0%,transparent 60%);
+  opacity:0;transition:opacity .3s;
+}
+.btn-cta:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(50,48,47,.15)}
+.btn-cta:hover::before{opacity:1}
+.btn-cta:active{transform:translateY(0) scale(.97);box-shadow:var(--sh-sm)}
+.btn-cta:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-cta .arrow{display:inline-block;transition:transform .25s var(--ease-out-expo)}
+.btn-cta:hover:not(:disabled) .arrow{transform:translateX(3px)}
+
+/* ── Guarantee ── */
+.guarantee{
+  text-align:center;margin-top:20px;font-size:12px;color:var(--g400);font-weight:300;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.guarantee svg{flex-shrink:0;color:var(--accent)}
+
+/* ── Property Image ── */
+.property-img{
+  margin-bottom:32px;
+  opacity:0;animation:fadeSlideUp .6s var(--ease-out-expo) .5s forwards;
+}
+.property-img img{
+  display:block;width:100%;border-radius:var(--radius);
+  box-shadow:var(--sh);object-fit:cover;max-height:300px;
+}
+
+/* ── Services Summary ── */
+.services-summary{
+  text-align:center;margin-bottom:32px;
+  opacity:0;animation:fadeSlideUp .6s var(--ease-out-expo) .55s forwards;
+}
+.services-title{
+  font-family:var(--heading);font-size:clamp(18px,3vw,22px);font-weight:500;
+  color:var(--black);line-height:1.4;margin-bottom:8px;
+}
+.services-desc{
+  font-size:14px;color:var(--g500);font-weight:300;line-height:1.6;
+}
+
+/* ── Video ── */
+.video-section{
+  margin-bottom:36px;
+  opacity:0;animation:fadeSlideUp .6s var(--ease-out-expo) .6s forwards;
+}
+.video-section iframe{
+  display:block;width:100%;aspect-ratio:16/9;border:0;
+  border-radius:var(--radius);box-shadow:var(--sh);
+}
+
+/* ── Divider ── */
+.divider{
+  display:flex;align-items:center;gap:16px;margin:36px 0;color:var(--g400);font-size:12px;font-weight:400;
+  opacity:0;animation:fadeSlideUp .5s var(--ease-out-expo) .5s forwards;
+}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--g200)}
+
+
+/* ── Footer ── */
+.page-footer{
+  text-align:center;padding-top:40px;margin-top:12px;border-top:1px solid var(--g200);
+  opacity:0;animation:fadeSlideUp .5s var(--ease-out-expo) .75s forwards;
+}
+.footer-link{font-size:13px;color:var(--g400);text-decoration:none;font-weight:300;transition:color .2s}
+.footer-link:hover{color:var(--accent)}
+
+/* ── Success State ── */
+.success-overlay{
+  display:none;position:fixed;inset:0;z-index:50;
+  background:#fff;
+  align-items:center;justify-content:center;flex-direction:column;
+}
+.success-overlay.visible{display:flex}
+.success-icon{
+  width:80px;height:80px;border-radius:50%;
+  background:var(--accent-light);border:2px solid var(--accent-border);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 28px;opacity:0;animation:iconBounceIn .6s var(--ease-out-back) .1s forwards;
+}
+@keyframes iconBounceIn{
+  0%{opacity:0;transform:scale(0)}
+  50%{transform:scale(1.12)}
+  70%{transform:scale(.95)}
+  100%{opacity:1;transform:scale(1)}
+}
+.success-text{text-align:center;padding:0 28px}
+.success-text h2{font-family:var(--heading);font-size:clamp(26px,4vw,32px);font-weight:400;letter-spacing:-.02em;color:var(--black);margin-bottom:10px;opacity:0;animation:fadeSlideUp .5s var(--ease-out-expo) .4s forwards}
+.success-text h2 em{font-style:italic;color:var(--accent)}
+.success-text p{font-size:15px;color:var(--g500);line-height:1.7;font-weight:300;max-width:400px;margin:0 auto;opacity:0;animation:fadeSlideUp .5s var(--ease-out-expo) .55s forwards}
+
+/* ── Animations ── */
+@keyframes fadeSlideUp{
+  from{opacity:0;transform:translateY(16px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes underlineDraw{
+  from{transform:scaleX(0) rotate(-1.5deg)}
+  to{transform:scaleX(1) rotate(-1.5deg)}
+}
+
+/* ── Confetti ── */
+.confetti-wrap{position:fixed;inset:0;pointer-events:none;z-index:100;overflow:hidden}
+.confetti{position:absolute;width:8px;height:8px;border-radius:2px;opacity:0}
+.confetti.go{animation:confettiFall var(--fall-dur, 2.5s) var(--ease-out-expo) forwards}
+@keyframes confettiFall{
+  0%{opacity:1;transform:translateY(0) rotate(0deg) scale(1)}
+  20%{opacity:1}
+  100%{opacity:0;transform:translateY(calc(100vh + 50px)) rotate(var(--spin, 720deg)) scale(.3)}
+}
+
+/* ── Responsive ── */
+@media(max-width:640px){
+  .page-shell{padding:32px 18px 56px}
+  .stat-row{grid-template-columns:1fr 1fr;gap:10px}
+  .phone-wrap{flex-direction:column}
+  .phone-code{width:100%}
+}
+</style>
+</head>
+<body>
+
+<div class="page-shell">
+
+  <!-- Welcome Hero -->
+  <div class="welcome-hero">
+    <div class="welcome-eyebrow">Welcome Back</div>
+    <h1 class="welcome-title">Airbnb Owners Make <em>$25,892 More</em> With RevWhisper</h1>
+    <p class="welcome-desc">Our team tracks your Airbnb search position daily, deploys algorithm-timed pricing, and optimizes every part of your listing so you earn more without lifting a finger.</p>
+  </div>
+
+  <!-- Video -->
+  <div class="video-section">
+    <iframe src="https://www.youtube.com/embed/MFiPKRFp7tE?si=lZzKRYnxRijJEpIx" title="The Hidden Revenue Problem Every Airbnb Host Misses" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  </div>
+
+  <!-- What We Handle -->
+  <div class="services-summary">
+    <div class="services-title">Pricing, photos, copy, promotions, and review responses.</div>
+    <div class="services-desc">A fully managed acceleration engine so you collect more revenue without lifting a finger.</div>
+  </div>
+
+  <!-- Trust Bar -->
+  <div class="trust-bar">
+    <div class="trust-badge">&check; No CapEx required</div>
+    <div class="trust-badge">&check; Fully managed</div>
+    <div class="trust-badge">&check; Revenue-backed guarantee</div>
+    <div class="trust-badge">&check; Results in 30 days</div>
+  </div>
+
+  <!-- Divider -->
+  <div class="divider">Pick up where you left off</div>
+
+  <!-- Form -->
+  <div class="form-section">
+    <h2 class="form-section-title">Book your free <em>strategy call.</em></h2>
+    <p class="form-section-desc">Get your custom analysis. We&rsquo;ll show you exactly what your listing is leaving on the table.</p>
+
+    <form id="wb-form" onsubmit="return false;">
+      <div class="field">
+        <label class="field-label" for="full-name">Full Name</label>
+        <input type="text" class="field-input" id="full-name" placeholder="Jane Doe" autocomplete="name">
+        <div class="field-error">Please enter your name</div>
+      </div>
+      <div class="field">
+        <label class="field-label" for="email">Email</label>
+        <div class="input-icon-wrap">
+          <div class="input-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          </div>
+          <input type="email" class="field-input" id="email" placeholder="jane@example.com" autocomplete="email">
+        </div>
+        <div class="field-error">Please enter a valid email</div>
+      </div>
+      <div class="field">
+        <label class="field-label" for="phone">Phone Number</label>
+        <div class="phone-wrap">
+          <select class="phone-code" id="phone-code">
+            <option value="+1">+1</option>
+            <option value="+44">+44</option>
+            <option value="+61">+61</option>
+            <option value="+33">+33</option>
+            <option value="+49">+49</option>
+            <option value="+81">+81</option>
+            <option value="+52">+52</option>
+            <option value="+34">+34</option>
+            <option value="+39">+39</option>
+            <option value="+55">+55</option>
+          </select>
+          <input type="tel" class="field-input phone-input" id="phone" placeholder="(555) 123-4567" autocomplete="tel">
+        </div>
+        <div class="field-error">Please enter a valid phone number</div>
+      </div>
+      <button class="btn-cta" id="btn-submit" onclick="submitForm()">
+        Book My Free Strategy Call <span class="arrow">&rarr;</span>
+      </button>
+    </form>
+
+    <div class="guarantee">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+      Your information is encrypted and never shared with third parties.
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="page-footer">
+    <a href="https://www.revwhisper.com" class="footer-link">&larr; Back to RevWhisper.com</a>
+  </div>
+
+</div>
+
+<!-- Success Overlay -->
+<div class="success-overlay" id="success-overlay">
+  <div class="success-icon">
+    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="#4A6741" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+  </div>
+  <div class="success-text">
+    <h2>You&rsquo;re <em>all set.</em></h2>
+    <p>Redirecting you to pick a time that works. Check your inbox for confirmation.</p>
+  </div>
+</div>
+
+<!-- Confetti -->
+<div class="confetti-wrap" id="confetti-wrap"></div>
+
+<script>
+const FORM_WEBHOOK_ENDPOINT = '/api/form-webhook';
+var webhookSent = false;
+
+function validateForm() {
+  let valid = true;
+  const name = document.getElementById('full-name');
+  const email = document.getElementById('email');
+  const phone = document.getElementById('phone');
+
+  if (!name.value.trim()) { name.classList.add('error'); valid = false; } else { name.classList.remove('error'); }
+  if (!email.value.trim() || !email.value.includes('@')) { email.classList.add('error'); valid = false; } else { email.classList.remove('error'); }
+  if (!phone.value.trim()) { phone.classList.add('error'); valid = false; } else { phone.classList.remove('error'); }
+
+  return valid;
+}
+
+async function submitForm() {
+  if (!validateForm()) return;
+  if (webhookSent) return;
+  webhookSent = true;
+
+  const btn = document.getElementById('btn-submit');
+  btn.disabled = true;
+  const originalLabel = btn.innerHTML;
+  btn.textContent = 'Submitting...';
+
+  const fullName = document.getElementById('full-name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const phoneCode = document.getElementById('phone-code').value.trim();
+  const phoneNumber = document.getElementById('phone').value.trim();
+  const phoneFull = (phoneCode + ' ' + phoneNumber).trim();
+
+  const data = {
+    name: fullName,
+    email: email,
+    phone_code: phoneCode,
+    phone_number: phoneNumber,
+    phone_full: phoneFull,
+    phone: phoneFull,
+    source: 'welcome-back',
+    submittedAt: new Date().toISOString(),
+    attribution: rwAttribution()
+  };
+
+  rwTrack('generate_lead', { page: 'welcome-back' });
+  fbq('track', 'Lead', { content_name: 'Welcome Back - Form Complete', content_category: 'Retarget' });
+
+  try {
+    const response = await fetch(FORM_WEBHOOK_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ event_type: 'welcome_back', payload: data })
+    });
+
+    if (!response.ok) {
+      let message = 'We could not submit your information. Please try again.';
+      try {
+        const payload = await response.json();
+        if (payload && payload.error) message = payload.error;
+      } catch (error) {}
+      throw new Error(message);
+    }
+  } catch (error) {
+    console.error('Welcome back webhook failed:', error);
+    webhookSent = false;
+    btn.disabled = false;
+    btn.innerHTML = originalLabel;
+    alert(error.message || 'We could not submit your information. Please try again.');
+    return;
+  }
+
+  // Show success + confetti
+  document.getElementById('success-overlay').classList.add('visible');
+  launchConfetti();
+
+  // Redirect to Cal.com after brief pause
+  const calParams = new URLSearchParams({ name: fullName, email: email, phone: phoneFull });
+  setTimeout(function() {
+    window.location.href = 'https://cal.com/team/revwhisper/discovery?' + calParams.toString();
+  }, 2000);
+}
+
+function launchConfetti() {
+  const wrap = document.getElementById('confetti-wrap');
+  const colors = ['#4A6741','#dce6d8','#b3c5ab','#32302F','#E0DCDA','#706b68','#8aab7f','#c5d6bf'];
+  for (let i = 0; i < 60; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti';
+    el.style.background = colors[Math.floor(Math.random() * colors.length)];
+    el.style.left = (Math.random() * 100) + '%';
+    el.style.top = (-10 - Math.random() * 20) + '%';
+    el.style.width = (5 + Math.random() * 6) + 'px';
+    el.style.height = (5 + Math.random() * 6) + 'px';
+    el.style.borderRadius = Math.random() > .5 ? '50%' : '2px';
+    el.style.setProperty('--fall-dur', (1.8 + Math.random() * 1.5) + 's');
+    el.style.setProperty('--spin', (360 + Math.random() * 720) + 'deg');
+    wrap.appendChild(el);
+    setTimeout(() => el.classList.add('go'), Math.random() * 400);
+  }
+  setTimeout(() => { wrap.innerHTML = ''; }, 4000);
+}
+
+// Clear errors on input
+document.querySelectorAll('.field-input').forEach(input => {
+  input.addEventListener('input', () => input.classList.remove('error'));
+});
+
+// Enter key submits
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
+    e.preventDefault();
+    submitForm();
+  }
+});
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
