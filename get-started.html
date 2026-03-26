@@ -43,6 +43,36 @@ function rwTrack(e,p){if(localStorage.getItem('rw_cookie_consent')==='accepted')
   });
 })();
 </script>
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '959022406709300');
+fbq('track', 'PageView');
+fbq('track', 'Lead', {content_name:'Get Started Page',content_category:'High Intent'});
+</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=959022406709300&ev=PageView&noscript=1"/></noscript>
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+  document.addEventListener('click',function(e){
+    var el=e.target.closest('a,button');
+    if(!el)return;
+    var txt=(el.textContent||'').replace(/\s+/g,' ').trim().toLowerCase();
+    if(txt.indexOf('book your free strategy call')!==-1||txt.indexOf('book a call')!==-1){
+      fbq('track','Lead',{content_name:'Book Strategy Call'});
+    }else if(txt.indexOf('check my search ranking')!==-1){
+      fbq('track','Lead',{content_name:'Check Search Ranking'});
+    }
+  });
+});
+</script>
+<!-- End Meta Pixel -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Get Started | RevWhisper</title>
