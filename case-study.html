@@ -208,11 +208,12 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
 .quote-attr{font-size:14px;opacity:.7;position:relative}
 
 /* ── CTA Footer ── */
-.cs-cta{background:var(--black);color:var(--white);text-align:center;padding:80px 28px}
-.cs-cta h2{font-family:var(--heading);font-size:clamp(32px,4.5vw,42px);font-weight:400;margin-bottom:16px;letter-spacing:-.02em}
-.cs-cta p{font-size:17px;color:var(--g400);margin-bottom:36px;font-weight:300}
-.cs-cta-btn{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:var(--white);font-family:var(--body);font-weight:500;font-size:16px;padding:16px 40px;border-radius:var(--radius);text-decoration:none;transition:transform .25s ease,box-shadow .25s ease;box-shadow:0 4px 16px rgba(74,103,65,.2)}
-.cs-cta-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(74,103,65,.3)}
+.cs-cta{background:var(--accent);color:var(--white);text-align:center;padding:80px 28px;position:relative;overflow:hidden}
+.cs-cta::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% -20%,rgba(255,255,255,.08),transparent 50%),radial-gradient(ellipse at 70% 120%,rgba(0,0,0,.12),transparent 50%);pointer-events:none}
+.cs-cta h2{font-family:var(--heading);font-size:clamp(32px,4.5vw,42px);font-weight:400;margin-bottom:16px;letter-spacing:-.02em;position:relative}
+.cs-cta p{font-size:17px;color:rgba(255,255,255,.7);margin-bottom:36px;font-weight:300;position:relative}
+.cs-cta-btn{display:inline-flex;align-items:center;gap:8px;background:#fff;color:var(--accent);font-family:var(--body);font-weight:600;font-size:16px;padding:16px 40px;border-radius:var(--radius);text-decoration:none;transition:transform .25s ease,box-shadow .25s ease;box-shadow:0 4px 16px rgba(0,0,0,.15);position:relative}
+.cs-cta-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,.25)}
 .cs-cta-contact{margin-top:32px;font-size:14px;color:var(--g500)}
 .cs-cta-contact a{color:var(--g400);text-decoration:underline;text-underline-offset:3px;transition:color .2s}
 .cs-cta-contact a:hover{color:var(--white)}
@@ -636,25 +637,12 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
 </div>
 
 <!-- ════════════════════════════════════════════════
-     QUOTE
-     ════════════════════════════════════════════════ -->
-<div style="padding:64px 28px">
-  <div class="quote-block r">
-    <blockquote>&ldquo;We didn&rsquo;t change a single piece of furniture. RevWhisper changed everything around it.&rdquo;</blockquote>
-    <div class="quote-attr">Property owner, Tropical Oasis, Sarasota FL</div>
-  </div>
-</div>
-
-<!-- ════════════════════════════════════════════════
      CTA
      ════════════════════════════════════════════════ -->
 <section class="cs-cta">
   <h2>Stop guessing. Start whispering.</h2>
   <p>See what the Whisper Wheel can do for your property.</p>
   <a href="https://revwhisper.com/get-started" class="cs-cta-btn">Book Your Free Strategy Call</a>
-  <div class="cs-cta-contact">
-    <a href="mailto:sshafran@revwhisper.com">sshafran@revwhisper.com</a> &nbsp;&middot;&nbsp; (647) 535-3119 &nbsp;&middot;&nbsp; revwhisper.com
-  </div>
 </section>
 
 <!-- ════════════════════════════════════════════════
