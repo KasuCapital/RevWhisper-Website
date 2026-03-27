@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- noindex -->
+<meta name="robots" content="noindex, nofollow">
+<!-- Attribution tracking (cookie-free) -->
+<script>
+(function(){
+  var key='rw_attribution';
+  var params=new URLSearchParams(window.location.search);
+  var utmFields=['utm_source','utm_medium','utm_campaign','utm_term','utm_content'];
+  var hasUtm=utmFields.some(function(f){return params.has(f);});
+  if(hasUtm||!sessionStorage.getItem(key)){
+    var data={};
+    utmFields.forEach(function(f){if(params.get(f))data[f]=params.get(f);});
+    try{data.referrer=document.referrer?new URL(document.referrer).hostname:'direct';}catch(e){data.referrer=document.referrer||'direct';}
+    data.landing_page=window.location.pathname;
+    data.arrived_at=new Date().toISOString();
+    sessionStorage.setItem(key,JSON.stringify(data));
+  }
+})();
+</script>
+<!-- Cookie Consent + GA4 (consent-gated) -->
+<script>
+window.dataLayer=window.dataLayer||[];
+function gtag(){dataLayer.push(arguments);}
+function rwLoadGA(){
+  var s=document.createElement('script');s.async=true;
+  s.src='https://www.googletagmanager.com/gtag/js?id=G-Y1FYZ5849B';
+  document.head.appendChild(s);
+  gtag('js',new Date());gtag('config','G-Y1FYZ5849B');
+}
+function rwTrack(e,p){if(localStorage.getItem('rw_cookie_consent')==='accepted')gtag('event',e,p||{});}
+(function(){
+  var c=localStorage.getItem('rw_cookie_consent');
+  if(c==='accepted'){rwLoadGA();return;}
+  if(c==='declined')return;
+  document.addEventListener('DOMContentLoaded',function(){
+    var b=document.createElement('div');b.id='rw-consent';
+    b.innerHTML='<div style="position:fixed;bottom:0;left:0;right:0;z-index:9999;padding:16px 24px;background:#32302F;color:#fff;font-family:DM Sans,system-ui,sans-serif;font-size:14px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;box-shadow:0 -4px 24px rgba(0,0,0,.15)"><span style="flex:1;min-width:240px;line-height:1.5">We use cookies to analyze site usage and improve your experience.</span><div style="display:flex;gap:10px;flex-shrink:0"><button id="rw-decline" style="background:transparent;color:#ccc8c5;border:1.5px solid #706b68;padding:8px 20px;border-radius:6px;font-size:13px;font-family:inherit;cursor:pointer">Decline</button><button id="rw-accept" style="background:#4A6741;color:#fff;border:none;padding:8px 20px;border-radius:6px;font-size:13px;font-family:inherit;cursor:pointer;font-weight:500">Accept</button></div></div>';
+    document.body.appendChild(b);
+    document.getElementById('rw-accept').addEventListener('click',function(){localStorage.setItem('rw_cookie_consent','accepted');b.remove();rwLoadGA();});
+    document.getElementById('rw-decline').addEventListener('click',function(){localStorage.setItem('rw_cookie_consent','declined');b.remove();});
+  });
+})();
+</script>
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '595257495497929');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=595257495497929&ev=PageView&noscript=1"/></noscript>
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+  document.addEventListener('click',function(e){
+    var el=e.target.closest('a,button');
+    if(!el)return;
+    var txt=(el.textContent||'').replace(/\s+/g,' ').trim().toLowerCase();
+    if(txt.indexOf('book your free strategy call')!==-1||txt.indexOf('book a call')!==-1){
+      fbq('track','Lead',{content_name:'Book Strategy Call'});
+    }
+  });
+});
+</script>
+<!-- End Meta Pixel -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case Study — The Whisper Wheel in Action | RevWhisper</title>
+<meta name="description" content="See how RevWhisper's Whisper Wheel system lifted revenue by 33% across three Florida Airbnb properties in 90 days with zero physical modifications.">
+<link rel="icon" href="/icons/favicon-light.svg" type="image/svg+xml" media="(prefers-color-scheme: light)">
+<link rel="icon" href="/icons/favicon-dark.svg" type="image/svg+xml" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/icons/favicon-light.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=DM+Sans:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ── Reset & Base ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#fff;color:#32302F;line-height:1.6;font-size:18px;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+/* ── Design Tokens ── */
+:root{
+  --black:#32302F;
+  --white:#ffffff;
+  --accent:#4A6741;
+  --accent-light:#dce6d8;
+  --accent-border:#b3c5ab;
+  --green:#4A6741;
+  --green-bg:#dce6d8;
+  --green-bd:#b3c5ab;
+  --red:#B85252;
+  --terra:#8B4A3E;
+  --gold:#9B7B3A;
+  --stone:#f3f1ef;
+  --g50:#faf9f8;--g100:#f3f1ef;--g200:#E0DCDA;--g300:#ccc8c5;--g400:#a39e9b;--g500:#706b68;--g600:#58534f;--g700:#48433f;
+  --radius:8px;--radius-sm:6px;
+  --sh-sm:0 1px 3px rgba(50,48,47,.06),0 1px 2px rgba(50,48,47,.04);
+  --sh:0 4px 16px rgba(50,48,47,.07),0 2px 6px rgba(50,48,47,.04);
+  --sh-lg:0 16px 48px rgba(50,48,47,.1),0 4px 12px rgba(50,48,47,.05);
+  --heading:'Lora','Georgia',serif;
+  --body:'DM Sans','system-ui','Helvetica Neue',sans-serif;
+  --mono:'DM Mono','Consolas',monospace;
+}
+
+/* ── Layout ── */
+.w{max-width:1100px;margin:0 auto;padding:0 28px}
+
+/* ── Floating Nav Bar ── */
+@keyframes fbSlideIn{from{opacity:0;transform:translate(-50%,-20px)}to{opacity:1;transform:translate(-50%,0)}}
+.float-bar{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:200;display:flex;align-items:center;max-width:1060px;width:calc(100% - 56px);background:var(--white);padding:8px 8px 8px 22px;border-radius:var(--radius);box-shadow:0 2px 20px rgba(50,48,47,.08),0 0 0 1px rgba(50,48,47,.04);animation:fbSlideIn .6s cubic-bezier(.34,1.56,.64,1) both;transition:box-shadow .3s ease,padding .3s ease}
+.float-bar.scrolled{box-shadow:0 4px 28px rgba(50,48,47,.12),0 0 0 1px rgba(50,48,47,.06)}
+.fb-logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--black);flex-shrink:0;transition:opacity .2s ease}
+.fb-logo:hover{opacity:.7}
+.lm{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--accent)}
+.ln{font-family:var(--heading);font-size:15px;font-weight:600;letter-spacing:-.02em}
+.fb-links{display:flex;align-items:center;gap:2px;margin:0 auto}
+.fb-link{font-family:var(--body);font-size:13px;font-weight:400;color:var(--g500);text-decoration:none;padding:8px 16px;border-radius:var(--radius-sm);transition:color .2s ease,background .2s ease;white-space:nowrap}
+.fb-link:hover{color:var(--black);background:var(--g50)}
+.fb-cta{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#fff;padding:10px 24px;border-radius:var(--radius);font-family:var(--body);font-size:13px;font-weight:500;text-decoration:none;white-space:nowrap;flex-shrink:0;transition:transform .25s ease,box-shadow .25s ease;box-shadow:0 2px 8px rgba(74,103,65,.15)}
+.fb-cta:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(74,103,65,.25)}
+.fb-hamburger{display:none;background:none;border:none;cursor:pointer;padding:10px;flex-direction:column;gap:5px;align-items:center;justify-content:center}
+.fb-ham-line{display:block;width:18px;height:2px;background:var(--black);border-radius:1px;transition:transform .3s ease,opacity .3s ease}
+.fb-hamburger.open .fb-ham-line:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.fb-hamburger.open .fb-ham-line:nth-child(2){opacity:0}
+.fb-hamburger.open .fb-ham-line:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+/* ── Hero ── */
+.cs-hero{background:var(--accent);color:var(--white);padding:140px 28px 80px;text-align:center;position:relative;overflow:hidden}
+.cs-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% -20%,rgba(255,255,255,.08),transparent 50%),radial-gradient(ellipse at 70% 120%,rgba(0,0,0,.12),transparent 50%);pointer-events:none}
+.cs-hero .w{position:relative;z-index:1}
+.cs-hero-eyebrow{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;opacity:.65;margin-bottom:20px}
+.cs-hero h1{font-family:var(--heading);font-size:clamp(36px,5vw,56px);font-weight:400;line-height:1.15;max-width:800px;margin:0 auto 24px;letter-spacing:-.02em}
+.cs-hero p{font-size:17px;max-width:600px;margin:0 auto;opacity:.8;line-height:1.7;font-weight:300}
+
+/* ── Stats Banner ── */
+.stats-banner{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--g200)}
+.stat-item{padding:40px 32px;text-align:center;border-right:1px solid var(--g200)}
+.stat-item:last-child{border-right:none}
+.stat-value{font-family:var(--mono);font-size:40px;font-weight:500;color:var(--accent);line-height:1;margin-bottom:8px}
+.stat-label{font-size:14px;color:var(--g500)}
+
+/* ── Section ── */
+.cs-section{max-width:1100px;margin:0 auto;padding:80px 28px}
+.cs-section-alt{background:var(--g50)}
+.cs-eyebrow{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+.cs-section h2{font-family:var(--heading);font-size:clamp(28px,3.5vw,36px);font-weight:400;line-height:1.2;margin-bottom:16px;letter-spacing:-.02em}
+.cs-section-intro{font-size:17px;max-width:680px;color:var(--g500);margin-bottom:48px;line-height:1.7;font-weight:300}
+
+/* ── Whisper Wheel Overview ── */
+.wheel-overview{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:48px}
+.wheel-spoke{text-align:center;padding:20px 12px;background:var(--g50);border-radius:var(--radius);border-top:3px solid var(--accent)}
+.cs-section-alt .wheel-spoke{background:var(--white)}
+.wheel-spoke-number{font-family:var(--mono);font-size:24px;font-weight:500;color:var(--accent);margin-bottom:8px}
+.wheel-spoke-name{font-family:var(--heading);font-size:14px;line-height:1.3;color:var(--black)}
+
+/* ── Property Card ── */
+.property-card{background:var(--white);border-radius:var(--radius);box-shadow:var(--sh);overflow:hidden;margin-bottom:64px;border:1px solid var(--g200)}
+.property-header{display:grid;grid-template-columns:1fr 1fr;min-height:320px}
+.property-photo{background:linear-gradient(135deg,var(--g200) 0%,var(--g300) 100%);position:relative;overflow:hidden;min-height:320px;display:flex;align-items:center;justify-content:center}
+.property-photo-placeholder{font-family:var(--mono);font-size:13px;color:var(--g400);opacity:.6}
+.property-summary{padding:48px 40px;display:flex;flex-direction:column;justify-content:center}
+.property-tag{display:inline-block;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;background:var(--accent-light);color:var(--accent);padding:4px 12px;border-radius:4px;margin-bottom:16px;width:fit-content}
+.property-name{font-family:var(--heading);font-size:28px;font-weight:400;margin-bottom:8px;letter-spacing:-.02em}
+.property-location{font-size:15px;color:var(--g400);margin-bottom:24px}
+.property-desc{font-size:16px;line-height:1.65;color:var(--g500);margin-bottom:32px}
+
+/* ── Mini Stats ── */
+.mini-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.mini-stat{background:var(--g50);border-radius:var(--radius-sm);padding:16px;text-align:center}
+.mini-stat-label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--g400);margin-bottom:6px}
+.mini-stat-before{font-family:var(--mono);font-size:14px;color:var(--terra);text-decoration:line-through;opacity:.6;margin-bottom:2px}
+.mini-stat-after{font-family:var(--mono);font-size:22px;font-weight:500;color:var(--accent);line-height:1.2}
+.mini-stat-delta{font-family:var(--mono);font-size:12px;color:var(--accent);margin-top:2px}
+
+/* ── Improvements ── */
+.improvements{padding:40px;border-top:1px solid var(--g200)}
+.improvements-title{font-family:var(--mono);font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);margin-bottom:32px}
+.improvements-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.improvement-item{padding:24px;background:var(--g50);border-radius:var(--radius);border-left:3px solid var(--accent)}
+.improvement-pillar{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+.improvement-heading{font-family:var(--heading);font-size:17px;font-weight:400;margin-bottom:10px;line-height:1.3}
+.improvement-detail{font-size:15px;line-height:1.6;color:var(--g500)}
+
+/* ── Timeline ── */
+.timeline{padding:40px;border-top:1px solid var(--g200)}
+.timeline-title{font-family:var(--mono);font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);margin-bottom:28px}
+.timeline-row{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.timeline-phase{position:relative;padding-left:20px}
+.timeline-phase::before{content:'';position:absolute;left:0;top:4px;width:8px;height:8px;border-radius:50%;background:var(--accent)}
+.timeline-phase::after{content:'';position:absolute;left:3.5px;top:16px;width:1px;height:calc(100% - 16px);background:var(--g200)}
+.timeline-phase:last-child::after{display:none}
+.timeline-phase-label{font-family:var(--mono);font-size:12px;font-weight:500;color:var(--accent);margin-bottom:6px}
+.timeline-phase-text{font-size:15px;line-height:1.6;color:var(--g500)}
+
+/* ── Quote ── */
+.quote-block{background:var(--accent);color:var(--white);padding:48px;border-radius:var(--radius);margin:0 auto;max-width:1100px;text-align:center;position:relative;overflow:hidden}
+.quote-block::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% -20%,rgba(255,255,255,.06),transparent 50%);pointer-events:none}
+.quote-block blockquote{font-family:var(--heading);font-size:clamp(20px,2.5vw,24px);line-height:1.5;font-style:italic;max-width:700px;margin:0 auto 16px;position:relative}
+.quote-attr{font-size:14px;opacity:.7;position:relative}
+
+/* ── CTA Footer ── */
+.cs-cta{background:var(--black);color:var(--white);text-align:center;padding:80px 28px}
+.cs-cta h2{font-family:var(--heading);font-size:clamp(32px,4.5vw,42px);font-weight:400;margin-bottom:16px;letter-spacing:-.02em}
+.cs-cta p{font-size:17px;color:var(--g400);margin-bottom:36px;font-weight:300}
+.cs-cta-btn{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:var(--white);font-family:var(--body);font-weight:500;font-size:16px;padding:16px 40px;border-radius:var(--radius);text-decoration:none;transition:transform .25s ease,box-shadow .25s ease;box-shadow:0 4px 16px rgba(74,103,65,.2)}
+.cs-cta-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(74,103,65,.3)}
+.cs-cta-contact{margin-top:32px;font-size:14px;color:var(--g500)}
+.cs-cta-contact a{color:var(--g400);text-decoration:underline;text-underline-offset:3px;transition:color .2s}
+.cs-cta-contact a:hover{color:var(--white)}
+
+/* ── Footer ── */
+footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
+.footer-grid{display:grid;grid-template-columns:1fr auto;gap:24px 48px;margin-bottom:36px}
+.footer-logo{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:700;letter-spacing:-.03em;color:var(--black);margin-bottom:10px}
+.footer-tag{font-size:13px;color:var(--g400);max-width:420px;line-height:1.6}
+.footer-socials{display:flex;gap:12px;margin-top:14px}
+.footer-socials a{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;background:var(--g100);color:var(--g400);transition:background .2s,color .2s}
+.footer-socials a:hover{background:var(--g200);color:var(--black)}
+.footer-bottom{display:flex;align-items:center;justify-content:space-between;padding-top:24px;border-top:1px solid var(--g200);font-size:13px;color:var(--g400)}
+
+/* ── Animations ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.r{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+.r.in{opacity:1;transform:translateY(0)}
+
+/* ── Responsive ── */
+@media(max-width:768px){
+  .float-bar{top:14px;width:calc(100% - 32px);padding:8px 8px 8px 16px}
+  .fb-links{display:none;position:absolute;top:calc(100% + 10px);left:0;right:0;background:var(--white);border-radius:16px;padding:8px;flex-direction:column;gap:0;box-shadow:0 8px 32px rgba(50,48,47,.12),0 0 0 1px rgba(50,48,47,.04)}
+  .fb-links.open{display:flex}
+  .fb-link{padding:12px 16px;border-radius:12px;font-size:14px;width:100%}
+  .fb-hamburger{display:flex}
+  .fb-cta{font-size:12px;padding:8px 18px;margin-left:auto}
+  .cs-hero{padding:120px 20px 60px}
+  .cs-section{padding:56px 20px}
+  .stats-banner{grid-template-columns:1fr}
+  .stat-item{border-right:none;border-bottom:1px solid var(--g200)}
+  .stat-item:last-child{border-bottom:none}
+  .property-header{grid-template-columns:1fr}
+  .property-photo{min-height:200px}
+  .property-summary{padding:32px 20px}
+  .improvements-grid{grid-template-columns:1fr}
+  .timeline-row{grid-template-columns:1fr}
+  .wheel-overview{grid-template-columns:repeat(3,1fr)}
+  .mini-stats{grid-template-columns:1fr}
+  .improvements,.timeline{padding:32px 20px}
+  .quote-block{padding:32px 20px;margin:0 20px}
+  footer{padding:40px 0 30px}
+  .footer-bottom{flex-direction:column;gap:10px;align-items:flex-start}
+}
+@media(max-width:480px){
+  .wheel-overview{grid-template-columns:repeat(2,1fr)}
+}
+@media print,speech{
+  .float-bar{position:relative;top:0;left:0;transform:none;width:100%;animation:none;box-shadow:none}
+}
+@media(prefers-reduced-motion:reduce){
+  .float-bar{animation:none;opacity:1;transform:translateX(-50%)}
+  .r{opacity:1;transform:none;transition:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════
+     NAV
+     ════════════════════════════════════════════════ -->
+<nav class="float-bar" id="float-bar">
+  <a href="/" class="fb-logo">
+    <div class="lm"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24" fill="none"><path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <span class="ln">RevWhisper</span>
+  </a>
+  <div class="fb-links" id="fb-links">
+    <a href="/#solution" class="fb-link">What We Do</a>
+    <a href="/#how-it-works" class="fb-link">How It Works</a>
+    <a href="/#credibility" class="fb-link">Results</a>
+    <a href="/#pricing" class="fb-link">Pricing</a>
+    <a href="/blog" class="fb-link">Blog</a>
+  </div>
+  <a href="https://revwhisper.com/get-started" class="fb-cta">Book Your Free Strategy Call</a>
+  <button class="fb-hamburger" id="fb-hamburger" aria-label="Toggle navigation" aria-expanded="false">
+    <span class="fb-ham-line"></span>
+    <span class="fb-ham-line"></span>
+    <span class="fb-ham-line"></span>
+  </button>
+</nav>
+
+<!-- ════════════════════════════════════════════════
+     HERO
+     ════════════════════════════════════════════════ -->
+<section class="cs-hero">
+  <div class="w">
+    <div class="cs-hero-eyebrow">The Whisper Wheel in Action</div>
+    <h1>Three Properties. 90 Days. Zero Physical Modifications.</h1>
+    <p>Every property below was optimized using RevWhisper's six-pillar Whisper Wheel system. No renovations. No new furniture. Just revenue, engineered.</p>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     AGGREGATE STATS
+     ════════════════════════════════════════════════ -->
+<div class="stats-banner">
+  <div class="stat-item">
+    <div class="stat-value">+33%</div>
+    <div class="stat-label">Average Revenue Lift</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-value">+19 pts</div>
+    <div class="stat-label">Average Occupancy Gain</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-value">90 days</div>
+    <div class="stat-label">Time to Measurable Results</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════
+     WHISPER WHEEL OVERVIEW
+     ════════════════════════════════════════════════ -->
+<div class="cs-section r">
+  <div class="cs-eyebrow">The Framework</div>
+  <h2>Six Pillars. One Compounding System.</h2>
+  <p class="cs-section-intro">Each property was optimized across all six determinants of the Whisper Wheel. Unlike point solutions that address one variable at a time, the Wheel creates compounding momentum where every improvement feeds the next.</p>
+  <div class="wheel-overview">
+    <div class="wheel-spoke">
+      <div class="wheel-spoke-number">1</div>
+      <div class="wheel-spoke-name">Ideal Booker Profile</div>
+    </div>
+    <div class="wheel-spoke">
+      <div class="wheel-spoke-number">2</div>
+      <div class="wheel-spoke-name">Photo Tour Engineering</div>
+    </div>
+    <div class="wheel-spoke">
+      <div class="wheel-spoke-number">3</div>
+      <div class="wheel-spoke-name">Listing Architecture</div>
+    </div>
+    <div class="wheel-spoke">
+      <div class="wheel-spoke-number">4</div>
+      <div class="wheel-spoke-name">Search Competitor Analysis</div>
+    </div>
+    <div class="wheel-spoke">
+      <div class="wheel-spoke-number">5</div>
+      <div class="wheel-spoke-name">Pricing Model Layering</div>
+    </div>
+    <div class="wheel-spoke">
+      <div class="wheel-spoke-number">6</div>
+      <div class="wheel-spoke-name">Search Rank Tracking</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════
+     PROPERTY 1
+     ════════════════════════════════════════════════ -->
+<div class="cs-section-alt">
+  <div class="cs-section r">
+    <div class="cs-eyebrow">Property 01</div>
+    <h2>Poolside Retreat, Gulf Coast FL</h2>
+    <p class="cs-section-intro">A 4-bedroom beachside home with a private pool, sport court, and large outdoor entertaining space. The owner was self-managing pricing with a static nightly rate and had not updated the listing copy or photos in over two years.</p>
+
+    <div class="property-card">
+      <div class="property-header">
+        <div class="property-photo">
+          <div class="property-photo-placeholder">Property Photo</div>
+        </div>
+        <div class="property-summary">
+          <div class="property-tag">4 BR · Sleeps 10 · Private Pool</div>
+          <h3 class="property-name">From Page 3 to Rank 3</h3>
+          <p class="property-location">Gulf Coast, Florida</p>
+          <p class="property-desc">This property had strong fundamentals but was invisible in search. The listing hadn't been touched since 2022, the photo order buried the pool (its top asset), and pricing was flat at $295/night year-round.</p>
+          <div class="mini-stats">
+            <div class="mini-stat">
+              <div class="mini-stat-label">Monthly Revenue</div>
+              <div class="mini-stat-before">$18,800</div>
+              <div class="mini-stat-after">$23,500</div>
+              <div class="mini-stat-delta">+25%</div>
+            </div>
+            <div class="mini-stat">
+              <div class="mini-stat-label">Occupancy</div>
+              <div class="mini-stat-before">74%</div>
+              <div class="mini-stat-after">91%</div>
+              <div class="mini-stat-delta">+17 pts</div>
+            </div>
+            <div class="mini-stat">
+              <div class="mini-stat-label">Search Rank</div>
+              <div class="mini-stat-before">Page 3</div>
+              <div class="mini-stat-after">Rank 3</div>
+              <div class="mini-stat-delta">Top 5</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="improvements">
+        <div class="improvements-title">What We Changed</div>
+        <div class="improvements-grid">
+          <div class="improvement-item">
+            <div class="improvement-pillar">1 — Ideal Booker Profile</div>
+            <div class="improvement-heading">Repositioned for families with kids under 12</div>
+            <div class="improvement-detail">Competitor analysis showed oversaturation in the "couples getaway" segment. We identified an underserved niche of traveling families seeking pool access and outdoor space, then rewrote every touchpoint to speak directly to that booker.</div>
+          </div>
+          <div class="improvement-item">
+            <div class="improvement-pillar">2 — Photo Tour Engineering</div>
+            <div class="improvement-heading">Led with the pool and sport court</div>
+            <div class="improvement-detail">The original hero photo was a generic front-door shot. We resequenced the existing gallery to open with a wide-angle aerial of the pool and court, followed by the outdoor dining setup. Click-through rates on the listing increased within 10 days.</div>
+          </div>
+          <div class="improvement-item">
+            <div class="improvement-pillar">3 — Listing Architecture</div>
+            <div class="improvement-heading">Complete title, description, and amenity overhaul</div>
+            <div class="improvement-detail">Rewrote the title to front-load high-search-volume keywords ("Private Pool," "Sport Court," "Sleeps 10"). Restructured the description with scannable sections, clear sleeping arrangements, and proximity callouts to the beach.</div>
+          </div>
+          <div class="improvement-item">
+            <div class="improvement-pillar">4 — Competitor Analysis</div>
+            <div class="improvement-heading">Identified pricing gaps in the 4BR segment</div>
+            <div class="improvement-detail">Mapped the 15 closest comparable listings by bedroom count, amenities, and guest capacity. Found that most 4BRs with pools were pricing $40-60 below market on weekends and $20-30 above on midweek, creating exploitable gaps in both directions.</div>
+          </div>
+          <div class="improvement-item">
+            <div class="improvement-pillar">5 — Pricing Model Layering</div>
+            <div class="improvement-heading">Dynamic nightly rates with gap-night discounts</div>
+            <div class="improvement-detail">Replaced the flat $295/night with a layered model: base rates that flex between $249 (Tue-Wed) and $389 (Fri-Sat), orphan-night pricing to fill 1-2 night gaps, and a 14-day booking window accelerator that pushes rates higher as availability tightens.</div>
+          </div>
+          <div class="improvement-item">
+            <div class="improvement-pillar">6 — Search Rank Tracking</div>
+            <div class="improvement-heading">Daily rank monitoring with recalibration triggers</div>
+            <div class="improvement-detail">Set up daily rank tracking across 8 high-intent search queries. When rank dipped below position 10, the system triggered automatic pricing adjustments and listing micro-updates to signal freshness to the algorithm.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-title">90-Day Timeline</div>
+        <div class="timeline-row">
+          <div class="timeline-phase">
+            <div class="timeline-phase-label">Days 1-14 / Deep Audit</div>
+            <div class="timeline-phase-text">Full competitive analysis, booker profile definition, photo resequencing, and listing rewrite deployed. Dynamic pricing model activated on Day 7.</div>
+          </div>
+          <div class="timeline-phase">
+            <div class="timeline-phase-label">Days 15-45 / Momentum Build</div>
+            <div class="timeline-phase-text">Search rank climbed from page 3 to page 1 within 3 weeks. Occupancy jumped 11 points as the new pricing model captured previously empty midweek nights. Two 5-star reviews triggered during this phase.</div>
+          </div>
+          <div class="timeline-phase">
+            <div class="timeline-phase-label">Days 46-90 / Compounding</div>
+            <div class="timeline-phase-text">Rank stabilized at position 3. Higher conversion rates allowed rate increases of 12% on peak nights without occupancy loss. Monthly revenue plateaued at $23,500, up from $18,800.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════
+     PROPERTY 2
+     ════════════════════════════════════════════════ -->
+<div class="cs-section r">
+  <div class="cs-eyebrow">Property 02</div>
+  <h2>Modern Villa, Tampa Bay Area</h2>
+  <p class="cs-section-intro">A recently renovated 5-bedroom villa with a heated pool, outdoor kitchen, and proximity to Tampa's top attractions. High-quality property, but the listing was underperforming relative to its physical product due to poor positioning and a generic pricing strategy.</p>
+
+  <div class="property-card">
+    <div class="property-header">
+      <div class="property-photo">
+        <div class="property-photo-placeholder">Property Photo</div>
+      </div>
+      <div class="property-summary">
+        <div class="property-tag">5 BR · Sleeps 14 · Heated Pool</div>
+        <h3 class="property-name">From Page 4 to Rank 2</h3>
+        <p class="property-location">Tampa Bay Area, Florida</p>
+        <p class="property-desc">This villa had a recent renovation but the listing still described the pre-renovation property. Photos were a mix of old and new. Pricing didn't reflect the premium product, and the listing sat buried on page 4 of search results.</p>
+        <div class="mini-stats">
+          <div class="mini-stat">
+            <div class="mini-stat-label">Monthly Revenue</div>
+            <div class="mini-stat-before">$21,950</div>
+            <div class="mini-stat-after">$29,200</div>
+            <div class="mini-stat-delta">+33%</div>
+          </div>
+          <div class="mini-stat">
+            <div class="mini-stat-label">Occupancy</div>
+            <div class="mini-stat-before">76%</div>
+            <div class="mini-stat-after">95%</div>
+            <div class="mini-stat-delta">+19 pts</div>
+          </div>
+          <div class="mini-stat">
+            <div class="mini-stat-label">Search Rank</div>
+            <div class="mini-stat-before">Page 4</div>
+            <div class="mini-stat-after">Rank 2</div>
+            <div class="mini-stat-delta">Top 3</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="improvements">
+      <div class="improvements-title">What We Changed</div>
+      <div class="improvements-grid">
+        <div class="improvement-item">
+          <div class="improvement-pillar">1 — Ideal Booker Profile</div>
+          <div class="improvement-heading">Targeted large-group trips and event stays</div>
+          <div class="improvement-detail">With 14-person capacity and an outdoor kitchen, this property was a natural fit for bachelor/bachelorette groups, milestone birthdays, and family reunions. We rebuilt the messaging around group experiences rather than generic "luxury stay" positioning.</div>
+        </div>
+        <div class="improvement-item">
+          <div class="improvement-pillar">2 — Photo Tour Engineering</div>
+          <div class="improvement-heading">Removed all pre-renovation photos</div>
+          <div class="improvement-detail">7 of the 28 gallery photos showed the old kitchen and dated bathrooms. We removed them entirely, reordered to lead with the outdoor kitchen and pool at sunset, and recommended specific reshoot angles for the primary bedroom and living area.</div>
+        </div>
+        <div class="improvement-item">
+          <div class="improvement-pillar">3 — Listing Architecture</div>
+          <div class="improvement-heading">Built a conversion-optimized description</div>
+          <div class="improvement-detail">Replaced a 3-paragraph wall of text with a structured description: hook sentence, sleeping arrangement grid, proximity to attractions (Busch Gardens 12 min, Clearwater Beach 25 min), and a clear "perfect for" section that aligned with the target booker profile.</div>
+        </div>
+        <div class="improvement-item">
+          <div class="improvement-pillar">4 — Competitor Analysis</div>
+          <div class="improvement-heading">Found zero competitors positioning for groups</div>
+          <div class="improvement-detail">Analyzed 20 comparable 5BR listings in the market. Every single one used generic positioning. None mentioned group stays, event hosting, or "enough space for everyone." This became the central differentiator in the listing.</div>
+        </div>
+        <div class="improvement-item">
+          <div class="improvement-pillar">5 — Pricing Model Layering</div>
+          <div class="improvement-heading">Event-premium pricing with minimum-stay strategy</div>
+          <div class="improvement-detail">Implemented a tiered model: standard nights at $379, weekends at $499, and event weekends (NFL games, spring break, holidays) at $649. Added a 3-night minimum on weekends to reduce turnover costs and attract the higher-spend group segment.</div>
+        </div>
+        <div class="improvement-item">
+          <div class="improvement-pillar">6 — Search Rank Tracking</div>
+          <div class="improvement-heading">Conversion-rate signals drove rank recovery</div>
+          <div class="improvement-detail">Tracked rank daily across 12 search queries. The listing jumped from page 4 to page 2 within 18 days of the rewrite. By day 30, the higher conversion rate from better photos and copy pushed it to position 2, where it held for the remainder of the study.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline">
+      <div class="timeline-title">90-Day Timeline</div>
+      <div class="timeline-row">
+        <div class="timeline-phase">
+          <div class="timeline-phase-label">Days 1-14 / Deep Audit</div>
+          <div class="timeline-phase-text">Removed 7 outdated photos, rewrote the full listing with group-focused positioning, activated the layered pricing model, and began daily rank tracking across 12 queries.</div>
+        </div>
+        <div class="timeline-phase">
+          <div class="timeline-phase-label">Days 15-45 / Momentum Build</div>
+          <div class="timeline-phase-text">Rank jumped from page 4 to page 2 by day 18. Three group bookings came in at the new weekend rate within 10 days. Occupancy crossed 85% for the first time in the property's history.</div>
+        </div>
+        <div class="timeline-phase">
+          <div class="timeline-phase-label">Days 46-90 / Compounding</div>
+          <div class="timeline-phase-text">Stabilized at Rank 2. Event-weekend pricing generated $649/night bookings consistently. Monthly revenue hit $29,200 with 95% occupancy. The owner reported their highest-grossing quarter ever.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════
+     PROPERTY 3
+     ════════════════════════════════════════════════ -->
+<div class="cs-section-alt">
+  <div class="cs-section r">
+    <div class="cs-eyebrow">Property 03</div>
+    <h2>Tropical Oasis, Sarasota FL</h2>
+    <p class="cs-section-intro">A 3-bedroom tropical-styled home with a private pool, lush landscaping, and a covered outdoor lounge. Despite strong reviews (4.9 stars), the property was hemorrhaging revenue due to severe pricing issues and a rank that had collapsed after Airbnb's 2025 algorithm update.</p>
+
+    <div class="property-card">
+      <div class="property-header">
+        <div class="property-photo">
+          <div class="property-photo-placeholder">Property Photo</div>
+        </div>
+        <div class="property-summary">
+          <div class="property-tag">3 BR · Sleeps 8 · Tropical Pool</div>
+          <h3 class="property-name">From Page 5 to Rank 2</h3>
+          <p class="property-location">Sarasota, Florida</p>
+          <p class="property-desc">This property had the biggest gap between quality and performance. A 4.9-star rating, gorgeous outdoor space, and loyal repeat guests, yet it was buried on page 5 and losing $8,000+/month in potential revenue to bad pricing and a stale listing.</p>
+          <div class="mini-stats">
+            <div class="mini-stat">
+              <div class="mini-stat-label">Monthly Revenue</div>
+              <div class="mini-stat-before">$19,650</div>
+              <div class="mini-stat-after">$27,900</div>
+              <div class="mini-stat-delta">+42%</div>
+            </div>
+            <div class="mini-stat">
+              <div class="mini-stat-label">Occupancy</div>
+              <div class="mini-stat-before">62%</div>
+              <div class="mini-stat-after">83%</div>
+              <div class="mini-stat-delta">+21 pts</div>
+            </div>
+            <div class="mini-stat">
+              <div class="mini-stat-label">Search Rank</div>
+              <div class="mini-stat-before">Page 5</div>
+              <div class="mini-stat-after">Rank 2</div>
+              <div class="mini-stat-delta">Top 3</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="improvements">
+        <div class="improvements-title">What We Changed</div>
+        <div class="improvements-grid">
+          <div class="improvement-item">
+            <div class="improvement-pillar">1 — Ideal Booker Profile</div>
+            <div class="improvement-heading">Shifted from "beach vacation" to "tropical escape"</div>
+            <div class="improvement-detail">The property is 15 minutes from the beach, making "beach vacation" a losing position against beachfront competitors. We repositioned it as a private tropical retreat with emphasis on the lush landscaping, covered lounge, and resort-feel pool area.</div>
+          </div>
+          <div class="improvement-item">
+            <div class="improvement-pillar">2 — Photo Tour Engineering</div>
+            <div class="improvement-heading">Golden-hour reshoot of the outdoor space</div>
+            <div class="improvement-detail">Directed a reshoot focused on late-afternoon light hitting the pool through the palm canopy. Replaced 12 interior photos that were overlit and sterile with warm, lived-in shots. The new hero image increased listing click-through by an estimated 35%.</div>
+          </div>
+          <div class="improvement-item">
+            <div class="improvement-pillar">3 — Listing Architecture</div>
+            <div class="improvement-heading">Rewrote for the "escape" narrative</div>
+            <div class="improvement-detail">Eliminated generic copy like "minutes from everything Sarasota has to offer" and replaced it with sensory-driven language focused on the on-property experience. Added a "your first 24 hours" section that walked potential guests through a day at the property.</div>
+          </div>
+          <div class="improvement-item">
+            <div class="improvement-pillar">4 — Competitor Analysis</div>
+            <div class="improvement-heading">Exploited a pricing vacuum in the 3BR segment</div>
+            <div class="improvement-detail">Sarasota's 3BR market was split between budget ($150/night) and luxury ($450+/night) with almost nothing in the $250-$350 range. We positioned this property squarely in that gap, capturing guests who wanted quality without the luxury price tag.</div>
+          </div>
+          <div class="improvement-item">
+            <div class="improvement-pillar">5 — Pricing Model Layering</div>
+            <div class="improvement-heading">Aggressive gap-fill + seasonal surge model</div>
+            <div class="improvement-detail">Built a model with 4 tiers: low-season base ($229), shoulder ($289), peak ($349), and event ($429). Added an automatic orphan-night discount that dropped 1-night gaps by 18% at T-minus 5 days. This alone filled an estimated 9 additional nights per month.</div>
+          </div>
+          <div class="improvement-item">
+            <div class="improvement-pillar">6 — Search Rank Tracking</div>
+            <div class="improvement-heading">Algorithm recovery through conversion signals</div>
+            <div class="improvement-detail">The 2025 algorithm update had buried this listing despite strong reviews. By increasing conversion rate through better photos and targeted copy, we sent the momentum signals the new algorithm rewards. Rank climbed from page 5 to top 3 in 28 days.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-title">90-Day Timeline</div>
+        <div class="timeline-row">
+          <div class="timeline-phase">
+            <div class="timeline-phase-label">Days 1-14 / Deep Audit</div>
+            <div class="timeline-phase-text">Completed competitive mapping of 18 local 3BRs. Directed and deployed the golden-hour reshoot. Rewrote the listing with the "tropical escape" positioning. Activated the 4-tier pricing model.</div>
+          </div>
+          <div class="timeline-phase">
+            <div class="timeline-phase-label">Days 15-45 / Momentum Build</div>
+            <div class="timeline-phase-text">Rank recovered from page 5 to page 1 in 28 days. The orphan-night discount filled 9 previously empty nights. Two new 5-star reviews came in that referenced the exact language from the new listing description.</div>
+          </div>
+          <div class="timeline-phase">
+            <div class="timeline-phase-label">Days 46-90 / Compounding</div>
+            <div class="timeline-phase-text">Revenue surged to $27,900/month (+42%). Rank held at position 2. The owner increased their rates by 8% on peak nights and still maintained 83% occupancy. This was the strongest-performing property relative to starting position in the study.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════
+     QUOTE
+     ════════════════════════════════════════════════ -->
+<div style="padding:64px 28px">
+  <div class="quote-block r">
+    <blockquote>"We didn't change a single piece of furniture. RevWhisper changed everything around it."</blockquote>
+    <div class="quote-attr">Property owner, Tropical Oasis, Sarasota FL</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════
+     CTA
+     ════════════════════════════════════════════════ -->
+<section class="cs-cta">
+  <h2>Stop guessing. Start whispering.</h2>
+  <p>See what the Whisper Wheel can do for your property.</p>
+  <a href="https://revwhisper.com/get-started" class="cs-cta-btn">Book Your Free Strategy Call</a>
+  <div class="cs-cta-contact">
+    <a href="mailto:sshafran@revwhisper.com">sshafran@revwhisper.com</a> &nbsp;&middot;&nbsp; (647) 535-3119 &nbsp;&middot;&nbsp; revwhisper.com
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     FOOTER
+     ════════════════════════════════════════════════ -->
+<footer>
+  <div class="w">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">
+          <div class="lm">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24" fill="none">
+              <path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="#32302F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="#32302F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span style="font-family:var(--heading);font-weight:600">RevWhisper</span>
+        </div>
+        <p class="footer-tag">A revenue intelligence team that layers into your Airbnb listing to accelerate performance and maximize earnings.</p>
+        <div class="footer-socials">
+          <a href="https://x.com/RevWhisper" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+          <a href="https://www.instagram.com/rev.whisper/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          </a>
+          <a href="https://www.facebook.com/groups/airbnblistingoptimization" target="_blank" rel="noopener noreferrer" aria-label="Facebook Group">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div>
+        <p style="font-family:var(--heading);font-weight:600;font-size:14px;margin-bottom:10px">Resources</p>
+        <a href="/blog" style="display:block;font-size:13px;color:var(--g400);text-decoration:none;margin-bottom:6px;transition:color .2s" onmouseover="this.style.color='#32302F'" onmouseout="this.style.color='#a39e9b'">Blog</a>
+        <a href="https://app.revwhisper.com/search-ranking" style="display:block;font-size:13px;color:var(--g400);text-decoration:none;margin-bottom:6px;transition:color .2s" onmouseover="this.style.color='#32302F'" onmouseout="this.style.color='#a39e9b'">Search Ranking Report</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 MCO CORP d/b/a RevWhisper. All rights reserved.</span>
+      <span>Stop Guessing. Start Whispering.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ════════════════════════════════════════════════
+     SCRIPTS
+     ════════════════════════════════════════════════ -->
+<script>
+(function() {
+  /* ── Scroll-reveal observer ── */
+  var revealIO = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in');
+        revealIO.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.r').forEach(function(el) { revealIO.observe(el); });
+
+  /* ── Float bar scroll shadow ── */
+  var floatBar = document.getElementById('float-bar');
+  var lastScroll = 0;
+  window.addEventListener('scroll', function() {
+    var st = window.pageYOffset || document.documentElement.scrollTop;
+    if (st > 40) { floatBar.classList.add('scrolled'); }
+    else { floatBar.classList.remove('scrolled'); }
+    lastScroll = st;
+  }, { passive: true });
+
+  /* ── Mobile hamburger ── */
+  var hamburger = document.getElementById('fb-hamburger');
+  var fbLinks = document.getElementById('fb-links');
+  if (hamburger && fbLinks) {
+    hamburger.addEventListener('click', function() {
+      var isOpen = fbLinks.classList.toggle('open');
+      hamburger.classList.toggle('open');
+      hamburger.setAttribute('aria-expanded', isOpen);
+    });
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.float-bar')) {
+        fbLinks.classList.remove('open');
+        hamburger.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+})();
+</script>
+</body>
+</html>
