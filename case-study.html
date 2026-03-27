@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded',function(){
 <!-- End Meta Pixel -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Case Study — The Whisper Wheel in Action | RevWhisper</title>
+<title>Case Study &mdash; The Whisper Wheel in Action | RevWhisper</title>
 <meta name="description" content="See how RevWhisper's Whisper Wheel system lifted revenue by 33% across three Florida Airbnb properties in 90 days with zero physical modifications.">
 <link rel="icon" href="/icons/favicon-light.svg" type="image/svg+xml" media="(prefers-color-scheme: light)">
 <link rel="icon" href="/icons/favicon-dark.svg" type="image/svg+xml" media="(prefers-color-scheme: dark)">
@@ -165,8 +165,8 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
 /* ── Property Card ── */
 .property-card{background:var(--white);border-radius:var(--radius);box-shadow:var(--sh);overflow:hidden;margin-bottom:64px;border:1px solid var(--g200)}
 .property-header{display:grid;grid-template-columns:1fr 1fr;min-height:320px}
-.property-photo{background:linear-gradient(135deg,var(--g200) 0%,var(--g300) 100%);position:relative;overflow:hidden;min-height:320px;display:flex;align-items:center;justify-content:center}
-.property-photo-placeholder{font-family:var(--mono);font-size:13px;color:var(--g400);opacity:.6}
+.property-photo{background:var(--g200);position:relative;overflow:hidden;min-height:320px}
+.property-photo img{width:100%;height:100%;object-fit:cover;display:block}
 .property-summary{padding:48px 40px;display:flex;flex-direction:column;justify-content:center}
 .property-tag{display:inline-block;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;background:var(--accent-light);color:var(--accent);padding:4px 12px;border-radius:4px;margin-bottom:16px;width:fit-content}
 .property-name{font-family:var(--heading);font-size:28px;font-weight:400;margin-bottom:8px;letter-spacing:-.02em}
@@ -188,7 +188,7 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
 .improvement-item{padding:24px;background:var(--g50);border-radius:var(--radius);border-left:3px solid var(--accent)}
 .improvement-pillar{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
 .improvement-heading{font-family:var(--heading);font-size:17px;font-weight:400;margin-bottom:10px;line-height:1.3}
-.improvement-detail{font-size:15px;line-height:1.6;color:var(--g500)}
+
 
 /* ── Timeline ── */
 .timeline{padding:40px;border-top:1px solid var(--g200)}
@@ -370,10 +370,10 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
     <div class="property-card">
       <div class="property-header">
         <div class="property-photo">
-          <div class="property-photo-placeholder">Property Photo</div>
+          <img src="/images/properties/case-study-1.png" alt="Aerial view of Poolside Retreat, Gulf Coast FL" loading="lazy">
         </div>
         <div class="property-summary">
-          <div class="property-tag">4 BR · Sleeps 10 · Private Pool</div>
+          <div class="property-tag">4 BR &middot; Sleeps 10 &middot; Private Pool</div>
           <h3 class="property-name">From Page 3 to Rank 3</h3>
           <p class="property-location">Gulf Coast, Florida</p>
           <p class="property-desc">This property had strong fundamentals but was invisible in search. The listing hadn't been touched since 2022, the photo order buried the pool (its top asset), and pricing was flat at $295/night year-round.</p>
@@ -404,34 +404,28 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
         <div class="improvements-title">What We Changed</div>
         <div class="improvements-grid">
           <div class="improvement-item">
-            <div class="improvement-pillar">1 — Ideal Booker Profile</div>
-            <div class="improvement-heading">Repositioned for families with kids under 12</div>
-            <div class="improvement-detail">Competitor analysis showed oversaturation in the "couples getaway" segment. We identified an underserved niche of traveling families seeking pool access and outdoor space, then rewrote every touchpoint to speak directly to that booker.</div>
+            <div class="improvement-pillar">1 &mdash; Photo Tour Restructure</div>
+            <div class="improvement-heading">Resequenced all 32 photos using Airbnb&rsquo;s Vision Transformer logic</div>
           </div>
           <div class="improvement-item">
-            <div class="improvement-pillar">2 — Photo Tour Engineering</div>
-            <div class="improvement-heading">Led with the pool and sport court</div>
-            <div class="improvement-detail">The original hero photo was a generic front-door shot. We resequenced the existing gallery to open with a wide-angle aerial of the pool and court, followed by the outdoor dining setup. Click-through rates on the listing increased within 10 days.</div>
+            <div class="improvement-pillar">2 &mdash; Listing Completeness Score</div>
+            <div class="improvement-heading">Filled every algorithm-weighted field the listing was missing</div>
           </div>
           <div class="improvement-item">
-            <div class="improvement-pillar">3 — Listing Architecture</div>
-            <div class="improvement-heading">Complete title, description, and amenity overhaul</div>
-            <div class="improvement-detail">Rewrote the title to front-load high-search-volume keywords ("Private Pool," "Sport Court," "Sleeps 10"). Restructured the description with scannable sections, clear sleeping arrangements, and proximity callouts to the beach.</div>
+            <div class="improvement-pillar">3 &mdash; Title &amp; Keyword Optimization</div>
+            <div class="improvement-heading">Front-loaded the 50-character title for mobile search</div>
           </div>
           <div class="improvement-item">
-            <div class="improvement-pillar">4 — Competitor Analysis</div>
-            <div class="improvement-heading">Identified pricing gaps in the 4BR segment</div>
-            <div class="improvement-detail">Mapped the 15 closest comparable listings by bedroom count, amenities, and guest capacity. Found that most 4BRs with pools were pricing $40-60 below market on weekends and $20-30 above on midweek, creating exploitable gaps in both directions.</div>
+            <div class="improvement-pillar">4 &mdash; Cancellation &amp; Booking Settings</div>
+            <div class="improvement-heading">Switched from Strict to Moderate policy, enabled Instant Book</div>
           </div>
           <div class="improvement-item">
-            <div class="improvement-pillar">5 — Pricing Model Layering</div>
-            <div class="improvement-heading">Dynamic nightly rates with gap-night discounts</div>
-            <div class="improvement-detail">Replaced the flat $295/night with a layered model: base rates that flex between $249 (Tue-Wed) and $389 (Fri-Sat), orphan-night pricing to fill 1-2 night gaps, and a 14-day booking window accelerator that pushes rates higher as availability tightens.</div>
+            <div class="improvement-pillar">5 &mdash; Dynamic Pricing via PriceLabs</div>
+            <div class="improvement-heading">Replaced flat $295/night with a market-responsive model</div>
           </div>
           <div class="improvement-item">
-            <div class="improvement-pillar">6 — Search Rank Tracking</div>
-            <div class="improvement-heading">Daily rank monitoring with recalibration triggers</div>
-            <div class="improvement-detail">Set up daily rank tracking across 8 high-intent search queries. When rank dipped below position 10, the system triggered automatic pricing adjustments and listing micro-updates to signal freshness to the algorithm.</div>
+            <div class="improvement-pillar">6 &mdash; Review Velocity &amp; Freshness</div>
+            <div class="improvement-heading">Engineered the signals the algorithm weights heaviest</div>
           </div>
         </div>
       </div>
@@ -468,10 +462,10 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
   <div class="property-card">
     <div class="property-header">
       <div class="property-photo">
-        <div class="property-photo-placeholder">Property Photo</div>
+        <img src="/images/properties/case-study-2.jpg" alt="Modern Villa, Tampa Bay Area" loading="lazy">
       </div>
       <div class="property-summary">
-        <div class="property-tag">5 BR · Sleeps 14 · Heated Pool</div>
+        <div class="property-tag">5 BR &middot; Sleeps 14 &middot; Heated Pool</div>
         <h3 class="property-name">From Page 4 to Rank 2</h3>
         <p class="property-location">Tampa Bay Area, Florida</p>
         <p class="property-desc">This villa had a recent renovation but the listing still described the pre-renovation property. Photos were a mix of old and new. Pricing didn't reflect the premium product, and the listing sat buried on page 4 of search results.</p>
@@ -502,34 +496,28 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
       <div class="improvements-title">What We Changed</div>
       <div class="improvements-grid">
         <div class="improvement-item">
-          <div class="improvement-pillar">1 — Ideal Booker Profile</div>
-          <div class="improvement-heading">Targeted large-group trips and event stays</div>
-          <div class="improvement-detail">With 14-person capacity and an outdoor kitchen, this property was a natural fit for bachelor/bachelorette groups, milestone birthdays, and family reunions. We rebuilt the messaging around group experiences rather than generic "luxury stay" positioning.</div>
+          <div class="improvement-pillar">1 &mdash; Photo Accuracy &amp; AI Scoring</div>
+          <div class="improvement-heading">Eliminated 7 pre-renovation photos that were tanking quality score</div>
         </div>
         <div class="improvement-item">
-          <div class="improvement-pillar">2 — Photo Tour Engineering</div>
-          <div class="improvement-heading">Removed all pre-renovation photos</div>
-          <div class="improvement-detail">7 of the 28 gallery photos showed the old kitchen and dated bathrooms. We removed them entirely, reordered to lead with the outdoor kitchen and pool at sunset, and recommended specific reshoot angles for the primary bedroom and living area.</div>
+          <div class="improvement-pillar">2 &mdash; Search Filter Optimization</div>
+          <div class="improvement-heading">Added 28 missing amenities to unlock filtered search visibility</div>
         </div>
         <div class="improvement-item">
-          <div class="improvement-pillar">3 — Listing Architecture</div>
-          <div class="improvement-heading">Built a conversion-optimized description</div>
-          <div class="improvement-detail">Replaced a 3-paragraph wall of text with a structured description: hook sentence, sleeping arrangement grid, proximity to attractions (Busch Gardens 12 min, Clearwater Beach 25 min), and a clear "perfect for" section that aligned with the target booker profile.</div>
+          <div class="improvement-pillar">3 &mdash; Conversion-Optimized Description</div>
+          <div class="improvement-heading">Structured 450 words across all four description fields</div>
         </div>
         <div class="improvement-item">
-          <div class="improvement-pillar">4 — Competitor Analysis</div>
-          <div class="improvement-heading">Found zero competitors positioning for groups</div>
-          <div class="improvement-detail">Analyzed 20 comparable 5BR listings in the market. Every single one used generic positioning. None mentioned group stays, event hosting, or "enough space for everyone." This became the central differentiator in the listing.</div>
+          <div class="improvement-pillar">4 &mdash; Competitive Pricing Intelligence</div>
+          <div class="improvement-heading">Mapped 20 comp-set listings and found a positioning vacuum</div>
         </div>
         <div class="improvement-item">
-          <div class="improvement-pillar">5 — Pricing Model Layering</div>
-          <div class="improvement-heading">Event-premium pricing with minimum-stay strategy</div>
-          <div class="improvement-detail">Implemented a tiered model: standard nights at $379, weekends at $499, and event weekends (NFL games, spring break, holidays) at $649. Added a 3-night minimum on weekends to reduce turnover costs and attract the higher-spend group segment.</div>
+          <div class="improvement-pillar">5 &mdash; Event-Tiered Pricing Model</div>
+          <div class="improvement-heading">3-tier dynamic pricing with weekly/monthly discounts</div>
         </div>
         <div class="improvement-item">
-          <div class="improvement-pillar">6 — Search Rank Tracking</div>
-          <div class="improvement-heading">Conversion-rate signals drove rank recovery</div>
-          <div class="improvement-detail">Tracked rank daily across 12 search queries. The listing jumped from page 4 to page 2 within 18 days of the rewrite. By day 30, the higher conversion rate from better photos and copy pushed it to position 2, where it held for the remainder of the study.</div>
+          <div class="improvement-pillar">6 &mdash; Booking Velocity Acceleration</div>
+          <div class="improvement-heading">Drove 8 bookings in 18 days to trigger compound ranking</div>
         </div>
       </div>
     </div>
@@ -566,10 +554,10 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
     <div class="property-card">
       <div class="property-header">
         <div class="property-photo">
-          <div class="property-photo-placeholder">Property Photo</div>
+          <img src="/images/properties/case-study-3.png" alt="Aerial view of Tropical Oasis, Sarasota FL" loading="lazy">
         </div>
         <div class="property-summary">
-          <div class="property-tag">3 BR · Sleeps 8 · Tropical Pool</div>
+          <div class="property-tag">3 BR &middot; Sleeps 8 &middot; Tropical Pool</div>
           <h3 class="property-name">From Page 5 to Rank 2</h3>
           <p class="property-location">Sarasota, Florida</p>
           <p class="property-desc">This property had the biggest gap between quality and performance. A 4.9-star rating, gorgeous outdoor space, and loyal repeat guests, yet it was buried on page 5 and losing $8,000+/month in potential revenue to bad pricing and a stale listing.</p>
@@ -600,34 +588,28 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
         <div class="improvements-title">What We Changed</div>
         <div class="improvements-grid">
           <div class="improvement-item">
-            <div class="improvement-pillar">1 — Ideal Booker Profile</div>
-            <div class="improvement-heading">Shifted from "beach vacation" to "tropical escape"</div>
-            <div class="improvement-detail">The property is 15 minutes from the beach, making "beach vacation" a losing position against beachfront competitors. We repositioned it as a private tropical retreat with emphasis on the lush landscaping, covered lounge, and resort-feel pool area.</div>
+            <div class="improvement-pillar">1 &mdash; Professional Photo Reshoot</div>
+            <div class="improvement-heading">Golden-hour reshoot scored for Airbnb&rsquo;s 12 image attributes</div>
           </div>
           <div class="improvement-item">
-            <div class="improvement-pillar">2 — Photo Tour Engineering</div>
-            <div class="improvement-heading">Golden-hour reshoot of the outdoor space</div>
-            <div class="improvement-detail">Directed a reshoot focused on late-afternoon light hitting the pool through the palm canopy. Replaced 12 interior photos that were overlit and sterile with warm, lived-in shots. The new hero image increased listing click-through by an estimated 35%.</div>
+            <div class="improvement-pillar">2 &mdash; Algorithm Recovery Strategy</div>
+            <div class="improvement-heading">Reversed the 2025 algorithm penalty through conversion signals</div>
           </div>
           <div class="improvement-item">
-            <div class="improvement-pillar">3 — Listing Architecture</div>
-            <div class="improvement-heading">Rewrote for the "escape" narrative</div>
-            <div class="improvement-detail">Eliminated generic copy like "minutes from everything Sarasota has to offer" and replaced it with sensory-driven language focused on the on-property experience. Added a "your first 24 hours" section that walked potential guests through a day at the property.</div>
+            <div class="improvement-pillar">3 &mdash; Listing Completeness Overhaul</div>
+            <div class="improvement-heading">Rebuilt all four description sections with 420+ words of keyword-rich copy</div>
           </div>
           <div class="improvement-item">
-            <div class="improvement-pillar">4 — Competitor Analysis</div>
-            <div class="improvement-heading">Exploited a pricing vacuum in the 3BR segment</div>
-            <div class="improvement-detail">Sarasota's 3BR market was split between budget ($150/night) and luxury ($450+/night) with almost nothing in the $250-$350 range. We positioned this property squarely in that gap, capturing guests who wanted quality without the luxury price tag.</div>
+            <div class="improvement-pillar">4 &mdash; Total Price Optimization</div>
+            <div class="improvement-heading">Restructured cleaning fee after Airbnb&rsquo;s April 2025 total-price display</div>
           </div>
           <div class="improvement-item">
-            <div class="improvement-pillar">5 — Pricing Model Layering</div>
-            <div class="improvement-heading">Aggressive gap-fill + seasonal surge model</div>
-            <div class="improvement-detail">Built a model with 4 tiers: low-season base ($229), shoulder ($289), peak ($349), and event ($429). Added an automatic orphan-night discount that dropped 1-night gaps by 18% at T-minus 5 days. This alone filled an estimated 9 additional nights per month.</div>
+            <div class="improvement-pillar">5 &mdash; 4-Tier Seasonal Pricing</div>
+            <div class="improvement-heading">Dynamic model with orphan-night auto-fill and monthly discounts</div>
           </div>
           <div class="improvement-item">
-            <div class="improvement-pillar">6 — Search Rank Tracking</div>
-            <div class="improvement-heading">Algorithm recovery through conversion signals</div>
-            <div class="improvement-detail">The 2025 algorithm update had buried this listing despite strong reviews. By increasing conversion rate through better photos and targeted copy, we sent the momentum signals the new algorithm rewards. Rank climbed from page 5 to top 3 in 28 days.</div>
+            <div class="improvement-pillar">6 &mdash; Guest Favorites Path</div>
+            <div class="improvement-heading">Optimized every category score to qualify for the highest-impact badge</div>
           </div>
         </div>
       </div>
@@ -658,7 +640,7 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
      ════════════════════════════════════════════════ -->
 <div style="padding:64px 28px">
   <div class="quote-block r">
-    <blockquote>"We didn't change a single piece of furniture. RevWhisper changed everything around it."</blockquote>
+    <blockquote>&ldquo;We didn&rsquo;t change a single piece of furniture. RevWhisper changed everything around it.&rdquo;</blockquote>
     <div class="quote-attr">Property owner, Tropical Oasis, Sarasota FL</div>
   </div>
 </div>
