@@ -854,9 +854,6 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
 /* ── Calculator Widget ── */
 .calc-widget{margin-top:40px;text-align:center}
 .calc-label{font-size:13px;color:var(--g400);margin-bottom:12px;font-weight:500}
-.calc-input-wrap{display:flex;align-items:stretch;max-width:540px;margin:0 auto;border-radius:var(--radius);overflow:hidden;box-shadow:var(--sh);border:1.5px solid var(--g200);background:#fff}
-.calc-input{flex:1;border:none;padding:14px 18px;font-size:15px;font-family:var(--body);color:var(--black);outline:none;background:transparent;min-width:0}
-.calc-input::placeholder{color:var(--g300)}
 .calc-btn{background:var(--accent);color:#fff;border:none;padding:14px 24px;font-family:var(--body);font-size:14px;font-weight:500;cursor:pointer;white-space:nowrap;transition:background .15s}
 .calc-btn:hover{background:#3d5736}
 
@@ -977,8 +974,7 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
   .lm{width:28px;height:28px}
   #hero{padding:100px 0 72px}
   .hero-h1{font-size:42px}
-  .calc-input-wrap{flex-direction:column}
-  .calc-btn{padding:12px 18px}
+  .calc-btn{padding:14px 28px}
   .onboard-grid{grid-template-columns:1fr 1fr;gap:16px}
   .logo-carousel{margin-top:36px}
   .logo-track{gap:36px}
@@ -1117,10 +1113,7 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
     <!-- Calculator Widget -->
     <div class="calc-widget r d2">
       <p class="calc-label">Get your custom analysis</p>
-      <div class="calc-input-wrap">
-        <input type="url" class="calc-input" placeholder="Paste your Airbnb listing URL" aria-label="Airbnb listing URL">
-        <button class="calc-btn" type="button">Check My Search Ranking</button>
-      </div>
+      <a href="https://app.revwhisper.com/search-ranking" class="calc-btn" style="display:inline-block;border-radius:var(--radius);padding:16px 32px;font-size:15px;text-decoration:none;">Check My Search Ranking →</a>
     </div>
     <div class="hero-trust r d3">
       <span class="ht-item">✓ No CapEx required</span>
