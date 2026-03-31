@@ -203,7 +203,7 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 .hero-h1{font-family:var(--heading);font-size:clamp(52px,8vw,96px);font-weight:400;letter-spacing:-.025em;line-height:1.18;color:var(--black);max-width:880px;margin:0 auto 28px}
 .hero-h1 em{font-style:italic;color:var(--accent)}
-.hero-sub{font-size:17px;color:var(--g500);max-width:540px;margin:0 auto 40px;line-height:1.7;font-weight:300}
+.hero-sub{font-size:17px;color:var(--g500);max-width:540px;margin:0 auto 0;line-height:1.7;font-weight:300}
 .hero-actions{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
 .hero-trust{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:18px}
 .ht-item{font-size:13px;color:var(--g400);display:flex;align-items:center;gap:5px}
@@ -852,7 +852,7 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
 }
 
 /* ── Calculator Widget ── */
-.calc-widget{margin-top:40px;text-align:center}
+.calc-widget{margin-top:32px;text-align:center}
 .calc-label{font-size:13px;color:var(--g400);margin-bottom:12px;font-weight:500}
 .calc-btn{background:var(--accent);color:#fff;border:none;padding:14px 24px;font-family:var(--body);font-size:14px;font-weight:500;cursor:pointer;white-space:nowrap;transition:background .15s}
 .calc-btn:hover{background:#3d5736}
@@ -1112,10 +1112,9 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
     <p class="hero-sub r d2">Our team tracks your Airbnb search position daily, deploys algorithm-timed pricing, and optimizes every part of your listing so you earn more without lifting a finger.</p>
     <!-- Calculator Widget -->
     <div class="calc-widget r d2">
-      <p class="calc-label">Get your custom analysis</p>
       <a href="https://app.revwhisper.com/search-ranking" class="calc-btn" style="display:inline-block;border-radius:var(--radius);padding:16px 32px;font-size:15px;text-decoration:none;">Check My Search Ranking →</a>
     </div>
-    <div class="hero-trust r d3">
+    <div class="hero-trust r d3" style="margin-top:16px">
       <span class="ht-item">✓ No CapEx required</span>
       <div class="ht-sep"></div>
       <span class="ht-item">✓ Fully managed</span>
