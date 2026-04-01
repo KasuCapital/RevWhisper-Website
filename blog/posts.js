@@ -18,6 +18,15 @@
 
 var BLOG_POSTS = [
   {
+    slug: "airbnb-mobile-app-listing-optimization",
+    title: "64% of Airbnb Bookings Now Happen on the App. Your Listing Isn't Optimized for It.",
+    excerpt: "In Q4 2025, 64% of all Airbnb nights were booked through the mobile app. Most hosts build their listing on a laptop. Here's how to optimize for the 6-inch screen.",
+    date: "2026-03-18",
+    image: "/images/properties/kitchen-after.webp",
+    tags: ["Deep Dive", "Listing Optimization"],
+    author: "RevWhisper Team"
+  },
+  {
     slug: "comp-set-analysis-30-minutes",
     title: "How to Run a Comp Set Analysis in 30 Minutes",
     excerpt: "Your listing is invisible because you don't know who you're competing against. A comp set analysis shows you the 5-10 listings stealing your bookings. Here's how to do it in 30 minutes.",
