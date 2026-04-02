@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Attribution tracking (cookie-free) -->
+<script>
+(function(){
+  var key='rw_attribution';
+  var params=new URLSearchParams(window.location.search);
+  var utmFields=['utm_source','utm_medium','utm_campaign','utm_term','utm_content'];
+  var hasUtm=utmFields.some(function(f){return params.has(f);});
+  if(hasUtm||!sessionStorage.getItem(key)){
+    var data={};
+    utmFields.forEach(function(f){if(params.get(f))data[f]=params.get(f);});
+    try{data.referrer=document.referrer?new URL(document.referrer).hostname:'direct';}catch(e){data.referrer=document.referrer||'direct';}
+    data.landing_page=window.location.pathname;
+    data.arrived_at=new Date().toISOString();
+    sessionStorage.setItem(key,JSON.stringify(data));
+  }
+  sessionStorage.setItem('rw_partner','cribs');
+})();
+</script>
+<!-- Cookie Consent + GA4 (consent-mode) -->
+<script>
+window.dataLayer=window.dataLayer||[];
+function gtag(){dataLayer.push(arguments);}
+gtag('consent','default',{'analytics_storage':'denied','ad_storage':'denied'});
+gtag('js',new Date());
+gtag('config','G-Y1FYZ5849B');
+(function(){var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-Y1FYZ5849B';document.head.appendChild(s);})();
+function rwTrack(e,p){gtag('event',e,p||{});}
+rwTrack('partner_page_view',{partner:'cribs'});
+(function(){
+  var c=localStorage.getItem('rw_cookie_consent');
+  if(c==='accepted'){gtag('consent','update',{'analytics_storage':'granted','ad_storage':'granted'});return;}
+  if(c==='declined')return;
+  document.addEventListener('DOMContentLoaded',function(){
+    var b=document.createElement('div');b.id='rw-consent';
+    b.innerHTML='<div style="position:fixed;bottom:0;left:0;right:0;z-index:9999;padding:16px 24px;background:#32302F;color:#fff;font-family:DM Sans,system-ui,sans-serif;font-size:14px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;box-shadow:0 -4px 24px rgba(0,0,0,.15)"><span style="flex:1;min-width:240px;line-height:1.5">We use cookies to analyze site usage and improve your experience.</span><div style="display:flex;gap:10px;flex-shrink:0"><button id="rw-decline" style="background:transparent;color:#ccc8c5;border:1.5px solid #706b68;padding:8px 20px;border-radius:6px;font-size:13px;font-family:inherit;cursor:pointer">Decline</button><button id="rw-accept" style="background:#4A6741;color:#fff;border:none;padding:8px 20px;border-radius:6px;font-size:13px;font-family:inherit;cursor:pointer;font-weight:500">Accept</button></div></div>';
+    document.body.appendChild(b);
+    document.getElementById('rw-accept').addEventListener('click',function(){localStorage.setItem('rw_cookie_consent','accepted');b.remove();gtag('consent','update',{'analytics_storage':'granted','ad_storage':'granted'});});
+    document.getElementById('rw-decline').addEventListener('click',function(){localStorage.setItem('rw_cookie_consent','declined');b.remove();});
+  });
+})();
+</script>
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '959022406709300');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=959022406709300&ev=PageView&noscript=1"/></noscript>
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+  document.addEventListener('click',function(e){
+    var el=e.target.closest('a,button');
+    if(!el)return;
+    var txt=(el.textContent||'').replace(/\s+/g,' ').trim().toLowerCase();
+    if(txt.indexOf('book')!==-1&&(txt.indexOf('consultation')!==-1||txt.indexOf('onboarding')!==-1)){
+      fbq('track','Lead',{content_name:'Cribs Partner - Free Consultation'});
+      rwTrack('partner_cta_click',{partner:'cribs',cta:'book_onboarding'});
+    }
+  });
+});
+</script>
+<!-- End Meta Pixel -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>RevWhisper × Cribs Consulting | Exclusive Partner Offer</title>
+<meta name="description" content="Cribs Consulting clients get their first month of RevWhisper free plus waived onboarding. Start optimizing your Airbnb revenue risk-free.">
+<link rel="canonical" href="https://revwhisper.com/cribs">
+<meta property="og:type" content="website">
+<meta property="og:title" content="RevWhisper × Cribs Consulting | Exclusive Partner Offer">
+<meta property="og:description" content="Cribs Consulting clients get their first month of RevWhisper free plus waived onboarding. Start optimizing your Airbnb revenue risk-free.">
+<meta property="og:url" content="https://revwhisper.com/cribs">
+<meta property="og:site_name" content="RevWhisper">
+<meta property="og:image" content="https://revwhisper.com/images/properties/livingroom-after.webp">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="RevWhisper × Cribs Consulting | Exclusive Partner Offer">
+<meta name="twitter:description" content="Cribs Consulting clients get their first month of RevWhisper free plus waived onboarding.">
+<meta name="twitter:image" content="https://revwhisper.com/images/properties/livingroom-after.webp">
+<link rel="icon" href="/icons/favicon-light.svg" type="image/svg+xml" media="(prefers-color-scheme: light)">
+<link rel="icon" href="/icons/favicon-dark.svg" type="image/svg+xml" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/icons/favicon-light.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=DM+Sans:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ── Reset & Base ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#fff;color:#32302F;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+/* ── Design Tokens ── */
+:root{
+  --black:#32302F;
+  --white:#ffffff;
+  --accent:#4A6741;
+  --accent-light:#dce6d8;
+  --accent-border:#b3c5ab;
+  --green:#4A6741;
+  --green-bg:#dce6d8;
+  --green-bd:#b3c5ab;
+  --red:#B85252;
+  --red-bg:#EDD8D8;
+  --red-bd:#D4A8A8;
+  --terra:#8B4A3E;
+  --terra-bg:#EDE0DD;
+  --terra-bd:#C9A89F;
+  --gold:#9B7B3A;
+  --gold-bg:#EDE6D6;
+  --gold-bd:#C9B87E;
+  --stone:#f3f1ef;
+  --g50:#faf9f8;--g100:#f3f1ef;--g200:#E0DCDA;--g300:#ccc8c5;--g400:#a39e9b;--g500:#706b68;--g600:#58534f;--g700:#48433f;
+  --radius:8px;--radius-sm:6px;
+  --sh-sm:0 1px 3px rgba(50,48,47,.06),0 1px 2px rgba(50,48,47,.04);
+  --sh:0 4px 16px rgba(50,48,47,.07),0 2px 6px rgba(50,48,47,.04);
+  --sh-lg:0 16px 48px rgba(50,48,47,.1),0 4px 12px rgba(50,48,47,.05);
+  --heading:'Lora','Georgia',serif;
+  --body:'DM Sans','system-ui','Helvetica Neue',sans-serif;
+  --mono:'DM Mono','Consolas',monospace;
+  /* Cribs brand tokens */
+  --cribs-blue:#3BADE3;
+  --cribs-orange:#F5A623;
+  --cribs-gray:#4A4A4A;
+  --cribs-blue-light:rgba(59,173,227,.08);
+  --cribs-blue-border:rgba(59,173,227,.2);
+}
+
+/* ── Layout ── */
+.w{max-width:1100px;margin:0 auto;padding:0 28px}
+
+/* ── Scroll Reveal ── */
+.r{opacity:0;transform:translateY(8px);transition:opacity .4s cubic-bezier(0.25,0.1,0.25,1),transform .4s cubic-bezier(0.25,0.1,0.25,1)}
+.r.in{opacity:1;transform:translateY(0)}
+.d1{transition-delay:.07s}.d2{transition-delay:.14s}.d3{transition-delay:.21s}
+
+/* ── Floating Nav Bar ── */
+@keyframes fbSlideIn{from{opacity:0;transform:translate(-50%,-20px)}to{opacity:1;transform:translate(-50%,0)}}
+.float-bar{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:200;display:flex;align-items:center;max-width:1060px;width:calc(100% - 56px);background:var(--white);padding:8px 8px 8px 22px;border-radius:var(--radius);box-shadow:0 2px 20px rgba(50,48,47,.08),0 0 0 1px rgba(50,48,47,.04);animation:fbSlideIn .6s cubic-bezier(.34,1.56,.64,1) both;transition:box-shadow .3s ease,padding .3s ease}
+.float-bar.scrolled{box-shadow:0 4px 28px rgba(50,48,47,.12),0 0 0 1px rgba(50,48,47,.06)}
+.fb-logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--black);flex-shrink:0;transition:opacity .2s ease}
+.fb-logo:hover{opacity:.7}
+.lm{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--accent)}
+.ln{font-family:var(--heading);font-size:15px;font-weight:600;letter-spacing:-.02em}
+.fb-links{display:flex;align-items:center;gap:2px;margin:0 auto}
+.fb-link{font-family:var(--body);font-size:13px;font-weight:400;color:var(--g500);text-decoration:none;padding:8px 16px;border-radius:var(--radius-sm);transition:color .2s ease,background .2s ease;white-space:nowrap}
+.fb-link:hover{color:var(--black);background:var(--g50)}
+.fb-cta{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#fff;padding:10px 24px;border-radius:var(--radius);font-family:var(--body);font-size:13px;font-weight:500;text-decoration:none;white-space:nowrap;flex-shrink:0;transition:transform .25s ease,box-shadow .25s ease;box-shadow:0 2px 8px rgba(74,103,65,.15)}
+.fb-cta:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(74,103,65,.25)}
+.fb-hamburger{display:none;background:none;border:none;cursor:pointer;padding:10px;flex-direction:column;gap:5px;align-items:center;justify-content:center}
+.fb-ham-line{display:block;width:18px;height:2px;background:var(--black);border-radius:1px;transition:transform .3s ease,opacity .3s ease}
+.fb-hamburger.open .fb-ham-line:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.fb-hamburger.open .fb-ham-line:nth-child(2){opacity:0}
+.fb-hamburger.open .fb-ham-line:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+/* ── Buttons ── */
+.btn-primary{display:inline-flex;align-items:center;gap:6px;background:var(--black);color:#fff;font-size:13px;font-weight:400;letter-spacing:0;padding:12px 24px;border-radius:var(--radius-sm);text-decoration:none;transition:transform .25s ease,box-shadow .25s ease}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(74,103,65,.2)}
+.btn-accent{display:inline-block;font-family:var(--body);font-size:.95rem;font-weight:500;color:#fff;background:var(--accent);padding:14px 32px;border-radius:var(--radius);text-decoration:none;letter-spacing:.01em;transition:transform .25s ease,box-shadow .25s ease}
+.btn-accent:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(74,103,65,.2)}
+.btn-outline{display:inline-flex;align-items:center;gap:6px;background:#fff;color:var(--black);font-size:13px;font-weight:400;padding:11px 22px;border-radius:var(--radius-sm);text-decoration:none;border:1.5px solid var(--g200);transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease}
+.btn-outline:hover{border-color:var(--g300);transform:translateY(-2px);box-shadow:0 4px 16px rgba(74,103,65,.2)}
+.btn-white{display:inline-flex;align-items:center;gap:6px;background:#fff;color:var(--black);font-size:13px;font-weight:400;letter-spacing:0;padding:12px 28px;border-radius:var(--radius-sm);text-decoration:none;box-shadow:0 4px 20px rgba(50,48,47,.3);transition:transform .25s ease,box-shadow .25s ease,background .3s ease,color .3s ease;position:relative}
+.btn-white:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(74,103,65,.2)}
+.btn-guar{display:inline-block;font-family:var(--body);font-size:.95rem;font-weight:500;color:#fff;background:rgba(255,255,255,.15);padding:14px 36px;border-radius:var(--radius);text-decoration:none;letter-spacing:.01em;transition:transform .25s ease,box-shadow .25s ease;box-shadow:0 0 0 1.5px rgba(255,255,255,.4);border:none}
+.btn-guar:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(255,255,255,.25)}
+
+/* ── Typography ── */
+.eyebrow{display:inline-block;font-family:var(--body);font-size:clamp(.7rem,.9vw,.8rem);font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+.h2{font-family:var(--heading);font-size:clamp(1.6rem,3vw,2.2rem);font-weight:400;color:var(--black);line-height:1.3;letter-spacing:-.01em}
+.sub{font-family:var(--body);font-size:clamp(.92rem,1.1vw,1rem);color:var(--g500);line-height:1.7;margin-top:16px;font-weight:300;max-width:540px}
+
+/* ── Emphasis marks ── */
+.em-mark{position:relative;display:inline;white-space:nowrap}
+.em-mark::after{content:'';position:absolute;left:-2%;right:-2%;bottom:-6px;height:14px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 16' preserveAspectRatio='none'%3E%3Cpath d='M2 11 C25 4, 75 4, 98 11' fill='none' stroke='%234A6741' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center/100% 100%;pointer-events:none;transform:rotate(-0.5deg);clip-path:inset(0 100% 0 0)}
+.r.in .em-mark::after{animation:ctaUnderlineDraw .8s .4s ease both}
+@keyframes ctaUnderlineDraw{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0% 0 0)}}
+.em-mark-w{position:relative;display:inline;white-space:nowrap}
+.em-mark-w::after{content:'';position:absolute;left:-2%;right:-2%;bottom:-6px;height:14px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 16' preserveAspectRatio='none'%3E%3Cpath d='M2 11 C25 4, 75 4, 98 11' fill='none' stroke='%23ffffff' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center/100% 100%;pointer-events:none;transform:rotate(-0.5deg)}
+
+/* ════════════════════════════════════════
+   CO-BRANDED HERO
+   ════════════════════════════════════════ */
+#hero{padding:160px 0 100px;text-align:center;position:relative;overflow:hidden}
+.hero-glow{position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:900px;max-width:100vw;height:500px;background:radial-gradient(ellipse at 40% 40%,rgba(74,103,65,.07) 0%,transparent 50%),radial-gradient(ellipse at 60% 40%,rgba(59,173,227,.05) 0%,transparent 50%);pointer-events:none}
+.partner-badge{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--accent-light),rgba(59,173,227,.1));border:1px solid var(--accent-border);color:var(--accent);font-size:12px;font-weight:600;padding:6px 16px 6px 12px;border-radius:var(--radius-sm);margin-bottom:28px}
+.partner-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.cobrand-logos{display:flex;align-items:center;justify-content:center;gap:20px;margin-bottom:36px;flex-wrap:wrap}
+.cobrand-logos svg{height:32px;width:auto;flex-shrink:0}
+.cobrand-logos img{height:44px;width:auto;flex-shrink:0}
+.cobrand-brand{display:flex;align-items:center;gap:10px}
+.cobrand-brand-name{font-family:var(--heading);font-size:22px;font-weight:600;color:var(--black);letter-spacing:-.02em}
+.cobrand-slash{font-family:var(--heading);font-size:36px;font-weight:200;color:var(--g300)}
+.cobrand-label{font-size:13px;color:var(--g400);margin-bottom:8px}
+.hero-h1{font-family:var(--heading);font-size:clamp(42px,7vw,72px);font-weight:400;letter-spacing:-.025em;line-height:1.15;color:var(--black);max-width:820px;margin:0 auto 24px}
+.hero-h1 em{font-style:italic;color:var(--accent)}
+.hero-sub{font-size:17px;color:var(--g500);max-width:560px;margin:0 auto 36px;line-height:1.7;font-weight:300}
+.hero-actions{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.hero-trust{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:18px}
+.ht-item{font-size:13px;color:var(--g400);display:flex;align-items:center;gap:5px}
+.ht-sep{width:3px;height:3px;border-radius:50%;background:var(--g300)}
+
+/* Gradient divider line */
+.gradient-divider{height:3px;max-width:200px;margin:0 auto;border-radius:2px;background:linear-gradient(90deg,var(--accent),var(--cribs-blue));opacity:.3}
+
+/* ════════════════════════════════════════
+   SAVINGS BREAKDOWN
+   ════════════════════════════════════════ */
+#savings{padding:100px 0;background:var(--g50)}
+.savings-header{text-align:center;max-width:620px;margin:0 auto 56px}
+.savings-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:720px;margin:0 auto}
+.savings-card{background:#fff;border:1.5px solid var(--g200);border-radius:14px;padding:40px 32px;text-align:center;transition:transform .35s ease,box-shadow .35s ease,border-color .3s ease}
+.savings-card:hover{transform:translateY(-4px);box-shadow:0 8px 32px rgba(50,48,47,.1);border-color:var(--g300)}
+.savings-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px}
+.savings-icon.green{background:var(--accent-light);color:var(--accent)}
+.savings-icon.blue{background:var(--cribs-blue-light);color:var(--cribs-blue)}
+.savings-label{font-family:var(--heading);font-size:16px;font-weight:500;color:var(--black);margin-bottom:12px}
+.savings-old{font-family:var(--heading);font-size:32px;font-weight:400;color:var(--g300);text-decoration:line-through;margin-bottom:4px}
+.savings-new{font-family:var(--heading);font-size:48px;font-weight:700;letter-spacing:-.03em;line-height:1;margin-bottom:12px}
+.savings-new.green{color:var(--accent)}
+.savings-new.blue{color:var(--cribs-blue)}
+.savings-badge{display:inline-block;font-family:var(--body);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:16px}
+.savings-badge.green{background:var(--accent-light);color:var(--accent)}
+.savings-badge.blue{background:var(--cribs-blue-light);color:var(--cribs-blue)}
+.savings-desc{font-size:14px;color:var(--g500);line-height:1.6}
+.savings-total{max-width:720px;margin:32px auto 0;padding:24px 32px;background:linear-gradient(135deg,var(--accent-light) 0%,rgba(59,173,227,.08) 100%);border:1px solid var(--accent-border);border-radius:var(--radius);text-align:center;display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
+.savings-total-label{font-size:15px;color:var(--g500);font-weight:400}
+.savings-total-amt{font-family:var(--heading);font-size:clamp(16px,2vw,20px);font-weight:600;color:var(--accent);letter-spacing:-.01em}
+
+/* ════════════════════════════════════════
+   WHAT YOU GET (Features)
+   ════════════════════════════════════════ */
+#features{padding:100px 0;background:#fff}
+.features-header{text-align:center;max-width:620px;margin:0 auto 56px}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:960px;margin:0 auto}
+.feat-card{background:var(--g50);border:1.5px solid var(--g200);border-radius:14px;padding:32px 24px;transition:transform .35s ease,box-shadow .35s ease,border-color .3s ease}
+.feat-card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(50,48,47,.08);border-color:var(--accent)}
+.feat-icon{width:44px;height:44px;border-radius:var(--radius-sm);background:var(--accent);display:flex;align-items:center;justify-content:center;color:#fff;margin-bottom:20px;transition:transform .4s cubic-bezier(.34,1.56,.64,1)}
+.feat-card:hover .feat-icon{transform:scale(1.08)}
+.feat-icon svg{width:20px;height:20px}
+.feat-eyebrow{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--g400);margin-bottom:8px}
+.feat-title{font-family:var(--heading);font-size:18px;font-weight:500;color:var(--black);margin-bottom:10px;letter-spacing:-.01em}
+.feat-desc{font-size:14px;color:var(--g500);line-height:1.7;font-weight:300}
+
+/* ════════════════════════════════════════
+   HOW IT WORKS
+   ════════════════════════════════════════ */
+#how-it-works{padding:100px 0;background:var(--g50)}
+.hiw-header{text-align:center;margin-bottom:56px}
+.onboard-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;max-width:960px;margin:0 auto}
+.onboard-step{background:#fff;border:1.5px solid var(--g200);border-radius:14px;padding:32px 24px;text-align:center;opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s cubic-bezier(.34,1.56,.64,1)}
+.onboard-step:nth-child(1){transition-delay:.1s}
+.onboard-step:nth-child(2){transition-delay:.2s}
+.onboard-step:nth-child(3){transition-delay:.3s}
+.onboard-step:nth-child(4){transition-delay:.4s}
+.onboard-grid.in .onboard-step{opacity:1;transform:translateY(0)}
+.onboard-step:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(50,48,47,.08);border-color:var(--accent);transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease}
+.onboard-num{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:var(--accent);color:#fff;font-family:var(--heading);font-size:16px;font-weight:600;margin-bottom:16px}
+.onboard-title{font-family:var(--heading);font-size:17px;font-weight:600;color:var(--black);margin-bottom:8px;letter-spacing:-.01em}
+.onboard-desc{font-size:13px;color:var(--g500);line-height:1.6}
+.onboard-note{display:inline-block;font-size:12px;font-weight:600;color:var(--accent);margin-top:10px;padding:4px 10px;background:var(--accent-light);border-radius:var(--radius-sm)}
+.onboard-note.blue{color:var(--cribs-blue);background:var(--cribs-blue-light)}
+
+/* ════════════════════════════════════════
+   GUARANTEE
+   ════════════════════════════════════════ */
+.guarantee{background:var(--accent);color:#fff;padding:100px 0;text-align:center;position:relative;overflow:hidden}
+.guar-bg-pattern{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+.guar-circle{position:absolute;pointer-events:none;z-index:1;opacity:.18;will-change:transform;color:rgba(255,255,255,1)}
+.guar-circle svg{display:block;width:100%;height:100%}
+.guar-icon{margin-bottom:20px}
+.guar-icon svg{width:44px;height:44px;transition:transform .4s cubic-bezier(.34,1.56,.64,1)}
+.guar-icon:hover svg{transform:scale(1.15) rotate(-5deg)}
+.guar-eyebrow{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:24px}
+.guar-amount-wrap{display:flex;align-items:baseline;justify-content:center;gap:0;margin-bottom:20px;line-height:1;position:relative;transition:transform .3s ease}
+.guar-dollar{font-family:var(--heading);font-size:clamp(2.5rem,5vw,3.5rem);font-weight:400;color:rgba(255,255,255,.8);align-self:flex-start;margin-top:.12em;margin-right:2px}
+.guar-number{font-family:var(--heading);font-size:clamp(5rem,12vw,9rem);font-weight:700;letter-spacing:-.04em;color:#fff;text-shadow:0 0 60px rgba(255,255,255,.25),0 0 120px rgba(255,255,255,.1);position:relative;transition:text-shadow .4s ease}
+.guar-number::before{content:'';position:absolute;top:50%;left:50%;width:100%;height:160%;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(ellipse at center,rgba(255,255,255,.08) 0%,transparent 70%);pointer-events:none;z-index:-1}
+.guar-period{font-family:var(--heading);font-size:clamp(1.5rem,3vw,2.2rem);font-weight:400;color:rgba(255,255,255,.6);margin-left:4px;align-self:flex-end;margin-bottom:.15em}
+.guar-headline{font-family:var(--heading);font-size:clamp(1.4rem,2.8vw,2rem);font-weight:400;font-style:italic;color:#fff;line-height:1.3;max-width:580px;margin:0 auto 20px;letter-spacing:-.01em}
+.guar-copy{font-family:var(--body);font-size:clamp(.92rem,1.1vw,1rem);color:rgba(255,255,255,.8);line-height:1.75;max-width:560px;margin:0 auto 32px;font-weight:300}
+.guar-copy strong{color:#fff;font-weight:600}
+.guar-divider{width:60px;height:1px;background:rgba(255,255,255,.2);margin:0 auto 32px;transition:width .6s ease}
+.guar-proofs{display:flex;align-items:center;justify-content:center;gap:28px;margin-bottom:40px;flex-wrap:wrap}
+.guar-proof{display:flex;align-items:center;gap:7px;font-family:var(--body);font-size:13px;font-weight:400;color:rgba(255,255,255,.75);transition:transform .3s ease,color .3s ease}
+.guar-proof:hover{transform:translateY(-2px);color:#fff}
+.guar-proof svg{flex-shrink:0;opacity:.7}
+@keyframes guarFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+
+/* ════════════════════════════════════════
+   PRICING COMPARISON
+   ════════════════════════════════════════ */
+#pricing{background:var(--g50);padding:100px 0;position:relative;overflow:hidden}
+.pricing-header{text-align:center;max-width:620px;margin:0 auto 56px}
+.pricing-header .sub{margin:24px auto 0}
+.pricing-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:700px;margin:0 auto;align-items:stretch}
+.price-card{background:#fff;border:1.5px solid var(--g200);border-radius:14px;padding:40px 32px;text-align:center;display:flex;flex-direction:column;position:relative;transition:transform .45s cubic-bezier(.34,1.56,.64,1),box-shadow .35s ease,border-color .3s ease}
+.price-card:hover{box-shadow:0 8px 32px rgba(50,48,47,.1),0 2px 8px rgba(50,48,47,.06);border-color:var(--g300);transform:translateY(-4px)}
+.price-card.featured{border-color:var(--accent);background:var(--accent);color:#fff;box-shadow:0 8px 32px rgba(74,103,65,.15);transform:scale(1.03)}
+.price-card.featured:hover{box-shadow:0 16px 48px rgba(74,103,65,.2);transform:scale(1.05) translateY(-4px)}
+.price-card.featured .price-name{color:#fff}
+.price-card.featured .price-line{color:rgba(255,255,255,.8)}
+.price-card.featured .price-line-old{color:rgba(255,255,255,.5)}
+.price-card.featured .price-total-label{color:rgba(255,255,255,.6)}
+.price-card.featured .price-total-val{color:#fff}
+.price-card.featured .price-save{background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.3)}
+.price-badge{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;display:inline-block;padding:4px 12px;border-radius:20px;margin:0 auto 16px;min-height:18px}
+.price-card:not(.featured) .price-badge{background:transparent;color:var(--g400)}
+.price-card.featured .price-badge{background:rgba(255,255,255,.2);color:#fff}
+.price-name{font-family:var(--heading);font-size:22px;font-weight:500;letter-spacing:-.01em;margin-bottom:20px;color:var(--black)}
+.price-line{font-size:15px;color:var(--g500);padding:8px 0;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--g200)}
+.price-card.featured .price-line{border-bottom-color:rgba(255,255,255,.12)}
+.price-line:last-of-type{border-bottom:none}
+.price-line-old{text-decoration:line-through;color:var(--g300);font-size:14px}
+.price-line-new{font-weight:700;font-size:16px}
+.price-line-new.green{color:var(--accent)}
+.price-card.featured .price-line-new{color:#fff}
+.price-divider{width:100%;height:1px;background:var(--g200);margin:20px 0}
+.price-card.featured .price-divider{background:rgba(255,255,255,.15)}
+.price-total{padding:16px 0 20px}
+.price-total-label{font-size:13px;color:var(--g400);margin-bottom:4px}
+.price-total-val{font-family:var(--heading);font-size:36px;font-weight:700;letter-spacing:-.03em;color:var(--black)}
+.price-save{display:inline-block;font-size:12px;font-weight:700;padding:5px 14px;border-radius:20px;background:var(--accent-light);color:var(--accent);border:1px solid var(--accent-border);margin-top:12px}
+.price-fine{text-align:center;max-width:700px;margin:32px auto 0;font-size:13px;color:var(--g400);line-height:1.6}
+
+/* ════════════════════════════════════════
+   FINAL CTA
+   ════════════════════════════════════════ */
+#cta{padding:80px 0 80px}
+.cta-card{background:var(--accent);border-radius:var(--radius);padding:92px 76px;text-align:center;position:relative;overflow:hidden}
+.cta-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% -10%,rgba(255,255,255,.12) 0%,transparent 55%);pointer-events:none}
+.cta-card::after{content:'';position:absolute;bottom:-40%;left:50%;transform:translateX(-50%);width:60%;height:50%;border-radius:50%;background:radial-gradient(ellipse,rgba(255,255,255,.06) 0%,transparent 70%);pointer-events:none;animation:ctaGlow 6s ease-in-out infinite}
+@keyframes ctaGlow{0%,100%{opacity:.4;transform:translateX(-50%) scale(1)}50%{opacity:1;transform:translateX(-50%) scale(1.15)}}
+.cta-ey{display:inline-block;font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--accent);background:#fff;padding:6px 16px;border-radius:var(--radius-sm);margin-bottom:28px;position:relative;cursor:default;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.cta-h2{font-family:var(--heading);font-size:clamp(36px,5.5vw,60px);font-weight:400;letter-spacing:-.02em;line-height:1.1;color:#fff;margin-bottom:22px;position:relative}
+.cta-sub{font-size:17px;color:rgba(255,255,255,.55);max-width:520px;margin:0 auto 44px;line-height:1.7;position:relative;font-weight:300}
+.cta-note{margin-top:18px;font-size:13px;color:rgba(255,255,255,.3);position:relative}
+.cta-ripple-wrap{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+.cta-ripple{position:absolute;top:50%;left:50%;width:80px;height:80px;margin:-40px 0 0 -40px;border-radius:50%;border:.5px solid rgba(255,255,255,.06);opacity:0;animation:ctaRipple 8s cubic-bezier(.2,.6,.4,1) infinite}
+.cta-ripple:nth-child(2){animation-delay:2.7s}
+.cta-ripple:nth-child(3){animation-delay:5.3s}
+@keyframes ctaRipple{0%{width:80px;height:80px;margin:-40px 0 0 -40px;opacity:0}5%{opacity:.6}100%{width:900px;height:900px;margin:-450px 0 0 -450px;opacity:0}}
+
+/* CTA entrance animations */
+.cta-card.in .cta-ey{animation:ctaFadeIn .6s ease both}
+@keyframes ctaFadeIn{from{opacity:0;transform:translateY(-10px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+.cta-card.in .cta-h2{animation:ctaFadeUp .6s .15s ease both}
+.cta-card.in .cta-sub{animation:ctaFadeUp .6s .3s ease both}
+.cta-card.in .btn-white{animation:ctaFadeUp .6s .45s ease both}
+.cta-card.in .cta-note{animation:ctaFadeUp .6s .55s ease both}
+@keyframes ctaFadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.cta-card.in .em-mark-w::after{animation:ctaUnderlineDraw .8s .6s ease both}
+
+/* ════════════════════════════════════════
+   FOOTER
+   ════════════════════════════════════════ */
+footer{padding:56px 0 40px;border-top:1px solid var(--g200)}
+.footer-grid{display:grid;grid-template-columns:1fr auto;gap:24px 48px;margin-bottom:36px}
+.footer-logo{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.footer-tag{font-size:13px;color:var(--g400);max-width:420px;line-height:1.6}
+.footer-socials{display:flex;gap:12px;margin-top:14px}
+.footer-socials a{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;background:var(--g100);color:var(--g400);transition:background .2s,color .2s;text-decoration:none}
+.footer-socials a:hover{background:var(--g200);color:var(--black)}
+.footer-bottom{display:flex;align-items:center;justify-content:space-between;padding-top:24px;border-top:1px solid var(--g200);font-size:13px;color:var(--g400)}
+.footer-partner{font-size:13px;color:var(--g400);margin-top:10px}
+.footer-partner img{height:20px;vertical-align:middle;margin-left:6px;border-radius:3px}
+
+/* ════════════════════════════════════════
+   RESPONSIVE
+   ════════════════════════════════════════ */
+@media(max-width:900px){
+  .w{padding:0 20px}
+  .float-bar{top:14px;width:calc(100% - 32px);padding:8px 8px 8px 16px}
+  .fb-links{display:none;position:absolute;top:calc(100% + 10px);left:0;right:0;background:var(--white);border-radius:16px;padding:8px;flex-direction:column;gap:0;box-shadow:0 8px 32px rgba(50,48,47,.12),0 0 0 1px rgba(50,48,47,.04)}
+  .fb-links.open{display:flex}
+  .fb-link{padding:12px 16px;border-radius:12px;font-size:14px;width:100%}
+  .fb-hamburger{display:flex}
+  .fb-cta{font-size:12px;padding:8px 18px;margin-left:auto}
+  .ln{font-size:13px}
+  .lm{width:28px;height:28px}
+  #hero{padding:100px 0 72px}
+  .hero-h1{font-size:36px}
+  .savings-grid{grid-template-columns:1fr}
+  .features-grid{grid-template-columns:1fr}
+  .onboard-grid{grid-template-columns:1fr 1fr;gap:16px}
+  .pricing-grid{grid-template-columns:1fr;max-width:400px}
+  .price-card.featured{order:-1;transform:scale(1)}
+  .price-card.featured:hover{transform:translateY(-4px)}
+  .guarantee{padding:80px 0}
+  .guar-proofs{flex-direction:column;gap:14px}
+  #cta{padding:60px 0 50px}
+  .cta-card{padding:70px 26px}
+  .cta-sub{font-size:15px;margin-bottom:32px}
+  footer{padding:40px 0 30px}
+  .footer-bottom{flex-direction:column;gap:10px;align-items:flex-start}
+}
+@media(max-width:480px){
+  .hero-h1{font-size:30px}
+  .onboard-grid{grid-template-columns:1fr}
+  .cobrand-logos{gap:14px}
+  .cobrand-logos img{height:36px}
+  .savings-new{font-size:40px}
+  .guar-number{text-shadow:none}
+  .cta-card::after{animation:none}
+  .cta-card.in .cta-ey,.cta-card.in .cta-h2,.cta-card.in .cta-sub,.cta-card.in .btn-white,.cta-card.in .cta-note{animation:none;opacity:1;transform:none}
+  .cta-card.in .em-mark-w::after{animation:none;clip-path:none}
+}
+@media(prefers-reduced-motion:reduce){
+  .r{opacity:1;transform:none;transition:none}
+  .d1,.d2,.d3{transition-delay:0s}
+  .em-mark::after,.em-mark-w::after{clip-path:none;animation:none!important}
+  .cta-ripple,.guar-circle{display:none}
+  .cta-card::after{animation:none}
+}
+</style>
+</head>
+
+<body>
+
+<!-- ════════════════════════════════════════
+     NAVIGATION
+     ════════════════════════════════════════ -->
+<nav class="float-bar" id="float-bar">
+  <a href="/" class="fb-logo">
+    <div class="lm">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24" fill="none">
+        <path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <span class="ln">RevWhisper</span>
+  </a>
+  <div class="fb-links" id="fb-links">
+    <a href="#savings" class="fb-link">Your Savings</a>
+    <a href="#features" class="fb-link">What You Get</a>
+    <a href="#how-it-works" class="fb-link">How It Works</a>
+    <a href="#pricing" class="fb-link">Pricing</a>
+  </div>
+  <a href="/get-started?ref=cribs&utm_source=cribs&utm_medium=partner&utm_campaign=cribs-partnership" class="fb-cta">Free Consultation</a>
+  <button class="fb-hamburger" id="fb-hamburger" aria-label="Toggle navigation" aria-expanded="false">
+    <span class="fb-ham-line"></span>
+    <span class="fb-ham-line"></span>
+    <span class="fb-ham-line"></span>
+  </button>
+</nav>
+
+<!-- ════════════════════════════════════════
+     CO-BRANDED HERO
+     ════════════════════════════════════════ -->
+<section id="hero">
+  <div class="hero-glow"></div>
+  <div class="w">
+    <div class="r">
+      <span class="partner-badge"><span class="partner-dot"></span> Exclusive Partner Offer</span>
+    </div>
+
+    <div class="cobrand-logos r d1">
+      <img src="/images/partners/cribs-logo.png" alt="Cribs Consulting Logo">
+      <span class="cobrand-slash">/</span>
+      <div class="cobrand-brand">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="40" height="40" fill="none">
+          <path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="#32302F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="#32302F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="cobrand-brand-name">RevWhisper</span>
+      </div>
+    </div>
+
+    <h1 class="hero-h1 r d1">Cribs Clients Get Their <em class="em-mark">First Month Free</em> With RevWhisper</h1>
+    <p class="hero-sub r d2">As a Cribs Consulting client, your first month of RevWhisper is completely free and your onboarding fee is waived. Start earning more from your Airbnb without lifting a finger.</p>
+
+    <div class="hero-actions r d2">
+      <a href="/get-started?ref=cribs&utm_source=cribs&utm_medium=partner&utm_campaign=cribs-partnership" class="btn-accent">Book Your Free Consultation &rarr;</a>
+    </div>
+
+    <div class="hero-trust r d3">
+      <span class="ht-item">✓ $998 onboarding waived</span>
+      <div class="ht-sep"></div>
+      <span class="ht-item">✓ First month free</span>
+      <div class="ht-sep"></div>
+      <span class="ht-item">✓ Revenue-backed guarantee</span>
+      <div class="ht-sep"></div>
+      <span class="ht-item">✓ Results in 30 days</span>
+    </div>
+  </div>
+</section>
+
+<div class="gradient-divider"></div>
+
+<!-- ════════════════════════════════════════
+     SAVINGS BREAKDOWN
+     ════════════════════════════════════════ -->
+<section id="savings">
+  <div class="w">
+    <div class="savings-header r">
+      <span class="eyebrow">Your Exclusive Offer</span>
+      <h2 class="h2">One month free, plus waived <em class="em-mark" style="font-style:italic;color:var(--accent)">onboarding.</em></h2>
+    </div>
+
+    <div class="savings-grid r d1">
+      <div class="savings-card">
+        <div class="savings-icon green">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="savings-label">Listing Optimization Fee</div>
+        <div class="savings-old">$998</div>
+        <div class="savings-new green">$0</div>
+        <span class="savings-badge green">Waived</span>
+        <p class="savings-desc">Full listing audit, market analysis, and account setup — covered.</p>
+      </div>
+
+      <div class="savings-card">
+        <div class="savings-icon blue">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+        <div class="savings-label">First Month Subscription</div>
+        <div class="savings-old">$500/mo</div>
+        <div class="savings-new blue">$0</div>
+        <span class="savings-badge blue">Covered by Cribs</span>
+        <p class="savings-desc">Your first month of full revenue optimization — on the house.</p>
+      </div>
+    </div>
+
+    <div class="savings-total r d2">
+      <span class="savings-total-label">You pay nothing to start &mdash;</span>
+      <span class="savings-total-amt">free first month + free onboarding</span>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     WHAT YOU GET
+     ════════════════════════════════════════ -->
+<section id="features">
+  <div class="w">
+    <div class="features-header r">
+      <span class="eyebrow">What You Get</span>
+      <h2 class="h2">A fully managed Airbnb <em class="em-mark" style="font-style:italic;color:var(--accent)">revenue engine.</em></h2>
+      <p class="sub">RevWhisper handles pricing, photo optimization, copy, and promotions so you collect more revenue without lifting a finger.</p>
+    </div>
+
+    <div class="features-grid r d1">
+      <div class="feat-card">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <p class="feat-eyebrow">Revenue Management</p>
+        <h3 class="feat-title">Algorithm-Timed Pricing</h3>
+        <p class="feat-desc">Rate optimization that adapts nightly to demand, competitors, events, and seasonality — automatically.</p>
+      </div>
+
+      <div class="feat-card">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <p class="feat-eyebrow">Search Ranking</p>
+        <h3 class="feat-title">Algorithm-First Content</h3>
+        <p class="feat-desc">Every word, tag, and detail engineered for Airbnb search ranking and guest conversion.</p>
+      </div>
+
+      <div class="feat-card">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        </div>
+        <p class="feat-eyebrow">Visual Optimization</p>
+        <h3 class="feat-title">Professional Photo Direction</h3>
+        <p class="feat-desc">We direct what to shoot, how to stage, and optimize every image for maximum clicks and bookings.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     HOW IT WORKS
+     ════════════════════════════════════════ -->
+<section id="how-it-works">
+  <div class="w">
+    <div class="hiw-header r">
+      <span class="eyebrow">The Process</span>
+      <h2 class="h2">How it works for <em class="em-mark" style="font-style:italic;color:var(--accent)">Cribs clients.</em></h2>
+    </div>
+
+    <div class="onboard-grid r d1">
+      <div class="onboard-step">
+        <div class="onboard-num">1</div>
+        <h3 class="onboard-title">Book Your Free Consultation</h3>
+        <p class="onboard-desc">Schedule a quick call with our team. We'll learn about your property, your goals, and your market.</p>
+        <span class="onboard-note">$998 fee waived</span>
+      </div>
+      <div class="onboard-step">
+        <div class="onboard-num">2</div>
+        <h3 class="onboard-title">We Audit Everything</h3>
+        <p class="onboard-desc">Deep dive into your listing, competitors, pricing history, photos, and search position.</p>
+      </div>
+      <div class="onboard-step">
+        <div class="onboard-num">3</div>
+        <h3 class="onboard-title">Optimization Begins</h3>
+        <p class="onboard-desc">We deploy pricing algorithms, rewrite your copy, direct photo improvements, and launch promotions.</p>
+        <span class="onboard-note blue">First month free</span>
+      </div>
+      <div class="onboard-step">
+        <div class="onboard-num">4</div>
+        <h3 class="onboard-title">Results Within 30 Days</h3>
+        <p class="onboard-desc">You see measurable revenue improvements within the first month. If not, our guarantee kicks in.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     PRICING COMPARISON
+     ════════════════════════════════════════ -->
+<section id="pricing">
+  <div class="w">
+    <div class="pricing-header r">
+      <span class="eyebrow">Your Pricing</span>
+      <h2 class="h2">What you save as a <em class="em-mark" style="font-style:italic;color:var(--accent)">Cribs client.</em></h2>
+      <p class="sub" style="margin:24px auto 0">A side-by-side look at your exclusive pricing versus what everyone else pays.</p>
+    </div>
+
+    <div class="pricing-grid r d1">
+      <!-- Standard Rate -->
+      <div class="price-card">
+        <div class="price-badge">Standard</div>
+        <div class="price-name">Standard Rate</div>
+        <div class="price-line">
+          <span>Onboarding</span>
+          <span>$998</span>
+        </div>
+        <div class="price-line">
+          <span>Monthly</span>
+          <span>$500/mo</span>
+        </div>
+        <div class="price-divider"></div>
+        <div class="price-total">
+          <div class="price-total-label">Year 1 total</div>
+          <div class="price-total-val">$6,998</div>
+        </div>
+      </div>
+
+      <!-- Cribs Rate -->
+      <div class="price-card featured">
+        <div class="price-badge">Your Price</div>
+        <div class="price-name">Cribs Client Rate</div>
+        <div class="price-line">
+          <span>Onboarding</span>
+          <span><span class="price-line-old">$998</span>&nbsp;&nbsp;<span class="price-line-new">$0</span></span>
+        </div>
+        <div class="price-line">
+          <span>Month 1</span>
+          <span><span class="price-line-old">$500</span>&nbsp;&nbsp;<span class="price-line-new">$0</span></span>
+        </div>
+        <div class="price-line">
+          <span>Months 2&ndash;12</span>
+          <span>$500/mo</span>
+        </div>
+        <div class="price-divider"></div>
+        <div class="price-total">
+          <div class="price-total-label">Year 1 total</div>
+          <div class="price-total-val">$5,500</div>
+        </div>
+        <div class="price-save">First month + onboarding free</div>
+        <div style="margin-top:24px">
+          <a href="/get-started?ref=cribs&utm_source=cribs&utm_medium=partner&utm_campaign=cribs-partnership" class="btn-white" style="width:100%;justify-content:center">Book Your Free Consultation &rarr;</a>
+        </div>
+      </div>
+    </div>
+
+    <p class="price-fine r d2">After your free first month, service continues at $500/mo on the annual plan. Monthly plan available at $750/mo with a 3-month minimum.</p>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     FINAL CTA
+     ════════════════════════════════════════ -->
+<section id="cta">
+  <div class="w">
+    <div class="cta-card r">
+      <div class="cta-ripple-wrap"><div class="cta-ripple"></div><div class="cta-ripple"></div><div class="cta-ripple"></div></div>
+      <div class="cta-ey">Start now</div>
+      <h2 class="cta-h2">Your Listing Is Leaving Money on the Table. <em class="em-mark-w">Let's Fix That.</em></h2>
+      <p class="cta-sub">As a Cribs Consulting client, your first month and onboarding are completely free. See real results before you pay a dime.</p>
+      <a href="/get-started?ref=cribs&utm_source=cribs&utm_medium=partner&utm_campaign=cribs-partnership" class="btn-white">Book your free consultation &rarr;</a>
+      <p class="cta-note">No obligation. No pressure. Just data.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     FOOTER
+     ════════════════════════════════════════ -->
+<footer>
+  <div class="w">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">
+          <div class="lm">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24" fill="none">
+              <path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="#32302F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="#32302F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span style="font-family:var(--heading);font-weight:600">RevWhisper</span>
+        </div>
+        <p class="footer-tag">A revenue intelligence team that layers into your Airbnb listing to accelerate performance and maximize earnings.</p>
+        <p class="footer-partner">In partnership with <img src="/images/partners/cribs-logo.png" alt="Cribs Consulting"></p>
+        <div class="footer-socials">
+          <a href="https://x.com/RevWhisper" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+          <a href="https://www.instagram.com/rev.whisper/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          </a>
+          <a href="https://www.facebook.com/groups/airbnblistingoptimization" target="_blank" rel="noopener noreferrer" aria-label="Facebook Group">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div>
+        <p style="font-family:var(--heading);font-weight:600;font-size:14px;margin-bottom:10px">Resources</p>
+        <a href="/blog" style="display:block;font-size:13px;color:var(--g400);text-decoration:none;margin-bottom:6px;transition:color .2s" onmouseover="this.style.color='#32302F'" onmouseout="this.style.color='#a39e9b'">Blog</a>
+        <a href="https://app.revwhisper.com/search-ranking" style="display:block;font-size:13px;color:var(--g400);text-decoration:none;margin-bottom:6px;transition:color .2s" onmouseover="this.style.color='#32302F'" onmouseout="this.style.color='#a39e9b'">Search Ranking Report</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 MCO CORP d/b/a RevWhisper. All rights reserved.</span>
+      <span>Stop Guessing. Start Whispering.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ════════════════════════════════════════
+     SCRIPTS
+     ════════════════════════════════════════ -->
+<script>
+(function() {
+  var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ── 1. Global scroll-reveal observer ── */
+  var revealIO = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in');
+      }
+    });
+  }, { threshold: 0.07, rootMargin: '0px 0px -28px 0px' });
+
+  document.querySelectorAll('.r').forEach(function(el) {
+    revealIO.observe(el);
+  });
+
+  /* ── 2. Floating nav scroll behavior ── */
+  var floatBar = document.getElementById('float-bar');
+  var lastScroll = 0;
+  window.addEventListener('scroll', function() {
+    var st = window.pageYOffset;
+    if (st > 60) {
+      floatBar.classList.add('scrolled');
+    } else {
+      floatBar.classList.remove('scrolled');
+    }
+    lastScroll = st;
+  }, { passive: true });
+
+  /* ── 3. Mobile hamburger ── */
+  var hamburger = document.getElementById('fb-hamburger');
+  var fbLinks = document.getElementById('fb-links');
+  if (hamburger && fbLinks) {
+    hamburger.addEventListener('click', function() {
+      var isOpen = fbLinks.classList.toggle('open');
+      hamburger.classList.toggle('open');
+      hamburger.setAttribute('aria-expanded', isOpen);
+    });
+    fbLinks.querySelectorAll('.fb-link').forEach(function(link) {
+      link.addEventListener('click', function() {
+        fbLinks.classList.remove('open');
+        hamburger.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', 'false');
+      });
+    });
+  }
+
+
+})();
+</script>
+
+</body>
+</html>
