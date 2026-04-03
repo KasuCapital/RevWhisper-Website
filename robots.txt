@@ -14,5 +14,6 @@ Disallow: /index-storybrand
 Disallow: /storybrandsite
 Disallow: /webinar-original
 Disallow: /welcome-back
+Disallow: /poconos
 
 Sitemap: https://revwhisper.com/sitemap.xml
