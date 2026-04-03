@@ -2,6 +2,15 @@
   "cleanUrls": true,
   "redirects": [
     { "source": "/search-ranking", "destination": "https://app.revwhisper.com/search-ranking", "permanent": true },
-    { "source": "/revenue-lift", "destination": "/search-ranking", "permanent": true }
+    { "source": "/revenue-lift", "destination": "/search-ranking", "permanent": true },
+    { "source": "/webinar", "destination": "https://my.demio.com/ref/i6PtxjJOSUSo2kLo", "permanent": true }
+  ],
+  "headers": [
+    {
+      "source": "/(.*).md",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex" }
+      ]
+    }
   ]
 }

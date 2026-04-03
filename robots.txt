@@ -1,4 +1,18 @@
 User-agent: *
 Allow: /
 
+Disallow: /docs/
+Disallow: /service-agreement.md
+Disallow: /blog/HOW_TO_CREATE_A_BLOG_POST.md
+Disallow: /blog/_template
+Disallow: /checkout
+Disallow: /checkout-form
+Disallow: /success-b
+Disallow: /link-builder
+Disallow: /photoediting
+Disallow: /index-storybrand
+Disallow: /storybrandsite
+Disallow: /webinar-original
+Disallow: /welcome-back
+
 Sitemap: https://revwhisper.com/sitemap.xml

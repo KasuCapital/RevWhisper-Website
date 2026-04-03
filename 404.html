@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>404 — Lost Listing | RevWhisper</title>
+<link rel="icon" href="/icons/favicon-light.svg" type="image/svg+xml" media="(prefers-color-scheme: light)">
+<link rel="icon" href="/icons/favicon-dark.svg" type="image/svg+xml" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/icons/favicon-light.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#fff;color:#32302F;line-height:1.5;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column}
+
+:root{
+  --black:#32302F;
+  --white:#ffffff;
+  --accent:#4A6741;
+  --accent-light:#dce6d8;
+  --accent-border:#b3c5ab;
+  --stone:#f3f1ef;
+  --g50:#faf9f8;--g100:#f3f1ef;--g200:#E0DCDA;--g300:#ccc8c5;--g400:#a39e9b;--g500:#706b68;
+  --radius:8px;--radius-sm:6px;
+  --heading:'Lora','Georgia',serif;
+  --body:'DM Sans','system-ui','Helvetica Neue',sans-serif;
+  --mono:'DM Mono','Consolas',monospace;
+}
+
+.w{max-width:1100px;margin:0 auto;padding:0 28px}
+
+/* Nav */
+.float-bar{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:200;display:flex;align-items:center;max-width:1060px;width:calc(100% - 56px);background:var(--white);padding:8px 8px 8px 22px;border-radius:var(--radius);box-shadow:0 2px 20px rgba(50,48,47,.08),0 0 0 1px rgba(50,48,47,.04)}
+.fb-logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--black);flex-shrink:0;transition:opacity .2s}
+.fb-logo:hover{opacity:.7}
+.lm{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--accent)}
+.ln{font-family:var(--heading);font-size:15px;font-weight:600;letter-spacing:-.02em}
+.fb-links{display:flex;align-items:center;gap:2px;margin:0 auto}
+.fb-link{font-family:var(--body);font-size:13px;font-weight:400;color:var(--g500);text-decoration:none;padding:8px 16px;border-radius:var(--radius-sm);transition:color .2s,background .2s;white-space:nowrap}
+.fb-link:hover{color:var(--black);background:var(--g50)}
+.fb-cta{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#fff;padding:10px 24px;border-radius:var(--radius);font-family:var(--body);font-size:13px;font-weight:500;text-decoration:none;white-space:nowrap;flex-shrink:0;transition:transform .25s,box-shadow .25s;box-shadow:0 2px 8px rgba(74,103,65,.15)}
+.fb-cta:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(74,103,65,.25)}
+.fb-hamburger{display:none;background:none;border:none;cursor:pointer;padding:10px;flex-direction:column;gap:5px;align-items:center;justify-content:center}
+.fb-ham-line{display:block;width:18px;height:2px;background:var(--black);border-radius:1px;transition:transform .3s,opacity .3s}
+.fb-hamburger.open .fb-ham-line:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.fb-hamburger.open .fb-ham-line:nth-child(2){opacity:0}
+.fb-hamburger.open .fb-ham-line:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+/* 404 Content */
+.lost{flex:1;display:flex;align-items:center;justify-content:center;text-align:center;padding:160px 28px 100px;position:relative;overflow:hidden}
+.lost-glow{position:absolute;top:10%;left:50%;transform:translateX(-50%);width:700px;max-width:100vw;height:400px;background:radial-gradient(ellipse at 50% 40%,rgba(74,103,65,.06) 0%,transparent 65%);pointer-events:none}
+.lost-content{position:relative;z-index:1;max-width:600px}
+
+.lost-code{font-family:var(--mono);font-size:clamp(80px,15vw,140px);font-weight:500;color:var(--accent);line-height:1;letter-spacing:-.04em;margin-bottom:8px;opacity:.15}
+
+.lost-headline{font-family:var(--heading);font-size:clamp(32px,5vw,48px);font-weight:400;letter-spacing:-.025em;line-height:1.2;color:var(--black);margin-bottom:20px}
+.lost-headline em{font-style:italic;color:var(--accent)}
+
+.lost-sub{font-size:17px;color:var(--g500);line-height:1.7;font-weight:300;margin-bottom:12px}
+
+.lost-joke{font-family:var(--mono);font-size:13px;color:var(--g400);background:var(--g50);border:1px solid var(--g200);border-radius:var(--radius-sm);padding:12px 20px;display:inline-block;margin-bottom:36px;line-height:1.6}
+
+.lost-actions{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
+
+.btn-accent{display:inline-flex;align-items:center;gap:8px;font-family:var(--body);font-size:.95rem;font-weight:500;color:#fff;background:var(--accent);padding:14px 32px;border-radius:var(--radius);text-decoration:none;transition:transform .25s,box-shadow .25s}
+.btn-accent:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(74,103,65,.2)}
+.btn-outline{display:inline-flex;align-items:center;gap:6px;background:#fff;color:var(--black);font-size:14px;font-weight:400;padding:13px 24px;border-radius:var(--radius-sm);text-decoration:none;border:1.5px solid var(--g200);transition:transform .25s,box-shadow .25s,border-color .25s}
+.btn-outline:hover{border-color:var(--g300);transform:translateY(-2px);box-shadow:0 4px 16px rgba(74,103,65,.1)}
+
+/* Star rating animation */
+.lost-stars{display:flex;align-items:center;justify-content:center;gap:4px;margin-bottom:24px}
+.lost-star{font-size:24px;color:var(--g200);transition:color .3s;animation:starDim 3s ease-in-out infinite}
+.lost-star:nth-child(1){animation-delay:0s}
+.lost-star:nth-child(2){animation-delay:.15s}
+.lost-star:nth-child(3){animation-delay:.3s}
+.lost-star:nth-child(4){animation-delay:.45s}
+.lost-star:nth-child(5){animation-delay:.6s}
+@keyframes starDim{0%,100%{color:var(--g200)}50%{color:#e8c84a}}
+
+/* Footer */
+footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
+.footer-bottom{display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--g400)}
+
+/* Mobile */
+@media(max-width:768px){
+  .fb-links{display:none}
+  .fb-hamburger{display:flex}
+  .lost{padding:140px 20px 80px}
+  .lost-code{font-size:80px}
+  .footer-bottom{flex-direction:column;gap:10px;align-items:flex-start}
+}
+@media(max-width:480px){
+  .lost-headline{font-size:28px}
+  .lost-sub{font-size:15px}
+  .lost-actions{flex-direction:column}
+  .btn-accent,.btn-outline{width:100%;justify-content:center}
+}
+
+/* Mobile menu */
+.mobile-menu{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(255,255,255,.97);z-index:199;flex-direction:column;align-items:center;justify-content:center;gap:8px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.mobile-menu.open{display:flex}
+.mobile-menu a{font-family:var(--body);font-size:18px;color:var(--black);text-decoration:none;padding:12px 32px;border-radius:var(--radius-sm);transition:background .2s}
+.mobile-menu a:hover{background:var(--g50)}
+</style>
+</head>
+<body>
+
+<nav class="float-bar">
+  <a href="/" class="fb-logo">
+    <div class="lm"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24" fill="none"><path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <span class="ln">RevWhisper</span>
+  </a>
+  <div class="fb-links">
+    <a href="/blog" class="fb-link">Blog</a>
+    <a href="/get-started" class="fb-link">Get Started</a>
+  </div>
+  <a href="/get-started" class="fb-cta">Book Your Free Strategy Call</a>
+  <button class="fb-hamburger" id="fb-hamburger" aria-label="Toggle navigation" aria-expanded="false">
+    <span class="fb-ham-line"></span>
+    <span class="fb-ham-line"></span>
+    <span class="fb-ham-line"></span>
+  </button>
+</nav>
+
+<div class="mobile-menu" id="mobile-menu">
+  <a href="/">Home</a>
+  <a href="/blog">Blog</a>
+  <a href="/get-started">Get Started</a>
+</div>
+
+<main class="lost">
+  <div class="lost-glow"></div>
+  <div class="lost-content">
+    <div class="lost-code">404</div>
+    <div class="lost-stars">
+      <span class="lost-star">&#9733;</span>
+      <span class="lost-star">&#9733;</span>
+      <span class="lost-star">&#9733;</span>
+      <span class="lost-star">&#9733;</span>
+      <span class="lost-star">&#9733;</span>
+    </div>
+    <h1 class="lost-headline">This listing has <em>no availability</em></h1>
+    <p class="lost-sub">Looks like this page got delisted. Maybe the algorithm buried it. Maybe the cleaning crew never showed up. Either way, it's not here.</p>
+    <div class="lost-joke">"Cozy page with great natural light" &mdash; actual page: gone</div>
+    <div class="lost-actions">
+      <a href="/" class="btn-accent">Back to Home</a>
+      <a href="/get-started" class="btn-outline">Book a Strategy Call</a>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="w">
+    <div class="footer-bottom">
+      <span>&copy; 2026 MCO CORP d/b/a RevWhisper. All rights reserved.</span>
+      <span>Stop Guessing. Start Whispering.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var btn=document.getElementById('fb-hamburger');
+  var menu=document.getElementById('mobile-menu');
+  if(!btn||!menu)return;
+  btn.addEventListener('click',function(){
+    var open=menu.classList.toggle('open');
+    btn.classList.toggle('open');
+    btn.setAttribute('aria-expanded',open);
+  });
+  menu.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click',function(){
+      menu.classList.remove('open');
+      btn.classList.remove('open');
+      btn.setAttribute('aria-expanded','false');
+    });
+  });
+})();
+</script>
+</body>
+</html>
