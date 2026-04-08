@@ -18,6 +18,15 @@
 
 var BLOG_POSTS = [
   {
+    slug: "amenity-completeness-listing-visibility",
+    title: "Amenity Completeness: The Fields You Left Blank Are Costing You Visibility",
+    excerpt: "Airbnb's algorithm uses 800+ signals to rank your listing. Every blank amenity field, missing description detail, and unchecked checkbox is a zero-point signal pushing you down in search.",
+    date: "2026-04-08",
+    image: "/images/blog/amenity-completeness.png",
+    tags: ["Deep Dive", "Listing Optimization"],
+    author: "RevWhisper Team"
+  },
+  {
     slug: "airbnb-mobile-app-listing-optimization",
     title: "64% of Airbnb Bookings Now Happen on the App. Your Listing Isn't Optimized for It.",
     excerpt: "In Q4 2025, 64% of all Airbnb nights were booked through the mobile app. Most hosts build their listing on a laptop. Here's how to optimize for the 6-inch screen.",
