@@ -620,41 +620,7 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
 .price-card .btn-primary:hover,.price-card .btn-outline:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(74,103,65,.2)}
 .price-divider{width:0;height:1px;background:var(--g200);margin:0 auto 28px;transition:width .6s .2s ease}
 .price-card.in .price-divider{width:100%}
-.price-guarantee{text-align:center;margin-top:36px;padding:20px;background:var(--green-bg);border:1px solid var(--green-bd);border-radius:var(--radius-sm);max-width:640px;margin-left:auto;margin-right:auto}
-.price-guarantee-title{font-size:15px;font-weight:700;color:var(--green);margin-bottom:4px}
-.price-guarantee-desc{font-size:13px;color:var(--g500);line-height:1.6}
 
-/* ── Guarantee Section ── */
-.guarantee{background:var(--accent);color:#fff;padding:100px 0;text-align:center;position:relative;overflow:hidden}
-.guar-bg-pattern{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
-.guar-circle{position:absolute;pointer-events:none;z-index:1;opacity:.18;will-change:transform;color:rgba(255,255,255,1)}
-.guar-circle svg{display:block;width:100%;height:100%}
-.guar-icon svg{transition:transform .4s cubic-bezier(.34,1.56,.64,1)}
-.guar-icon:hover svg{transform:scale(1.15) rotate(-5deg)}
-.guar-amount-wrap{transition:transform .3s ease}
-.guar-number{transition:text-shadow .4s ease}
-.guarantee:hover .guar-number{text-shadow:0 0 80px rgba(255,255,255,.35),0 0 160px rgba(255,255,255,.15)}
-.guar-divider{transition:width .6s ease}
-.guarantee .guar-divider.in-guar{width:100px}
-.guar-proof{transition:transform .3s ease,color .3s ease}
-.guar-proof:hover{transform:translateY(-2px);color:#fff}
-.guar-icon{margin-bottom:20px}
-.guar-icon svg{width:44px;height:44px}
-.guar-eyebrow{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:24px}
-.guar-amount-wrap{display:flex;align-items:baseline;justify-content:center;gap:0;margin-bottom:20px;line-height:1;position:relative}
-.guar-dollar{font-family:var(--heading);font-size:clamp(2.5rem,5vw,3.5rem);font-weight:400;color:rgba(255,255,255,.8);align-self:flex-start;margin-top:.12em;margin-right:2px}
-.guar-number{font-family:var(--heading);font-size:clamp(5rem,12vw,9rem);font-weight:700;letter-spacing:-.04em;color:#fff;text-shadow:0 0 60px rgba(255,255,255,.25),0 0 120px rgba(255,255,255,.1);position:relative}
-.guar-number::before{content:'';position:absolute;top:50%;left:50%;width:100%;height:160%;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(ellipse at center,rgba(255,255,255,.08) 0%,transparent 70%);pointer-events:none;z-index:-1}
-.guar-period{font-family:var(--heading);font-size:clamp(1.5rem,3vw,2.2rem);font-weight:400;color:rgba(255,255,255,.6);margin-left:4px;align-self:flex-end;margin-bottom:.15em}
-.guar-headline{font-family:var(--heading);font-size:clamp(1.4rem,2.8vw,2rem);font-weight:400;font-style:italic;color:#fff;line-height:1.3;max-width:580px;margin:0 auto 20px;letter-spacing:-.01em}
-.guar-copy{font-family:var(--body);font-size:clamp(.92rem,1.1vw,1rem);color:rgba(255,255,255,.8);line-height:1.75;max-width:560px;margin:0 auto 32px;font-weight:300}
-.guar-copy strong{color:#fff;font-weight:600}
-.guar-divider{width:60px;height:1px;background:rgba(255,255,255,.2);margin:0 auto 32px}
-.guar-proofs{display:flex;align-items:center;justify-content:center;gap:28px;margin-bottom:40px;flex-wrap:wrap}
-.guar-proof{display:flex;align-items:center;gap:7px;font-family:var(--body);font-size:13px;font-weight:400;color:rgba(255,255,255,.75)}
-.guar-proof svg{flex-shrink:0;opacity:.7}
-.btn-guar{display:inline-block;font-family:var(--body);font-size:.95rem;font-weight:500;color:#fff;background:rgba(255,255,255,.15);padding:14px 36px;border-radius:var(--radius);text-decoration:none;letter-spacing:.01em;transition:transform .25s ease,box-shadow .25s ease;box-shadow:0 0 0 1.5px rgba(255,255,255,.4);border:none}
-.btn-guar:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(255,255,255,.25)}
 
 /* ── Stakes ── */
 .stakes{background:#fff;color:var(--black);padding:100px 0;position:relative;overflow:hidden}
@@ -897,8 +863,6 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
 @keyframes baCellGrey{0%{background:transparent;color:var(--g500);transform:scale(.6);opacity:.4}50%{background:var(--g200);color:var(--g600);transform:scale(1.2);opacity:1}100%{background:var(--g200);color:var(--g600);transform:scale(1);opacity:1}}
 @keyframes baCellGreen{0%{background:transparent;color:var(--g500);transform:scale(.6);opacity:.4}50%{background:var(--accent);color:#fff;transform:scale(1.2);opacity:1}100%{background:var(--accent);color:#fff;transform:scale(1);opacity:1}}
 
-/* ── Guarantee gentle float keyframes ── */
-@keyframes guarFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
 
 /* ── Comparison Section ── */
 #compare{padding:100px 0;background:var(--black);color:#fff;position:relative;overflow:hidden}
@@ -1005,8 +969,6 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
   .pricing-grid{grid-template-columns:1fr;max-width:400px}
   .price-card.featured{order:-1}
   .price-card.featured,.price-card.featured.in{transform:scale(1)}
-  .guarantee{padding:80px 0}
-  .guar-proofs{flex-direction:column;gap:14px}
   .hiw{padding:80px 0}
   .hiw-header{margin-bottom:48px}
   .hiw-layout{grid-template-columns:1fr;gap:40px}
@@ -1066,7 +1028,6 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
   .bt-rank-row.yours.celebrate{animation:none}
   .bt-rank-badge.glow{animation:none}
   .cred-carousel-track{animation:none}
-  .guar-number{text-shadow:none}
   .stakes-live-dot{animation:none;opacity:.6}
   .stakes-row{will-change:auto}
   .rg-counter-glow{opacity:1;transition:none}
@@ -1127,8 +1088,6 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
       <span class="ht-item">✓ Fully managed, you do nothing</span>
       <div class="ht-sep"></div>
       <span class="ht-item">✓ Results in 14 days</span>
-      <div class="ht-sep"></div>
-      <span class="ht-item">✓ Revenue-backed guarantee</span>
       <div class="ht-sep"></div>
       <span class="ht-item">✓ No long-term contracts</span>
     </div>
@@ -1681,75 +1640,6 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
   </div>
 </section>
 
-<!-- ════════════════════════════════════════════════
-     GUARANTEE
-     ════════════════════════════════════════════════ -->
-<section id="guarantee" class="guarantee">
-  <svg class="guar-bg-pattern" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <pattern id="guar-topo" x="0" y="0" width="200" height="200" patternUnits="userSpaceOnUse">
-        <circle cx="100" cy="100" r="30" fill="none" stroke="rgba(255,255,255,.04)" stroke-width=".8"/>
-        <circle cx="100" cy="100" r="55" fill="none" stroke="rgba(255,255,255,.03)" stroke-width=".6"/>
-        <circle cx="100" cy="100" r="80" fill="none" stroke="rgba(255,255,255,.025)" stroke-width=".5"/>
-        <circle cx="0" cy="0" r="40" fill="none" stroke="rgba(255,255,255,.03)" stroke-width=".6"/>
-        <circle cx="200" cy="200" r="45" fill="none" stroke="rgba(255,255,255,.03)" stroke-width=".6"/>
-        <circle cx="200" cy="0" r="35" fill="none" stroke="rgba(255,255,255,.025)" stroke-width=".5"/>
-        <circle cx="0" cy="200" r="50" fill="none" stroke="rgba(255,255,255,.025)" stroke-width=".5"/>
-      </pattern>
-    </defs>
-    <rect width="100%" height="100%" fill="url(#guar-topo)"/>
-  </svg>
-
-  <!-- Gentle floating circles -->
-  <div class="guar-circle gc-bill" style="opacity:.1;top:8%;left:5%;width:90px;height:45px;animation:guarFloat 8s ease-in-out infinite"><svg viewBox="0 0 120 60" fill="none"><rect x="2" y="2" width="116" height="56" rx="6" stroke="currentColor" stroke-width="2"/><circle cx="60" cy="30" r="14" stroke="currentColor" stroke-width="1.5"/><text x="60" y="36" text-anchor="middle" fill="currentColor" font-size="18" font-weight="600">$</text></svg></div>
-  <div class="guar-circle gc-coin" style="opacity:.08;top:15%;right:8%;width:32px;height:32px;animation:guarFloat 10s 1s ease-in-out infinite"><svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="17" stroke="currentColor" stroke-width="2"/><text x="20" y="26" text-anchor="middle" fill="currentColor" font-size="16" font-weight="600">$</text></svg></div>
-  <div class="guar-circle gc-bill" style="opacity:.07;bottom:12%;right:12%;width:80px;height:40px;animation:guarFloat 9s 2s ease-in-out infinite"><svg viewBox="0 0 120 60" fill="none"><rect x="2" y="2" width="116" height="56" rx="6" stroke="currentColor" stroke-width="2"/><circle cx="60" cy="30" r="14" stroke="currentColor" stroke-width="1.5"/><text x="60" y="36" text-anchor="middle" fill="currentColor" font-size="18" font-weight="600">$</text></svg></div>
-  <div class="guar-circle gc-coin" style="opacity:.06;bottom:20%;left:10%;width:28px;height:28px;animation:guarFloat 11s 3s ease-in-out infinite"><svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="17" stroke="currentColor" stroke-width="2"/><text x="20" y="26" text-anchor="middle" fill="currentColor" font-size="16" font-weight="600">$</text></svg></div>
-
-  <div class="w" style="position:relative;z-index:2">
-
-    <div class="guar-icon r">
-      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M24 4L6 12v12c0 11.1 7.7 21.5 18 24 10.3-2.5 18-12.9 18-24V12L24 4z" fill="rgba(255,255,255,.12)" stroke="#fff" stroke-width="1.5"/>
-        <path d="M17 24l5 5 9-9" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </div>
-
-    <p class="guar-eyebrow r d1">Your Safety Net</p>
-
-    <div class="guar-amount-wrap r d1">
-      <span class="guar-dollar">$</span>
-      <span class="guar-number" data-from="500" data-target="0">0</span>
-      <span class="guar-period">risk</span>
-    </div>
-
-    <h2 class="guar-headline r d2">Your revenue is guaranteed. Or you don't pay.</h2>
-
-    <p class="guar-copy r d2">You'll earn at least <strong>$500/month in additional revenue</strong> or we refund the difference. No hoops. No fine print. Your investment is protected from day one. If the results don't show up, your money comes back.</p>
-
-    <div class="guar-divider r d3"></div>
-
-    <div class="guar-proofs r d3">
-      <div class="guar-proof">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        <span>Revenue-backed guarantee</span>
-      </div>
-      <div class="guar-proof">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-5"/></svg>
-        <span>No long-term contracts</span>
-      </div>
-      <div class="guar-proof">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-        <span>Money-back if we miss</span>
-      </div>
-    </div>
-
-    <div class="r d3">
-      <a href="/checkout" class="btn-guar">Start risk-free today &rarr;</a>
-    </div>
-
-  </div>
-</section>
 
 <!-- ════════════════════════════════════════════════
      PRICING
@@ -1842,7 +1732,7 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
       <div class="onboard-step">
         <div class="onboard-num">4</div>
         <h3 class="onboard-title">You See the Difference</h3>
-        <p class="onboard-desc">Measurable revenue improvements within the first month. If you don't see results, our guarantee kicks in. Zero risk.</p>
+        <p class="onboard-desc">Measurable revenue improvements within the first month.</p>
       </div>
     </div>
   </div>
@@ -2045,12 +1935,6 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
         <div class="compare-col compare-ours"><span class="compare-yes">&#10003;</span></div>
       </div>
       <div class="compare-row">
-        <div class="compare-feat">Performance-backed guarantee</div>
-        <div class="compare-col"><span class="compare-no">&mdash;</span></div>
-        <div class="compare-col"><span class="compare-no">&mdash;</span></div>
-        <div class="compare-col compare-ours"><span class="compare-yes">&#10003;</span></div>
-      </div>
-      <div class="compare-row">
         <div class="compare-feat">Ranking by unbooked dates</div>
         <div class="compare-col"><span class="compare-no">&mdash;</span></div>
         <div class="compare-col"><span class="compare-no">&mdash;</span></div>
@@ -2071,7 +1955,7 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
     </div>
     <!-- CTA: Post-Compare -->
     <div style="text-align:center;margin-top:48px" class="r d2">
-      <a href="https://revwhisper.com/get-started" class="btn-guar" style="font-size:.95rem">Let Us Show You the Difference &rarr;</a>
+      <a href="https://revwhisper.com/get-started" class="btn-primary" style="font-size:.95rem">Let Us Show You the Difference &rarr;</a>
     </div>
   </div>
 </section>
@@ -2469,222 +2353,6 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
     }
     update();
     setInterval(update,1000);
-  })();
-
-  /* ── 5b. Guarantee countdown – removed (no more $500 counter) ── */
-  (function() {
-    var guarNum = document.querySelector('.guar-number[data-target]');
-    if (!guarNum) return; /* Element no longer exists, this safely no-ops */
-    var guarFired = false;
-
-    var guarObs = new IntersectionObserver(function(entries) {
-      entries.forEach(function(entry) {
-        if (entry.isIntersecting && !guarFired) {
-          guarFired = true;
-          var from = parseInt(guarNum.dataset.from, 10) || 500;
-          var target = parseInt(guarNum.dataset.target, 10);
-
-          if (reducedMotion) {
-            guarNum.textContent = target;
-            guarObs.unobserve(entry.target);
-            return;
-          }
-
-          var flashDuration = 300;
-          var flashRate = 50;
-          var flashStart = performance.now();
-          var lastFlash = 0;
-
-          function flash(now) {
-            if (now - flashStart < flashDuration) {
-              if (now - lastFlash >= flashRate) {
-                guarNum.textContent = Math.floor(Math.random() * 900 + 100);
-                lastFlash = now;
-              }
-              requestAnimationFrame(flash);
-            } else {
-              var countStart = performance.now();
-              var duration = 1200;
-              var easeOut = function(t) { return 1 - Math.pow(1 - t, 4); };
-
-              function tick(now) {
-                var elapsed = now - countStart;
-                var progress = Math.min(elapsed / duration, 1);
-                var current = Math.round(from - easeOut(progress) * from);
-                guarNum.textContent = current;
-                if (progress < 1) requestAnimationFrame(tick);
-              }
-              requestAnimationFrame(tick);
-            }
-          }
-          requestAnimationFrame(flash);
-          guarObs.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.3 });
-
-    guarObs.observe(document.querySelector('.guarantee'));
-  })();
-
-  /* ── 5b. Guarantee circles – simple CSS float (ball-pit physics removed) ── */
-  (function() {
-    /* Physics engine removed per feedback — circles now use CSS animation only */
-    return;
-
-    /* bill=wider rect, coin=square — alternating bill/coin, 28 total */
-    var sizes = [100,36,85,32,110,38,90,34,95,40,80,30,105,42,88,36,100,34,92,38,85,32,110,40,95,36,80,34];
-    var balls = [];
-    var mouseX = -9999, mouseY = -9999, mouseIn = false;
-    var sW, sH, running = false, rafId = null;
-
-    function measure() {
-      sW = section.offsetWidth;
-      sH = section.offsetHeight;
-    }
-
-    // Place circles randomly without overlapping
-    function init() {
-      measure();
-      balls = [];
-      circleEls.forEach(function(el, i) {
-        var d = sizes[i] || 60;
-        var r = d / 2;
-        var isBill = (i % 2 === 0);
-        el.style.width = d + 'px';
-        el.style.height = (isBill ? Math.round(d / 2) : d) + 'px';
-
-        // Find non-overlapping position
-        var x, y, attempts = 0, ok;
-        do {
-          x = r + Math.random() * (sW - d);
-          y = r + Math.random() * (sH - d);
-          ok = true;
-          for (var j = 0; j < balls.length; j++) {
-            var b = balls[j];
-            var dx = x - b.x, dy = y - b.y;
-            if (Math.sqrt(dx*dx + dy*dy) < r + b.r + 10) { ok = false; break; }
-          }
-          attempts++;
-        } while (!ok && attempts < 200);
-
-        balls.push({ el: el, x: x, y: y, vx: 0, vy: 0, r: r });
-      });
-      render();
-    }
-
-    function render() {
-      for (var i = 0; i < balls.length; i++) {
-        var b = balls[i];
-        b.el.style.left = '0px';
-        b.el.style.top = '0px';
-        b.el.style.transform = 'translate(' + (b.x - b.r).toFixed(1) + 'px,' + (b.y - b.r).toFixed(1) + 'px)';
-      }
-    }
-
-    function tick() {
-      if (!running) return;
-      measure();
-      var friction = 0.94;
-      var mouseForce = 0.15;
-      var driftForce = 0.02;
-
-      for (var i = 0; i < balls.length; i++) {
-        var b = balls[i];
-
-        // Mouse attraction – gently follow cursor
-        if (mouseIn) {
-          var dx = mouseX - b.x;
-          var dy = mouseY - b.y;
-          var dist = Math.sqrt(dx*dx + dy*dy) || 1;
-          // Stronger pull when closer, but capped
-          var pull = Math.min(mouseForce, 200 / (dist + 50) * mouseForce);
-          b.vx += (dx / dist) * pull;
-          b.vy += (dy / dist) * pull;
-        } else {
-          // Gentle idle drift – slow random wander
-          b.vx += (Math.random() - 0.5) * driftForce;
-          b.vy += (Math.random() - 0.5) * driftForce;
-        }
-
-        // Apply friction
-        b.vx *= friction;
-        b.vy *= friction;
-
-        // Clamp max speed
-        var speed = Math.sqrt(b.vx*b.vx + b.vy*b.vy);
-        if (speed > 3) { b.vx = (b.vx/speed)*3; b.vy = (b.vy/speed)*3; }
-
-        // Move
-        b.x += b.vx;
-        b.y += b.vy;
-
-        // Wall bounce
-        if (b.x - b.r < 0) { b.x = b.r; b.vx = Math.abs(b.vx) * 0.5; }
-        if (b.x + b.r > sW) { b.x = sW - b.r; b.vx = -Math.abs(b.vx) * 0.5; }
-        if (b.y - b.r < 0) { b.y = b.r; b.vy = Math.abs(b.vy) * 0.5; }
-        if (b.y + b.r > sH) { b.y = sH - b.r; b.vy = -Math.abs(b.vy) * 0.5; }
-      }
-
-      // Circle-circle collision resolution
-      for (var i = 0; i < balls.length; i++) {
-        for (var j = i + 1; j < balls.length; j++) {
-          var a = balls[i], c = balls[j];
-          var dx = c.x - a.x, dy = c.y - a.y;
-          var dist = Math.sqrt(dx*dx + dy*dy) || 1;
-          var minDist = a.r + c.r + 10;
-          if (dist < minDist) {
-            // Push apart
-            var overlap = (minDist - dist) / 2;
-            var nx = dx / dist, ny = dy / dist;
-            a.x -= nx * overlap;
-            a.y -= ny * overlap;
-            c.x += nx * overlap;
-            c.y += ny * overlap;
-            // Exchange some velocity along collision normal
-            var dvx = a.vx - c.vx, dvy = a.vy - c.vy;
-            var dot = dvx * nx + dvy * ny;
-            if (dot > 0) {
-              a.vx -= nx * dot * 0.4;
-              a.vy -= ny * dot * 0.4;
-              c.vx += nx * dot * 0.4;
-              c.vy += ny * dot * 0.4;
-            }
-          }
-        }
-      }
-
-      render();
-      rafId = requestAnimationFrame(tick);
-    }
-
-    // Track mouse relative to section
-    section.addEventListener('mousemove', function(e) {
-      var rect = section.getBoundingClientRect();
-      mouseX = e.clientX - rect.left;
-      mouseY = e.clientY - rect.top;
-      mouseIn = true;
-    });
-    section.addEventListener('mouseleave', function() {
-      mouseIn = false;
-    });
-
-    // Only run when section is visible
-    var visObs = new IntersectionObserver(function(entries) {
-      entries.forEach(function(entry) {
-        if (entry.isIntersecting && !running) {
-          running = true;
-          rafId = requestAnimationFrame(tick);
-        } else if (!entry.isIntersecting && running) {
-          running = false;
-          if (rafId) cancelAnimationFrame(rafId);
-        }
-      });
-    }, { threshold: 0.05 });
-    visObs.observe(section);
-
-    // Init on load
-    init();
-    window.addEventListener('resize', function() { measure(); });
   })();
 
   /* ── 5b2. CTA floating money – removed per feedback ── */
