@@ -257,7 +257,10 @@ body::before{
 }
 
 /* ── Cal.com Inline Embed ── */
+/* Breaks out of the 560px page-shell to fit the wider month view */
 .cal-embed-section{
+  position:relative;left:50%;transform:translateX(-50%);
+  width:calc(100vw - 48px);max-width:960px;
   margin-bottom:36px;
   opacity:0;animation:fadeSlideUp .6s var(--ease-out-expo) .5s forwards;
 }
@@ -275,10 +278,15 @@ body::before{
   line-height:1.6;margin-bottom:22px;
 }
 .cal-embed-frame{
-  width:100%;min-height:640px;border-radius:var(--radius);
+  width:100%;min-height:720px;border-radius:var(--radius);
   background:#fff;box-shadow:var(--sh);overflow:hidden;border:1px solid var(--g200);
 }
-#cal-inline{width:100%;height:100%;min-height:640px;overflow:auto}
+#cal-inline{width:100%;height:100%;min-height:720px;overflow:auto}
+@media(max-width:640px){
+  .cal-embed-section{width:calc(100vw - 32px)}
+  .cal-embed-frame{min-height:640px}
+  #cal-inline{min-height:640px}
+}
 
 /* ── Video ── */
 .video-section{
@@ -511,13 +519,13 @@ body::before{
 <!-- Cal.com inline embed -->
 <script type="text/javascript">
 (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if(typeof namespace === "string"){cal.ns[namespace] = cal.ns[namespace] || api;p(cal.ns[namespace], ar);p(cal, ["initNamespace", namespace]);} else p(cal, ar); return;} p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
-Cal("init", "discovery", {origin:"https://cal.com"});
-Cal.ns.discovery("inline", {
+Cal("init", "onboarding-call", {origin:"https://cal.com"});
+Cal.ns["onboarding-call"]("inline", {
   elementOrSelector:"#cal-inline",
-  config: {"layout":"month_view"},
-  calLink: "team/revwhisper/discovery",
+  config: {"layout":"month_view","theme":"light"},
+  calLink: "team/revwhisper/onboarding-call",
 });
-Cal.ns.discovery("ui", {
+Cal.ns["onboarding-call"]("ui", {
   "theme":"light",
   "cssVarsPerTheme":{"light":{"cal-brand":"#4A6741"},"dark":{"cal-brand":"#4A6741"}},
   "hideEventTypeDetails":false,
