@@ -123,6 +123,8 @@ body::before{
 
 /* ── Main Shell ── */
 .page-shell{width:100%;max-width:560px;padding:48px 28px 80px;position:relative;z-index:1;margin:auto}
+.page-shell--top{padding-bottom:24px}
+.page-shell--bottom{padding-top:8px}
 
 /* ── Welcome Hero ── */
 .welcome-hero{text-align:center;margin-bottom:48px;opacity:0;animation:fadeSlideUp .7s var(--ease-out-expo) .1s forwards}
@@ -256,13 +258,17 @@ body::before{
   font-size:14px;color:var(--g500);font-weight:300;line-height:1.6;
 }
 
-/* ── Cal.com Inline Embed ── */
-/* Breaks out of the 560px page-shell to fit the wider month view */
-.cal-embed-section{
-  position:relative;left:50%;transform:translateX(-50%);
-  width:calc(100vw - 48px);max-width:960px;
-  margin-bottom:36px;
+/* ── Cal.com Inline Embed (lives outside .page-shell so it can be wider) ── */
+.cal-embed-wrapper{
+  width:100%;
+  padding:0 24px;
+  margin:0 auto 36px;
+  box-sizing:border-box;
   opacity:0;animation:fadeSlideUp .6s var(--ease-out-expo) .5s forwards;
+  position:relative;z-index:1;
+}
+.cal-embed-section{
+  max-width:960px;margin:0 auto;
 }
 .cal-embed-eyebrow{
   font-size:11px;font-weight:500;color:var(--accent);letter-spacing:.1em;
@@ -283,7 +289,7 @@ body::before{
 }
 #cal-inline{width:100%;height:100%;min-height:720px;overflow:auto}
 @media(max-width:640px){
-  .cal-embed-section{width:calc(100vw - 32px)}
+  .cal-embed-wrapper{padding:0 18px;margin-bottom:28px}
   .cal-embed-frame{min-height:640px}
   #cal-inline{min-height:640px}
 }
@@ -369,7 +375,7 @@ body::before{
 </head>
 <body>
 
-<div class="page-shell">
+<div class="page-shell page-shell--top">
 
   <!-- Welcome Hero -->
   <div class="welcome-hero">
@@ -378,7 +384,10 @@ body::before{
     <p class="welcome-desc">Our team tracks your Airbnb search position daily, deploys algorithm-timed pricing, and optimizes every part of your listing so you earn more without lifting a finger.</p>
   </div>
 
-  <!-- Cal.com Inline Embed -->
+</div>
+
+<!-- Cal.com Inline Embed (outside page-shell so it can be wider than 560px) -->
+<div class="cal-embed-wrapper">
   <div class="cal-embed-section">
     <div class="cal-embed-eyebrow">Book Directly</div>
     <h2 class="cal-embed-title">Grab a time on our <em>calendar.</em></h2>
@@ -387,6 +396,9 @@ body::before{
       <div id="cal-inline"></div>
     </div>
   </div>
+</div>
+
+<div class="page-shell page-shell--bottom">
 
   <!-- Video -->
   <div class="video-section">
