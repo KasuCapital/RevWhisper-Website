@@ -256,6 +256,30 @@ body::before{
   font-size:14px;color:var(--g500);font-weight:300;line-height:1.6;
 }
 
+/* ── Cal.com Inline Embed ── */
+.cal-embed-section{
+  margin-bottom:36px;
+  opacity:0;animation:fadeSlideUp .6s var(--ease-out-expo) .5s forwards;
+}
+.cal-embed-eyebrow{
+  font-size:11px;font-weight:500;color:var(--accent);letter-spacing:.1em;
+  text-transform:uppercase;text-align:center;margin-bottom:10px;
+}
+.cal-embed-title{
+  font-family:var(--heading);font-size:clamp(22px,3.6vw,28px);font-weight:400;
+  text-align:center;letter-spacing:-.02em;line-height:1.2;margin-bottom:8px;color:var(--black);
+}
+.cal-embed-title em{font-style:italic;color:var(--accent)}
+.cal-embed-desc{
+  font-size:14px;color:var(--g500);text-align:center;font-weight:300;
+  line-height:1.6;margin-bottom:22px;
+}
+.cal-embed-frame{
+  width:100%;min-height:640px;border-radius:var(--radius);
+  background:#fff;box-shadow:var(--sh);overflow:hidden;border:1px solid var(--g200);
+}
+#cal-inline{width:100%;height:100%;min-height:640px;overflow:auto}
+
 /* ── Video ── */
 .video-section{
   margin-bottom:36px;
@@ -344,6 +368,16 @@ body::before{
     <div class="welcome-eyebrow">Welcome Back</div>
     <h1 class="welcome-title">Airbnb Owners Make <em>$25,892 More</em> With RevWhisper</h1>
     <p class="welcome-desc">Our team tracks your Airbnb search position daily, deploys algorithm-timed pricing, and optimizes every part of your listing so you earn more without lifting a finger.</p>
+  </div>
+
+  <!-- Cal.com Inline Embed -->
+  <div class="cal-embed-section">
+    <div class="cal-embed-eyebrow">Book Directly</div>
+    <h2 class="cal-embed-title">Grab a time on our <em>calendar.</em></h2>
+    <p class="cal-embed-desc">Skip the form &mdash; pick a slot that works for you and we&rsquo;ll meet you there.</p>
+    <div class="cal-embed-frame">
+      <div id="cal-inline"></div>
+    </div>
   </div>
 
   <!-- Video -->
@@ -474,6 +508,23 @@ body::before{
 <!-- Confetti -->
 <div class="confetti-wrap" id="confetti-wrap"></div>
 
+<!-- Cal.com inline embed -->
+<script type="text/javascript">
+(function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if(typeof namespace === "string"){cal.ns[namespace] = cal.ns[namespace] || api;p(cal.ns[namespace], ar);p(cal, ["initNamespace", namespace]);} else p(cal, ar); return;} p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
+Cal("init", "discovery", {origin:"https://cal.com"});
+Cal.ns.discovery("inline", {
+  elementOrSelector:"#cal-inline",
+  config: {"layout":"month_view"},
+  calLink: "team/revwhisper/discovery",
+});
+Cal.ns.discovery("ui", {
+  "theme":"light",
+  "cssVarsPerTheme":{"light":{"cal-brand":"#4A6741"},"dark":{"cal-brand":"#4A6741"}},
+  "hideEventTypeDetails":false,
+  "layout":"month_view"
+});
+</script>
+
 <script>
 const FORM_WEBHOOK_ENDPOINT = '/api/form-webhook';
 var webhookSent = false;
@@ -526,7 +577,7 @@ async function submitForm() {
     const response = await fetch(FORM_WEBHOOK_ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ event_type: 'welcome_back', payload: data })
+      body: JSON.stringify({ event_type: 'get_started', payload: data })
     });
 
     if (!response.ok) {
