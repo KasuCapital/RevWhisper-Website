@@ -18,6 +18,15 @@
 
 var BLOG_POSTS = [
   {
+    slug: "views-not-bookings-content-gap",
+    title: "You're Getting Views but Not Bookings. Here's What the Algorithm Sees.",
+    excerpt: "You are getting views but not bookings. That gap is not a pricing problem. It is a content problem, and the algorithm is watching every second of it.",
+    date: "2026-04-14",
+    image: "/images/blog/views-not-bookings.jpg",
+    tags: ["Deep Dive", "Listing Optimization"],
+    author: "RevWhisper Team"
+  },
+  {
     slug: "amenity-completeness-listing-visibility",
     title: "Amenity Completeness: The Fields You Left Blank Are Costing You Visibility",
     excerpt: "Airbnb's algorithm uses 800+ signals to rank your listing. Every blank amenity field, missing description detail, and unchecked checkbox is a zero-point signal pushing you down in search.",
