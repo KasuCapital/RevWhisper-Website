@@ -61,9 +61,14 @@ module.exports = async function handler(req, res) {
 
   const baseUrl = resolveBaseUrl(req);
   const isEnterprise = plan === 'enterprise';
-  const onboardingFee = isEnterprise && payload.onboarding_fee
-    ? Number(payload.onboarding_fee)
-    : 0;
+  const parseNumeric = (value) => {
+    if (value == null || value === '') return 0;
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : 0;
+  };
+  const onboardingFee = isEnterprise ? parseNumeric(payload.onboarding_fee) : 0;
+  const monthlyCost = isEnterprise ? parseNumeric(payload.monthly_cost) : 0;
+  const useSubscriptionMode = isEnterprise && onboardingFee === 0;
   const enterpriseRedirectUrl =
     process.env.ENTERPRISE_REDIRECT_URL || `${baseUrl}/get-started?plan=enterprise`;
 
@@ -85,8 +90,16 @@ module.exports = async function handler(req, res) {
     });
   }
 
-  if (isEnterprise && (!onboardingFee || onboardingFee < 1)) {
-    return sendJson(res, 400, { error: 'A valid onboarding fee is required for enterprise plans.' });
+  if (isEnterprise) {
+    if (useSubscriptionMode) {
+      if (monthlyCost < 1) {
+        return sendJson(res, 400, {
+          error: 'A valid monthly cost is required when onboarding fee is $0.'
+        });
+      }
+    } else if (onboardingFee < 1) {
+      return sendJson(res, 400, { error: 'A valid onboarding fee is required for enterprise plans.' });
+    }
   }
 
   const successUrl =
@@ -96,13 +109,20 @@ module.exports = async function handler(req, res) {
     `${baseUrl}/checkout-form${plan ? `?plan=${encodeURIComponent(plan)}` : ''}`;
 
   const params = new URLSearchParams();
-  params.set('mode', 'payment');
+  params.set('mode', useSubscriptionMode ? 'subscription' : 'payment');
   params.set('customer_email', email);
   params.set('success_url', successUrl);
   params.set('cancel_url', cancelUrl);
   params.set('allow_promotion_codes', 'true');
 
-  if (isEnterprise) {
+  if (useSubscriptionMode) {
+    // Enterprise with waived onboarding fee: start the monthly subscription immediately.
+    params.set('line_items[0][price_data][currency]', 'usd');
+    params.set('line_items[0][price_data][unit_amount]', String(Math.round(monthlyCost * 100)));
+    params.set('line_items[0][price_data][recurring][interval]', 'month');
+    params.set('line_items[0][price_data][product_data][name]', 'RevWhisper Monthly Subscription');
+    params.set('line_items[0][quantity]', String(listingCount));
+  } else if (isEnterprise) {
     // Dynamic pricing via price_data for enterprise
     params.set('line_items[0][price_data][currency]', 'usd');
     params.set('line_items[0][price_data][unit_amount]', String(Math.round(onboardingFee * 100)));
@@ -117,10 +137,11 @@ module.exports = async function handler(req, res) {
   params.set('metadata[plan]', plan);
   params.set('metadata[listing_count]', String(listingCount));
   params.set('metadata[source]', 'checkout-form');
+  params.set('metadata[checkout_mode]', useSubscriptionMode ? 'subscription' : 'payment');
 
   if (isEnterprise) {
     params.set('metadata[onboarding_fee]', String(onboardingFee));
-    if (payload.monthly_cost) params.set('metadata[monthly_cost]', String(payload.monthly_cost));
+    params.set('metadata[monthly_cost]', String(monthlyCost));
     if (payload.term_months) params.set('metadata[term_months]', String(payload.term_months));
   }
 

@@ -27,6 +27,14 @@
 - Annual plan must be a recurring yearly Price.
 - The checkout API sets both onboarding and selected plan quantity equal to `listing_count`.
 
+## Enterprise with $0 Onboarding Fee (Subscription-Only)
+- When `plan=enterprise` and `onboarding_fee=0`, the API creates a Stripe Checkout Session in `mode=subscription` instead of `mode=payment`.
+- The single line item is an inline `price_data` with `recurring.interval=month`, `unit_amount=monthly_cost * 100`, `quantity=listing_count`, and product name `RevWhisper Monthly Subscription`.
+- First invoice is charged immediately at checkout completion (no trial).
+- `term_months` is passed through as session metadata only — the minimum-term commitment lives in the service agreement, not in Stripe.
+- Session metadata includes `checkout_mode=subscription` (vs `payment` for the standard flow) so downstream automations can route events correctly.
+- If `onboarding_fee=0` is submitted without a valid `monthly_cost`, the API returns a 400 with `A valid monthly cost is required when onboarding fee is $0.`
+
 ## Webhook Endpoint
 - Endpoint: `/api/stripe-webhook`
 - Recommended Stripe events:

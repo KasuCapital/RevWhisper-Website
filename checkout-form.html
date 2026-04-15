@@ -858,15 +858,24 @@ if (requestedPlan) {
   }
 }
 
-// Update fee note with dynamic onboarding fee
-document.querySelector('.plan-fee-note').innerHTML = 'One-time listing optimization fee: <strong>$' + onboardingFee.toLocaleString() + '.00 per listing</strong> (charged upfront at enrollment). Your subscription begins once optimization is complete.';
+// Update fee note with dynamic onboarding fee (or waived-fee copy when onboarding is $0)
+const isSubscriptionOnly = isEnterprise && onboardingFee === 0;
+if (isSubscriptionOnly && enterpriseMonthly) {
+  document.querySelector('.plan-fee-note').innerHTML = 'Your RevWhisper monthly subscription begins at checkout &mdash; <strong>$' + enterpriseMonthly.toLocaleString() + '.00 per listing, per month</strong>. The one-time listing optimization fee has been waived.';
+} else {
+  document.querySelector('.plan-fee-note').innerHTML = 'One-time listing optimization fee: <strong>$' + onboardingFee.toLocaleString() + '.00 per listing</strong> (charged upfront at enrollment). Your subscription begins once optimization is complete.';
+}
 
 // Populate dynamic service agreement sections
 (function() {
   var feeAmt = '$' + onboardingFee.toLocaleString() + '.00';
 
-  // Section 3.1 — Listing Optimization Fee
-  document.getElementById('terms-3-1').innerHTML = 'Client shall pay a one-time listing optimization fee of ' + feeAmt + ' per Listing (the &ldquo;Listing Optimization Fee&rdquo;). The Listing Optimization Fee is due upfront upon execution of this Agreement and is non-refundable. Client&rsquo;s monthly subscription shall commence upon completion of the listing optimization period and the start of ongoing revenue management services.';
+  // Section 3.1 — Listing Optimization Fee (waived when onboarding fee is $0)
+  if (isSubscriptionOnly) {
+    document.getElementById('terms-3-1').innerHTML = 'The one-time listing optimization fee has been waived for Client. Client&rsquo;s monthly subscription commences upon execution of this Agreement.';
+  } else {
+    document.getElementById('terms-3-1').innerHTML = 'Client shall pay a one-time listing optimization fee of ' + feeAmt + ' per Listing (the &ldquo;Listing Optimization Fee&rdquo;). The Listing Optimization Fee is due upfront upon execution of this Agreement and is non-refundable. Client&rsquo;s monthly subscription shall commence upon completion of the listing optimization period and the start of ongoing revenue management services.';
+  }
 
   if (isEnterprise && enterpriseMonthly && enterpriseTermMonths) {
     var mo = '$' + enterpriseMonthly.toLocaleString() + '.00';
