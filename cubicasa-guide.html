@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rev Whisper — CubiCasa Floor Plan Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Lora:wght@400&display=swap" rel="stylesheet">
+<style>
+  @page { size: letter; margin: 0.4in 0.55in 0.3in; }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --dune: #32302F;
+    --fern: #4A6741;
+    --white: #FFFFFF;
+    --stone: #E0DCDA;
+    --bg-subtle: #F8F7F6;
+    --terracotta: #8B4A3E;
+    --fern-light: #dce6d8;
+    --sh-sm: 0 1px 2px rgba(50,48,47,.04), 0 1px 3px rgba(50,48,47,.06);
+    --heading: 'Lora', Georgia, serif;
+    --body: 'DM Sans', system-ui, 'Helvetica Neue', sans-serif;
+  }
+
+  body {
+    font-family: var(--body);
+    font-size: 9pt;
+    line-height: 1.5;
+    color: var(--dune);
+    background: #f3f1ef;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .page {
+    width: 8.5in;
+    margin: 0 auto;
+    background: var(--white);
+    padding: 0.5in 0.55in 0.35in;
+    position: relative;
+  }
+
+  @media print {
+    body { background: var(--white); }
+    .page { width: auto; margin: 0; padding: 0 0.15in; box-shadow: none; }
+  }
+
+  @media screen {
+    .page {
+      box-shadow: 0 2px 4px rgba(50,48,47,.03), 0 4px 12px rgba(50,48,47,.06);
+      margin-top: 24px;
+      margin-bottom: 24px;
+    }
+  }
+
+  /* Watermark */
+  .watermark {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='180'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Georgia,serif' font-size='18' font-weight='400' letter-spacing='3' fill='%2332302F' opacity='0.055' transform='rotate(-30 160 90)'%3ERevWhisper%3C/text%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 320px 180px;
+  }
+
+  /* Header */
+  .doc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 8px;
+    margin-bottom: 6px;
+    border-bottom: 1.5px solid var(--stone);
+  }
+  .doc-title {
+    font-family: var(--heading);
+    font-size: 22pt;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    color: var(--dune);
+    line-height: 1.2;
+  }
+  .doc-eyebrow {
+    font-size: 7.5pt;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1.4px;
+    color: var(--fern);
+    margin-bottom: 3px;
+  }
+  .brand-mark {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .brand-mark svg { width: 28px; height: 28px; }
+  .brand-wordmark {
+    font-family: var(--heading);
+    font-size: 13pt;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+  }
+  .brand-wordmark .rev { color: var(--fern); }
+  .brand-wordmark .whisper { color: var(--dune); }
+
+  /* Hero */
+  .hero {
+    background: linear-gradient(135deg, #f7faf5 0%, var(--bg-subtle) 100%);
+    border-left: 3px solid var(--fern);
+    padding: 5px 14px;
+    margin-bottom: 4px;
+    border-radius: 0 8px 8px 0;
+  }
+  .hero p {
+    font-size: 9pt;
+    line-height: 1.5;
+    color: var(--dune);
+  }
+  .hero strong { color: var(--fern); }
+
+  h2 {
+    font-family: var(--heading);
+    font-size: 12pt;
+    font-weight: 400;
+    color: var(--dune);
+    margin-top: 4px;
+    margin-bottom: 2px;
+    padding-bottom: 1px;
+    border-bottom: 1px solid var(--stone);
+    letter-spacing: -0.01em;
+  }
+
+  p { margin-bottom: 4px; }
+  strong { font-weight: 600; }
+
+  /* Three-step card row */
+  .steps {
+    display: flex;
+    gap: 7px;
+    margin: 3px 0 4px;
+  }
+  .step {
+    flex: 1;
+    background: var(--white);
+    border: 1px solid var(--stone);
+    border-radius: 7px;
+    padding: 7px 10px 8px;
+    box-shadow: var(--sh-sm);
+  }
+  .step-num {
+    display: inline-block;
+    background: var(--fern);
+    color: var(--white);
+    width: 19px; height: 19px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 19px;
+    font-size: 8pt;
+    font-weight: 600;
+    margin-bottom: 3px;
+  }
+  .step h4 {
+    font-family: var(--heading);
+    font-size: 9.5pt;
+    font-weight: 400;
+    margin-bottom: 2px;
+  }
+  .step p {
+    font-size: 7.5pt;
+    color: #706a63;
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  /* Value props */
+  .value-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin: 3px 0 4px;
+  }
+  .value-item {
+    background: var(--bg-subtle);
+    border: 1px solid var(--stone);
+    border-left: 3px solid var(--fern);
+    border-radius: 6px;
+    padding: 6px 10px;
+  }
+  .value-item h4 {
+    font-size: 8.5pt;
+    font-weight: 600;
+    margin-bottom: 1px;
+    color: var(--dune);
+  }
+  .value-item p {
+    font-size: 7.5pt;
+    color: #504d4a;
+    margin: 0;
+    line-height: 1.35;
+  }
+
+  /* Specs strip */
+  .specs-strip {
+    display: flex;
+    gap: 6px;
+    margin: 3px 0 4px;
+  }
+  .spec {
+    flex: 1;
+    background: var(--bg-subtle);
+    border: 1px solid var(--stone);
+    border-radius: 6px;
+    padding: 6px 8px;
+    text-align: center;
+  }
+  .spec .label {
+    font-size: 6.2pt;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1.1px;
+    color: #948d85;
+    margin-bottom: 1px;
+  }
+  .spec .value {
+    font-family: var(--heading);
+    font-size: 11.5pt;
+    color: var(--fern);
+    line-height: 1.1;
+  }
+  .spec .desc {
+    font-size: 6.5pt;
+    color: #706a63;
+    margin-top: 1px;
+    line-height: 1.25;
+  }
+
+  /* Inline links + tutorial note */
+  .link-plain {
+    color: var(--fern);
+    text-decoration: none;
+    border-bottom: 1px solid var(--fern-light);
+  }
+  .tutorial-note {
+    font-size: 7.5pt;
+    color: #504d4a;
+    background: var(--fern-light);
+    border-radius: 6px;
+    padding: 5px 10px;
+    margin: -2px 0 4px;
+    line-height: 1.4;
+  }
+  .tutorial-note strong { color: var(--fern); }
+  .small-note {
+    font-size: 7pt;
+    color: #948d85;
+    line-height: 1.35;
+    margin: -2px 0 6px;
+    text-align: center;
+  }
+
+  /* Floor plan sample */
+  .plan-sample {
+    display: grid;
+    grid-template-columns: 1.8fr 1fr;
+    gap: 12px;
+    margin: 3px 0 4px;
+    align-items: center;
+    background: var(--bg-subtle);
+    border: 1px solid var(--stone);
+    border-radius: 8px;
+    padding: 6px 10px;
+  }
+  .plan-sample .plan-svg {
+    background: var(--white);
+    border: 1px solid var(--stone);
+    border-radius: 6px;
+    padding: 4px;
+    display: block;
+    width: 100%;
+    max-height: 130px;
+    box-shadow: var(--sh-sm);
+  }
+  .plan-sample .plan-images {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+  }
+  .plan-sample .plan-images img {
+    width: 100%;
+    max-height: 100px;
+    object-fit: contain;
+    object-position: center;
+    display: block;
+    background: var(--white);
+    border: 1px solid var(--stone);
+    border-radius: 5px;
+    box-shadow: var(--sh-sm);
+  }
+  .plan-sample .plan-caption h4 {
+    font-family: var(--heading);
+    font-size: 10pt;
+    font-weight: 400;
+    color: var(--dune);
+    margin-bottom: 3px;
+  }
+  .plan-sample .plan-caption p {
+    font-size: 8pt;
+    color: #504d4a;
+    line-height: 1.4;
+    margin: 0 0 4px;
+  }
+  .plan-sample .plan-caption ul {
+    list-style: none;
+    padding: 0;
+    margin: 2px 0 0;
+    font-size: 7.5pt;
+    color: var(--dune);
+  }
+  .plan-sample .plan-caption ul li {
+    padding: 0 0 0 12px;
+    position: relative;
+    line-height: 1.35;
+  }
+  .plan-sample .plan-caption ul li::before {
+    content: "+";
+    position: absolute;
+    left: 0;
+    color: var(--fern);
+    font-weight: 700;
+  }
+
+  /* Tips callout */
+  .tips {
+    background: var(--bg-subtle);
+    border: 1px solid var(--stone);
+    border-radius: 8px;
+    padding: 6px 12px 7px;
+    margin: 2px 0 3px;
+  }
+  .tips h4 {
+    font-size: 9pt;
+    font-weight: 600;
+    color: var(--dune);
+    margin-bottom: 4px;
+  }
+  .tips ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    columns: 3;
+    column-gap: 14px;
+  }
+  .tips ul li {
+    padding: 1px 0 1px 11px;
+    position: relative;
+    font-size: 7pt;
+    color: #504d4a;
+    line-height: 1.35;
+    break-inside: avoid;
+  }
+  .tips ul li::before {
+    content: "+";
+    position: absolute;
+    left: 0;
+    font-weight: 700;
+    color: var(--fern);
+  }
+
+  /* Footer */
+  .footer-row {
+    margin-top: 4px;
+    padding-top: 3px;
+    border-top: 1px solid var(--stone);
+    font-size: 7pt;
+    color: #b8b2ab;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-row .footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .footer-row svg { width: 14px; height: 14px; }
+  .footer-row .footer-wordmark {
+    font-family: var(--heading);
+    font-size: 8pt;
+    font-weight: 400;
+  }
+  .footer-row .footer-wordmark .rev { color: var(--fern); }
+  .footer-row .footer-wordmark .whisper { color: #b8b2ab; }
+</style>
+</head>
+<body>
+
+<div class="watermark"></div>
+<div class="page">
+
+  <div class="doc-header">
+    <div>
+      <div class="doc-eyebrow">Companion to the Property Photo Guide</div>
+      <div class="doc-title">Floor Plans with CubiCasa</div>
+    </div>
+    <div class="brand-mark">
+      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="#32302F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="#32302F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="brand-wordmark"><span class="rev">Rev</span><span class="whisper">Whisper</span></span>
+    </div>
+  </div>
+
+  <div class="hero">
+    <p><strong>A floor plan is one of the cheapest conversion lifts on an STR listing.</strong> Guests who can't picture the layout hesitate, and hesitation costs bookings. CubiCasa turns a 5-minute phone scan into a professionally rendered 3D floor plan. We upload it as a photo in your Airbnb gallery, where guests already scrolling can see exactly how the spaces connect.</p>
+  </div>
+
+  <div class="tutorial-note"><strong>Which CubiCasa tier?</strong> CubiCasa offers Standard ($10), Plus ($20), and Plus 3D ($65). For Airbnb listings, use <strong>Plus 3D</strong>. It is the only tier that produces a furnished, full-color 3D floor plan, which is what performs best in the photo gallery and gives guests a clear picture of the layout.</div>
+
+  <h2>How It Works</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <h4>Download &amp; Sign Up</h4>
+      <p>Get <a href="https://www.cubi.casa/" class="link-plain">CubiCasa</a> on iOS or Android. Create an account and select the <strong>Plus 3D</strong> plan ($65 per scan). Takes about one minute.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <h4>Walk &amp; Scan</h4>
+      <p>Phone at chest height, walk slowly through every room. About 5 minutes for a typical home. The app uploads automatically when you finish.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <h4>CubiCasa Processes</h4>
+      <p>You'll get a finished, furnished 3D floor plan emailed to you within 48 hours. Download it from your CubiCasa account.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <h4>Send It to Us</h4>
+      <p>Forward the finished plan to RevWhisper. We upload it to your Airbnb gallery and any other platforms where it helps conversions.</p>
+    </div>
+  </div>
+
+  <h2>Why It Matters for Your Listing</h2>
+  <div class="value-grid">
+    <div class="value-item">
+      <h4>Reduces booking hesitation</h4>
+      <p>Groups and families want to know "who sleeps where" before they commit. A floor plan answers that instantly and privately, without a single message to the host.</p>
+    </div>
+    <div class="value-item">
+      <h4>Highlights square footage</h4>
+      <p>A "2,400 sq ft" number means little in the abstract. A visual layout makes scale obvious and helps justify a higher nightly rate.</p>
+    </div>
+    <div class="value-item">
+      <h4>Lives in the photo gallery</h4>
+      <p>Airbnb treats the floor plan like any other photo. Dropped into position 6 or 7 of the gallery, it catches every guest already scrolling without needing a separate field to hunt for.</p>
+    </div>
+    <div class="value-item">
+      <h4>Accessibility signal</h4>
+      <p>Guests filtering for step-free layouts, wide hallways, or ground-floor bedrooms can self-qualify from the plan. Fewer refund requests down the line.</p>
+    </div>
+  </div>
+
+  <h2>What You're Getting</h2>
+  <div class="specs-strip">
+    <div class="spec">
+      <div class="label">Time to Scan</div>
+      <div class="value">~5 min</div>
+      <div class="desc">Typical 2,000 sq ft home</div>
+    </div>
+    <div class="spec">
+      <div class="label">Turnaround</div>
+      <div class="value">48 hr</div>
+      <div class="desc">Scan to finished plan</div>
+    </div>
+    <div class="spec">
+      <div class="label">Deliverable</div>
+      <div class="value">3D Plan</div>
+      <div class="desc">Furnished, colored, textured</div>
+    </div>
+    <div class="spec">
+      <div class="label">Cost</div>
+      <div class="value">$65</div>
+      <div class="desc">Plus 3D tier, per scan</div>
+    </div>
+    <div class="spec">
+      <div class="label">Gear</div>
+      <div class="value">Phone</div>
+      <div class="desc">No extra equipment</div>
+    </div>
+  </div>
+  <h2>What the Finished Plan Looks Like</h2>
+  <div class="plan-sample">
+    <div class="plan-images">
+      <img src="/images/guides/img-plan-sample-1.png" alt="3D rendered floor plan showing multi-bedroom home with furnished rooms">
+      <img src="/images/guides/img-plan-sample-2.png" alt="3D rendered floor plan showing single-story home with furnished living and bedroom spaces">
+    </div>
+    <div class="plan-caption">
+      <h4>Clean, furnished, ready to upload</h4>
+      <p>The Plus 3D plan shows every room furnished with realistic colors and textures. Guests see exactly how the space lays out at a glance.</p>
+      <ul>
+        <li>Every room furnished and labeled</li>
+        <li>Realistic colors and textures</li>
+        <li>Door &amp; window openings marked</li>
+        <li>Web-ready image for your gallery</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>Scan Tips for the Cleanest Result</h2>
+  <div class="tips">
+    <ul>
+      <li>Scan the whole property in one continuous session, including all floors</li>
+      <li>Start at the lowest-floor entrance and work upward</li>
+      <li>Hold the phone in landscape at chest height, both hands, camera forward</li>
+      <li>Stay 5 to 11 ft (1.5 to 3.5 m) from walls and furniture</li>
+      <li>Walk at a normal pace. No sudden turns or jumps between floors</li>
+      <li>Open interior doors, close exterior doors, raise all blinds</li>
+      <li>Skip closets under 3x3 ft. Stand in the doorway and pan</li>
+      <li>If tracking drops, return to the last mapped corner to recover</li>
+    </ul>
+  </div>
+
+  <div class="footer-row">
+    <div class="footer-brand">
+      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="#b8b2ab" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="#b8b2ab" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="footer-wordmark"><span class="rev">Rev</span><span class="whisper">Whisper</span></span>
+    </div>
+    <span>Video walkthrough: <a href="https://www.youtube.com/watch?v=DeElK26vDyE" class="link-plain">How to Scan with CubiCasa (YouTube)</a> &middot; Questions? Contact RevWhisper</span>
+  </div>
+
+</div>
+
+</body>
+</html>
