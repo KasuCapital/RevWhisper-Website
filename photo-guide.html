@@ -1,0 +1,1463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RevWhisper Property Photo Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Lora:wght@400&display=swap" rel="stylesheet">
+<style>
+  @page {
+    size: letter;
+    margin: 0.55in 0.55in 0.4in;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --dune: #32302F;
+    --fern: #4A6741;
+    --white: #FFFFFF;
+    --stone: #E0DCDA;
+    --bg-subtle: #F8F7F6;
+    --terracotta: #8B4A3E;
+    --gold: #9B7B3A;
+    --fern-light: #dce6d8;
+    --sh-sm: 0 1px 2px rgba(50,48,47,.04), 0 1px 3px rgba(50,48,47,.06);
+    --sh: 0 2px 4px rgba(50,48,47,.03), 0 4px 12px rgba(50,48,47,.06);
+    --heading: 'Lora', Georgia, serif;
+    --body: 'DM Sans', system-ui, 'Helvetica Neue', sans-serif;
+    --radius-sm: 6px;
+    --radius: 8px;
+    --radius-lg: 12px;
+  }
+
+  body {
+    font-family: var(--body);
+    font-size: 9.5pt;
+    line-height: 1.6;
+    color: var(--dune);
+    background: #f3f1ef;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .page {
+    width: 8.5in;
+    margin: 0 auto;
+    background: var(--white);
+    padding: 0.5in 0.6in;
+    position: relative;
+  }
+
+  .watermark {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='180'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Georgia,serif' font-size='18' font-weight='400' letter-spacing='3' fill='%2332302F' opacity='0.055' transform='rotate(-30 160 90)'%3ERevWhisper%3C/text%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 320px 180px;
+  }
+
+  @media print {
+    body { background: var(--white); }
+    .page { width: auto; margin: 0; padding: 0 0.15in; box-shadow: none; }
+    .page-break { page-break-before: always; }
+    .section-intro {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+    .callout, .shot-types, .check-cols, .schedule-bar, .gallery-seq, .spec-row, .config-row {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+    .surface-panel .caption {
+      page-break-before: avoid;
+      break-before: avoid;
+    }
+    .surface-panel img {
+      page-break-after: avoid;
+      break-after: avoid;
+    }
+    h2, h3 {
+      page-break-after: avoid;
+      break-after: avoid;
+    }
+    p { orphans: 3; widows: 3; }
+  }
+
+  @media screen {
+    .page {
+      box-shadow: var(--sh);
+      margin-top: 24px;
+      margin-bottom: 24px;
+    }
+  }
+
+  .doc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 12px;
+    margin-bottom: 6px;
+    border-bottom: 1.5px solid var(--stone);
+  }
+  .doc-title {
+    font-family: var(--heading);
+    font-size: 22pt;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    color: var(--dune);
+    line-height: 1.2;
+  }
+  .brand-mark {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .brand-mark svg { width: 28px; height: 28px; }
+  .brand-wordmark {
+    font-family: var(--heading);
+    font-size: 13pt;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+  }
+  .brand-wordmark .rev { color: var(--fern); }
+  .brand-wordmark .whisper { color: var(--dune); }
+  .subtitle {
+    font-size: 9pt;
+    font-weight: 400;
+    color: #706a63;
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+
+  h2 {
+    font-family: var(--heading);
+    font-size: 13pt;
+    font-weight: 400;
+    color: var(--dune);
+    margin-top: 18px;
+    margin-bottom: 7px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--stone);
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+  }
+  h3 {
+    font-family: var(--body);
+    font-size: 10pt;
+    font-weight: 600;
+    color: var(--dune);
+    margin-top: 12px;
+    margin-bottom: 5px;
+  }
+
+  p { margin-bottom: 7px; }
+  strong { font-weight: 600; }
+  .small { font-size: 8.5pt; color: #706a63; }
+  .caption {
+    font-size: 7.5pt;
+    color: #948d85;
+    text-align: center;
+    margin-top: 5px;
+    margin-bottom: 14px;
+    line-height: 1.45;
+  }
+
+  .spec-row { display: flex; gap: 8px; margin: 18px 0 10px; }
+  .spec-box {
+    flex: 1;
+    background: var(--bg-subtle);
+    border: 1px solid var(--stone);
+    border-radius: var(--radius);
+    padding: 34px 24px 38px;
+    text-align: center;
+  }
+  .spec-box .label {
+    font-size: 10pt;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1.8px;
+    color: #948d85;
+    margin-bottom: 6px;
+  }
+  .spec-box .value {
+    font-size: 38pt;
+    font-weight: 600;
+    color: var(--fern);
+    line-height: 1.1;
+  }
+  .spec-box .sub {
+    font-size: 10pt;
+    color: #948d85;
+    margin-top: 4px;
+  }
+  .spec-box .orient-row {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 56px;
+    margin-top: 26px;
+    padding-top: 24px;
+    border-top: 1px solid var(--stone);
+  }
+  .spec-box .orient-item { text-align: center; }
+  .spec-box .orient-label {
+    font-size: 9.5pt;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: #948d85;
+    margin-top: 12px;
+  }
+  .spec-box .orient-px {
+    font-size: 10pt;
+    font-weight: 600;
+    color: var(--dune);
+    margin-top: 6px;
+    line-height: 1.45;
+  }
+  .spec-box .orient-px .px-min,
+  .spec-box .orient-px .px-target { display: block; }
+  .spec-box .orient-px .px-min {
+    color: #948d85;
+    font-weight: 500;
+    font-size: 9pt;
+  }
+  .spec-box .orient-px .px-target {
+    color: var(--fern);
+    font-weight: 600;
+  }
+  .ratio-shape {
+    border: 2px solid var(--fern);
+    border-radius: 4px;
+    background: var(--fern-light);
+    margin: 0 auto;
+  }
+  .ratio-3x2 { width: 156px; height: 104px; }
+  .ratio-2x3 { width: 104px; height: 156px; }
+
+  .callout {
+    background: var(--bg-subtle);
+    border-left: 3px solid var(--fern);
+    padding: 10px 14px;
+    margin: 12px 0;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    font-size: 8.5pt;
+    line-height: 1.5;
+  }
+  .callout strong { color: var(--fern); }
+
+  .callout-warm { border-left-color: var(--terracotta); }
+  .callout-warm strong { color: var(--terracotta); }
+
+  .example-img {
+    width: 100%;
+    max-width: 100%;
+    border-radius: var(--radius);
+    display: block;
+    margin: 8px auto;
+  }
+  .example-row {
+    display: flex;
+    gap: 12px;
+    margin: 10px 0;
+  }
+  .example-wrap { flex: 1; page-break-inside: avoid; break-inside: avoid; min-width: 0; overflow: hidden; border-radius: var(--radius); }
+  .example-wrap .example-img { width: 100%; }
+  .example-wrap .caption { margin-top: 3px; margin-bottom: 0; }
+  .example-row.bp-pair-1 .example-img {
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    object-position: center;
+    height: auto;
+  }
+  .example-row.bp-pair-2 .example-img {
+    aspect-ratio: 505 / 445;
+    object-fit: cover;
+    object-position: center;
+    height: auto;
+  }
+
+  .shot-types { display: flex; gap: 12px; margin: 12px 0; }
+  .shot-card {
+    flex: 1;
+    background: var(--white);
+    border: 1px solid var(--stone);
+    border-radius: var(--radius);
+    padding: 10px 12px;
+    box-shadow: var(--sh-sm);
+  }
+  .shot-card .num {
+    display: inline-block;
+    background: var(--fern);
+    color: var(--white);
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 20px;
+    font-size: 8pt;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .shot-card h4 {
+    font-family: var(--heading);
+    font-size: 9.5pt;
+    font-weight: 400;
+    margin-bottom: 3px;
+    color: var(--dune);
+  }
+  .shot-card p {
+    font-size: 8pt;
+    color: #706a63;
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  .room-guidance {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin: 10px 0;
+  }
+  .room-item {
+    background: var(--bg-subtle);
+    border: 1px solid var(--stone);
+    border-radius: var(--radius-sm);
+    padding: 7px 9px;
+  }
+  .room-item h4 {
+    font-family: var(--body);
+    font-size: 8.5pt;
+    font-weight: 600;
+    color: var(--dune);
+    margin-bottom: 2px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .room-item h4 .badge {
+    font-size: 6.5pt;
+    background: var(--fern);
+    color: var(--white);
+    padding: 1px 7px;
+    border-radius: 10px;
+    font-weight: 600;
+  }
+  .room-item p {
+    font-size: 7.5pt;
+    color: #706a63;
+    margin: 0;
+    line-height: 1.35;
+  }
+
+  .check-cols { display: flex; gap: 14px; margin: 8px 0; }
+  .check-col { flex: 1; }
+  .check-col h4 {
+    font-size: 9pt; font-weight: 600;
+    margin-bottom: 4px; padding-bottom: 3px;
+  }
+  .check-col.include h4 { color: var(--fern); border-bottom: 2px solid var(--fern); }
+  .check-col.remove h4 { color: var(--terracotta); border-bottom: 2px solid var(--terracotta); }
+  .check-col ul { list-style: none; padding: 0; font-size: 8pt; color: var(--dune); }
+  .check-col ul li { padding: 2px 0 2px 15px; position: relative; }
+  .check-col.include ul li::before {
+    content: "+"; position: absolute; left: 0;
+    font-weight: 700; color: var(--fern); font-size: 10pt; line-height: 1.15;
+  }
+  .check-col.remove ul li::before {
+    content: "\2013"; position: absolute; left: 0;
+    font-weight: 700; color: var(--terracotta); font-size: 10pt; line-height: 1.15;
+  }
+
+  .access-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 7px;
+    margin: 7px 0;
+  }
+  .access-item {
+    border: 1px solid var(--stone);
+    background: var(--bg-subtle);
+    border-radius: var(--radius-sm);
+    padding: 7px 9px;
+    border-left: 3px solid var(--fern);
+  }
+  .access-item h4 {
+    font-size: 8pt; font-weight: 600;
+    color: var(--dune); margin-bottom: 1px;
+  }
+  .access-item p {
+    font-size: 7.5pt; color: #706a63;
+    margin: 0; line-height: 1.3;
+  }
+
+  .schedule-bar { display: flex; gap: 8px; margin: 8px 0; }
+  .schedule-item {
+    flex: 1; background: var(--bg-subtle);
+    border: 1px solid var(--stone);
+    border-radius: var(--radius-sm);
+    padding: 8px 10px; text-align: center;
+  }
+  .schedule-item .time {
+    font-family: var(--heading);
+    font-size: 12pt; font-weight: 400;
+    color: var(--dune);
+  }
+  .schedule-item .desc {
+    font-size: 7.5pt; color: #706a63;
+  }
+
+  .room-ref-list {
+    column-count: 4;
+    column-gap: 14px;
+    margin: 8px 0;
+    font-size: 7.5pt;
+    color: var(--dune);
+    line-height: 1.65;
+  }
+  .room-ref-list span {
+    display: block;
+    break-inside: avoid;
+  }
+
+  .opening-hook {
+    background: var(--bg-subtle);
+    border-left: 3px solid var(--fern);
+    padding: 12px 16px;
+    margin: 14px 0 18px;
+    border-radius: 0 var(--radius) var(--radius) 0;
+    font-size: 9.5pt;
+    line-height: 1.55;
+    color: var(--dune);
+  }
+  .opening-hook strong { color: var(--fern); }
+
+  .config-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin: 12px 0;
+  }
+  .config-card {
+    background: var(--white);
+    border: 1px solid var(--stone);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    page-break-inside: avoid;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+  }
+  .config-visual {
+    width: 100%;
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 0;
+  }
+  .config-text { flex: 1; }
+  .cfg-tile {
+    background: var(--fern-light);
+    border: 1.5px solid var(--fern);
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  .cfg { display: flex; gap: 5px; }
+  .cfg .col { display: flex; flex-direction: column; gap: 5px; }
+
+  .cfg-3land { flex-direction: column; width: 108px; }
+  .cfg-3land .hero { width: 108px; height: 72px; }
+  .cfg-3land .bot { display: flex; gap: 5px; }
+  .cfg-3land .bot > .cfg-tile { width: 51.5px; height: 36px; }
+
+  .cfg-1p2l { width: 149px; }
+  .cfg-1p2l .hero { width: 72px; height: 108px; }
+  .cfg-1p2l .col > .cfg-tile { width: 72px; height: 51.5px; }
+
+  .cfg-3port { width: 113px; }
+  .cfg-3port .hero { width: 72px; height: 108px; }
+  .cfg-3port .col > .cfg-tile { width: 36px; height: 51.5px; }
+
+  .cfg-2p1l { flex-direction: column; width: 108px; }
+  .cfg-2p1l .hero { width: 108px; height: 72px; }
+  .cfg-2p1l .bot { display: flex; gap: 5px; }
+  .cfg-2p1l .bot > .cfg-tile { width: 51.5px; height: 77px; }
+
+  .avoid-tag {
+    display: inline-block;
+    font-size: 6.5pt;
+    font-weight: 700;
+    background: var(--terracotta);
+    color: white;
+    padding: 1px 6px;
+    border-radius: 8px;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    margin-left: 4px;
+    vertical-align: middle;
+  }
+
+  .config-card h4 {
+    font-family: var(--body);
+    font-size: 9.5pt;
+    font-weight: 600;
+    color: var(--dune);
+    margin: 0;
+  }
+  .config-card p.small-note {
+    font-size: 8pt;
+    color: #706a63;
+    line-height: 1.45;
+    margin: 3px 0 0;
+  }
+
+  .gallery-seq {
+    display: flex;
+    gap: 8px;
+    margin: 10px 0;
+  }
+  .gallery-pos {
+    flex: 1;
+    background: var(--white);
+    border: 1px solid var(--stone);
+    border-radius: var(--radius-sm);
+    padding: 9px 10px;
+    page-break-inside: avoid;
+  }
+  .gallery-pos.highlight { border-color: var(--fern); border-width: 1.5px; background: #f7faf5; }
+  .gallery-pos .pos-num {
+    font-family: var(--heading);
+    font-size: 16pt;
+    color: var(--fern);
+    line-height: 1;
+    margin-bottom: 3px;
+  }
+  .gallery-pos h4 {
+    font-size: 8pt;
+    font-weight: 600;
+    color: var(--dune);
+    margin-bottom: 3px;
+  }
+  .gallery-pos p {
+    font-size: 7.5pt;
+    color: #706a63;
+    margin: 0;
+    line-height: 1.35;
+  }
+
+  .drone-callout {
+    background: linear-gradient(135deg, #f7faf5 0%, var(--bg-subtle) 100%);
+    border: 1px solid var(--fern);
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    margin: 12px 0;
+  }
+  .drone-callout h3 {
+    margin-top: 0;
+    margin-bottom: 4px;
+    color: var(--fern);
+    font-size: 10pt;
+    font-weight: 600;
+  }
+  .drone-callout p {
+    font-size: 8.5pt;
+    color: #504d4a;
+    margin: 0;
+    line-height: 1.5;
+  }
+  .drone-callout .when-list {
+    font-size: 8pt;
+    color: #706a63;
+    margin-top: 5px;
+  }
+  .drone-examples {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .drone-examples .drone-ex {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  .drone-examples img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: var(--radius-sm);
+  }
+  .drone-examples .caption {
+    font-size: 7.5pt;
+    color: #706a63;
+    margin: 4px 0 0;
+    line-height: 1.4;
+    font-style: italic;
+  }
+
+  .surfaces {
+    margin: 10px 0 14px;
+  }
+  .surfaces h3 {
+    margin: 0 0 4px;
+    font-size: 10pt;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .surfaces .lede {
+    font-size: 8.5pt;
+    color: #504d4a;
+    margin: 0 0 10px;
+    line-height: 1.5;
+  }
+  .surfaces-grid {
+    display: grid;
+    grid-template-columns: 2.3fr 1fr;
+    gap: 14px;
+    align-items: start;
+  }
+  .surface-panel {
+  }
+  .surface-panel .label {
+    display: inline-block;
+    font-size: 7pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--fern);
+    background: #eef4e8;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-bottom: 5px;
+  }
+  .surface-panel img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: var(--radius);
+  }
+  .surface-panel .caption {
+    font-size: 7.5pt;
+    color: #706a63;
+    margin: 5px 0 0;
+    line-height: 1.4;
+    font-style: italic;
+  }
+
+  .figure-wrap {
+    margin: 8px 0 14px;
+  }
+  .figure-wrap .caption {
+    margin-top: 5px;
+    margin-bottom: 0;
+  }
+  .figure-wrap > img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius);
+  }
+
+  .ann-side {
+    display: grid;
+    grid-template-columns: 1fr 135px;
+    gap: 14px;
+    align-items: start;
+  }
+  .ann-img-wrap {
+    position: relative;
+    line-height: 0;
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .ann-img-wrap img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius);
+  }
+  .ann-dot {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: var(--fern);
+    color: white;
+    font-family: var(--body);
+    font-size: 7pt;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transform: translate(-50%, -50%);
+    border: 1.5px solid white;
+    box-sizing: content-box;
+    z-index: 2;
+    line-height: 1;
+  }
+  .ann-side img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius);
+  }
+  .ann-sidenotes {
+    list-style: none;
+    margin: 0;
+    padding: 4px 0 0 0;
+    font-size: 8pt;
+    color: #504d4a;
+    line-height: 1.3;
+  }
+  .ann-sidenotes li {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    margin-bottom: 7px;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  .ann-sidenotes .num {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: var(--fern);
+    color: white;
+    font-size: 7.5pt;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    line-height: 1;
+    margin-top: 1px;
+  }
+  .ann-sidenotes .lbl { flex: 1; }
+
+  .section-intro {
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  .scheduling-block {
+  }
+  .scheduling-block h2 { margin-top: 14px; }
+
+  .shot-card, .room-item, .access-item, .schedule-item, .config-card, .gallery-pos, ol.keep-together, .opening-hook, .drone-callout {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .doc-footer {
+    margin-top: 6px;
+    padding-top: 4px;
+    border-top: 1px solid var(--stone);
+    font-size: 7pt;
+    color: #b8b2ab;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .doc-footer .footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .doc-footer svg { width: 14px; height: 14px; }
+  .doc-footer .footer-wordmark {
+    font-family: var(--heading);
+    font-size: 8pt;
+    font-weight: 400;
+  }
+  .doc-footer .footer-wordmark .rev { color: var(--fern); }
+  .doc-footer .footer-wordmark .whisper { color: #b8b2ab; }
+
+  /* TLDR page */
+  .tldr-title {
+    font-family: var(--heading);
+    font-size: 18pt;
+    font-weight: 400;
+    color: var(--dune);
+    margin-bottom: 4px;
+    letter-spacing: -0.02em;
+  }
+  .tldr-subtitle {
+    font-size: 9pt;
+    color: #706a63;
+    margin-bottom: 14px;
+    line-height: 1.5;
+  }
+  .tldr-section {
+    margin-bottom: 14px;
+  }
+  .tldr-section h3 {
+    font-family: var(--body);
+    font-size: 9.5pt;
+    font-weight: 600;
+    color: var(--fern);
+    margin: 0 0 5px;
+    padding-bottom: 3px;
+    border-bottom: 1px solid var(--stone);
+  }
+  .tldr-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+  .tldr-card {
+    background: var(--bg-subtle);
+    border: 1px solid var(--stone);
+    border-radius: var(--radius-sm);
+    padding: 7px 10px;
+  }
+  .tldr-card h4 {
+    font-size: 8.5pt;
+    font-weight: 600;
+    color: var(--dune);
+    margin: 0 0 2px;
+  }
+  .tldr-card p {
+    font-size: 7.5pt;
+    color: #504d4a;
+    margin: 0;
+    line-height: 1.4;
+  }
+  .tldr-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 8pt;
+    color: var(--dune);
+    line-height: 1.5;
+  }
+  .tldr-list li {
+    padding: 3px 0 3px 14px;
+    position: relative;
+    border-bottom: 1px solid #f0edeb;
+  }
+  .tldr-list li:last-child { border-bottom: none; }
+  .tldr-list li::before {
+    content: "+";
+    position: absolute;
+    left: 0;
+    color: var(--fern);
+    font-weight: 700;
+  }
+  .tldr-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 6px;
+  }
+  .tldr-stat {
+    flex: 1;
+    background: var(--white);
+    border: 1.5px solid var(--fern);
+    border-radius: var(--radius-sm);
+    padding: 8px 10px;
+    text-align: center;
+  }
+  .tldr-stat .num {
+    font-family: var(--heading);
+    font-size: 16pt;
+    color: var(--fern);
+    line-height: 1.1;
+  }
+  .tldr-stat .desc {
+    font-size: 7pt;
+    color: #706a63;
+    margin-top: 2px;
+  }
+</style>
+</head>
+<body>
+
+<div class="watermark"></div>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="doc-header">
+    <div class="doc-title">Property Photo Guide</div>
+    <div class="brand-mark">
+      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="#32302F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="#32302F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="brand-wordmark"><span class="rev">Rev</span><span class="whisper">Whisper</span></span>
+    </div>
+  </div>
+  <p class="subtitle"></p>
+
+
+  <!-- OPENING -->
+  <div class="opening-hook">
+    <strong>Photos are the single highest-ROI investment a host makes.</strong> Guests decide in under three seconds whether to keep scrolling or move on. Everything else in the listing only matters if the photos earn the click.
+  </div>
+
+
+  <!-- IMAGE SPECS -->
+  <div class="section-intro">
+    <h2>Image Specifications</h2>
+    <p>Shoot at the highest resolution your camera allows. <strong>We handle all cropping and exporting.</strong> Keep subjects centered so nothing important is lost when we crop.</p>
+  </div>
+
+  <div class="spec-row">
+    <div class="spec-box">
+      <div class="label">Airbnb</div>
+      <div class="value">3 : 2</div>
+      <div class="sub">Aspect ratio &middot; landscape or portrait</div>
+      <div class="orient-row">
+        <div class="orient-item">
+          <div class="ratio-shape ratio-3x2"></div>
+          <div class="orient-label">Landscape</div>
+          <div class="orient-px"><span class="px-min">Min 1024 &times; 683</span><span class="px-target">Target 3000 &times; 2000</span></div>
+        </div>
+        <div class="orient-item">
+          <div class="ratio-shape ratio-2x3"></div>
+          <div class="orient-label">Portrait</div>
+          <div class="orient-px"><span class="px-min">Min 683 &times; 1024</span><span class="px-target">Target 2000 &times; 3000</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="small"><em>3:2 aspect ratio, minimum 1024 &times; 683 px. Target 3000 &times; 2000+. Max 30 MB per file. JPEG, PNG, or BMP.</em></p>
+
+  <p><strong>Shoot both landscape and portrait for each room.</strong> Airbnb uses both orientations in the Photo Tour, and the orientation mix changes the layout.</p>
+
+
+  <!-- HOW AIRBNB DISPLAYS PHOTOS -->
+  <div class="section-intro">
+    <h2>How Airbnb Displays Your Photos</h2>
+    <p>Airbnb organizes photos into a <strong>Photo Tour</strong> grouped by room. Each room shows one large <strong>hero</strong> image with two smaller supporting shots below it.</p>
+  </div>
+
+  <div class="callout-warm callout">
+    <strong>The hero shot and first 5 images drive roughly 80% of all photo views.</strong> They determine whether a guest keeps scrolling or bounces. The first 5 is the single biggest lever on listing conversion.
+  </div>
+
+  <div class="figure-wrap">
+    <div class="ann-side">
+      <div class="ann-img-wrap">
+        <img src="/images/guides/img-bedroom1-tour.png" alt="Airbnb Photo Tour - Bedroom 1 showing hero image with two supporting shots">
+        <span class="ann-dot" style="top: 5%; left: 15%;">1</span>
+        <span class="ann-dot" style="top: 15%; left: 10%;">2</span>
+        <span class="ann-dot" style="top: 55%; left: 75%;">3</span>
+        <span class="ann-dot" style="top: 94%; left: 49%;">4</span>
+        <span class="ann-dot" style="top: 94%; left: 75%;">5</span>
+      </div>
+      <ul class="ann-sidenotes">
+        <li><span class="num">1</span><span class="lbl">Room name</span></li>
+        <li><span class="num">2</span><span class="lbl">Amenity tags</span></li>
+        <li><span class="num">3</span><span class="lbl">Hero shot</span></li>
+        <li><span class="num">4</span><span class="lbl">Supporting shot</span></li>
+        <li><span class="num">5</span><span class="lbl">Supporting shot</span></li>
+      </ul>
+    </div>
+    <p class="caption">Each room: 1 hero + 2 supporting shots in a grid.</p>
+  </div>
+
+  <p>Every room needs at least <strong>3 deliberate shots</strong>: one wide hero, one secondary angle, and one amenity close-up. We ask for <strong>6 photos per room</strong> so we can pick the strongest set, rotate seasonally, and replace underperformers.</p>
+
+
+  <!-- ORIENTATION LAYOUTS -->
+  <div class="section-intro">
+    <h3>Orientation and Layout</h3>
+    <p>The mix of landscape and portrait photos determines which grid layout Airbnb builds for each room:</p>
+  </div>
+
+  <div class="config-row">
+    <div class="config-card">
+      <div class="config-visual">
+        <div class="cfg cfg-3land">
+          <div class="cfg-tile hero"></div>
+          <div class="bot"><div class="cfg-tile"></div><div class="cfg-tile"></div></div>
+        </div>
+      </div>
+      <div class="config-text">
+        <h4>3 landscape</h4>
+        <p class="small-note">Landscape hero on top, two landscape supports side-by-side below.</p>
+      </div>
+    </div>
+    <div class="config-card">
+      <div class="config-visual">
+        <div class="cfg cfg-1p2l">
+          <div class="cfg-tile hero"></div>
+          <div class="col"><div class="cfg-tile"></div><div class="cfg-tile"></div></div>
+        </div>
+      </div>
+      <div class="config-text">
+        <h4>1 portrait + 2 landscape</h4>
+        <p class="small-note">Portrait hero on one side, two landscape supports stacked beside it.</p>
+      </div>
+    </div>
+    <div class="config-card">
+      <div class="config-visual">
+        <div class="cfg cfg-3port">
+          <div class="cfg-tile hero"></div>
+          <div class="col"><div class="cfg-tile"></div><div class="cfg-tile"></div></div>
+        </div>
+      </div>
+      <div class="config-text">
+        <h4>3 portrait</h4>
+        <p class="small-note">Portrait hero on one side, two smaller portraits stacked beside it.</p>
+      </div>
+    </div>
+    <div class="config-card">
+      <div class="config-visual">
+        <div class="cfg cfg-2p1l">
+          <div class="cfg-tile hero"></div>
+          <div class="bot"><div class="cfg-tile"></div><div class="cfg-tile"></div></div>
+        </div>
+      </div>
+      <div class="config-text">
+        <h4>2 portrait + 1 landscape <span class="avoid-tag">avoid</span></h4>
+        <p class="small-note">Visually awkward. We don't set rooms up this way.</p>
+      </div>
+    </div>
+  </div>
+  <p class="small"><strong>Takeaway:</strong> shoot the strongest angle in <em>both</em> landscape and portrait. Aim for 3 landscapes, 3 portraits, or 1 portrait + 2 landscapes per room.</p>
+
+
+  <!-- ROOM CATEGORIES -->
+  <div class="section-intro">
+    <h2>Airbnb Photo Tour Room Categories</h2>
+    <p>The complete set of room types in Airbnb's Photo Tour. <strong>If your property has any of these spaces, each needs photos.</strong></p>
+  </div>
+
+  <div class="room-ref-list">
+    <span>Art studio</span>
+    <span>Backyard</span>
+    <span>Balcony</span>
+    <span>Bedroom</span>
+    <span>Bowling alley</span>
+    <span>Children's playroom</span>
+    <span>Courtyard</span>
+    <span>Darkroom</span>
+    <span>Deck</span>
+    <span>Dining area</span>
+    <span>Event room</span>
+    <span>Exterior</span>
+    <span>Front yard</span>
+    <span>Full bathroom</span>
+    <span>Full kitchen</span>
+    <span>Game room</span>
+    <span>Garage</span>
+    <span>Garden</span>
+    <span>Gym</span>
+    <span>Half bathroom</span>
+    <span>Hot tub</span>
+    <span>Kitchenette</span>
+    <span>Laundry area</span>
+    <span>Library</span>
+    <span>Living room</span>
+    <span>Movie theatre</span>
+    <span>Music studio</span>
+    <span>Office</span>
+    <span>Patio</span>
+    <span>Photography studio</span>
+    <span>Pool</span>
+    <span>Porch</span>
+    <span>Rooftop</span>
+    <span>Sunroom</span>
+    <span>Terrace</span>
+    <span>Theme room</span>
+    <span>Wine cellar</span>
+    <span>Woodshop</span>
+    <span>Workshop</span>
+    <span>Workspace</span>
+  </div>
+
+
+  <!-- THREE SHOT TYPES -->
+  <div class="section-intro">
+    <h2>The Three Shot Types</h2>
+    <p>Aim for <strong>2 of each per room</strong> (6 total). The hero sets the scene, the secondary adds context, and the close-up proves the details.</p>
+  </div>
+
+  <div class="shot-types">
+    <div class="shot-card">
+      <div class="num">1</div>
+      <h4>Hero: Sets the Scene</h4>
+      <p>Wide-angle shot of the full room. This becomes the large image in the Photo Tour. Tripod at chest height.</p>
+    </div>
+    <div class="shot-card">
+      <div class="num">2</div>
+      <h4>Secondary: Adds Context</h4>
+      <p>Different angle showing what the hero missed: the other side, how it connects to other spaces, or the view.</p>
+    </div>
+    <div class="shot-card">
+      <div class="num">3</div>
+      <h4>Close-Up: Proves the Details</h4>
+      <p>Detail shots of specific listed amenities. Stage them as if someone is about to use them.</p>
+    </div>
+  </div>
+
+  <div class="example-row bp-pair-1">
+    <div class="example-wrap">
+      <img src="/images/guides/img-outdoor-pool.png" alt="Pool area showing drone hero, sports court, and towel tote detail" class="example-img">
+      <p class="caption">Pool and Courts: drone overview, ground-level court, staged towel tote.</p>
+    </div>
+    <div class="example-wrap">
+      <img src="/images/guides/img-outdoor-play.png" alt="Playground showing mini golf, equipment wall, and deck overview" class="example-img">
+      <p class="caption">Recreation: playground hero, equipment close-up, full deck overview.</p>
+    </div>
+  </div>
+
+  <div class="example-row bp-pair-2">
+    <div class="example-wrap">
+      <img src="/images/guides/img-outdoor-dining.png" alt="Outdoor dining with table set, lounge seating, and cabana" class="example-img">
+      <p class="caption">Outdoor Dining: table set with glasses, lounge seating, cabana. Staged for arrival.</p>
+    </div>
+    <div class="example-wrap">
+      <img src="/images/guides/img-bedroom3-tour.png" alt="Bunk room Photo Tour with hero and two supporting angles" class="example-img">
+      <p class="caption">Bunk Room: same three-shot treatment. Hero of all beds, two supporting angles.</p>
+    </div>
+  </div>
+
+
+  <!-- GALLERY SEQUENCING -->
+  <div class="section-intro">
+    <h2>Gallery Sequencing: The First 5</h2>
+    <p>The first 5 photos receive roughly <strong>80% of all views</strong>. Match the hero shot to the guest's search intent, not just aesthetics.</p>
+  </div>
+
+  <div class="gallery-seq">
+    <div class="gallery-pos highlight">
+      <div class="pos-num">1</div>
+      <h4>Hero Shot</h4>
+      <p>Strongest single image. Usually exterior or most striking interior. Twilight wins when available.</p>
+    </div>
+    <div class="gallery-pos highlight">
+      <div class="pos-num">2</div>
+      <h4>Main Living Hero</h4>
+      <p>Living room or open-plan shot. Signals "this is a place I could relax in."</p>
+    </div>
+    <div class="gallery-pos highlight">
+      <div class="pos-num">3</div>
+      <h4>Signature Amenity</h4>
+      <p>The thing that makes this property desirable. Pool, hot tub, view, game room.</p>
+    </div>
+    <div class="gallery-pos highlight">
+      <div class="pos-num">4</div>
+      <h4>Kitchen or Primary Bedroom</h4>
+      <p>Whichever photographs better.</p>
+    </div>
+    <div class="gallery-pos highlight">
+      <div class="pos-num">5</div>
+      <h4>Outdoor or Atmosphere</h4>
+      <p>Conveys the overall feel: golden hour, deck, fire pit, patio.</p>
+    </div>
+  </div>
+
+
+  <!-- DRONE -->
+  <div class="drone-callout">
+    <h3>Drone Coverage</h3>
+    <p>For properties where scale or setting is part of the appeal, drone gives guests a sense of place that no ground-level shot can. This often becomes the hero shot and search thumbnail.</p>
+    <p class="when-list"><strong>When it makes sense:</strong> waterfront, pool-centric, acreage with privacy/views, large outdoor amenity footprints. <strong>Skip it</strong> for urban condos, standard suburban lots, or properties where neighbors are the main thing visible from above.</p>
+    <div class="drone-examples">
+      <div class="drone-ex">
+        <img src="/images/guides/img-drone-top.png" alt="Drone overhead showing house, pool, and backyard amenity footprint">
+        <p class="caption">Top-down: shows full amenity layout and how spaces connect.</p>
+      </div>
+      <div class="drone-ex">
+        <img src="/images/guides/img-drone-angled-2.png" alt="Angled drone aerial showing house, pool, sport courts, and wooded privacy">
+        <p class="caption">Angled: captures scale, privacy, and amenity spread. Often becomes the hero shot.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="surfaces">
+    <h3>Where the Hero Shot Appears</h3>
+    <p class="lede">The hero shot is the first tile of the listing page collage and the search result thumbnail. If this image is weak, the listing loses the click before anyone reads the title.</p>
+    <div class="surfaces-grid">
+      <div class="surface-panel">
+        <span class="label">Listing page cover</span>
+        <img src="/images/guides/img-airbnb-cover.png" alt="Airbnb listing page showing the angled drone photo as the dominant cover tile">
+        <p class="caption">Largest slot in the listing collage.</p>
+      </div>
+      <div class="surface-panel">
+        <span class="label">Search result card</span>
+        <img src="/images/guides/img-airbnb-search.png" alt="Airbnb search result card showing the angled drone photo as the thumbnail">
+        <p class="caption">Standalone in search. Decides the click.</p>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ACCESSIBILITY -->
+  <div class="section-intro float-up">
+    <h2>Accessibility Photos</h2>
+    <p>Airbnb has a separate accessibility section <strong>reviewed by their team</strong>. Verified photos unlock accessibility search filters. If the property has any of these features, capture them:</p>
+  </div>
+
+  <div class="access-grid">
+    <div class="access-item">
+      <h4>Doorways wider than 32 inches</h4>
+      <p>Tape measure on inside of door frame, numbers visible, door fully open. Needed for guest entrance, each bedroom, each bathroom.</p>
+    </div>
+    <div class="access-item">
+      <h4>Step-free path to entrance</h4>
+      <p>Photos every 10 feet from parking to front door. All doors/gates open. Ramps in place. Separate entrance shot from 8 feet away.</p>
+    </div>
+    <div class="access-item">
+      <h4>Lit path to entrance</h4>
+      <p>Taken at dusk or evening showing all outdoor light sources along the path. Exclude interior lighting.</p>
+    </div>
+    <div class="access-item">
+      <h4>Step-free room access</h4>
+      <p>Camera angled down to show threshold. Door open. Camera outside looking in. Thresholds under 2 inches.</p>
+    </div>
+    <div class="access-item">
+      <h4>Step-free shower</h4>
+      <p>Full shower visible including where floor meets bathroom floor. Threshold under 1 inch.</p>
+    </div>
+    <div class="access-item">
+      <h4>Grab bars (shower and toilet)</h4>
+      <p>Clear view showing bar is wall-mounted (not towel rack or suction). Show location relative to fixture.</p>
+    </div>
+    <div class="access-item">
+      <h4>Shower or bath chair</h4>
+      <p>Full seat visible inside shower or tub. Fixed or freestanding.</p>
+    </div>
+    <div class="access-item">
+      <h4>Disabled parking spot</h4>
+      <p>Signage/markings for public spots. Private: show spot is 11+ ft wide and distance to entrance.</p>
+    </div>
+  </div>
+
+
+  <!-- ROOM GUIDANCE -->
+  <div class="page-break"></div>
+  <div class="section-intro">
+    <h2>Room-by-Room Guidance</h2>
+    <p><strong>6 photos minimum per room.</strong> Multiple angles, every amenity a guest would want to verify.</p>
+  </div>
+
+  <div class="room-guidance">
+    <div class="room-item">
+      <h4>Exterior <span class="badge">6 min</span></h4>
+      <p>Full property from 2+ angles. Front entry. Twilight with all lights on. Drone if available. Driveway/parking.</p>
+    </div>
+    <div class="room-item">
+      <h4>Living Room <span class="badge">6 min</span></h4>
+      <p>Full room from 2 positions. Kitchen/dining connection. TV setup. Fireplace. Seating capacity.</p>
+    </div>
+    <div class="room-item">
+      <h4>Kitchen <span class="badge">6 min</span></h4>
+      <p>Full layout from 2 angles. Coffee station. Appliances. Island/bar seating. Storage.</p>
+    </div>
+    <div class="room-item">
+      <h4>Dining Area <span class="badge">6 min</span></h4>
+      <p>Table set for full guest count from 2 angles. Place setting close-up. Lighting/view.</p>
+    </div>
+    <div class="room-item">
+      <h4>Each Bedroom <span class="badge">6 min each</span></h4>
+      <p>Full room from 2 positions. Bedding close-up. Nightstand/desk. View. Closet. <strong>Every bedroom</strong> needs coverage.</p>
+    </div>
+    <div class="room-item">
+      <h4>Each Bathroom <span class="badge">6 min each</span></h4>
+      <p>Full bathroom from doorway. Shower/tub. Vanity and mirror. Towel setup. Special fixtures.</p>
+    </div>
+    <div class="room-item">
+      <h4>Outdoor Spaces <span class="badge">6+ min</span></h4>
+      <p>Drone or elevated wide. Each feature: pool, hot tub, fire pit, grill, dining, lounge. Twilight with string lights.</p>
+    </div>
+    <div class="room-item">
+      <h4>Game Room / Bonus <span class="badge">6 min</span></h4>
+      <p>Full room showing all equipment. Each game close-up. Equipment staged ready to play.</p>
+    </div>
+    <div class="room-item">
+      <h4>Playground / Courts <span class="badge">6 min</span></h4>
+      <p>Wide shot of full setup. Equipment close-ups. Gear staged and ready.</p>
+    </div>
+    <div class="room-item">
+      <h4>Entry / Parking <span class="badge">3 min</span></h4>
+      <p>Entry from inside. Parking showing capacity. Accessibility path if applicable.</p>
+    </div>
+  </div>
+
+
+  <!-- SCHEDULING -->
+  <div class="scheduling-block">
+    <h2>Scheduling the Shoot</h2>
+
+    <div class="schedule-bar">
+      <div class="schedule-item">
+        <div class="time">9 &ndash; 11 AM</div>
+        <div class="desc">Soft angled light. Best for interiors.</div>
+      </div>
+      <div class="schedule-item">
+        <div class="time">2 &ndash; 4 PM</div>
+        <div class="desc">Warm light. Also great for interiors.</div>
+      </div>
+      <div class="schedule-item">
+        <div class="time">Sunset + 15&ndash;40 min</div>
+        <div class="desc">Twilight exteriors. All lights on. Tripod.</div>
+      </div>
+    </div>
+
+    <p style="margin-top: 6px;"><strong>Overcast days are ideal.</strong> Plan for 2&ndash;3 hours for a standard property, longer for 5+ bedrooms. Stay through twilight for exteriors.</p>
+  </div>
+
+
+  <!-- STAGING CHECKLIST -->
+  <div class="section-intro">
+    <h2>Staging Checklist</h2>
+  </div>
+
+  <div class="check-cols">
+    <div class="check-col include">
+      <h4>Set Up Before Every Shot</h4>
+      <ul>
+        <li>All blinds, curtains, and shades fully open</li>
+        <li>Every lamp on for warm ambient light</li>
+        <li>Beds made with white/light linens, comforter folded back, 4-5 pillows</li>
+        <li>Couch pillows fluffed, one throw draped on arm</li>
+        <li>Dining table set for full guest count</li>
+        <li>Kitchen counters clear except coffee setup, cutting board, fruit bowl</li>
+        <li>Bathrooms: fresh white towels, hand soap, small plant or candle</li>
+        <li>Every toilet lid closed</li>
+        <li>Outdoor furniture with clean cushions, string lights on</li>
+        <li>Game equipment organized, set up ready to play</li>
+      </ul>
+    </div>
+    <div class="check-col remove">
+      <h4>Remove Before Every Shot</h4>
+      <ul>
+        <li>Family photos, personal items, religious or political items</li>
+        <li>Charging cables, visible cords, power strips</li>
+        <li>Trash cans, shoes, scattered remotes</li>
+        <li>Dish rack, sponges, dish soap, paper towels, fridge magnets</li>
+        <li>All personal products, medications, shampoo bottles</li>
+        <li>Toilet brush, plunger, bathroom trash bin</li>
+        <li>Cars from driveway, hoses, toys, tools, trash bins</li>
+        <li>Lockbox from the door</li>
+        <li>Check every mirror and reflective surface for reflections</li>
+      </ul>
+    </div>
+  </div>
+
+
+  <!-- TLDR -->
+  <div class="page-break"></div>
+
+  <div class="tldr-title">Quick Reference: What We Need from You</div>
+  <p class="tldr-subtitle">Everything above distilled into one page. If you read nothing else, read this.</p>
+
+  <div class="tldr-section">
+    <h3>The Numbers</h3>
+    <div class="tldr-row">
+      <div class="tldr-stat">
+        <div class="num">6</div>
+        <div class="desc">photos per room minimum</div>
+      </div>
+      <div class="tldr-stat">
+        <div class="num">3:2</div>
+        <div class="desc">aspect ratio, landscape + portrait</div>
+      </div>
+      <div class="tldr-stat">
+        <div class="num">3</div>
+        <div class="desc">shot types per room (hero, secondary, close-up)</div>
+      </div>
+      <div class="tldr-stat">
+        <div class="num">2-3 hr</div>
+        <div class="desc">typical shoot length</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tldr-section">
+    <h3>Every Room Needs</h3>
+    <div class="tldr-grid">
+      <div class="tldr-card">
+        <h4>Hero Shot</h4>
+        <p>Wide-angle of the full room. Tripod at chest height. This becomes the large image in the Photo Tour.</p>
+      </div>
+      <div class="tldr-card">
+        <h4>Secondary Shot</h4>
+        <p>Different angle showing what the hero missed: the other side, how it connects to other spaces, or the view.</p>
+      </div>
+      <div class="tldr-card">
+        <h4>Close-Up</h4>
+        <p>Detail shots of specific listed amenities. Stage them as if someone is about to use them.</p>
+      </div>
+      <div class="tldr-card">
+        <h4>Both Orientations</h4>
+        <p>Shoot the strongest angle in both landscape and portrait. We need both for the Photo Tour grid.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="tldr-section">
+    <h3>The First 5 Gallery Slots</h3>
+    <ul class="tldr-list">
+      <li><strong>1. Hero Shot</strong> &ndash; Strongest single image. Exterior or most striking interior. Twilight wins.</li>
+      <li><strong>2. Main Living Hero</strong> &ndash; Living room or open-plan shot. "I could relax here."</li>
+      <li><strong>3. Signature Amenity</strong> &ndash; The thing guests are really booking: pool, hot tub, view, game room.</li>
+      <li><strong>4. Kitchen or Primary Bedroom</strong> &ndash; Whichever photographs better.</li>
+      <li><strong>5. Outdoor or Atmosphere</strong> &ndash; Golden hour, deck, fire pit, patio. Closes the first impression.</li>
+    </ul>
+  </div>
+
+  <div class="tldr-section">
+    <h3>Before Every Shot</h3>
+    <div class="tldr-grid">
+      <div class="tldr-card">
+        <h4>Stage</h4>
+        <p>All blinds/curtains open. Every lamp on. Beds made with white linens, 4-5 pillows. Dining table set for full guest count. Outdoor furniture clean, string lights on.</p>
+      </div>
+      <div class="tldr-card">
+        <h4>Remove</h4>
+        <p>Personal items, family photos, charging cables, power strips, trash cans, shoes, dish racks, toiletries, medications, cars from driveway, lockbox from door.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="tldr-section">
+    <h3>Best Shooting Windows</h3>
+    <div class="tldr-row">
+      <div class="tldr-stat">
+        <div class="num">9-11 AM</div>
+        <div class="desc">soft light, best for interiors</div>
+      </div>
+      <div class="tldr-stat">
+        <div class="num">2-4 PM</div>
+        <div class="desc">warm light, also great for interiors</div>
+      </div>
+      <div class="tldr-stat">
+        <div class="num">Sunset +15-40 min</div>
+        <div class="desc">twilight exteriors, all lights on, tripod</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top: 10px;">
+    <strong>Overcast days are ideal.</strong> Plan for 2-3 hours for a standard property, longer for 5+ bedrooms. Stay through twilight for exteriors. Shoot at the highest resolution your camera allows. We handle all cropping and exporting.
+  </div>
+
+
+  <!-- FOOTER -->
+  <div class="doc-footer">
+    <div class="footer-brand">
+      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="#b8b2ab" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="#b8b2ab" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="footer-wordmark"><span class="rev">Rev</span><span class="whisper">Whisper</span></span>
+    </div>
+    <span>Prepared for client and photographer use</span>
+  </div>
+
+</div>
+
+</body>
+</html>
