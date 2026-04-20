@@ -3,10 +3,7 @@
   "redirects": [
     { "source": "/search-ranking", "destination": "https://app.revwhisper.com/search-ranking", "permanent": true },
     { "source": "/revenue-lift", "destination": "/search-ranking", "permanent": true },
-    { "source": "/webinar", "destination": "https://my.demio.com/ref/i6PtxjJOSUSo2kLo", "permanent": true },
-    { "source": "/checkout-form", "destination": "/checkout-maintenance", "permanent": false },
-    { "source": "/checkout", "destination": "/checkout-maintenance", "permanent": false },
-    { "source": "/get-started", "destination": "/checkout-maintenance", "permanent": false }
+    { "source": "/webinar", "destination": "https://my.demio.com/ref/i6PtxjJOSUSo2kLo", "permanent": true }
   ],
   "headers": [
     {
