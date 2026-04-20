@@ -45,6 +45,11 @@ module.exports = async function handler(req, res) {
     return sendJson(res, 405, { error: 'Method not allowed.' });
   }
 
+  return sendJson(res, 503, {
+    error: 'Checkout is temporarily unavailable while we migrate our payment system. Please try again shortly or contact hello@revwhisper.com.',
+    maintenance: true
+  });
+
   const payload = parseBody(req);
   const email = String(payload.email || '').trim().toLowerCase();
   const submittedPlan = String(payload.plan || '').trim().toLowerCase();
