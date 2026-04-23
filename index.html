@@ -117,7 +117,12 @@ document.addEventListener('DOMContentLoaded',function(){
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=DM+Sans:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://i.ytimg.com">
+<link rel="dns-prefetch" href="https://www.youtube.com">
+<link rel="preload" as="image" href="https://i.ytimg.com/vi_webp/MFiPKRFp7tE/maxresdefault.webp" fetchpriority="high">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
 <style>
 /* ── Reset & Base ── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -193,6 +198,13 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
 .em-mark::after{content:'';position:absolute;left:-2%;right:-2%;bottom:-6px;height:14px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 16' preserveAspectRatio='none'%3E%3Cpath d='M2 11 C25 4, 75 4, 98 11' fill='none' stroke='%234A6741' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center/100% 100%;pointer-events:none;transform:rotate(-0.5deg);clip-path:inset(0 100% 0 0)}
 .r.in .em-mark::after{animation:ctaUnderlineDraw .8s .4s ease both}
 .em-mark-hi{font-style:italic;background:linear-gradient(to top,var(--accent-light) 32%,transparent 32%);padding:0 2px}
+
+/* ── YouTube Facade ── */
+.yt-facade{position:relative;display:block;width:100%;aspect-ratio:16/9;padding:0;border:0;background:#000;cursor:pointer;border-radius:inherit;overflow:hidden}
+.yt-facade img{width:100%;height:100%;object-fit:cover;display:block;border:0}
+.yt-facade .yt-play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:68px;height:48px;pointer-events:none;transition:opacity .2s ease,transform .2s ease;filter:drop-shadow(0 2px 6px rgba(0,0,0,.3))}
+.yt-facade:hover .yt-play{transform:translate(-50%,-50%) scale(1.06)}
+.yt-facade:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 
 /* ── Hero ── */
 #hero{padding:160px 0 100px;text-align:center;position:relative;overflow:hidden}
@@ -1086,7 +1098,10 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
     </div>
     <!-- YouTube Video -->
     <div class="hero-video r d3" style="margin-top:1.5rem;max-width:720px;margin-left:auto;margin-right:auto;border-radius:16px;overflow:hidden;">
-      <iframe width="720" height="405" src="https://www.youtube.com/embed/MFiPKRFp7tE?si=lZzKRYnxRijJEpIx" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style="display:block;width:100%;height:auto;aspect-ratio:16/9;border:0;"></iframe>
+      <button class="yt-facade" data-video="MFiPKRFp7tE" data-query="si=lZzKRYnxRijJEpIx" aria-label="Play video: RevWhisper intro">
+        <img src="https://i.ytimg.com/vi_webp/MFiPKRFp7tE/maxresdefault.webp" alt="" width="720" height="405" decoding="async" loading="eager" fetchpriority="high" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/MFiPKRFp7tE/hqdefault.jpg';">
+        <svg class="yt-play" viewBox="0 0 68 48" aria-hidden="true"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55c-2.93.78-4.63 3.26-5.42 6.19C.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="#f00"/><path d="M45 24 27 14v20" fill="#fff"/></svg>
+      </button>
     </div>
     <div class="logo-carousel r d3">
       <div class="logo-track">
@@ -1785,7 +1800,7 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
             <div class="stakes-row managed" data-drift="-0.09">
               <div class="stakes-pos">1</div>
               <div class="stakes-thumb">
-                <img src="images/airbnbs/creekstone-lodge.png" alt="Creekstone Lodge">
+                <img src="images/airbnbs/creekstone-lodge.webp" alt="Creekstone Lodge" width="96" height="96" loading="lazy" decoding="async">
               </div>
               <div class="stakes-info">
                 <div class="stakes-name">Creekstone Lodge</div>
@@ -1795,7 +1810,7 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
             <div class="stakes-row managed" data-drift="-0.06">
               <div class="stakes-pos">2</div>
               <div class="stakes-thumb">
-                <img src="images/airbnbs/timber-ridge-retreat.png" alt="Timber Ridge Retreat">
+                <img src="images/airbnbs/timber-ridge-retreat.webp" alt="Timber Ridge Retreat" width="96" height="96" loading="lazy" decoding="async">
               </div>
               <div class="stakes-info">
                 <div class="stakes-name">Timber Ridge Retreat</div>
@@ -1805,7 +1820,7 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
             <div class="stakes-row" data-drift="0.025">
               <div class="stakes-pos">3</div>
               <div class="stakes-thumb">
-                <img src="images/airbnbs/pine-valley-cabin.png" alt="Pine Valley Cabin">
+                <img src="images/airbnbs/pine-valley-cabin.webp" alt="Pine Valley Cabin" width="96" height="96" loading="lazy" decoding="async">
               </div>
               <div class="stakes-info">
                 <div class="stakes-name">Pine Valley Cabin</div>
@@ -1815,7 +1830,7 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
             <div class="stakes-row yours" data-drift="0.14">
               <div class="stakes-pos">4</div>
               <div class="stakes-thumb">
-                <img src="images/airbnbs/your-listing.png" alt="Your Listing">
+                <img src="images/airbnbs/your-listing.webp" alt="Your Listing" width="96" height="96" loading="lazy" decoding="async">
               </div>
               <div class="stakes-info">
                 <div class="stakes-name">Your Listing</div>
@@ -1825,7 +1840,7 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
             <div class="stakes-row managed" data-drift="-0.08">
               <div class="stakes-pos">5</div>
               <div class="stakes-thumb">
-                <img src="images/airbnbs/summit-view-chalet.png" alt="Summit View Chalet">
+                <img src="images/airbnbs/summit-view-chalet.webp" alt="Summit View Chalet" width="96" height="96" loading="lazy" decoding="async">
               </div>
               <div class="stakes-info">
                 <div class="stakes-name">Summit View Chalet</div>
@@ -1835,7 +1850,7 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
             <div class="stakes-row" data-drift="0.04">
               <div class="stakes-pos">6</div>
               <div class="stakes-thumb">
-                <img src="images/airbnbs/lakeview-hideaway.png" alt="Lakeview Hideaway">
+                <img src="images/airbnbs/lakeview-hideaway.webp" alt="Lakeview Hideaway" width="96" height="96" loading="lazy" decoding="async">
               </div>
               <div class="stakes-info">
                 <div class="stakes-name">Lakeview Hideaway</div>
@@ -1845,7 +1860,7 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
             <div class="stakes-row managed" data-drift="-0.11">
               <div class="stakes-pos">7</div>
               <div class="stakes-thumb">
-                <img src="images/airbnbs/birchwood-estate.png" alt="Birchwood Estate">
+                <img src="images/airbnbs/birchwood-estate.webp" alt="Birchwood Estate" width="96" height="96" loading="lazy" decoding="async">
               </div>
               <div class="stakes-info">
                 <div class="stakes-name">Birchwood Estate</div>
@@ -3181,6 +3196,25 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
         window.scrollTo({ top: top, behavior: 'smooth' });
       }
     });
+  });
+
+  /* ── YouTube facade: load the real iframe on click ── */
+  document.querySelectorAll('.yt-facade').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var id = btn.getAttribute('data-video');
+      if (!id) return;
+      var extra = btn.getAttribute('data-query') || '';
+      var src = 'https://www.youtube.com/embed/' + id + '?autoplay=1&' + extra;
+      var iframe = document.createElement('iframe');
+      iframe.setAttribute('src', src);
+      iframe.setAttribute('title', btn.getAttribute('aria-label') || 'YouTube video player');
+      iframe.setAttribute('frameborder', '0');
+      iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
+      iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+      iframe.setAttribute('allowfullscreen', '');
+      iframe.style.cssText = 'display:block;width:100%;height:100%;aspect-ratio:16/9;border:0;';
+      btn.replaceWith(iframe);
+    }, { once: true });
   });
 
   /* ── Floating Nav: mobile hamburger ── */
