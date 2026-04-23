@@ -129,8 +129,8 @@ document.addEventListener('DOMContentLoaded',function(){
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
-<link rel="preload" href="/assets/home.css" as="style">
-<link rel="stylesheet" href="/assets/home.css">
+<link rel="preload" href="assets/home.css" as="style">
+<link rel="stylesheet" href="assets/home.css">
 </head>
 <body>
 
@@ -1136,7 +1136,7 @@ document.addEventListener('DOMContentLoaded',function(){
 <!-- ════════════════════════════════════════════════
      SCRIPTS
      ════════════════════════════════════════════════ -->
-<script defer src="/assets/home.js"></script>
+<script defer src="assets/home.js"></script>
 <!-- GA4 Custom Events -->
 <script>
 function normalizeAirbnbUrl(raw){var s=raw.trim().replace(/^["'<]+|["'>]+$/g,'');if(!/^https?:\/\//i.test(s))s='https://'+s.replace(/^\/\//,'');var url;try{url=new URL(s)}catch(e){return null}var host=url.hostname.replace(/^www\./,'');if(!/^airbnb\.[a-z.]+$/i.test(host))return null;var path=url.pathname.replace(/\/+$/,'');if(/^\/rooms\/\d+/.test(path))return url.href;if(/^\/h\/[a-zA-Z0-9_-]+/.test(path))return url.href;if(/^\/users\/show\/\d+/.test(path))return url.href;if(/^\/p\/[a-zA-Z0-9_-]+/.test(path))return url.href;var sys=['hosting','login','signup','help','account','settings','experiences','s','luxury','wishlists','messages','trips','notifications','manage-listing','resources'];var seg=path.split('/')[1];if(seg&&sys.indexOf(seg)===-1&&/^[a-zA-Z0-9_-]+$/.test(seg))return url.href;return null}
