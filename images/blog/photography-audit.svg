@@ -1,0 +1,50 @@
+<svg width="900" height="500" viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg">
+  <rect width="900" height="500" rx="28" fill="#F8F7F6"/>
+
+  <text x="450" y="58" text-anchor="middle" font-family="Georgia, serif" font-size="36" fill="#32302F">
+    Photography Audit
+  </text>
+  <text x="450" y="88" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="#6F6A67">
+    Better listing photos lead to more clicks and bookings
+  </text>
+
+  <!-- Left card -->
+  <rect x="70" y="135" width="240" height="245" rx="22" fill="#FFFFFF" stroke="#E0DCDA" stroke-width="2"/>
+  <rect x="95" y="160" width="190" height="118" rx="14" fill="#DCE6D8"/>
+  <circle cx="140" cy="200" r="20" fill="#4A6741"/>
+  <path d="M100 270 L155 218 L205 252 L238 226 L285 270 Z" fill="#4A6741" opacity="0.78"/>
+
+  <text x="190" y="320" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" font-weight="700" fill="#32302F">
+    Audit Photos
+  </text>
+  <text x="190" y="348" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#777">
+    cover shot · daylight · flow
+  </text>
+
+  <!-- Arrow -->
+  <path d="M350 255 H505" stroke="#4A6741" stroke-width="6" stroke-linecap="round"/>
+  <path d="M505 255 L478 232 M505 255 L478 278" stroke="#4A6741" stroke-width="6" stroke-linecap="round"/>
+
+  <!-- Right card -->
+  <rect x="560" y="135" width="270" height="245" rx="22" fill="#FFFFFF" stroke="#E0DCDA" stroke-width="2"/>
+
+  <rect x="592" y="165" width="206" height="48" rx="12" fill="#F8F7F6"/>
+  <circle cx="620" cy="189" r="12" fill="#DCE6D8"/>
+  <rect x="645" y="180" width="120" height="8" rx="4" fill="#C7C1BE"/>
+  <rect x="645" y="195" width="80" height="7" rx="3.5" fill="#E0DCDA"/>
+
+  <circle cx="695" cy="270" r="46" fill="#DCE6D8"/>
+  <path d="M676 270 L690 285 L716 252" fill="none" stroke="#4A6741" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <text x="695" y="337" text-anchor="middle" font-family="Georgia, serif" font-size="30" fill="#4A6741">
+    More Clicks
+  </text>
+  <text x="695" y="362" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#777">
+    stronger listing visibility
+  </text>
+
+  <!-- Footer -->
+  <text x="450" y="445" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#9A9490">
+    RevWhisper · Listing Optimization Checklist
+  </text>
+</svg>
