@@ -22,7 +22,7 @@ var BLOG_POSTS = [
     title: "Photography Audit: Is Your Listing Losing Clicks?",
     excerpt: "Your listing is leaking clicks and bookings right now, and your photos are likely the first place to look. A 12-item audit covering cover photo, sequencing, title, amenities, and review strategy.",
     date: "2026-04-29",
-    image: "/images/blog/photography-audit.svg",
+    image: "/images/blog/photography-audit-v1.svg",
     tags: ["Checklist", "Listing Optimization"],
     author: "RevWhisper Team"
   },
