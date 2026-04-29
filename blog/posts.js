@@ -18,6 +18,15 @@
 
 var BLOG_POSTS = [
   {
+    slug: "photography-audit-listing-losing-clicks",
+    title: "Photography Audit: Is Your Listing Losing Clicks?",
+    excerpt: "Your listing is leaking clicks and bookings right now, and your photos are likely the first place to look. A 12-item audit covering cover photo, sequencing, title, amenities, and review strategy.",
+    date: "2026-04-29",
+    image: "/images/blog/photography-audit.svg",
+    tags: ["Checklist", "Listing Optimization"],
+    author: "RevWhisper Team"
+  },
+  {
     slug: "views-not-bookings-content-gap",
     title: "You're Getting Views but Not Bookings. Here's What the Algorithm Sees.",
     excerpt: "You are getting views but not bookings. That gap is not a pricing problem. It is a content problem, and the algorithm is watching every second of it.",
