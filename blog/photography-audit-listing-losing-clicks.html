@@ -187,10 +187,35 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
 .post-content strong{color:var(--black);font-weight:600}
 
 /* ── Priority Pill ── */
-.priority{display:inline-block;font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.04em;text-transform:uppercase;padding:2px 8px;border-radius:20px;margin-left:6px;vertical-align:middle;line-height:1.6}
+.priority{display:inline-block;font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.04em;text-transform:uppercase;padding:2px 8px;border-radius:20px;vertical-align:middle;line-height:1.6}
 .priority.critical{color:#8a3a2e;background:#f5e1dc}
 .priority.important{color:var(--accent);background:var(--accent-light)}
 .priority.nice{color:var(--g500);background:var(--g100)}
+
+/* ── Stat Card ── */
+.stat-card{background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:24px 28px;margin:0 0 36px;text-align:center}
+.stat-num{font-family:var(--mono);font-size:clamp(28px,6vw,40px);color:var(--accent);line-height:1}
+.stat-label{font-size:14.5px;color:var(--g500);margin-top:8px;line-height:1.5}
+
+/* ── Section Lead ── */
+.section-lead{font-size:15.5px;color:var(--g500);font-style:italic;margin:-2px 0 18px;line-height:1.65}
+
+/* ── Audit Cards ── */
+.audit-list{margin:0 0 32px;padding:0;list-style:none;counter-reset:audit}
+.audit-list li{margin:0 0 10px;padding:0}
+.audit-card{position:relative;display:flex;gap:18px;background:var(--white);border:1px solid var(--g200);border-left-width:3px;border-radius:var(--radius);padding:16px 20px}
+.audit-card.critical{border-left-color:#c5614e}
+.audit-card.important{border-left-color:var(--accent)}
+.audit-card.nice{border-left-color:var(--g300)}
+.audit-num{font-family:var(--mono);font-size:12px;font-weight:500;color:var(--g400);flex-shrink:0;padding-top:3px;min-width:24px}
+.audit-body{flex:1;min-width:0}
+.audit-action{font-family:var(--body);font-size:15.5px;font-weight:600;color:var(--black);line-height:1.5;margin:0 96px 4px 0}
+.audit-reason{font-size:14.5px;color:var(--g500);line-height:1.6;margin:0}
+.audit-card .priority{position:absolute;top:18px;right:18px}
+@media(max-width:600px){
+  .audit-action{margin-right:0}
+  .audit-card .priority{position:static;margin-top:8px;display:inline-block}
+}
 
 /* ── CTA Banner ── */
 .post-cta{max-width:680px;margin:0 auto 64px;padding:36px 32px;background:var(--g50);border:1px solid var(--g200);border-radius:var(--radius);text-align:center}
@@ -266,42 +291,156 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
 
 <article class="post-content w">
 
-  <p>Your listing is leaking clicks and bookings right now, and your photos are likely the first place to look.</p>
+  <p>Your listing is leaking clicks. The algorithm is grading it in real time on signals you can fix tonight, and most hosts do not know which signals to look at first. This is the audit.</p>
 
-  <p>This is a working audit. Run each item against your live Airbnb listing today and fix the ones marked <span class="priority critical">critical</span> first &mdash; those are the ones the algorithm and the guest both punish you for.</p>
+  <div class="stat-card">
+    <div class="stat-num">64%</div>
+    <div class="stat-label">of all Q4 2025 Airbnb nights were booked from a 6-inch screen. Your audit starts there.</div>
+  </div>
+
+  <p>Twelve items. Three sections. Run them in order against your live listing. Fix the <span class="priority critical">critical</span> rows first &mdash; those are the ones the algorithm and the guest both punish you for.</p>
 
   <h2>Cover Photo and Visual Hierarchy</h2>
+  <p class="section-lead">Your cover photo has one job: stop the scroll on a phone. Most do not, and the algorithm watches every miss.</p>
 
-  <ul>
-    <li><strong>Replace your cover photo with a wide hero shot of your best room.</strong> The cover photo is the single frame that wins or loses the click in Airbnb search results. <span class="priority critical">critical</span></li>
-    <li><strong>Audit all photos for natural daylight and professional composition.</strong> Airbnb&rsquo;s algorithm scores listing quality using photo signals as one of its 800+ ranking inputs. <span class="priority critical">critical</span></li>
-    <li><strong>Sequence photos to tell a guest journey, not a room inventory.</strong> Lead with the best space, then show the bedroom, bathroom, outdoor area, and neighborhood in that order. <span class="priority important">important</span></li>
-    <li><strong>Add at least 25 photos covering every space a guest will use.</strong> Airbnb rewards content completeness; listings under 20 photos rank lower than those with full coverage. <span class="priority important">important</span></li>
-  </ul>
+  <ol class="audit-list">
+    <li>
+      <div class="audit-card critical">
+        <div class="audit-num">01</div>
+        <div class="audit-body">
+          <p class="audit-action">Replace your cover photo with a wide hero shot of your best room.</p>
+          <p class="audit-reason">The cover photo is the single frame Airbnb gives you in search. A flat interior shot loses the click to an exterior or hero room every time.</p>
+        </div>
+        <span class="priority critical">critical</span>
+      </div>
+    </li>
+    <li>
+      <div class="audit-card critical">
+        <div class="audit-num">02</div>
+        <div class="audit-body">
+          <p class="audit-action">Audit every photo for natural daylight and clean composition.</p>
+          <p class="audit-reason">Airbnb scores photo quality as one of its 800+ ranking inputs. Phone shots in artificial light pull your whole listing down.</p>
+        </div>
+        <span class="priority critical">critical</span>
+      </div>
+    </li>
+    <li>
+      <div class="audit-card important">
+        <div class="audit-num">03</div>
+        <div class="audit-body">
+          <p class="audit-action">Sequence photos as a guest journey, not a room inventory.</p>
+          <p class="audit-reason">Lead with the best space, then bedroom, bathroom, outdoor, neighborhood. Stop showing the laundry room third.</p>
+        </div>
+        <span class="priority important">important</span>
+      </div>
+    </li>
+    <li>
+      <div class="audit-card important">
+        <div class="audit-num">04</div>
+        <div class="audit-body">
+          <p class="audit-action">Show every space a guest will use &mdash; aim for 25+ photos.</p>
+          <p class="audit-reason">Listings under 20 photos rank lower. Empty space in your gallery reads as a missing room.</p>
+        </div>
+        <span class="priority important">important</span>
+      </div>
+    </li>
+  </ol>
 
   <h2>Title, Description, and Amenity Signals</h2>
+  <p class="section-lead">The algorithm reads your copy. The guest skims it. Both have to win in the first two lines.</p>
 
-  <ul>
-    <li><strong>Rewrite your title using the formula: Vibe + Standout Feature + Location Anchor.</strong> Titles like &ldquo;Cozy Cabin&rdquo; are invisible; titles like &ldquo;Lakeview Cabin With Private Hot Tub&rdquo; win clicks. <span class="priority critical">critical</span></li>
-    <li><strong>Audit your amenities list and add every item that is physically present in your listing.</strong> Missing amenities are invisible to guests filtering search, cutting you out of entire demand pools. <span class="priority critical">critical</span></li>
-    <li><strong>Rewrite your description opening sentence to lead with the guest experience, not the property facts.</strong> Guests buy feelings first; your first two lines appear in search previews and drive the click decision. <span class="priority important">important</span></li>
-    <li><strong>Structure your description with clear sections: the space, the experience, the location, the rules.</strong> Airbnb&rsquo;s algorithm scores content completeness; structured descriptions signal a high-quality host. <span class="priority important">important</span></li>
-  </ul>
+  <ol class="audit-list" start="5">
+    <li>
+      <div class="audit-card critical">
+        <div class="audit-num">05</div>
+        <div class="audit-body">
+          <p class="audit-action">Rewrite your title: Vibe + Standout Feature + Location Anchor.</p>
+          <p class="audit-reason">&ldquo;Cozy Cabin&rdquo; is invisible. &ldquo;Lakeview Cabin With Private Hot Tub&rdquo; wins the click.</p>
+        </div>
+        <span class="priority critical">critical</span>
+      </div>
+    </li>
+    <li>
+      <div class="audit-card critical">
+        <div class="audit-num">06</div>
+        <div class="audit-body">
+          <p class="audit-action">Fill every amenity box that is physically true in your listing.</p>
+          <p class="audit-reason">Blank fields are zero-point signals. Missing amenities cut you out of entire filtered demand pools.</p>
+        </div>
+        <span class="priority critical">critical</span>
+      </div>
+    </li>
+    <li>
+      <div class="audit-card important">
+        <div class="audit-num">07</div>
+        <div class="audit-body">
+          <p class="audit-action">Lead your description with the experience, not the property facts.</p>
+          <p class="audit-reason">Your first two lines appear in search previews. Guests buy a feeling before they read a footprint.</p>
+        </div>
+        <span class="priority important">important</span>
+      </div>
+    </li>
+    <li>
+      <div class="audit-card important">
+        <div class="audit-num">08</div>
+        <div class="audit-body">
+          <p class="audit-action">Structure your description: the space, the experience, the location, the rules.</p>
+          <p class="audit-reason">Structured copy signals a high-quality host to both the algorithm and the skimmer.</p>
+        </div>
+        <span class="priority important">important</span>
+      </div>
+    </li>
+  </ol>
 
   <h2>Algorithm, Reviews, and Badge Strategy</h2>
+  <p class="section-lead">Every signal you give the algorithm compounds. Three of the strongest are within reach today.</p>
 
-  <ul>
-    <li><strong>Check your Guest Favorite eligibility status in your Airbnb hosting dashboard today.</strong> Guest Favorite requires high ratings, low cancellations, and a response rate above 90% within 1 hour. <span class="priority critical">critical</span></li>
-    <li><strong>Set a review response template and reply to every review within 24 hours.</strong> Review velocity and host response behavior are direct algorithm ranking signals in Airbnb&rsquo;s 800+ factor model. <span class="priority critical">critical</span></li>
-    <li><strong>Audit your response time and enable Instant Book if your average reply exceeds 1 hour.</strong> Response time is a weighted ranking signal; slow response times suppress your listing in search results. <span class="priority important">important</span></li>
-    <li><strong>Request Superhost status review if you are within 1&ndash;2 stays of the quarterly threshold.</strong> The Superhost badge increases guest trust and is a confirmed positive signal in Airbnb&rsquo;s search algorithm. <span class="priority nice">nice-to-have</span></li>
-  </ul>
+  <ol class="audit-list" start="9">
+    <li>
+      <div class="audit-card critical">
+        <div class="audit-num">09</div>
+        <div class="audit-body">
+          <p class="audit-action">Check your Guest Favorite eligibility in your hosting dashboard today.</p>
+          <p class="audit-reason">Eligibility requires high ratings, low cancellations, and a response rate above 90% within 1 hour.</p>
+        </div>
+        <span class="priority critical">critical</span>
+      </div>
+    </li>
+    <li>
+      <div class="audit-card critical">
+        <div class="audit-num">10</div>
+        <div class="audit-body">
+          <p class="audit-action">Reply to every review within 24 hours, with a template you actually use.</p>
+          <p class="audit-reason">Review velocity and host response behavior are direct ranking signals in the 800+ factor model.</p>
+        </div>
+        <span class="priority critical">critical</span>
+      </div>
+    </li>
+    <li>
+      <div class="audit-card important">
+        <div class="audit-num">11</div>
+        <div class="audit-body">
+          <p class="audit-action">Get your average response time under 1 hour, or turn on Instant Book.</p>
+          <p class="audit-reason">Response time is a weighted ranking signal. Slow replies suppress your listing in search.</p>
+        </div>
+        <span class="priority important">important</span>
+      </div>
+    </li>
+    <li>
+      <div class="audit-card nice">
+        <div class="audit-num">12</div>
+        <div class="audit-body">
+          <p class="audit-action">Request a Superhost review if you are 1&ndash;2 stays from the quarterly threshold.</p>
+          <p class="audit-reason">The badge increases guest trust and is a confirmed positive signal in Airbnb&rsquo;s search algorithm.</p>
+        </div>
+        <span class="priority nice">nice-to-have</span>
+      </div>
+    </li>
+  </ol>
 
-  <h2>Pro Tips</h2>
+  <h2>What&rsquo;s At Stake</h2>
 
-  <blockquote>App bookings hit 64% of all Q4 2025 nights. Your cover photo must look perfect on a 6-inch screen.</blockquote>
-
-  <blockquote>Airbnb removed 550,000+ listings since 2023 for quality issues. Every audit item here protects your standing.</blockquote>
+  <blockquote>Airbnb has removed 550,000+ listings since 2023 for quality issues. Every row in this audit protects your standing.</blockquote>
 
   <blockquote>Guests are booking further in advance. A weaker listing loses to a stronger one 60 days before check-in, not the night before.</blockquote>
 
