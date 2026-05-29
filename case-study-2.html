@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Attribution tracking (cookie-free) -->
+<script>
+(function(){
+  var key='rw_attribution';
+  var params=new URLSearchParams(window.location.search);
+  var utmFields=['utm_source','utm_medium','utm_campaign','utm_term','utm_content'];
+  var hasUtm=utmFields.some(function(f){return params.has(f);});
+  if(hasUtm||!sessionStorage.getItem(key)){
+    var data={};
+    utmFields.forEach(function(f){if(params.get(f))data[f]=params.get(f);});
+    try{data.referrer=document.referrer?new URL(document.referrer).hostname:'direct';}catch(e){data.referrer=document.referrer||'direct';}
+    data.landing_page=window.location.pathname;
+    data.arrived_at=new Date().toISOString();
+    sessionStorage.setItem(key,JSON.stringify(data));
+  }
+})();
+</script>
+<!-- Cookie Consent + GA4 (consent-gated) -->
+<script>
+window.dataLayer=window.dataLayer||[];
+function gtag(){dataLayer.push(arguments);}
+function rwLoadGA(){
+  var s=document.createElement('script');s.async=true;
+  s.src='https://www.googletagmanager.com/gtag/js?id=G-Y1FYZ5849B';
+  document.head.appendChild(s);
+  gtag('js',new Date());gtag('config','G-Y1FYZ5849B');
+}
+function rwTrack(e,p){if(localStorage.getItem('rw_cookie_consent')==='accepted')gtag('event',e,p||{});}
+(function(){
+  var c=localStorage.getItem('rw_cookie_consent');
+  if(c==='accepted'){rwLoadGA();return;}
+  if(c==='declined')return;
+  document.addEventListener('DOMContentLoaded',function(){
+    var b=document.createElement('div');b.id='rw-consent';
+    b.innerHTML='<div style="position:fixed;bottom:0;left:0;right:0;z-index:9999;padding:16px 24px;background:#32302F;color:#fff;font-family:DM Sans,system-ui,sans-serif;font-size:14px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;box-shadow:0 -4px 24px rgba(0,0,0,.15)"><span style="flex:1;min-width:240px;line-height:1.5">We use cookies to analyze site usage and improve your experience.</span><div style="display:flex;gap:10px;flex-shrink:0"><button id="rw-decline" style="background:transparent;color:#ccc8c5;border:1.5px solid #706b68;padding:8px 20px;border-radius:6px;font-size:13px;font-family:inherit;cursor:pointer">Decline</button><button id="rw-accept" style="background:#4A6741;color:#fff;border:none;padding:8px 20px;border-radius:6px;font-size:13px;font-family:inherit;cursor:pointer;font-weight:500">Accept</button></div></div>';
+    document.body.appendChild(b);
+    document.getElementById('rw-accept').addEventListener('click',function(){localStorage.setItem('rw_cookie_consent','accepted');b.remove();rwLoadGA();});
+    document.getElementById('rw-decline').addEventListener('click',function(){localStorage.setItem('rw_cookie_consent','declined');b.remove();});
+  });
+})();
+</script>
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '595257495497929');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=595257495497929&ev=PageView&noscript=1"/></noscript>
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+  document.addEventListener('click',function(e){
+    var el=e.target.closest('a,button');
+    if(!el)return;
+    var txt=(el.textContent||'').replace(/\s+/g,' ').trim().toLowerCase();
+    if(txt.indexOf('book your free strategy call')!==-1||txt.indexOf('book a call')!==-1){
+      fbq('track','Lead',{content_name:'Book Strategy Call'});
+    }
+  });
+});
+</script>
+<!-- End Meta Pixel -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case Study 2 &mdash; Gulfstream Villa, Englewood FL | RevWhisper</title>
+<meta name="description" content="How RevWhisper took a 4.98-star Englewood, FL home from page 7 of Airbnb search to #1 on its open dates — July pacing 97% booked while the surrounding market sat at 27%.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://revwhisper.com/case-study-2">
+<link rel="icon" href="/icons/favicon-light.svg" type="image/svg+xml" media="(prefers-color-scheme: light)">
+<link rel="icon" href="/icons/favicon-dark.svg" type="image/svg+xml" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/icons/favicon-light.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ════════════════════════════════════════════════
+   RevWhisper Case Study — brand tokens mirror /case-study
+   White 70 · Dune 15 · Fern 10 · Stone 5
+   ════════════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;overflow-x:hidden}
+
+:root{
+  --black:#32302F;          /* Dune — primary text, never #000 */
+  --white:#ffffff;
+  --accent:#4A6741;         /* Fern — accents & CTAs */
+  --accent-light:#dce6d8;
+  --accent-border:#b3c5ab;
+  --terra:#8B4A3E;          /* Terracotta — secondary accent / before */
+  --gold:#9B7B3A;
+  --g50:#faf9f8;--g100:#f3f1ef;--g200:#E0DCDA;--g300:#ccc8c5;--g400:#a39e9b;--g500:#706b68;--g600:#58534f;--g700:#48433f;
+  --radius:8px;--radius-sm:6px;--radius-lg:12px;--radius-xl:16px;
+  --sh-sm:0 1px 3px rgba(50,48,47,.06),0 1px 2px rgba(50,48,47,.04);
+  --sh:0 4px 16px rgba(50,48,47,.07),0 2px 6px rgba(50,48,47,.04);
+  --sh-lg:0 16px 48px rgba(50,48,47,.1),0 4px 12px rgba(50,48,47,.05);
+  --heading:'Lora','Georgia',serif;
+  --body:'DM Sans','system-ui','Helvetica Neue',sans-serif;
+  --mono:'DM Mono','Consolas',monospace;
+  --maxw:1080px;
+}
+
+body{margin:0;background:var(--white);color:var(--black);font-family:var(--body);font-size:18px;line-height:1.6;font-weight:400;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 40px}
+
+/* Headlines: Lora, weight 400 only — never bold */
+h1,h2,h3,h4{font-family:var(--heading);font-weight:400;color:var(--black);margin:0;line-height:1.14;letter-spacing:-.02em}
+.serif{font-family:var(--heading);font-weight:400}
+.eyebrow{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--g500)}
+.green{color:var(--accent)}.terra{color:var(--terra)}
+.up::before{content:"\25B2";font-size:.62em;vertical-align:middle;margin-right:.32em;position:relative;top:-1px}
+
+/* ── Hero ── */
+.hero{padding-top:72px;padding-bottom:18px}
+.hero .kick{display:flex;gap:14px;align-items:center;margin-bottom:26px}
+.hero .kick .line{height:1px;background:var(--g200);flex:1}
+.hero h1{font-size:clamp(40px,6.4vw,68px);line-height:1.04;letter-spacing:-.025em;max-width:15ch}
+.hero h1 .accent{font-style:italic;color:var(--accent)}
+.hero .sub{margin-top:24px;max-width:62ch;color:var(--g600);font-size:18px;font-weight:300;line-height:1.7}
+.propline{margin-top:30px;display:flex;flex-wrap:wrap;gap:10px 22px;align-items:baseline}
+.propline .pl-name{font-family:var(--heading);font-weight:400;font-size:20px}
+.propline .pl-meta{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;color:var(--g500);text-transform:uppercase}
+
+/* Airbnb screenshot link */
+.ablink{display:block;margin-top:40px;position:relative;border-radius:var(--radius-xl);overflow:hidden;border:1px solid var(--g200);background:var(--white);box-shadow:var(--sh-sm);transition:box-shadow .25s cubic-bezier(.16,1,.3,1),transform .25s cubic-bezier(.16,1,.3,1);text-decoration:none}
+.ablink:hover{box-shadow:var(--sh-lg);transform:translateY(-2px)}
+.ablink img{width:100%;display:block}
+.ablink .pill{position:absolute;top:16px;right:16px;background:var(--black);color:#fff;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:8px 14px;border-radius:30px;box-shadow:0 2px 10px rgba(50,48,47,.22);display:inline-flex;align-items:center;gap:7px}
+
+/* hook pull-quote */
+.hook{margin-top:40px;border-left:3px solid var(--terra);padding:6px 0 6px 26px}
+.hook .hlab{font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--terra)}
+.hook blockquote{margin:14px 0 0;font-family:var(--heading);font-style:italic;font-weight:400;font-size:clamp(20px,2.5vw,26px);line-height:1.45;color:var(--black);max-width:50ch}
+.hook blockquote b{font-style:normal;font-weight:500}
+
+/* ── Aggregate stats ── */
+.statrow{margin-top:46px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.stat{background:var(--g50);border:1px solid var(--g200);border-radius:var(--radius);padding:24px}
+.stat .lab{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--g500)}
+.stat .big{font-family:var(--mono);font-weight:500;font-size:clamp(26px,3.4vw,36px);line-height:1.04;margin-top:14px;letter-spacing:-.01em;color:var(--accent)}
+.stat .big small{font-family:var(--body);font-size:.42em;font-weight:400;color:var(--g400);letter-spacing:0}
+.stat .delta{margin-top:9px;font-family:var(--mono);font-size:12px;color:var(--g500)}
+.stat .delta.green{color:var(--accent)}
+
+/* ── Section scaffold ── */
+section{padding-top:74px}
+.sec-head{display:flex;gap:14px;align-items:center;margin-bottom:30px}
+.sec-head .num{font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--g500);text-transform:uppercase;white-space:nowrap}
+.sec-head .line{height:1px;background:var(--g200);flex:1}
+.sec-title{font-size:clamp(30px,4.4vw,46px);line-height:1.06;letter-spacing:-.02em;max-width:18ch}
+.sec-title .accent{font-style:italic;color:var(--accent)}
+.lede{margin-top:18px;max-width:66ch;color:var(--g600);font-size:17px;font-weight:300;line-height:1.7}
+
+/* ── Baseline panels ── */
+.baseline{margin-top:34px;display:grid;grid-template-columns:1.05fr .95fr;gap:26px;align-items:start}
+.panel{background:var(--g50);border:1px solid var(--g200);border-radius:var(--radius);padding:28px}
+.panel.dark{background:var(--accent);color:#fff;border-color:transparent;position:relative;overflow:hidden}
+.panel.dark::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 25% -20%,rgba(255,255,255,.07),transparent 55%);pointer-events:none}
+.panel.dark>*{position:relative;z-index:1}
+.panel.dark .eyebrow{color:var(--accent-light)}
+.panel h3{font-size:22px;margin-bottom:4px}.panel.dark h3{color:#fff}
+.kv{margin-top:18px;border-top:1px solid var(--g200)}
+.kv .row{display:flex;justify-content:space-between;align-items:baseline;gap:18px;padding:13px 0;border-bottom:1px solid var(--g200)}
+.kv .k{font-size:14.5px;color:var(--g500)}
+.kv .v{font-family:var(--mono);font-weight:500;font-size:17px;text-align:right;white-space:nowrap;color:var(--black)}
+.kv .v small{font-family:var(--body);font-weight:400;font-size:12px;color:var(--g400);display:block}
+.mkt{margin-top:18px;border-top:1px solid rgba(255,255,255,.18)}
+.mkt .mrow{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.18)}.mkt .mrow:last-child{border-bottom:0}
+.mkt .mk{font-family:var(--mono);font-size:12px;letter-spacing:.05em;color:var(--accent-light);text-transform:uppercase}
+.mkt .mv{font-family:var(--mono);font-weight:500;font-size:17px;color:#fff}.mkt .mv .dlt{font-family:var(--mono);font-size:11px;margin-left:8px;color:#e6c3b6}
+.mkt-foot{margin-top:16px;font-size:14.5px;color:rgba(255,255,255,.85);line-height:1.55}.mkt-foot b{color:#fff;font-weight:500;font-family:var(--heading)}
+.paradox{margin-top:26px;background:var(--g50);border:1px solid var(--g200);border-left:3px solid var(--terra);border-radius:var(--radius-sm);padding:20px 22px;font-size:15.5px;color:var(--g600)}.paradox b{font-family:var(--heading);font-weight:400;color:var(--black)}
+
+/* ── Levers ── */
+.levers{margin-top:34px;display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.lever{background:var(--g50);border:1px solid var(--g200);border-radius:var(--radius);padding:22px 20px}
+.lever .n{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--terra)}
+.lever h4{font-size:18px;margin-top:12px;margin-bottom:9px;line-height:1.18}
+.lever p{font-size:14px;color:var(--g500);line-height:1.55;margin:0}
+.lever ul{margin:12px 0 0;padding-left:16px}.lever li{font-size:13.5px;color:var(--g600);line-height:1.55;margin-bottom:5px}
+
+/* ── Before/after comparison ── */
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px}
+.frame{position:relative;border:1px solid var(--g200);border-radius:var(--radius);overflow:hidden;background:var(--g100)}
+.frame img{width:100%;display:block;aspect-ratio:4/3;object-fit:cover}
+.cmp.hero .frame img{aspect-ratio:3/2}
+.frame .tag{position:absolute;top:0;left:0;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:6px 11px;color:#fff;z-index:2}
+.tag.before{background:rgba(139,74,62,.92)}.tag.after{background:rgba(74,103,65,.94)}
+.cmp-label{margin-top:30px;display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--terra)}
+.cmp-label .ln{height:1px;background:var(--g200);flex:1}
+.cmp-cap{margin-top:10px;font-size:14px;color:var(--g500);line-height:1.55;max-width:74ch}.cmp-cap b{color:var(--black);font-family:var(--heading);font-weight:400}
+.titleflip{margin-top:30px;display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.tf{border:1px solid var(--g200);border-radius:var(--radius);padding:20px 22px;background:var(--g50)}
+.tf .tflab{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--g500)}
+.tf .tfval{font-family:var(--heading);font-weight:400;font-size:20px;margin-top:10px;line-height:1.3}.tf.before .tfval{color:var(--g500)}
+.tf.after{border-color:var(--accent-border);background:var(--accent-light)}
+
+/* ── Ranking cards ── */
+.rank-wrap{margin-top:30px;display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.rankcard{border:1px solid var(--g200);border-radius:var(--radius);overflow:hidden}
+.rankcard .rc-head{padding:16px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--g200)}
+.rankcard.before .rc-head{background:#f5ece9}.rankcard.after .rc-head{background:var(--accent-light)}
+.rc-head .h{font-family:var(--heading);font-weight:400;font-size:17px}.rc-head .s{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--g500)}
+.rankcard table{width:100%;border-collapse:collapse}
+.rankcard td{padding:11px 20px;font-size:13.5px;border-bottom:1px solid var(--g200)}.rankcard tr:last-child td{border-bottom:0}
+.rankcard td:first-child{font-family:var(--mono);font-size:11.5px;color:var(--g500)}
+.rankcard td:last-child{text-align:right;font-family:var(--mono);font-weight:500;font-size:15px}
+.rankcard.before td:last-child{color:var(--terra)}.rankcard.after td:last-child{color:var(--accent)}
+.badge1{display:inline-block;background:var(--accent);color:#fff;font-family:var(--mono);font-size:11px;font-weight:500;padding:2px 9px;border-radius:4px}
+.rank-foot{margin-top:18px;font-size:14.5px;color:var(--g600);max-width:66ch}.rank-foot b{font-family:var(--heading);font-weight:400;color:var(--black)}
+
+/* ── Performance table ── */
+.ptbl{margin-top:14px;border:1px solid var(--g200);border-radius:var(--radius);overflow:hidden;background:var(--white)}
+.ptbl .pt-top{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:var(--g50);border-bottom:1px solid var(--g200)}
+.ptbl .pt-top .ttl{font-weight:500;font-size:14px;color:var(--g700)}.ptbl .pt-top .src{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--g400)}
+table.perf{width:100%;border-collapse:collapse;font-size:13.5px}
+table.perf th{font-family:var(--mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--g500);text-align:right;padding:12px 16px;border-bottom:1px solid var(--g200);font-weight:500}table.perf th:first-child{text-align:left}
+table.perf td{padding:11px 16px;border-bottom:1px solid var(--g100);text-align:right;color:var(--black);font-family:var(--mono);font-weight:400}
+table.perf td:first-child{text-align:left;color:var(--g600);font-family:var(--body)}
+table.perf tr:last-child td{border-bottom:0}table.perf tr.cur td{background:var(--g50)}table.perf .mo{font-weight:500}
+table.perf .cur-tag{font-family:var(--mono);font-size:8.5px;letter-spacing:.08em;background:var(--accent-light);color:var(--accent);padding:2px 6px;border-radius:3px;margin-left:7px;text-transform:uppercase}
+table.perf .d{font-family:var(--mono);font-size:11px;color:var(--g500)}table.perf .d.green{color:var(--accent)}
+.perf-cap{margin-top:16px;font-size:14.5px;color:var(--g600);max-width:68ch}.perf-cap b{font-family:var(--heading);font-weight:400;color:var(--black)}
+
+/* ── Listing vs market ── */
+.vs{margin-top:30px;border:1px solid var(--g200);border-radius:var(--radius);overflow:hidden}
+.vs .vs-head{display:grid;grid-template-columns:1fr 1fr 1fr;background:var(--g50);border-bottom:1px solid var(--g200)}
+.vs .vs-head div{padding:13px 18px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--g500)}.vs .vs-head .c2{color:var(--accent)}.vs .vs-head .c3{text-align:right}
+.vs .vrow{display:grid;grid-template-columns:1fr 1fr 1fr;border-bottom:1px solid var(--g100);align-items:center}.vs .vrow:last-child{border-bottom:0}
+.vs .vrow .vm{padding:13px 18px;font-family:var(--mono);font-size:12px;color:var(--g600)}
+.vs .vrow .vl{padding:13px 18px;font-family:var(--mono);font-weight:500;font-size:18px;color:var(--accent)}
+.vs .vrow .vmk{padding:13px 18px;text-align:right;font-family:var(--mono);font-weight:500;font-size:18px;color:var(--g400)}
+.vs-foot{margin-top:16px;font-size:14.5px;color:var(--g600);max-width:68ch}.vs-foot b{font-family:var(--heading);font-weight:400;color:var(--black)}
+
+/* ── Forecast ── */
+.fc-lead{margin-top:14px;background:var(--g50);border:1px solid var(--g200);border-radius:var(--radius);padding:22px 24px;display:flex;gap:22px;align-items:baseline;flex-wrap:wrap}
+.fc-lead .fcbig{font-family:var(--mono);font-weight:500;font-size:44px;color:var(--accent);line-height:1;letter-spacing:-.01em}
+.fc-lead p{margin:0;font-size:15.5px;color:var(--g600);max-width:52ch}.fc-lead p b{font-family:var(--heading);font-weight:400;color:var(--black)}
+.bars{margin-top:26px;display:flex;flex-direction:column;gap:18px}
+.bar{display:grid;grid-template-columns:180px 1fr;gap:18px;align-items:center}
+.bar .blab{font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--g500)}.bar .blab b{display:block;font-family:var(--heading);font-weight:400;font-size:13px;color:var(--black);text-transform:none;margin-top:3px}
+.bar .track{position:relative;height:44px;background:var(--g100);border:1px solid var(--g200);border-radius:var(--radius-sm);overflow:visible}
+.fill{position:absolute;top:0;left:0;height:100%;display:flex;align-items:center;padding-left:14px;font-family:var(--mono);font-weight:500;font-size:15px;color:#fff;white-space:nowrap;border-radius:5px 0 0 5px}
+.fill.before{background:var(--g400)}.fill.booked{background:var(--accent)}.fill.proj{background:repeating-linear-gradient(135deg,#587a4f 0 8px,#4a6741 8px 16px);border-radius:0}.fill.net{background:var(--accent)}
+.stacklab{position:absolute;top:0;height:100%;display:flex;align-items:center;font-family:var(--mono);font-size:10.5px;color:#eef3ea;padding-left:12px}
+.ceiling{position:absolute;top:-7px;bottom:-7px;border-left:2px dashed var(--terra)}.ceiling .clab{position:absolute;top:-20px;left:6px;font-family:var(--mono);font-size:10px;letter-spacing:.05em;color:var(--terra);white-space:nowrap}
+.lyline{position:absolute;top:-7px;bottom:-7px;border-left:2px dotted var(--g400)}.lyline .llab{position:absolute;bottom:-20px;left:6px;font-family:var(--mono);font-size:9.5px;letter-spacing:.03em;color:var(--g500);white-space:nowrap}
+.net-tag{position:absolute;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:11px;color:var(--accent);white-space:nowrap;padding-left:8px}
+.fee-note{margin-top:30px;font-size:14.5px;color:var(--g600);max-width:68ch}.fee-note b{font-family:var(--heading);font-weight:400;color:var(--black)}
+.assum{margin-top:18px;font-family:var(--mono);font-size:10.5px;letter-spacing:.02em;color:var(--g400);line-height:1.7}
+
+/* ── Before / after summary ── */
+.ba2{margin-top:30px;display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.state{border-radius:var(--radius);padding:30px 28px;border:1px solid var(--g200)}.state.b{background:var(--g50)}.state.a{background:var(--accent);border-color:transparent;position:relative;overflow:hidden}
+.state.a::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 25% -20%,rgba(255,255,255,.07),transparent 55%);pointer-events:none}.state.a>*{position:relative;z-index:1}
+.state .st-lab{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase}.state.b .st-lab{color:var(--g500)}.state.a .st-lab{color:var(--accent-light)}
+.state h3{font-size:24px;margin-top:10px}.state.a h3{color:#fff}
+.state ul{list-style:none;margin:20px 0 0;padding:0}.state li{padding:11px 0;border-bottom:1px solid var(--g200);font-size:14.5px;display:flex;gap:11px;align-items:flex-start}.state.a li{border-bottom-color:rgba(255,255,255,.18);color:rgba(255,255,255,.9)}.state li:last-child{border-bottom:0}
+.state .mk{font-family:var(--mono);font-size:13px;line-height:1.4}.state.b .mk{color:var(--terra)}.state.a .mk{color:var(--accent-light)}.state.a li b{color:#fff;font-weight:500}
+
+/* ── Compounding loop ── */
+.loop{display:flex;flex-wrap:wrap;align-items:stretch;gap:10px;margin-top:30px}
+.lnode{flex:1 1 0;min-width:150px;background:var(--g50);border:1px solid var(--g200);border-radius:var(--radius-lg);padding:14px;display:flex;flex-direction:column;gap:7px}
+.lnode .ln-k{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--g500)}
+.lnode .ln-t{font-family:var(--body);font-size:14px;line-height:1.35;color:var(--black);font-weight:500}
+.lnode.rw{box-shadow:inset 3px 0 0 var(--accent);border-color:var(--accent-border)}
+.lnode.host{box-shadow:inset 3px 0 0 var(--terra);border-color:#d8b6ac}
+.lnode .ln-k.rw{color:var(--accent)} .lnode .ln-k.host{color:var(--terra)}
+.larr{display:flex;align-items:center;justify-content:center;color:var(--g400);font-size:17px;flex:0 0 auto}
+.loop-legend{display:flex;gap:22px;margin-top:16px;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--g500)}
+.loop-legend .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px;vertical-align:middle}
+.loop-back{margin-top:14px;font-family:var(--body);font-size:13.5px;color:var(--accent);display:flex;align-items:center;gap:8px}
+.tlead{margin-top:36px;font-family:var(--body);font-size:15px;color:var(--black)}
+.tgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+.tcard{background:var(--white);border:1px solid var(--g200);border-radius:var(--radius-lg);padding:20px 22px;box-shadow:var(--sh-sm)}
+.tcard .tstars{color:var(--accent);font-size:13px;letter-spacing:2px;margin-bottom:10px}
+.tcard .tquote{font-family:var(--heading);font-weight:400;font-style:italic;font-size:16px;line-height:1.5;color:var(--black);margin:0}
+.tcard .tmeta{margin-top:14px;font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--g500)}
+.compound-foot{margin-top:30px;font-family:var(--body);font-size:15px;line-height:1.6;color:var(--black);border-left:3px solid var(--accent);padding-left:18px}
+
+/* ── Closing CTA ── */
+.closing{margin-top:74px;background:var(--accent);color:#fff;border-radius:var(--radius-lg);padding:52px 50px;margin-bottom:30px;position:relative;overflow:hidden}
+.closing::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 28% -20%,rgba(255,255,255,.08),transparent 52%),radial-gradient(ellipse at 78% 120%,rgba(50,48,47,.16),transparent 52%);pointer-events:none}
+.closing>*{position:relative;z-index:1}
+.closing .eyebrow{color:var(--accent-light)}.closing h2{color:#fff;font-size:clamp(30px,4.2vw,44px);margin-top:14px;max-width:17ch}.closing h2 .accent{font-style:italic;color:var(--accent-light)}
+.closing p{margin-top:20px;max-width:64ch;color:rgba(255,255,255,.86);font-size:16px;line-height:1.7}
+.cta{margin-top:32px;display:inline-flex;align-items:center;gap:10px;background:#fff;color:var(--accent);font-family:var(--body);font-weight:600;font-size:16px;padding:16px 32px;border-radius:var(--radius);text-decoration:none;box-shadow:0 4px 16px rgba(50,48,47,.2);transition:transform .25s cubic-bezier(.16,1,.3,1),box-shadow .25s cubic-bezier(.16,1,.3,1)}
+.cta:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(50,48,47,.3)}.cta .arr{transition:transform .2s cubic-bezier(.16,1,.3,1)}.cta:hover .arr{transform:translateX(4px)}
+.rw-signoff{margin-top:42px;padding-top:26px;border-top:1px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px}
+.rw-signoff .sg{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-light)}
+.rw-sign{height:30px;width:auto;display:block}
+
+/* ── Sourcing + footer ── */
+.sourcing{margin-top:34px;padding-top:18px;border-top:1px solid var(--g200);font-family:var(--mono);font-size:10px;letter-spacing:.02em;color:var(--g400);line-height:1.8}
+footer{border-top:1px solid var(--g200)}footer .wrap{display:flex;justify-content:space-between;align-items:center;padding:22px 40px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--g500);gap:16px;flex-wrap:wrap}
+footer .ft-brand{display:inline-flex;align-items:center;gap:10px}
+.rw-foot{height:15px;width:auto;display:block}
+
+/* ── Motion ── */
+@media(prefers-reduced-motion:no-preference){
+  .reveal{opacity:0;transform:translateY(8px);animation:rise .45s cubic-bezier(.16,1,.3,1) forwards}
+  @keyframes rise{to{opacity:1;transform:none}}
+}
+@media print{body{background:#fff}.reveal{opacity:1;transform:none;animation:none}section{break-inside:avoid}.closing,.ba2,.bars,.cmp{break-inside:avoid}}
+
+/* ── Responsive ── */
+@media(max-width:860px){.levers{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:780px){.wrap{padding:0 24px}.baseline{grid-template-columns:1fr}.statrow{grid-template-columns:1fr}.rank-wrap,.ba2,.titleflip{grid-template-columns:1fr}footer .wrap{padding:22px 24px}}
+@media(max-width:680px){.tgrid{grid-template-columns:1fr}.larr{transform:rotate(90deg)}.lnode{flex:1 1 100%}}
+@media(max-width:600px){.bar{grid-template-columns:1fr;gap:6px}}
+@media(max-width:560px){.cmp{grid-template-columns:1fr}.hero{padding-top:48px}}
+@media(max-width:480px){.levers{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+  <div class="wrap">
+
+    <!-- ════════════════════════════════════════════════ HERO ════════════════════════════════════════════════ -->
+    <header class="hero">
+      <div class="kick reveal"><span class="eyebrow">01 / Englewood, FL &nbsp;&middot;&nbsp; 3 BR Heated Pool</span><span class="line"></span></div>
+      <h1 class="reveal" style="animation-delay:.05s">A 4.98-star home,<br><span class="accent">invisible</span> in search.</h1>
+      <p class="sub reveal" style="animation-delay:.12s">
+        Gulfstream Villa already had the reviews, the pool, and a Guest Favorite badge. What it did not have was visibility.
+        The listing sat on page 7 of Airbnb search with a summer that was almost entirely open. One month into service, the
+        same August dates that were buried on page 8 now rank #1, July is pacing 97 percent booked, and June sits at 87 percent
+        while the surrounding market holds at 34. The lift was taken from a market that is itself pacing down.
+      </p>
+      <div class="propline reveal" style="animation-delay:.18s">
+        <span class="pl-name">Gulfstream Villa</span><span class="pl-meta">3 BR / 2 BA / Sleeps 9</span>
+        <span class="pl-meta">Englewood, FL &middot; Guesty</span>
+        <span class="pl-meta terra">Service start &middot; May 1, 2026</span>
+      </div>
+
+      <a class="ablink reveal" style="animation-delay:.24s" href="https://www.airbnb.com/rooms/648495870773649000" target="_blank" rel="noopener">
+        <img src="/images/properties/gulfstream/airbnb-listing.jpg" alt="Gulfstream Villa on Airbnb: Heated Pool, Manasota Key, Dog Friendly" loading="eager">
+        <span class="pill">View on Airbnb &#8599;</span>
+      </a>
+
+      <div class="hook reveal" style="animation-delay:.3s">
+        <div class="hlab">The one line</div>
+        <blockquote>August is the clearest line. Paid occupancy moved from 6 percent to 64 percent, a 58 point swing,
+          while booked ADR rose from $100 to $147. Occupancy and rate are climbing together, which is the signal that the
+          listing is converting at a stronger price rather than discounting to fill.</blockquote>
+      </div>
+    </header>
+
+    <!-- ════════════════════════════════════════════════ AGGREGATE STATS ════════════════════════════════════════════════ -->
+    <div class="statrow reveal">
+      <div class="stat"><div class="lab">Search Position</div><div class="big">Pg 7 <small>to</small> #1</div><div class="delta green">Same Aug dates that ranked #129</div></div>
+      <div class="stat"><div class="lab">July Occupancy vs Market</div><div class="big">97% <small>vs</small> 27%</div><div class="delta green">Booked while the market sits open</div></div>
+      <div class="stat"><div class="lab">Projected 12-Mo Revenue</div><div class="big">$39.7K <small>to</small> ~$55K</div><div class="delta green up">About +40% gross, +$9K net after fees</div></div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════ 02 · BASELINE ════════════════════════════════════════════════ -->
+    <section>
+      <div class="sec-head"><span class="num">02 / The Baseline</span><span class="line"></span></div>
+      <h2 class="sec-title">Great property. <span class="accent">Soft market. Buried listing.</span></h2>
+      <p class="lede">This is what we measured at intake, before touching anything. The home was strong on every signal that does
+        not move search, and quietly losing on the ones that do. It was also sitting in a market that was cooling, not climbing.</p>
+      <div class="baseline">
+        <div class="panel">
+          <span class="eyebrow">Search &amp; Calendar at Intake</span><h3 class="serif" style="margin-top:8px">Where the listing stood</h3>
+          <div class="kv">
+            <div class="row"><span class="k">Median search position</span><span class="v">Page 7</span></div>
+            <div class="row"><span class="k">Guests who never saw it</span><span class="v">98%</span></div>
+            <div class="row"><span class="k">Competitors ranked ahead</span><span class="v">117</span></div>
+            <div class="row"><span class="k">Page 1 visibility (Aug)</span><span class="v">0 of 5</span></div>
+            <div class="row"><span class="k">Open nights on calendar</span><span class="v">317 <small>of 365</small></span></div>
+            <div class="row"><span class="k">May to August</span><span class="v">~100% open</span></div>
+            <div class="row" style="border-bottom:0"><span class="k">Trailing-12-month revenue</span><span class="v">$39.7K</span></div>
+          </div>
+        </div>
+        <div class="panel dark">
+          <span class="eyebrow">The market it sat in</span><h3 style="margin-top:8px">Demand was cooling</h3>
+          <div class="mkt">
+            <div class="mrow"><span class="mk">May market occ</span><span class="mv">40%<span class="dlt">&#9660; 7 pts YoY</span></span></div>
+            <div class="mrow"><span class="mk">June market occ</span><span class="mv">34%<span class="dlt">&#9660; 6 pts YoY</span></span></div>
+            <div class="mrow"><span class="mk">July market occ</span><span class="mv">27%<span class="dlt">&#9660; 1 pt YoY</span></span></div>
+            <div class="mrow"><span class="mk">August market occ</span><span class="mv">11%<span class="dlt">&#9660; 4 pts YoY</span></span></div>
+          </div>
+          <p class="mkt-foot"><b>Englewood was pacing flat to down.</b> Any lift on this listing had to be taken from competitors,
+            not handed over by a rising tide. That distinction matters for everything that follows.</p>
+        </div>
+      </div>
+      <div class="paradox"><b>The paradox.</b> 4.98 stars across 48 reviews, all six rating categories above 4.8, and a Guest
+        Favorite badge. Reputation was never the problem. Visibility was. The home was excellent and almost nobody was being shown it.</div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════ 03 · WHAT WE DID ════════════════════════════════════════════════ -->
+    <section>
+      <div class="sec-head"><span class="num">03 / What We Did</span><span class="line"></span></div>
+      <h2 class="sec-title">Four levers, run on <span class="accent">every listing.</span></h2>
+      <p class="lede">Not a checklist from an automated audit. This is the operating system we run on every property, in order:
+        fix the foundation under the listing, rebuild what guests see, then manage price as a position in the market rather than a setting.</p>
+      <div class="levers">
+        <div class="lever"><div class="n">01</div><h4>Backend Health</h4><p>We start under the hood, where listing audits never look.</p>
+          <ul><li>PMS and OTA sync integrity</li><li>Availability, min-night and gap-night rules</li><li>Booking, check-in and account settings</li><li>The hidden flags that gate ranking</li></ul></div>
+        <div class="lever"><div class="n">02</div><h4>Content Rebuild</h4><p>Rewritten for the algorithm and for the guest.</p>
+          <ul><li>New title, description and captions</li><li>Sensory, story-led copy</li><li>Full amenity set surfaced</li><li>Wider search-filter eligibility</li></ul></div>
+        <div class="lever"><div class="n">03</div><h4>Photo Optimization</h4><p>The gallery does the selling once the listing is seen.</p>
+          <ul><li>Relit and de-hazed images</li><li>Strongest shots lead the set</li><li>Every room covered and ordered</li><li>Captions carry search keywords</li></ul></div>
+        <div class="lever"><div class="n">04</div><h4>Pricing as Visibility</h4><p>Price is a ranking lever, not a number we set once.</p>
+          <ul><li>Daily search-rank tracking per open date</li><li>Price to win the dates that move rank</li><li>ADR ceiling pushed vs a live comp set</li><li>Custom promos and last-minute logic, tuned weekly</li></ul></div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════ 04 · THE REVAMP ════════════════════════════════════════════════ -->
+    <section>
+      <div class="sec-head"><span class="num">04 / The Revamp</span><span class="line"></span></div>
+      <h2 class="sec-title">What used to be. <span class="accent">What it is now.</span></h2>
+      <p class="lede">Five matched pairs, the original on the left and our optimized version on the right, in the order they run on
+        the live listing. We did not reshoot anything. Our in-house editing team rebuilt the existing photos, light, color, framing, and sequence, so the same house finally sells.</p>
+
+      <div class="cmp hero">
+        <figure class="frame"><span class="tag before">Original &middot; at intake</span><img src="/images/properties/gulfstream/hero-before.jpg" alt="Original hero photo of Gulfstream Villa deck before optimization" loading="lazy"></figure>
+        <figure class="frame"><span class="tag after">Optimized &middot; today</span><img src="/images/properties/gulfstream/hero-after.jpg" alt="Optimized golden-hour hero photo of Gulfstream Villa pool deck" loading="lazy"></figure>
+      </div>
+      <p class="cmp-cap"><b>The hero.</b> A bare deck under flat daylight becomes a warm, golden-hour scene. We lead with the experience, the open book, the sunglasses, the iced drink resting on the lounger, finished with warm light and a low angle that drops the viewer into the chair so they picture their own stay. The heated pool reads as the headline amenity, and this is the first image every guest now sees.</p>
+
+      <div class="titleflip">
+        <div class="tf before"><div class="tflab">Title &middot; before</div><div class="tfval">Gulfstream Villa | Heated Pool + Dog Friendly</div></div>
+        <div class="tf after"><div class="tflab">Title &middot; after</div><div class="tfval">Heated Pool &middot; Manasota Key &middot; Dog Friendly</div></div>
+      </div>
+
+      <div class="cmp-label">Exterior<span class="ln"></span></div>
+      <div class="cmp">
+        <figure class="frame"><span class="tag before">Original</span><img src="/images/properties/gulfstream/exterior-before.jpg" alt="Original exterior photo of Gulfstream Villa" loading="lazy"></figure>
+        <figure class="frame"><span class="tag after">Optimized</span><img src="/images/properties/gulfstream/exterior-after.jpg" alt="Optimized exterior photo of Gulfstream Villa" loading="lazy"></figure>
+      </div>
+      <p class="cmp-cap"><b>Curb appeal.</b> The same elevation, color-corrected and balanced so the arrival shot feels bright and cared for.</p>
+
+      <div class="cmp-label">Covered lanai<span class="ln"></span></div>
+      <div class="cmp">
+        <figure class="frame"><span class="tag before">Original</span><img src="/images/properties/gulfstream/lanai-before.jpg" alt="Original covered lanai photo before optimization" loading="lazy"></figure>
+        <figure class="frame"><span class="tag after">Optimized</span><img src="/images/properties/gulfstream/lanai-after.jpg" alt="Optimized covered lanai photo" loading="lazy"></figure>
+      </div>
+      <p class="cmp-cap"><b>The lanai.</b> Brought up and warmed so the screened outdoor living space reads as usable, not dim.</p>
+
+      <div class="cmp-label">Great room<span class="ln"></span></div>
+      <div class="cmp">
+        <figure class="frame"><span class="tag before">Original</span><img src="/images/properties/gulfstream/living-before.jpg" alt="Original great room photo before optimization" loading="lazy"></figure>
+        <figure class="frame"><span class="tag after">Optimized</span><img src="/images/properties/gulfstream/living-after.jpg" alt="Optimized great room photo" loading="lazy"></figure>
+      </div>
+      <p class="cmp-cap"><b>The great room.</b> Relit and squared so the volume, the natural light, and the open sightline to the kitchen all come through.</p>
+
+      <div class="cmp-label">Backyard<span class="ln"></span></div>
+      <div class="cmp">
+        <figure class="frame"><span class="tag before">Original</span><img src="/images/properties/gulfstream/backyard-before.jpg" alt="Original backyard photo before optimization" loading="lazy"></figure>
+        <figure class="frame"><span class="tag after">Optimized</span><img src="/images/properties/gulfstream/backyard-after.jpg" alt="Optimized backyard photo of Gulfstream Villa" loading="lazy"></figure>
+      </div>
+      <p class="cmp-cap"><b>The backyard.</b> The fenced yard and screen enclosure, balanced and clean, so the privacy and the space land at a glance.</p>
+    </section>
+
+    <!-- ════════════════════════════════════════════════ 05 · RANKING MOVEMENT ════════════════════════════════════════════════ -->
+    <section>
+      <div class="sec-head"><span class="num">05 / Ranking Movement</span><span class="line"></span></div>
+      <h2 class="sec-title">The August that was <span class="accent">invisible.</span></h2>
+      <p class="lede">The intake scan searched five August check-in windows and found the listing on pages 7 and 8 every time.
+        The same dates, after the work above, surface at the top of page one. Identical dates, opposite outcome.</p>
+      <div class="rank-wrap">
+        <div class="rankcard before"><div class="rc-head"><span class="h">At intake</span><span class="s">April 2026 &middot; scan</span></div>
+          <table><tr><td>Aug 03 &rarr; 07</td><td>#82 &middot; pg 5</td></tr><tr><td>Aug 10 &rarr; 14</td><td>#120 &middot; pg 7</td></tr><tr><td>Aug 17 &rarr; 21</td><td>#123 &middot; pg 7</td></tr><tr><td>Aug 24 &rarr; 28</td><td>#129 &middot; pg 8</td></tr><tr><td>Aug 31 &rarr; Sep 04</td><td>#135 &middot; pg 8</td></tr></table></div>
+        <div class="rankcard after"><div class="rc-head"><span class="h">Today</span><span class="s">May 2026 &middot; live calendar</span></div>
+          <table><tr><td>Aug 01</td><td><span class="badge1">#1</span></td></tr><tr><td>Aug 28</td><td><span class="badge1">#1</span></td></tr><tr><td>Aug 29</td><td><span class="badge1">#1&ndash;#2</span></td></tr><tr><td>Aug 30</td><td><span class="badge1">#1&ndash;#4</span></td></tr><tr><td>Aug 31</td><td><span class="badge1">#1</span></td></tr></table></div>
+      </div>
+      <p class="rank-foot"><b>It is not only August.</b> June dates rank #1 across the early month and late July holds #1 to #2 with
+        impressions past 1,200 per date. The listing went from never appearing on page one to owning position one on its open dates.</p>
+    </section>
+
+    <!-- ════════════════════════════════════════════════ 06 · RESULTS & MARKET ════════════════════════════════════════════════ -->
+    <section>
+      <div class="sec-head"><span class="num">06 / Results &amp; Market</span><span class="line"></span></div>
+      <h2 class="sec-title">Up, while the market is <span class="accent">down.</span></h2>
+      <p class="lede">Visibility converts into nights. These are the actuals from PriceLabs, this year against the same month last year,
+        set beside what the broader Englewood market is doing.</p>
+      <div class="ptbl">
+        <div class="pt-top"><span class="ttl">Forward window &middot; actuals, this year vs last year</span><span class="src">Source: PriceLabs Booking Insights</span></div>
+        <table class="perf">
+          <thead><tr><th>Month</th><th>Revenue</th><th>vs LY</th><th>Occupancy</th><th>vs LY</th><th>ADR</th></tr></thead>
+          <tbody>
+            <tr class="cur"><td class="mo">May 2026<span class="cur-tag">Current</span></td><td>$2.58K</td><td class="d green up">$180</td><td>58%</td><td class="d green up">13</td><td>$184</td></tr>
+            <tr><td class="mo">June 2026</td><td>$4.75K</td><td class="d green up">$967</td><td>87%</td><td class="d green up">20</td><td>$183</td></tr>
+            <tr><td class="mo">July 2026</td><td>$5.27K</td><td class="d green up">$1.98K</td><td>97%</td><td class="d green up">32</td><td>$176</td></tr>
+            <tr><td class="mo">August 2026</td><td>$2.51K</td><td class="d green up">$2.31K</td><td>68%</td><td class="d green up">62</td><td>$148</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="perf-cap"><b>Occupancy and rate move together.</b> June books to 87 percent and July to 97, revenue rises in every
+        month against last year, and ADR holds or climbs alongside it. That combination, more nights at a steady-to-higher price,
+        is the difference between filling a calendar and discounting into it.</p>
+
+      <div class="vs">
+        <div class="vs-head"><div>Summer month</div><div class="c2">This listing &middot; occupancy</div><div class="c3">The market &middot; occupancy</div></div>
+        <div class="vrow"><div class="vm">May 2026</div><div class="vl">58%</div><div class="vmk">40%</div></div>
+        <div class="vrow"><div class="vm">June 2026</div><div class="vl">87%</div><div class="vmk">34%</div></div>
+        <div class="vrow"><div class="vm">July 2026</div><div class="vl">97%</div><div class="vmk">27%</div></div>
+        <div class="vrow"><div class="vm">August 2026</div><div class="vl">68%</div><div class="vmk">11%</div></div>
+      </div>
+      <p class="vs-foot"><b>Read the two columns together.</b> The listing is booking two to nearly four times the market's occupancy on
+        the same dates, and the market itself is pacing behind last year. The gains were not a rising tide. They were share taken
+        from competitors who stayed buried. <span style="color:var(--g500)">Listing occupancy: PriceLabs. Market occupancy: RevWhisper Calibration Scan.</span></p>
+    </section>
+
+    <!-- ════════════════════════════════════════════════ 07 · THE FORECAST ════════════════════════════════════════════════ -->
+    <section>
+      <div class="sec-head"><span class="num">07 / The Forecast</span><span class="line"></span></div>
+      <h2 class="sec-title">Ahead of last year, <span class="accent">even after our fee.</span></h2>
+      <p class="lede">This is not a generic occupancy assumption. It is built from what the listing has actually booked since
+        service began on May 1, then run forward and capped by the inventory that is physically available to sell.</p>
+      <div class="fc-lead">
+        <div class="fcbig">$29,851.80</div>
+        <p><b>booked in the first month of service,</b> across 24 reservations. That is about 75 percent of the property's
+          entire prior-year revenue ($39.7K), secured in roughly thirty days. Close to four-fifths of everything now on the
+          forward books was booked by us in that one month.</p>
+      </div>
+      <div class="bars">
+        <div class="bar"><div class="blab">Before RevWhisper<b>Trailing 12 months, actual</b></div>
+          <div class="track"><div class="fill before" style="width:59.9%">$39.7K</div></div></div>
+        <div class="bar"><div class="blab">Projected, gross<b>Booked plus open nights filling</b></div>
+          <div class="track">
+            <div class="fill booked" style="width:57.8%"><span>$38.3K booked</span></div>
+            <div class="fill proj" style="left:57.8%;width:25.3%"><span class="stacklab">+$16.8K projected</span></div>
+            <div class="lyline" style="left:59.9%"></div>
+            <div class="ceiling" style="left:100%"><span class="clab">Ceiling if fully optimized ~$66K</span></div>
+          </div></div>
+        <div class="bar"><div class="blab">Projected, net<b>After the RevWhisper fee</b></div>
+          <div class="track">
+            <div class="fill net" style="width:74.1%">~$49K net</div>
+            <div class="lyline" style="left:59.9%"><span class="llab">last year $39.7K</span></div>
+            <div class="net-tag" style="left:74.1%">&#9650; +$9.3K vs last year</div>
+          </div></div>
+      </div>
+      <p class="fee-note"><b>The math, from the bookings.</b> $38.3K is already on the forward books, with $28.0K of inventory
+        still open. The first month shows the listing capturing the calendar fast, so we model about 60 percent of that open
+        inventory filling through the year, weighted toward the higher-rate winter that is still wide open. That lands the
+        forward year near $55K gross. Subtract the fee of $500 a month, $6K, and the owner nets about $49K. That clears last
+        year by roughly $9.3K, about 23 percent on the net and close to 40 percent on the gross book. If winter fills the way
+        summer did, the number runs higher, toward $60K.</p>
+      <p class="assum">ASSUMPTIONS &middot; Before = $39.7K (Final LY revenue, summed). Month one = $29,851.80 booked across 24
+        reservations; two blank-revenue rows (stays 2026-08-17 and 2027-02-04) excluded. Forward booked = $38.3K, open potential
+        = $28.0K (Calibration Scan). Central case captures ~60% of open potential, weighted to high-ADR winter. Fee = $500 / month
+        x 12 = $6K. Ceiling = full sellout at guest-facing ADR (~$66K). Band: gross ~$52K at 50% capture to ~$60K at 78% capture.
+        Estimates move as the calendar fills.</p>
+    </section>
+
+    <!-- ════════════════════════════════════════════════ 08 · COMPOUNDING ════════════════════════════════════════════════ -->
+    <section>
+      <div class="sec-head"><span class="num">08 / The Compounding Effect</span><span class="line"></span></div>
+      <h2 class="sec-title">We bring the demand. <span class="accent">The host keeps it five stars.</span></h2>
+      <p class="lede">Visibility is only half the equation. We put the listing in front of more guests and price it to book. The
+        host turns each of those stays into a five-star review, and fresh reviews, booking velocity, and near-zero cancellations
+        are exactly what Airbnb rewards with rank. So the listing earns more of its own visibility over time, and the next booking
+        costs less to win. The two efforts do not add. They multiply.</p>
+
+      <div class="loop">
+        <div class="lnode rw"><span class="ln-k rw">RevWhisper</span><span class="ln-t">We drive visibility and price it to book</span></div>
+        <span class="larr">&rarr;</span>
+        <div class="lnode"><span class="ln-k">Result</span><span class="ln-t">More guests see it and book</span></div>
+        <span class="larr">&rarr;</span>
+        <div class="lnode host"><span class="ln-k host">The host</span><span class="ln-t">Delivers a five-star stay</span></div>
+        <span class="larr">&rarr;</span>
+        <div class="lnode"><span class="ln-k">Signal</span><span class="ln-t">Fresh reviews, velocity, low cancellations</span></div>
+        <span class="larr">&rarr;</span>
+        <div class="lnode rw"><span class="ln-k rw">Airbnb</span><span class="ln-t">Rewards it with higher rank</span></div>
+      </div>
+      <div class="loop-legend"><span><span class="dot" style="background:var(--accent)"></span>Our work</span><span><span class="dot" style="background:var(--terra)"></span>The host&#39;s work</span></div>
+      <div class="loop-back">&#8635; Each turn of the loop makes the next booking cheaper to win.</div>
+
+      <p class="tlead">The flywheel is already turning. Every review below landed within weeks of service starting.</p>
+      <div class="tgrid">
+        <div class="tcard"><div class="tstars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><p class="tquote">&ldquo;We were looking to get away and have some peace and quiet away from home, and that&#39;s exactly what we found.&rdquo;</p><div class="tmeta">Idalmis &middot; Tampa, FL &middot; Stayed with a pet &middot; 1 week ago</div></div>
+        <div class="tcard"><div class="tstars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><p class="tquote">&ldquo;Julie was super responsive, the house was immaculate, beds were very comfortable.&rdquo;</p><div class="tmeta">Esteban &middot; Pembroke Pines, FL &middot; 2 weeks ago</div></div>
+        <div class="tcard"><div class="tstars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><p class="tquote">&ldquo;Michael and Julie are amazing hosts who truly understand what it takes to create a seamless and welcoming experience.&rdquo;</p><div class="tmeta">Angela &middot; Orlando, FL &middot; Stayed with kids &middot; 2 weeks ago</div></div>
+        <div class="tcard"><div class="tstars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><p class="tquote">&ldquo;This place is beyond what the listing describes. Five stars all the way, if I could leave 20 I would.&rdquo;</p><div class="tmeta">Jillian &middot; Stayed with a pet &middot; April 2026</div></div>
+      </div>
+
+      <p class="compound-foot">Gulfstream Villa came in a 4.98 Guest Favourite in the top 5 percent of homes. That is the input the flywheel runs on. As long as the home keeps earning reviews like these, our work keeps compounding on top of it.</p>
+    </section>
+
+    <!-- ════════════════════════════════════════════════ 09 · BEFORE & AFTER ════════════════════════════════════════════════ -->
+    <section>
+      <div class="sec-head"><span class="num">09 / Before &amp; After RevWhisper</span><span class="line"></span></div>
+      <h2 class="sec-title">The home was always good. <span class="accent">Now it is found.</span></h2>
+      <div class="ba2">
+        <div class="state b"><div class="st-lab">Before RevWhisper</div><h3 class="serif">Invisible and idle</h3>
+          <ul>
+            <li><span class="mk">&#9660;</span><span>Page 7 of search. 98 percent of guests never saw it.</span></li>
+            <li><span class="mk">&#9660;</span><span>317 of 365 nights open. Summer nearly empty.</span></li>
+            <li><span class="mk">&#9660;</span><span>Occupancy drifting flat as the market softened.</span></li>
+            <li><span class="mk">&#9660;</span><span>High-rate winter season unsold.</span></li>
+            <li><span class="mk">&#9660;</span><span>$39.7K trailing year.</span></li>
+          </ul></div>
+        <div class="state a"><div class="st-lab">After RevWhisper</div><h3 class="serif">Found and booking</h3>
+          <ul>
+            <li><span class="mk">&#9650;</span><span><b>#1</b> on its open dates, page one across summer.</span></li>
+            <li><span class="mk">&#9650;</span><span>July <b>97 percent</b> booked against a 27 percent market.</span></li>
+            <li><span class="mk">&#9650;</span><span>Occupancy up in every summer month while the market fell.</span></li>
+            <li><span class="mk">&#9650;</span><span>$29.9K booked in the first month, the winter still filling.</span></li>
+            <li><span class="mk">&#9650;</span><span><b>~$55K</b> projected, <b>~$49K</b> net after fees.</span></li>
+          </ul></div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════ CLOSING ════════════════════════════════════════════════ -->
+    <section class="closing">
+      <span class="eyebrow">The fifth lever</span>
+      <h2>We set you up for success. <span class="accent">You determine the outcome.</span></h2>
+      <p>Julie has hosted on Airbnb for eleven years. The home was already excellent, a 4.98 Guest Favourite in the top 5 percent, loved by everyone who actually found it. The house was never the problem. Almost nobody was being shown it.
+        Bringing us on was a real investment, a leap of faith on a property that had been working hard for far too little in return.</p>
+      <p style="margin-top:14px">We did our part. We set the listing up to win, the backend, the content, the photos, the price,
+        the rank, and inside a month it owns position one on its open dates and has booked roughly three quarters of last year's
+        revenue in thirty days. The leap is paying off.</p>
+      <p style="margin-top:14px">Here is the part no software can do for you. We set you up for success. You determine the outcome.
+        A host who keeps delivering five-star stays compounds everything we build, visibility into reviews, reviews into rank, rank
+        into the next booking won for less. That is the fifth lever, the magic one, and it is the only one we can never pull for
+        you. Keep giving guests the stay these reviews describe, and this does not simply continue. It compounds.</p>
+      <p style="margin-top:14px">Every listing is different, but the first step is always the same: see your own baseline before
+        anyone touches anything.</p>
+      <a class="cta" href="https://cal.com/team/revwhisper/discovery">Book Your Free Strategy Call <span class="arr">&rarr;</span></a>
+      <div class="rw-signoff"><svg class="rw-sign" viewBox="0 0 280 56" xmlns="http://www.w3.org/2000/svg" fill="none" role="img" aria-label="RevWhisper"><g transform="translate(0,0) scale(1.1667)"><path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="#F2F6ED" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="#F2F6ED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g><text x="68" y="38" font-family="'Lora', Georgia, serif" font-size="36" font-weight="400" fill="#F2F6ED" letter-spacing="-0.5">RevWhisper</text></svg><span class="sg">Your revenue, optimized.</span></div>
+    </section>
+
+    <div class="sourcing">
+      SOURCES &nbsp;//&nbsp; Actual revenue, occupancy and ADR: PriceLabs Booking Insights, this year vs last year. Market occupancy comps, last-year
+      revenue and open-night potential: RevWhisper Calibration Scan (Final LY). Search baseline and live ranking by date: RevWhisper Growth Hub and calendar.
+      Listing content and gallery: live Airbnb listing.<br>
+      Forecast figures are projections on the current trendline under the stated assumptions and will move as the window fills. Confidential // Client data.
+    </div>
+  </div>
+
+  <footer><div class="wrap"><span class="ft-brand"><svg class="rw-foot" viewBox="0 0 280 56" xmlns="http://www.w3.org/2000/svg" fill="none" role="img" aria-label="RevWhisper"><g transform="translate(0,0) scale(1.1667)"><path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="#4A6741" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="#4A6741" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g><text x="68" y="38" font-family="'Lora', Georgia, serif" font-size="36" font-weight="400" fill="#4A6741" letter-spacing="-0.5">RevWhisper</text></svg> // Case Study 2</span><span>Gulfstream Villa &middot; Englewood FL &middot; Issued May 2026</span></div></footer>
+</body>
+</html>
