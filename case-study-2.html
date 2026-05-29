@@ -219,6 +219,7 @@ section{padding-top:74px}
 
 /* ── Performance table ── */
 .ptbl{margin-top:14px;border:1px solid var(--g200);border-radius:var(--radius);overflow:hidden;background:var(--white)}
+.ptbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
 .ptbl .pt-top{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:var(--g50);border-bottom:1px solid var(--g200)}
 .ptbl .pt-top .ttl{font-weight:500;font-size:14px;color:var(--g700)}.ptbl .pt-top .src{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--g400)}
 table.perf{width:100%;border-collapse:collapse;font-size:13.5px}
@@ -251,7 +252,7 @@ table.perf .d{font-family:var(--mono);font-size:11px;color:var(--g500)}table.per
 .fill{position:absolute;top:0;left:0;height:100%;display:flex;align-items:center;padding-left:14px;font-family:var(--mono);font-weight:500;font-size:15px;color:#fff;white-space:nowrap;border-radius:5px 0 0 5px}
 .fill.before{background:var(--g400)}.fill.booked{background:var(--accent)}.fill.proj{background:repeating-linear-gradient(135deg,#587a4f 0 8px,#4a6741 8px 16px);border-radius:0}.fill.net{background:var(--accent)}
 .stacklab{position:absolute;top:0;height:100%;display:flex;align-items:center;font-family:var(--mono);font-size:10.5px;color:#eef3ea;padding-left:12px}
-.ceiling{position:absolute;top:-7px;bottom:-7px;border-left:2px dashed var(--terra)}.ceiling .clab{position:absolute;top:-20px;left:6px;font-family:var(--mono);font-size:10px;letter-spacing:.05em;color:var(--terra);white-space:nowrap}
+.ceiling{position:absolute;top:-7px;bottom:-7px;border-left:2px dashed var(--terra)}.ceiling .clab{position:absolute;top:-20px;right:0;text-align:right;font-family:var(--mono);font-size:10px;letter-spacing:.05em;color:var(--terra);white-space:nowrap}
 .lyline{position:absolute;top:-7px;bottom:-7px;border-left:2px dotted var(--g400)}.lyline .llab{position:absolute;bottom:-20px;left:6px;font-family:var(--mono);font-size:9.5px;letter-spacing:.03em;color:var(--g500);white-space:nowrap}
 .net-tag{position:absolute;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:11px;color:var(--accent);white-space:nowrap;padding-left:8px}
 .fee-note{margin-top:30px;font-size:14.5px;color:var(--g600);max-width:68ch}.fee-note b{font-family:var(--heading);font-weight:400;color:var(--black)}
@@ -302,7 +303,8 @@ table.perf .d{font-family:var(--mono);font-size:11px;color:var(--g500)}table.per
 .sourcing{margin-top:34px;padding-top:18px;border-top:1px solid var(--g200);font-family:var(--mono);font-size:10px;letter-spacing:.02em;color:var(--g400);line-height:1.8}
 footer{border-top:1px solid var(--g200)}footer .wrap{display:flex;justify-content:space-between;align-items:center;padding:22px 40px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--g500);gap:16px;flex-wrap:wrap}
 footer .ft-brand{display:inline-flex;align-items:center;gap:10px}
-.rw-foot{height:15px;width:auto;display:block}
+.rw-foot{height:15px;width:auto;display:block;text-transform:none}
+.rw-foot text{text-transform:none}
 
 /* ── Motion ── */
 @media(prefers-reduced-motion:no-preference){
@@ -313,10 +315,27 @@ footer .ft-brand{display:inline-flex;align-items:center;gap:10px}
 
 /* ── Responsive ── */
 @media(max-width:860px){.levers{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:780px){.wrap{padding:0 24px}.baseline{grid-template-columns:1fr}.statrow{grid-template-columns:1fr}.rank-wrap,.ba2,.titleflip{grid-template-columns:1fr}footer .wrap{padding:22px 24px}}
+@media(max-width:780px){.wrap{padding:0 24px}.baseline{grid-template-columns:1fr}.statrow{grid-template-columns:1fr}.rank-wrap,.ba2,.titleflip{grid-template-columns:1fr}footer .wrap{padding:22px 24px}
+  /* net-delta tag floats past the track once it narrows; the +$9.3K figure is stated in the note below */
+  .net-tag{display:none}}
 @media(max-width:680px){.tgrid{grid-template-columns:1fr}.larr{transform:rotate(90deg)}.lnode{flex:1 1 100%}}
-@media(max-width:600px){.bar{grid-template-columns:1fr;gap:6px}}
-@media(max-width:560px){.cmp{grid-template-columns:1fr}.hero{padding-top:48px}}
+@media(max-width:600px){.bar{grid-template-columns:1fr;gap:6px}
+  /* bars stack here: the floating reference lines/labels would collide with the
+     now-above-track bar labels, so drop them — the figures are stated in the note below */
+  .ceiling,.lyline,.net-tag{display:none}
+  /* keep the projected amount on its green segment; the word would spill onto the light track */
+  .sl-w{display:none}}
+@media(max-width:560px){
+  .cmp{grid-template-columns:1fr}
+  .hero{padding-top:48px}
+  /* data table scrolls instead of overflowing the page */
+  table.perf th,table.perf td{padding:10px 13px}
+  .fcbig{font-size:38px}
+  .fc-lead{padding:20px}
+  /* closing CTA: tighter panel, full-width tap target */
+  .closing{padding:40px 24px}
+  .cta{width:100%;justify-content:center}
+}
 @media(max-width:480px){.levers{grid-template-columns:1fr}}
 </style>
 </head>
@@ -483,6 +502,7 @@ footer .ft-brand{display:inline-flex;align-items:center;gap:10px}
         set beside what the broader Englewood market is doing.</p>
       <div class="ptbl">
         <div class="pt-top"><span class="ttl">Forward window &middot; actuals, this year vs last year</span><span class="src">Source: PriceLabs Booking Insights</span></div>
+        <div class="ptbl-scroll">
         <table class="perf">
           <thead><tr><th>Month</th><th>Revenue</th><th>vs LY</th><th>Occupancy</th><th>vs LY</th><th>ADR</th></tr></thead>
           <tbody>
@@ -492,6 +512,7 @@ footer .ft-brand{display:inline-flex;align-items:center;gap:10px}
             <tr><td class="mo">August 2026</td><td>$2.51K</td><td class="d green up">$2.31K</td><td>68%</td><td class="d green up">62</td><td>$148</td></tr>
           </tbody>
         </table>
+        </div>
       </div>
       <p class="perf-cap"><b>Occupancy and rate move together.</b> June books to 87 percent and July to 97, revenue rises in every
         month against last year, and ADR holds or climbs alongside it. That combination, more nights at a steady-to-higher price,
@@ -527,7 +548,7 @@ footer .ft-brand{display:inline-flex;align-items:center;gap:10px}
         <div class="bar"><div class="blab">Projected, gross<b>Booked plus open nights filling</b></div>
           <div class="track">
             <div class="fill booked" style="width:57.8%"><span>$38.3K booked</span></div>
-            <div class="fill proj" style="left:57.8%;width:25.3%"><span class="stacklab">+$16.8K projected</span></div>
+            <div class="fill proj" style="left:57.8%;width:25.3%"><span class="stacklab">+$16.8K<span class="sl-w"> projected</span></span></div>
             <div class="lyline" style="left:59.9%"></div>
             <div class="ceiling" style="left:100%"><span class="clab">Ceiling if fully optimized ~$66K</span></div>
           </div></div>
