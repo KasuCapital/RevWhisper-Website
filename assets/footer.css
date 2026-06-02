@@ -1,0 +1,34 @@
+/* RevWhisper site footer — canonical styles
+   Source of truth for the shared footer. Loaded by every page that ships the shared footer.
+   Markup lives in /_partials/footer.html and is mirrored into pages via scripts/sync-partials.mjs. */
+
+.site-footer{padding:64px 0 36px;border-top:1px solid var(--g200,#E0DCDA);background:var(--white,#fff)}
+.site-footer .w{max-width:1100px;margin:0 auto;padding:0 28px}
+
+.footer-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:32px 48px;margin-bottom:36px}
+
+.footer-logo{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.footer-logo .lm{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.footer-logo-name{font-family:var(--heading,'Lora','Georgia',serif);font-size:16px;font-weight:600;letter-spacing:-.02em;color:var(--black,#32302F)}
+
+.footer-tag{font-size:13px;color:var(--g400,#a39e9b);max-width:420px;line-height:1.6}
+
+.footer-socials{display:flex;gap:12px;margin-top:14px}
+.footer-socials a{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;background:var(--g100,#f3f1ef);color:var(--g400,#a39e9b);transition:background .2s,color .2s}
+.footer-socials a:hover{background:var(--g200,#E0DCDA);color:var(--black,#32302F)}
+
+.footer-col-title{font-family:var(--heading,'Lora','Georgia',serif);font-weight:600;font-size:14px;color:var(--black,#32302F);margin-bottom:12px}
+.footer-link{display:block;font-size:13px;color:var(--g400,#a39e9b);text-decoration:none;margin-bottom:8px;transition:color .2s}
+.footer-link:hover{color:var(--black,#32302F)}
+
+.footer-bottom{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px 24px;padding-top:24px;border-top:1px solid var(--g200,#E0DCDA);font-size:12px;color:var(--g400,#a39e9b);font-family:var(--mono,'DM Mono','Consolas',monospace)}
+
+.footer-legal{display:flex;align-items:center;gap:18px}
+.footer-legal a{color:var(--g400,#a39e9b);text-decoration:none;transition:color .2s}
+.footer-legal a:hover{color:var(--black,#32302F)}
+
+@media(max-width:768px){
+  .site-footer{padding:48px 0 32px}
+  .footer-grid{grid-template-columns:1fr;gap:32px}
+  .footer-bottom{flex-direction:column;gap:10px;align-items:flex-start}
+}

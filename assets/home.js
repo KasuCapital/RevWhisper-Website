@@ -1094,50 +1094,7 @@
     stakesObs.observe(section);
   })();
 
-  /* ── Floating Nav: scroll state ── */
-  var floatBar = document.getElementById('float-bar');
-  if (floatBar) {
-    window.addEventListener('scroll', function() {
-      if (window.pageYOffset > 60) {
-        floatBar.classList.add('scrolled');
-      } else {
-        floatBar.classList.remove('scrolled');
-      }
-    }, { passive: true });
-  }
-
-  /* ── Floating Nav: active section highlighting ── */
-  var navLinks = document.querySelectorAll('.fb-link[data-section]');
-  if (navLinks.length) {
-    var sectionObserver = new IntersectionObserver(function(entries) {
-      entries.forEach(function(entry) {
-        if (entry.isIntersecting) {
-          navLinks.forEach(function(l) { l.classList.remove('active'); });
-          var link = document.querySelector('.fb-link[data-section="' + entry.target.id + '"]');
-          if (link) link.classList.add('active');
-        }
-      });
-    }, { threshold: 0.15, rootMargin: '-80px 0px -40% 0px' });
-
-    navLinks.forEach(function(l) {
-      var el = document.getElementById(l.dataset.section);
-      if (el) sectionObserver.observe(el);
-    });
-  }
-
-  /* ── Floating Nav: smooth scroll with offset ── */
-  document.querySelectorAll('.fb-link').forEach(function(link) {
-    link.addEventListener('click', function(e) {
-      var targetId = this.getAttribute('href').substring(1);
-      var target = document.getElementById(targetId);
-      if (target) {
-        e.preventDefault();
-        var offset = (floatBar ? floatBar.offsetHeight : 60) + 28;
-        var top = target.getBoundingClientRect().top + window.pageYOffset - offset;
-        window.scrollTo({ top: top, behavior: 'smooth' });
-      }
-    });
-  });
+  /* Header scroll/hamburger logic lives in /assets/header.js */
 
   /* ── YouTube facade: load the real iframe on click ── */
   document.querySelectorAll('.yt-facade').forEach(function(btn){
@@ -1157,23 +1114,5 @@
       btn.replaceWith(iframe);
     }, { once: true });
   });
-
-  /* ── Floating Nav: mobile hamburger ── */
-  var hamburger = document.getElementById('fb-hamburger');
-  var fbLinks = document.getElementById('fb-links');
-  if (hamburger && fbLinks) {
-    hamburger.addEventListener('click', function() {
-      var isOpen = fbLinks.classList.toggle('open');
-      hamburger.classList.toggle('open');
-      hamburger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-    });
-    fbLinks.addEventListener('click', function(e) {
-      if (e.target.classList.contains('fb-link')) {
-        fbLinks.classList.remove('open');
-        hamburger.classList.remove('open');
-        hamburger.setAttribute('aria-expanded', 'false');
-      }
-    });
-  }
 
 })();

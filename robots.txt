@@ -1,19 +1,24 @@
 User-agent: *
 Allow: /
 
+# Internal / utility files
 Disallow: /docs/
 Disallow: /service-agreement.md
 Disallow: /blog/HOW_TO_CREATE_A_BLOG_POST.md
 Disallow: /blog/_template
+
+# Conversion-flow pages (intentionally not indexed)
 Disallow: /checkout
 Disallow: /checkout-form
 Disallow: /success-b
 Disallow: /link-builder
-Disallow: /photoediting
+
+# Old/experimental landing pages (intentionally not indexed)
 Disallow: /index-storybrand
 Disallow: /storybrandsite
 Disallow: /webinar-original
 Disallow: /welcome-back
 Disallow: /poconos
+Disallow: /cribs
 
 Sitemap: https://revwhisper.com/sitemap.xml

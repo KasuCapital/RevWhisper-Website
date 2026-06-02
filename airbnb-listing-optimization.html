@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Attribution tracking (cookie-free) -->
+<script>
+(function(){
+  var key='rw_attribution';
+  var params=new URLSearchParams(window.location.search);
+  var utmFields=['utm_source','utm_medium','utm_campaign','utm_term','utm_content'];
+  var hasUtm=utmFields.some(function(f){return params.has(f);});
+  if(hasUtm||!sessionStorage.getItem(key)){
+    var data={};
+    utmFields.forEach(function(f){if(params.get(f))data[f]=params.get(f);});
+    try{data.referrer=document.referrer?new URL(document.referrer).hostname:'direct';}catch(e){data.referrer=document.referrer||'direct';}
+    data.landing_page=window.location.pathname;
+    data.arrived_at=new Date().toISOString();
+    sessionStorage.setItem(key,JSON.stringify(data));
+  }
+})();
+</script>
+<!-- Cookie Consent + GA4 (consent-mode) -->
+<script>
+window.dataLayer=window.dataLayer||[];
+function gtag(){dataLayer.push(arguments);}
+gtag('consent','default',{'analytics_storage':'denied','ad_storage':'denied'});
+gtag('js',new Date());
+gtag('config','G-Y1FYZ5849B');
+function rwTrack(e,p){gtag('event',e,p||{});}
+(function(){
+  var c=localStorage.getItem('rw_cookie_consent');
+  if(c==='accepted'){gtag('consent','update',{'analytics_storage':'granted','ad_storage':'granted'});return;}
+  if(c==='declined')return;
+  document.addEventListener('DOMContentLoaded',function(){
+    var b=document.createElement('div');b.id='rw-consent';
+    b.innerHTML='<div style="position:fixed;bottom:0;left:0;right:0;z-index:9999;padding:16px 24px;background:#32302F;color:#fff;font-family:DM Sans,system-ui,sans-serif;font-size:14px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;box-shadow:0 -4px 24px rgba(0,0,0,.15)"><span style="flex:1;min-width:240px;line-height:1.5">We use cookies to analyze site usage and improve your experience.</span><div style="display:flex;gap:10px;flex-shrink:0"><button id="rw-decline" style="background:transparent;color:#ccc8c5;border:1.5px solid #706b68;padding:8px 20px;border-radius:6px;font-size:13px;font-family:inherit;cursor:pointer">Decline</button><button id="rw-accept" style="background:#4A6741;color:#fff;border:none;padding:8px 20px;border-radius:6px;font-size:13px;font-family:inherit;cursor:pointer;font-weight:500">Accept</button></div></div>';
+    document.body.appendChild(b);
+    document.getElementById('rw-accept').addEventListener('click',function(){localStorage.setItem('rw_cookie_consent','accepted');b.remove();gtag('consent','update',{'analytics_storage':'granted','ad_storage':'granted'});});
+    document.getElementById('rw-decline').addEventListener('click',function(){localStorage.setItem('rw_cookie_consent','declined');b.remove();});
+  });
+})();
+</script>
+<!-- Meta Pixel (shim only; script loaded on interaction) -->
+<script>
+!function(f){if(f.fbq)return;var n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[]}(window);
+fbq('init','959022406709300');
+fbq('track','PageView');
+</script>
+<!-- Deferred loader: fetch tracker scripts on first interaction or idle -->
+<script>
+(function(){
+  var loaded=false;
+  function load(){
+    if(loaded)return;loaded=true;
+    var g=document.createElement('script');g.async=true;g.src='https://www.googletagmanager.com/gtag/js?id=G-Y1FYZ5849B';document.head.appendChild(g);
+    var f=document.createElement('script');f.async=true;f.src='https://connect.facebook.net/en_US/fbevents.js';document.head.appendChild(f);
+  }
+  ['scroll','click','touchstart','keydown','mousemove'].forEach(function(e){window.addEventListener(e,load,{once:true,passive:true});});
+  if('requestIdleCallback' in window)requestIdleCallback(load,{timeout:4000});
+  else setTimeout(load,4000);
+})();
+</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=959022406709300&ev=PageView&noscript=1"/></noscript>
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+  document.addEventListener('click',function(e){
+    var el=e.target.closest('a,button');
+    if(!el)return;
+    var txt=(el.textContent||'').replace(/\s+/g,' ').trim().toLowerCase();
+    if(txt.indexOf('book your free strategy call')!==-1||txt.indexOf('book a call')!==-1||txt.indexOf('book a free strategy call')!==-1){
+      fbq('track','Lead',{content_name:'Book Strategy Call'});
+    }else if(txt.indexOf('check my search ranking')!==-1){
+      fbq('track','Lead',{content_name:'Check Search Ranking'});
+    }
+  });
+});
+</script>
+<!-- End Meta Pixel -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Airbnb Listing Optimization Service: More Bookings, Higher Rank | RevWhisper</title>
+<meta name="description" content="Done-for-you Airbnb listing optimization. We rewrite your title, photos, amenities, and pricing strategy so you rank higher and book more nights. See pricing.">
+<link rel="canonical" href="https://revwhisper.com/airbnb-listing-optimization">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Airbnb Listing Optimization Service: More Bookings, Higher Rank | RevWhisper">
+<meta property="og:description" content="Done-for-you Airbnb listing optimization. We rewrite your title, photos, amenities, and pricing strategy so you rank higher and book more nights.">
+<meta property="og:url" content="https://revwhisper.com/airbnb-listing-optimization">
+<meta property="og:site_name" content="RevWhisper">
+<meta property="og:image" content="https://revwhisper.com/images/properties/livingroom-after.webp">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Airbnb Listing Optimization Service: More Bookings, Higher Rank | RevWhisper">
+<meta name="twitter:description" content="Done-for-you Airbnb listing optimization. We rewrite your title, photos, amenities, and pricing strategy so you rank higher and book more nights.">
+<meta name="twitter:image" content="https://revwhisper.com/images/properties/livingroom-after.webp">
+<link rel="icon" href="/icons/favicon-light.svg" type="image/svg+xml" media="(prefers-color-scheme: light)">
+<link rel="icon" href="/icons/favicon-dark.svg" type="image/svg+xml" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/icons/favicon-light.svg" type="image/svg+xml">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "RevWhisper",
+  "legalName": "MCO CORP",
+  "url": "https://revwhisper.com",
+  "logo": "https://revwhisper.com/icons/favicon-light.svg",
+  "description": "RevWhisper helps Airbnb hosts maximize revenue with AI-powered listing optimization, professional photography direction, and data-driven pricing strategies.",
+  "sameAs": [
+    "https://x.com/RevWhisper",
+    "https://www.instagram.com/rev.whisper/"
+  ],
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "url": "https://revwhisper.com/get-started",
+    "contactType": "sales"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "serviceType": "Airbnb Listing Optimization",
+  "name": "Airbnb Listing Optimization Service",
+  "description": "Done-for-you Airbnb listing optimization. We rewrite your title, photos, amenities, and pricing strategy so you rank higher and book more nights.",
+  "provider": {
+    "@type": "Organization",
+    "name": "RevWhisper",
+    "url": "https://revwhisper.com"
+  },
+  "areaServed": {
+    "@type": "Country",
+    "name": "United States"
+  },
+  "url": "https://revwhisper.com/airbnb-listing-optimization",
+  "offers": {
+    "@type": "Offer",
+    "price": "500.00",
+    "priceCurrency": "USD",
+    "priceSpecification": {
+      "@type": "UnitPriceSpecification",
+      "price": "500.00",
+      "priceCurrency": "USD",
+      "unitText": "MONTH"
+    }
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://revwhisper.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Services", "item": "https://revwhisper.com/airbnb-listing-optimization" },
+    { "@type": "ListItem", "position": 3, "name": "Airbnb Listing Optimization", "item": "https://revwhisper.com/airbnb-listing-optimization" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How does Airbnb's algorithm work?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Airbnb's search algorithm evaluates roughly 800 signals to decide which listings appear first for a given search. The biggest categories are booking probability (how likely a guest is to click and convert), listing quality (photos, completeness, response rate, reviews, cancellation rate), and personalization to the searcher's preferences. Since the 2025 algorithm overhaul, conversion velocity replaced the old new-listing boost, meaning ranking is now earned, not granted."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why is my Airbnb not getting bookings?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "If you're getting impressions but no bookings, the problem is conversion, not visibility. The most common causes are a weak cover photo (low click-through), a title that doesn't match the keywords guests search, missing amenity tags that disqualify you from filtered searches, and pricing that's misaligned with your competitive set. We diagnose all four in the first hour of an audit."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How long does Airbnb listing optimization take to show results?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Most hosts see measurable changes in search ranking and click-through rate within 14-21 days of the optimization going live. Booking lift typically follows in the first 30 days. We send a baseline performance snapshot the day we launch and a results report at the 30-day mark so you can verify the lift directly."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What does your listing optimization service include?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Title rewrite, cover-photo selection and A/B testing, photo order and editing, full description rewrite, complete amenities mapping (against all 130+ Airbnb tags), pricing strategy with length-of-stay discount logic and weekend rules, promotion configuration, daily search-rank tracking from multiple traveler-origin markets, and a monthly performance report. Everything is done for you, you approve, we ship."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much does Airbnb listing optimization cost?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Our core program is $500/mo (billed annually, saves $3,000/year) with a one-time $998 listing optimization fee per property. The fee covers the full audit, market analysis, and account setup. Portfolios of 10+ properties get custom pricing. Most listing-optimization competitors hide pricing behind a sales call, we don't."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I optimize my Airbnb listing myself?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, and many hosts do successfully. The pieces that benefit most from a professional are (1) cover photo selection (it's the single biggest conversion lever and easy to get wrong), (2) the keyword research behind your title and description, and (3) competitive pricing strategy. If you want to DIY, our blog and free Airbnb ranking tool will get you most of the way."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do you only work with Airbnb, or also VRBO and Booking.com?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Airbnb is our primary platform, that's where the conversion gains compound fastest because of the algorithm's behavior. We do mirror optimizations to VRBO and Booking.com listings on request, though the algorithm dynamics are different and the lift is generally smaller."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need to be a Superhost already?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. About a third of our clients aren't Superhosts when they start. Superhost status is itself a ranking signal we work toward, it's tied to response rate, cancellation rate, and rating thresholds, all of which are downstream of the optimizations we make."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if my listing is brand new with no reviews?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "New listings have a different optimization playbook because the 2025 algorithm change removed the old new-listing boost. The priority shifts to driving fast initial bookings via aggressive launch pricing, an exceptional cover photo, and complete amenity coverage so the listing isn't filtered out. We've launched dozens of new listings, happy to walk through the playbook on the strategy call."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How is this different from tools like Rankbreeze or AutoRank?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Tools like Rankbreeze and AutoRank are software, they show you the data and give you suggestions, but you still execute. RevWhisper is a managed service: we use those signals plus our own daily ranking checks to actually rewrite, deploy, and iterate on your listing for you. The combination is what most hosts actually need, data without execution rarely moves the needle."
+      }
+    }
+  ]
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
+<link rel="preload" href="/assets/header.css" as="style">
+<link rel="stylesheet" href="/assets/header.css">
+<link rel="preload" href="/assets/home.css?v=3" as="style">
+<link rel="stylesheet" href="/assets/home.css?v=3">
+<script defer src="/assets/header.js"></script>
+<link rel="stylesheet" href="/assets/footer.css">
+<style>
+/* ── Page-specific: Anatomy + FAQ ── */
+/* Unified section header, mirrors home.css .pricing-header / .onboard-header */
+.lo-section-header{text-align:center;max-width:620px;margin:0 auto 56px}
+.lo-section-header .sub{margin:24px auto 0}
+.lo-anatomy{padding:100px 0;background:#fff}
+.lo-anatomy-header{text-align:center;max-width:620px;margin:0 auto 56px}
+.lo-anatomy-header .sub{margin:24px auto 0}
+.lo-anatomy-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:56px;align-items:center;max-width:1040px;margin:0 auto}
+.lo-listing-card{background:#fff;border:1.5px solid var(--g200);border-radius:14px;overflow:hidden;box-shadow:var(--sh-lg);position:relative}
+.lo-listing-cover{aspect-ratio:4/3;background:linear-gradient(135deg,#dce6d8 0%,#b3c5ab 100%) center/cover;background-position:center;background-size:cover;position:relative;display:flex;align-items:flex-end;padding:14px}
+.lo-listing-cover-tag{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:#fff;background:rgba(0,0,0,.4);padding:5px 10px;border-radius:20px;backdrop-filter:blur(6px)}
+.lo-listing-body{padding:18px 20px 20px}
+.lo-listing-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}
+.lo-listing-row:last-of-type{margin-bottom:14px}
+.lo-listing-title{font-family:var(--body);font-size:15px;font-weight:600;color:var(--black);line-height:1.35}
+.lo-listing-loc{font-size:13px;color:var(--g500);line-height:1.4;padding-top:2px}
+.lo-listing-amen{display:flex;flex-wrap:wrap;gap:6px;flex:1}
+.lo-listing-amen span{font-family:var(--mono);font-size:10px;color:var(--g500);background:var(--g50);border:1px solid var(--g200);padding:3px 8px;border-radius:4px;letter-spacing:.04em;text-transform:uppercase}
+.lo-listing-foot{display:flex;align-items:center;justify-content:space-between;padding-top:14px;border-top:1px solid var(--g100);gap:12px}
+.lo-listing-rate-wrap,.lo-listing-rev-wrap{display:flex;align-items:center;gap:8px}
+.lo-listing-rate{font-family:var(--heading);font-size:18px;font-weight:600;color:var(--black);letter-spacing:-.01em}
+.lo-listing-rate span{font-size:13px;font-weight:400;color:var(--g500)}
+.lo-listing-rev{font-size:12px;color:var(--g500);display:flex;align-items:center;gap:4px}
+.lo-listing-pin{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--accent);color:#fff;font-family:var(--mono);font-size:11px;font-weight:600;box-shadow:0 2px 8px rgba(74,103,65,.4);flex-shrink:0}
+.lo-pin-cover{position:absolute;top:14px;right:14px;z-index:2}
+.lo-pin-inline{margin-top:1px}
+.lo-callouts{display:flex;flex-direction:column;gap:14px}
+.lo-callout{display:flex;gap:14px;align-items:flex-start;padding:14px 16px;background:#fff;border:1.5px solid var(--g200);border-radius:var(--radius);transition:border-color .25s ease,transform .25s ease}
+.lo-callout:hover{border-color:var(--accent);transform:translateX(4px)}
+.lo-callout-num{flex:0 0 24px;width:24px;height:24px;border-radius:50%;background:var(--accent-light);color:var(--accent);font-family:var(--mono);font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center}
+.lo-callout-body{flex:1}
+.lo-callout-title{font-family:var(--heading);font-size:15px;font-weight:500;color:var(--black);margin-bottom:4px;letter-spacing:-.01em}
+.lo-callout-desc{font-size:13px;color:var(--g500);line-height:1.6;font-weight:300}
+
+/* FAQ accordion */
+.lo-faq{padding:100px 0;background:var(--g50)}
+.lo-faq-header{text-align:center;max-width:620px;margin:0 auto 48px}
+.lo-faq-header .sub{margin:24px auto 0}
+.lo-faq-list{max-width:780px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
+.lo-faq-item{background:#fff;border:1.5px solid var(--g200);border-radius:var(--radius);transition:border-color .25s ease}
+.lo-faq-item[open]{border-color:var(--accent)}
+.lo-faq-item summary{list-style:none;cursor:pointer;padding:18px 22px;display:flex;align-items:center;justify-content:space-between;gap:16px;font-family:var(--heading);font-size:16px;font-weight:500;color:var(--black);letter-spacing:-.01em}
+.lo-faq-item summary::-webkit-details-marker{display:none}
+.lo-faq-item summary::after{content:'';flex:0 0 16px;width:16px;height:16px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 6l4 4 4-4' fill='none' stroke='%23706b68' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center/100% 100%;transition:transform .3s ease}
+.lo-faq-item[open] summary::after{transform:rotate(180deg)}
+.lo-faq-answer{padding:0 22px 20px;font-size:14px;color:var(--g500);line-height:1.75;font-weight:300}
+
+/* Differentiation cards */
+#how-different{padding:100px 0;background:#fff}
+.lo-diff-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:1040px;margin:0 auto}
+.lo-diff-card{background:var(--g50);border:1.5px solid var(--g200);border-radius:14px;padding:32px 28px;display:flex;flex-direction:column;transition:border-color .25s ease,transform .25s ease,box-shadow .25s ease}
+.lo-diff-card:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:0 8px 24px rgba(50,48,47,.06)}
+.lo-diff-num{font-family:var(--mono);font-size:11px;font-weight:500;color:var(--accent);letter-spacing:.1em;margin-bottom:18px}
+.lo-diff-title{font-family:var(--heading);font-size:20px;font-weight:500;color:var(--black);line-height:1.3;letter-spacing:-.01em;margin-bottom:12px}
+.lo-diff-desc{font-size:14px;color:var(--g500);line-height:1.7;font-weight:300;margin-bottom:20px}
+.lo-diff-desc em{font-style:italic;color:var(--accent);font-weight:400}
+.lo-diff-viz{margin-top:auto;padding-top:20px;border-top:1px solid var(--g100)}
+.lo-diff-viz svg{display:block;width:100%;height:auto;max-width:240px;margin:0 auto}
+.lo-diff-viz-cap{margin-top:10px;font-family:var(--mono);font-size:10px;color:var(--g400);letter-spacing:.04em;text-align:center}
+
+/* Optimization system cards */
+#solution{position:relative;overflow:hidden;background:#fff}
+#solution::before{content:'';position:absolute;left:50%;top:120px;width:min(760px,90vw);height:360px;transform:translateX(-50%);background:radial-gradient(ellipse at center,rgba(74,103,65,.055),transparent 68%);pointer-events:none}
+#solution .w{position:relative;z-index:1}
+#solution .solution-header{max-width:650px}
+.lo-bento-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;align-items:stretch}
+.lo-bento-tile{--tile-accent:var(--accent);--tile-wash:var(--accent-light);position:relative;min-height:438px;padding:24px;border:1.5px solid var(--g200);border-radius:var(--radius);background:rgba(255,255,255,.96);box-shadow:0 12px 34px rgba(50,48,47,.055);overflow:hidden;display:flex;flex-direction:column;gap:14px;transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease}
+.lo-bento-tile::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(220,230,216,.28),transparent 34%);opacity:0;pointer-events:none;transition:opacity .25s ease}
+.lo-bento-tile:hover{transform:translateY(-3px);border-color:var(--accent-border);box-shadow:0 16px 42px rgba(50,48,47,.08),0 0 0 4px rgba(74,103,65,.045)}
+.lo-bento-tile:hover::before{opacity:1}
+.lo-bento-head{position:relative;z-index:1;display:flex;align-items:center;justify-content:flex-start;gap:12px;min-height:38px}
+.lo-bento-kicker{display:flex;align-items:center;gap:9px;min-width:0}
+.lo-bento-num{display:none}
+.lo-bento-icon{width:34px;height:34px;border-radius:8px;background:var(--accent-light);color:var(--accent);display:flex;align-items:center;justify-content:center;box-shadow:0 1px 0 rgba(255,255,255,.75) inset;flex:0 0 auto}
+.lo-bento-icon svg{width:20px;height:20px}
+.lo-bento-tile .bt-eyebrow{margin:0;color:var(--accent)}
+.lo-bento-tile .bt-title{position:relative;z-index:1;font-size:24px;line-height:1.2;margin:0;color:var(--black)}
+.lo-bento-tile .bt-desc{position:relative;z-index:1;font-size:13.5px;line-height:1.72;margin:0;color:var(--g500);min-height:70px}
+.lo-bento-actions{position:relative;z-index:1;margin-top:auto;padding-top:14px;border-top:1px solid rgba(50,48,47,.1);display:flex;flex-direction:column;gap:7px;list-style:none}
+.lo-bento-actions li{font-size:12.5px;color:var(--g500);font-weight:300;line-height:1.5;display:flex;align-items:flex-start;gap:9px}
+.lo-bento-actions li::before{content:'';flex:0 0 7px;width:7px;height:7px;margin-top:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px var(--accent-light)}
+.lo-bento-visual{position:relative;z-index:1;margin-top:2px;min-height:148px}
+.lo-search-lab{display:grid;gap:10px;align-content:start}
+.lo-search-bar{display:flex;align-items:center;gap:8px;min-height:38px;border:1px solid rgba(74,103,65,.18);border-radius:8px;background:#fff;padding:9px 11px;font-family:var(--mono);font-size:11px;color:var(--g600);box-shadow:0 8px 20px rgba(50,48,47,.05)}
+.lo-search-bar svg{width:14px;height:14px;color:var(--accent);flex:0 0 auto}
+.lo-keyword-pills{display:flex;flex-wrap:wrap;gap:7px}
+.lo-keyword-pills span,.lo-tag-cloud span,.lo-pricing-chip{font-family:var(--mono);font-size:10px;letter-spacing:.04em;text-transform:uppercase;border-radius:999px}
+.lo-keyword-pills span{color:var(--accent);background:var(--accent-light);padding:5px 8px}
+.lo-title-strip{border-left:3px solid var(--accent);padding:8px 0 8px 11px;font-family:var(--heading);font-size:16px;line-height:1.35;color:var(--black);background:linear-gradient(90deg,rgba(74,103,65,.06),transparent)}
+.lo-cover-stage{height:148px;border-radius:10px;background:linear-gradient(180deg,rgba(50,48,47,.08),rgba(50,48,47,.38)),url('/images/properties/backyardbbq-after.webp') center/cover;position:relative;overflow:hidden;box-shadow:0 14px 30px rgba(50,48,47,.12)}
+.lo-cover-badge{position:absolute;left:12px;top:12px;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:rgba(50,48,47,.56);border:1px solid rgba(255,255,255,.24);backdrop-filter:blur(8px);padding:6px 9px;border-radius:999px}
+.lo-cover-score{position:absolute;right:12px;bottom:12px;background:rgba(255,255,255,.92);border-radius:8px;padding:9px 11px;min-width:104px;box-shadow:0 10px 22px rgba(50,48,47,.18)}
+.lo-cover-score strong{display:block;font-family:var(--heading);font-size:24px;line-height:1;color:var(--accent)}
+.lo-cover-score span{font-family:var(--mono);font-size:9px;color:var(--g500);letter-spacing:.05em;text-transform:uppercase}
+.lo-cover-rail{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:10px}
+.lo-cover-rail span{height:6px;border-radius:999px;background:var(--accent-light)}
+.lo-cover-rail span:nth-child(2){background:var(--accent)}
+.lo-filmstrip{display:grid;grid-template-columns:1fr;gap:8px}
+.lo-frame{height:44px;border-radius:9px;background-size:cover;background-position:center;position:relative;overflow:hidden;box-shadow:0 8px 18px rgba(50,48,47,.09)}
+.lo-frame:nth-child(1){background-image:linear-gradient(90deg,rgba(50,48,47,.52),rgba(50,48,47,.08)),url('/images/properties/livingroom-after.webp')}
+.lo-frame:nth-child(2){background-image:linear-gradient(90deg,rgba(50,48,47,.48),rgba(50,48,47,.08)),url('/images/properties/kitchen-after.webp')}
+.lo-frame:nth-child(3){background-image:linear-gradient(90deg,rgba(50,48,47,.48),rgba(50,48,47,.08)),url('/images/properties/bunkroom-after.webp')}
+.lo-frame span{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#fff;color:var(--accent);font-family:var(--mono);font-size:10px;font-weight:600}
+.lo-copy-sheet{display:grid;gap:8px;padding:16px;border-radius:10px;background:#fff;border:1px solid rgba(50,48,47,.1);box-shadow:0 10px 24px rgba(50,48,47,.05)}
+.lo-copy-line{height:8px;border-radius:999px;background:var(--g100)}
+.lo-copy-line:nth-child(1){width:78%;background:var(--accent-light)}
+.lo-copy-line:nth-child(2){width:94%}
+.lo-copy-line:nth-child(3){width:66%}
+.lo-copy-highlight{display:flex;flex-wrap:wrap;gap:6px;padding-top:5px}
+.lo-copy-highlight span{font-size:11px;color:var(--accent);background:var(--accent-light);padding:4px 7px;border-radius:5px}
+.lo-tag-cloud{display:flex;flex-wrap:wrap;gap:8px;align-content:flex-start;min-height:98px}
+.lo-tag-cloud span{color:var(--g600);background:#fff;border:1px solid rgba(50,48,47,.1);padding:6px 9px}
+.lo-tag-cloud span:nth-child(2n){background:var(--accent-light);color:var(--accent);border-color:transparent}
+.lo-tag-stat{display:flex;align-items:baseline;gap:8px;margin-top:2px;color:var(--accent)}
+.lo-tag-stat strong{font-family:var(--heading);font-size:32px;line-height:1}
+.lo-tag-stat span{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--g500)}
+.lo-pricing-chart{height:138px;border-radius:10px;background:#fff;border:1px solid rgba(50,48,47,.1);padding:12px;box-shadow:0 10px 24px rgba(50,48,47,.05)}
+.lo-pricing-chart svg{width:100%;height:100%;display:block}
+.lo-pricing-chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.lo-pricing-chip{background:var(--accent-light);color:var(--accent);padding:5px 8px}
+
+@media(max-width:900px){
+  .lo-anatomy-grid{grid-template-columns:1fr;gap:40px}
+  .lo-bento-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+  .lo-bento-tile{min-height:auto}
+  .lo-diff-grid{grid-template-columns:1fr;gap:14px}
+  #how-different{padding:64px 0}
+}
+@media(max-width:640px){
+  .lo-anatomy{padding:64px 0}
+  .lo-faq{padding:64px 0}
+  .lo-faq-item summary{font-size:15px;padding:16px 18px}
+  .lo-diff-card{padding:24px 22px}
+  #solution .solution-header{margin-bottom:36px}
+  .lo-bento-grid{grid-template-columns:1fr}
+  .lo-bento-tile{padding:20px;border-radius:10px}
+  .lo-bento-head{align-items:center}
+  .lo-bento-tile .bt-title{font-size:22px}
+  .lo-bento-tile .bt-desc{min-height:auto}
+  .lo-cover-stage{height:176px}
+  .lo-frame{height:56px}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER:START -->
+<nav class="float-bar" id="float-bar" aria-label="Primary">
+  <a href="/" class="fb-logo">
+    <div class="lm"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24" fill="none" aria-hidden="true"><path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <span class="ln">RevWhisper</span>
+  </a>
+
+  <div class="fb-links" id="fb-links">
+
+    <!-- Services dropdown -->
+    <div class="fb-dropdown" data-dropdown>
+      <button class="fb-link fb-dropdown-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="fb-menu-services">
+        Services
+        <svg class="fb-chevron" viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="fb-menu" id="fb-menu-services">
+
+        <!-- Listing Optimization: paper + wavy text lines + sparkle (optimization mark) -->
+        <a href="/airbnb-listing-optimization" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M6.5 3.5h11a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1v-15a1 1 0 0 1 1-1Z"/>
+              <path d="M8.5 9c1.3-.7 2.7-.7 4 0s2.7.7 3 0"/>
+              <path d="M8.5 13c1.3-.7 2.7-.7 4 0s2.7.7 3 0"/>
+              <path d="M8.5 17q1.5-.7 3 0"/>
+              <path d="M16.5 5v2.5M15.3 6.2h2.4"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Listing Optimization</span>
+            </span>
+            <span class="fb-menu-desc">Title, description, and amenities tuned for conversion</span>
+          </span>
+        </a>
+
+        <!-- Revenue Management: hand-drawn stacked coins with squiggle on top -->
+        <a href="/revenue-management" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <ellipse cx="12" cy="6" rx="6" ry="2"/>
+              <path d="M6 6v12.5c0 1.1 2.7 2 6 2s6-.9 6-2V6"/>
+              <path d="M6 10c0 1.1 2.7 2 6 2s6-.9 6-2"/>
+              <path d="M6 14c0 1.1 2.7 2 6 2s6-.9 6-2"/>
+              <path d="M9.5 6q1.2-.7 2.5 0t2.5 0"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Revenue Management</span>
+            </span>
+            <span class="fb-menu-desc">Dynamic pricing, minimum stays, seasonal strategy</span>
+          </span>
+        </a>
+
+        <!-- Photo Optimization: frame + sun + horizon wave (contained inside the frame) -->
+        <a href="/photoediting" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4.5 5h15a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-15a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z"/>
+              <circle cx="8.5" cy="9.5" r="1.4" fill="currentColor"/>
+              <path d="M5 15.5c2-1.5 4-3 6.5-2s5 .5 7.5-1"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Photo Optimization</span>
+            </span>
+            <span class="fb-menu-desc">Cover photos, photo order, professional editing</span>
+          </span>
+        </a>
+
+      </div>
+    </div>
+
+    <!-- Resources dropdown -->
+    <div class="fb-dropdown" data-dropdown>
+      <button class="fb-link fb-dropdown-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="fb-menu-resources">
+        Resources
+        <svg class="fb-chevron" viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="fb-menu" id="fb-menu-resources">
+
+        <!-- Blog: notebook with binding + wavy lines -->
+        <a href="/blog" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M6 3.5h12a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-15a1 1 0 0 1 1-1Z"/>
+              <path d="M8.5 3.5v3M12 3.5v3M15.5 3.5v3"/>
+              <path d="M8 12c1.3-.7 2.7-.7 4 0s2.7.7 4 0"/>
+              <path d="M8 16c1.3-.7 2.7-.7 4 0s2 .3 2.5 0"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Blog</span>
+            </span>
+            <span class="fb-menu-desc">Strategies, data, and host insights</span>
+          </span>
+        </a>
+
+        <!-- Case Studies: open book -->
+        <a href="/case-study" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 6c2-1 4.5-1.5 7-1q1.5.4 2 2v13q-.5-1.5-2-2c-2.5-.5-5 0-7 1Z"/>
+              <path d="M21 6c-2-1-4.5-1.5-7-1q-1.5.4-2 2v13q.5-1.5 2-2c2.5-.5 5 0 7 1Z"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Case Studies</span>
+            </span>
+            <span class="fb-menu-desc">Real revenue lifts from real listings</span>
+          </span>
+        </a>
+
+        <!-- Search Ranking Tool: clean magnifying glass -->
+        <a href="https://app.revwhisper.com/search-ranking" class="fb-menu-item" target="_blank" rel="noopener">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="10.5" cy="10.5" r="6.5"/>
+              <path d="m15.5 15.5 4 4"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Search Ranking Tool</span>
+              <svg class="fb-menu-ext" viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M4 2h6v6M10 2L4 8M5 4H2v6h6V7" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <span class="fb-menu-desc">Free Airbnb ranking checker</span>
+          </span>
+        </a>
+      </div>
+    </div>
+
+    <a href="/get-started" class="fb-link fb-link--mobile-cta">Book a Strategy Call</a>
+  </div>
+
+  <a href="/get-started" class="fb-cta">Book a Strategy Call</a>
+  <button class="fb-hamburger" id="fb-hamburger" aria-label="Toggle navigation" aria-expanded="false">
+    <span class="fb-ham-line"></span>
+    <span class="fb-ham-line"></span>
+    <span class="fb-ham-line"></span>
+  </button>
+</nav>
+<!-- HEADER:END -->
+
+<!-- ════════════════════════════════════════════════
+     HERO
+     ════════════════════════════════════════════════ -->
+<section id="hero">
+  <div class="hero-glow"></div>
+  <div class="w">
+    <h1 class="hero-h1 r d1">Airbnb Listing Optimization, <em class="em-mark">Done For You</em></h1>
+    <p class="hero-sub r d2">Most "optimization" is a one-time rewrite. RevWhisper tracks your search ranking across every night you're bookable, then makes ongoing changes to your listing, tested against both Airbnb's algorithm signals and real conversion data, until you climb. Automatic. Continuous.</p>
+    <div class="hero-actions r d2" style="margin-top:32px">
+      <a href="/get-started" class="btn-accent">Book a Free Strategy Call →</a>
+    </div>
+    <div class="hero-trust r d3" style="margin-top:18px">
+      <span class="ht-item">✓ Used on our own portfolio</span>
+      <div class="ht-sep"></div>
+      <span class="ht-item">✓ No long-term contract</span>
+      <div class="ht-sep"></div>
+      <span class="ht-item">✓ Results in 30 days</span>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════════
+     PROBLEM / DIAGNOSTIC
+     ════════════════════════════════════════════════ -->
+<section class="problem">
+  <div class="w">
+
+    <div class="rg-closing r" style="margin:0 auto 56px;max-width:720px">
+      <p class="rg-closing-line">Most hosts don't have a traffic problem.</p>
+      <p class="rg-closing-em">They have a conversion problem.</p>
+    </div>
+
+    <!-- 3 Cards -->
+    <div class="rg-cards r d2">
+      <div class="rg-card">
+        <div class="rg-card-num">01</div>
+        <h3>Your title fails the click test.</h3>
+        <div class="rg-card-bar"></div>
+        <p>Airbnb shows your listing 5,000 times this month. If 1% of viewers click, you're invisible to the algorithm by week three. Generic titles like "Cozy 2BR Cabin" lose to titles that match what guests actually type.</p>
+      </div>
+      <div class="rg-card">
+        <div class="rg-card-num">02</div>
+        <h3>Your cover photo doesn't earn the second look.</h3>
+        <div class="rg-card-bar"></div>
+        <p>The first photo decides 90% of clicks. We A/B test cover candidates against your competitive set until yours wins, then run a quarterly check to make sure it still does.</p>
+      </div>
+      <div class="rg-card">
+        <div class="rg-card-num">03</div>
+        <h3>Your amenities don't match what guests search.</h3>
+        <div class="rg-card-bar"></div>
+        <p>Airbnb's algorithm rewards completeness across 130+ tags. Most listings miss 30+, meaning they're filtered out of every search with a "must have hot tub," "EV charger," or "workspace" tick.</p>
+      </div>
+    </div>
+
+    <!-- Closing CTA -->
+    <div class="rg-closing r d3">
+      <p class="rg-closing-line">You don't need more guests on your page.</p>
+      <p class="rg-closing-em">You need them to book.</p>
+      <a href="https://app.revwhisper.com/search-ranking" class="rg-cta">
+        See What's Hurting Your Listing <span class="rg-cta-arrow">→</span>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════════
+     DIFFERENTIATION, HOW WE MOVE THE NEEDLE
+     ════════════════════════════════════════════════ -->
+<section id="how-different">
+  <div class="w">
+    <div class="lo-section-header r">
+      <span class="eyebrow">Why RevWhisper</span>
+      <h2 class="h2">How we actually <em class="em-mark" style="font-style:italic;color:var(--accent)">move</em> your ranking</h2>
+      <p class="sub">Most listing-optimization services rewrite your listing once and call it done. We treat your listing like a product, measured, adjusted, and re-tested every week against the only two things that matter: the algorithm and your conversion rate.</p>
+    </div>
+    <div class="lo-diff-grid r d1">
+
+      <div class="lo-diff-card">
+        <div class="lo-diff-num">01</div>
+        <h3 class="lo-diff-title">We track every night you're bookable</h3>
+        <p class="lo-diff-desc">Most tools take one ranking snapshot for one search. We check yours across every available night and every traveler-origin market that books your area, daily. The signal is finer-grained, so the optimizations are sharper.</p>
+        <div class="lo-diff-viz">
+          <svg viewBox="0 0 220 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <text x="14" y="9" font-family="DM Mono,monospace" font-size="7" fill="#a39e9b" letter-spacing="0.5">M  T  W  T  F  S  S</text>
+            <g>
+              <rect x="14"  y="14" width="22" height="9" rx="2" fill="#dce6d8"/>
+              <rect x="40"  y="14" width="22" height="9" rx="2" fill="#dce6d8"/>
+              <rect x="66"  y="14" width="22" height="9" rx="2" fill="#4A6741"/>
+              <rect x="92"  y="14" width="22" height="9" rx="2" fill="#dce6d8"/>
+              <rect x="118" y="14" width="22" height="9" rx="2" fill="#4A6741"/>
+              <rect x="144" y="14" width="22" height="9" rx="2" fill="#dce6d8"/>
+              <rect x="170" y="14" width="22" height="9" rx="2" fill="#dce6d8"/>
+              <rect x="14"  y="26" width="22" height="9" rx="2" fill="#4A6741"/>
+              <rect x="40"  y="26" width="22" height="9" rx="2" fill="#dce6d8"/>
+              <rect x="66"  y="26" width="22" height="9" rx="2" fill="#dce6d8"/>
+              <rect x="92"  y="26" width="22" height="9" rx="2" fill="#4A6741"/>
+              <rect x="118" y="26" width="22" height="9" rx="2" fill="#4A6741"/>
+              <rect x="144" y="26" width="22" height="9" rx="2" fill="#dce6d8"/>
+              <rect x="170" y="26" width="22" height="9" rx="2" fill="#4A6741"/>
+              <rect x="14"  y="38" width="22" height="9" rx="2" fill="#dce6d8"/>
+              <rect x="40"  y="38" width="22" height="9" rx="2" fill="#4A6741"/>
+              <rect x="66"  y="38" width="22" height="9" rx="2" fill="#4A6741"/>
+              <rect x="92"  y="38" width="22" height="9" rx="2" fill="#dce6d8"/>
+              <rect x="118" y="38" width="22" height="9" rx="2" fill="#4A6741"/>
+              <rect x="144" y="38" width="22" height="9" rx="2" fill="#4A6741"/>
+              <rect x="170" y="38" width="22" height="9" rx="2" fill="#dce6d8"/>
+              <rect x="14"  y="50" width="22" height="9" rx="2" fill="#4A6741"/>
+              <rect x="40"  y="50" width="22" height="9" rx="2" fill="#dce6d8"/>
+              <rect x="66"  y="50" width="22" height="9" rx="2" fill="#4A6741"/>
+              <rect x="92"  y="50" width="22" height="9" rx="2" fill="#4A6741"/>
+              <rect x="118" y="50" width="22" height="9" rx="2" fill="#dce6d8"/>
+              <rect x="144" y="50" width="22" height="9" rx="2" fill="#4A6741"/>
+              <rect x="170" y="50" width="22" height="9" rx="2" fill="#dce6d8"/>
+            </g>
+          </svg>
+          <div class="lo-diff-viz-cap">28 days · daily checks · every market</div>
+        </div>
+      </div>
+
+      <div class="lo-diff-card">
+        <div class="lo-diff-num">02</div>
+        <h3 class="lo-diff-title">We optimize for both signals at once</h3>
+        <p class="lo-diff-desc">Generic listing optimization only chases guest conversion. We split-test every change against both your conversion rate <em>and</em> Airbnb's algorithm response, because lift on one without the other doesn't actually book more nights.</p>
+        <div class="lo-diff-viz">
+          <svg viewBox="0 0 220 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <circle cx="20" cy="9" r="2.5" fill="#4A6741"/>
+            <text x="27" y="12" font-family="DM Mono,monospace" font-size="7" fill="#706b68" letter-spacing="0.5">CONVERSION</text>
+            <circle cx="98" cy="9" r="2.5" fill="#b3c5ab"/>
+            <text x="105" y="12" font-family="DM Mono,monospace" font-size="7" fill="#706b68" letter-spacing="0.5">RANKING</text>
+            <line x1="14" y1="56" x2="206" y2="56" stroke="#E0DCDA" stroke-width="0.5"/>
+            <line x1="14" y1="40" x2="206" y2="40" stroke="#E0DCDA" stroke-width="0.4" stroke-dasharray="2 3"/>
+            <line x1="14" y1="24" x2="206" y2="24" stroke="#E0DCDA" stroke-width="0.4" stroke-dasharray="2 3"/>
+            <polyline points="14,50 50,46 90,40 130,30 170,22 206,18" fill="none" stroke="#4A6741" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <polyline points="14,54 50,48 90,46 130,36 170,30 206,24" fill="none" stroke="#b3c5ab" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3 3"/>
+            <circle cx="206" cy="18" r="2.5" fill="#4A6741"/>
+            <circle cx="206" cy="24" r="2.5" fill="#b3c5ab"/>
+          </svg>
+          <div class="lo-diff-viz-cap">Both must lift, or it doesn't ship</div>
+        </div>
+      </div>
+
+      <div class="lo-diff-card">
+        <div class="lo-diff-num">03</div>
+        <h3 class="lo-diff-title">It's ongoing, automatic, every week</h3>
+        <p class="lo-diff-desc">Most optimization stops the day the rewrite ships. We adjust your listing continuously as the algorithm shifts and your comp set moves. No new invoice, no new project. Just compounding gains, week after week.</p>
+        <div class="lo-diff-viz">
+          <svg viewBox="0 0 220 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <line x1="14" y1="50" x2="206" y2="50" stroke="#E0DCDA" stroke-width="0.5"/>
+            <rect x="20"  y="40" width="22" height="10" rx="2" fill="#dce6d8"/>
+            <rect x="50"  y="36" width="22" height="14" rx="2" fill="#c5d6c0"/>
+            <rect x="80"  y="30" width="22" height="20" rx="2" fill="#a8bea2"/>
+            <rect x="110" y="24" width="22" height="26" rx="2" fill="#7d9b75"/>
+            <rect x="140" y="18" width="22" height="32" rx="2" fill="#5e8054"/>
+            <rect x="170" y="12" width="22" height="38" rx="2" fill="#4A6741"/>
+            <text x="31"  y="60" font-family="DM Mono,monospace" font-size="7" fill="#a39e9b" text-anchor="middle">W1</text>
+            <text x="61"  y="60" font-family="DM Mono,monospace" font-size="7" fill="#a39e9b" text-anchor="middle">W2</text>
+            <text x="91"  y="60" font-family="DM Mono,monospace" font-size="7" fill="#a39e9b" text-anchor="middle">W3</text>
+            <text x="121" y="60" font-family="DM Mono,monospace" font-size="7" fill="#a39e9b" text-anchor="middle">W4</text>
+            <text x="151" y="60" font-family="DM Mono,monospace" font-size="7" fill="#a39e9b" text-anchor="middle">W5</text>
+            <text x="181" y="60" font-family="DM Mono,monospace" font-size="7" fill="#a39e9b" text-anchor="middle">W6</text>
+          </svg>
+          <div class="lo-diff-viz-cap">Compounding lift, week after week</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════════
+     ANATOMY OF AN OPTIMIZED LISTING
+     ════════════════════════════════════════════════ -->
+<section class="lo-anatomy">
+  <div class="w">
+    <div class="lo-anatomy-header r">
+      <span class="eyebrow">What changes</span>
+      <h2 class="h2">Anatomy of an <em class="em-mark" style="font-style:italic;color:var(--accent)">optimized</em> Airbnb listing</h2>
+      <p class="sub">Every element a guest scans in the first eight seconds. Every signal Airbnb's algorithm grades you on. Here's what we touch.</p>
+    </div>
+
+    <div class="lo-anatomy-grid">
+      <div class="lo-listing-card r d1">
+        <div class="lo-listing-cover" style="background-image:linear-gradient(rgba(50,48,47,.05),rgba(50,48,47,.3)),url('/images/properties/backyardbbq-after.webp')">
+          <span class="lo-listing-pin lo-pin-cover" aria-label="Annotation 1">1</span>
+          <span class="lo-listing-cover-tag">Guest Favorite</span>
+        </div>
+        <div class="lo-listing-body">
+          <div class="lo-listing-row">
+            <span class="lo-listing-pin lo-pin-inline" aria-label="Annotation 2">2</span>
+            <div class="lo-listing-title">Sunlit Mountain View Lodge · Hot Tub · EV Charger · Workspace</div>
+          </div>
+          <div class="lo-listing-row">
+            <span class="lo-listing-pin lo-pin-inline" aria-label="Annotation 3">3</span>
+            <div class="lo-listing-loc">Asheville, North Carolina · Sleeps 6</div>
+          </div>
+          <div class="lo-listing-row">
+            <span class="lo-listing-pin lo-pin-inline" aria-label="Annotation 4">4</span>
+            <div class="lo-listing-amen">
+              <span>Hot Tub</span><span>Wi-Fi</span><span>EV Charger</span><span>Workspace</span><span>Pet-Friendly</span>
+            </div>
+          </div>
+          <div class="lo-listing-foot">
+            <div class="lo-listing-rate-wrap">
+              <span class="lo-listing-pin lo-pin-inline" aria-label="Annotation 5">5</span>
+              <div class="lo-listing-rate">$284 <span>/ night</span></div>
+            </div>
+            <div class="lo-listing-rev-wrap">
+              <span class="lo-listing-pin lo-pin-inline" aria-label="Annotation 6">6</span>
+              <div class="lo-listing-rev">★ 4.97 (142)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lo-callouts r d2">
+        <div class="lo-callout">
+          <div class="lo-callout-num">1</div>
+          <div class="lo-callout-body">
+            <div class="lo-callout-title">Cover photo wins the click</div>
+            <div class="lo-callout-desc">Tested against your three closest comps until ours pulls higher click-through. Re-tested every quarter.</div>
+          </div>
+        </div>
+        <div class="lo-callout">
+          <div class="lo-callout-num">2</div>
+          <div class="lo-callout-body">
+            <div class="lo-callout-title">Title carries the keywords</div>
+            <div class="lo-callout-desc">Hot Tub, EV Charger, Workspace, exact phrases guests filter by, in the order Airbnb's algorithm reads them.</div>
+          </div>
+        </div>
+        <div class="lo-callout">
+          <div class="lo-callout-num">3</div>
+          <div class="lo-callout-body">
+            <div class="lo-callout-title">Location framed for search intent</div>
+            <div class="lo-callout-desc">"Asheville, North Carolina" outperforms "in the mountains" by ~12% on broad match queries we've A/B tested.</div>
+          </div>
+        </div>
+        <div class="lo-callout">
+          <div class="lo-callout-num">4</div>
+          <div class="lo-callout-body">
+            <div class="lo-callout-title">Amenities mapped to all 130+ tags</div>
+            <div class="lo-callout-desc">Every checkbox the algorithm grades you on, including the recently-added ones most hosts haven't even seen.</div>
+          </div>
+        </div>
+        <div class="lo-callout">
+          <div class="lo-callout-num">5</div>
+          <div class="lo-callout-body">
+            <div class="lo-callout-title">Price tuned to booking probability</div>
+            <div class="lo-callout-desc">Daily recalculation against demand, comp-set, weekday/weekend, and stay-length curves, not a flat rate.</div>
+          </div>
+        </div>
+        <div class="lo-callout">
+          <div class="lo-callout-num">6</div>
+          <div class="lo-callout-body">
+            <div class="lo-callout-title">Reviews surfaced for trust</div>
+            <div class="lo-callout-desc">Response time, cancellation rate, and rating thresholds tracked daily so the Superhost and Guest Favorite badges stay on.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════════
+     SOLUTION, WHAT WE OPTIMIZE
+     ════════════════════════════════════════════════ -->
+<section id="solution">
+  <div class="w">
+    <div class="solution-header r">
+      <span class="eyebrow">What we optimize</span>
+      <h2 class="h2">Every part of your listing, <em class="em-mark" style="font-style:italic;color:var(--accent)">engineered</em> for the algorithm.</h2>
+      <p class="sub">We don't just rewrite your description. We rebuild every element Airbnb's 800-signal algorithm cares about, then test the changes against your conversion rate.</p>
+    </div>
+    <div class="lo-bento-grid r d1">
+
+      <article class="lo-bento-tile lo-bento-tile--title">
+        <div class="lo-bento-head">
+          <div class="lo-bento-kicker">
+            <div class="lo-bento-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M4 6h16M4 12h12M4 18h8"/>
+              </svg>
+            </div>
+            <div class="bt-eyebrow">Element 01</div>
+          </div>
+          <span class="lo-bento-num">Search intent</span>
+        </div>
+        <div class="bt-title">Listing Title</div>
+        <p class="bt-desc">Searchable phrasing tuned for the keywords your guests actually type, backed by what's already converting in your market.</p>
+        <div class="lo-bento-visual lo-search-lab" aria-hidden="true">
+          <div class="lo-search-bar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="7"/>
+              <path d="m16.5 16.5 4 4"/>
+            </svg>
+            <span>hot tub cabin workspace ev charger</span>
+          </div>
+          <div class="lo-keyword-pills">
+            <span>Hot Tub</span><span>EV Charger</span><span>Workspace</span><span>Mountain View</span>
+          </div>
+          <div class="lo-title-strip">Sunlit Mountain Lodge · Hot Tub · EV Charger · Workspace</div>
+        </div>
+        <ul class="lo-bento-actions">
+          <li>Keyword research from your top 10 comps</li>
+          <li>Filter-tag matching (Hot Tub, EV, Workspace)</li>
+          <li>Re-tested quarterly against new searches</li>
+        </ul>
+      </article>
+
+      <article class="lo-bento-tile lo-bento-tile--cover">
+        <div class="lo-bento-head">
+          <div class="lo-bento-kicker">
+            <div class="lo-bento-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z"/>
+                <circle cx="9" cy="10" r="1.5" fill="currentColor"/>
+                <path d="M5 16c2-2 4-3 6-2s4 1 8-1"/>
+              </svg>
+            </div>
+            <div class="bt-eyebrow">Element 02</div>
+          </div>
+          <span class="lo-bento-num">Click test</span>
+        </div>
+        <div class="bt-title">Cover Photo</div>
+        <p class="bt-desc">A/B tested against your comp set until yours wins the click, the highest-leverage element on your entire listing.</p>
+        <div class="lo-bento-visual" aria-hidden="true">
+          <div class="lo-cover-stage">
+            <span class="lo-cover-badge">Winner cover</span>
+            <div class="lo-cover-score"><strong>+27%</strong><span>click intent</span></div>
+          </div>
+          <div class="lo-cover-rail"><span></span><span></span><span></span></div>
+        </div>
+        <ul class="lo-bento-actions">
+          <li>3–5 cover candidates shortlisted from your gallery</li>
+          <li>Click-through tested against your closest comps</li>
+          <li>Quarterly re-test as comp set rotates covers</li>
+        </ul>
+      </article>
+
+      <article class="lo-bento-tile lo-bento-tile--photo">
+        <div class="lo-bento-head">
+          <div class="lo-bento-kicker">
+            <div class="lo-bento-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="6" width="6" height="6" rx="1"/>
+                <rect x="11" y="6" width="6" height="6" rx="1"/>
+                <rect x="3" y="14" width="6" height="6" rx="1"/>
+                <rect x="11" y="14" width="6" height="6" rx="1"/>
+              </svg>
+            </div>
+            <div class="bt-eyebrow">Element 03</div>
+          </div>
+          <span class="lo-bento-num">First scan</span>
+        </div>
+        <div class="bt-title">Photo Order &amp; Edits</div>
+        <p class="bt-desc">Sequenced so the algorithm can read your space, edited so guests stop scrolling. Pairs with our <a href="/photoediting" style="color:var(--accent);text-decoration:underline">photo editing service</a>.</p>
+        <div class="lo-bento-visual lo-filmstrip" aria-hidden="true">
+          <div class="lo-frame"><span>1</span></div>
+          <div class="lo-frame"><span>2</span></div>
+          <div class="lo-frame"><span>3</span></div>
+        </div>
+        <ul class="lo-bento-actions">
+          <li>Order optimized for first-eight-second scan</li>
+          <li>Color, exposure, and crop edits on every photo</li>
+          <li>Caption rewrites mapped to amenity searches</li>
+        </ul>
+      </article>
+
+      <article class="lo-bento-tile lo-bento-tile--copy">
+        <div class="lo-bento-head">
+          <div class="lo-bento-kicker">
+            <div class="lo-bento-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 4h14a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1Z"/>
+                <path d="M8 9h8M8 13h8M8 17h5"/>
+              </svg>
+            </div>
+            <div class="bt-eyebrow">Element 04</div>
+          </div>
+          <span class="lo-bento-num">Mobile read</span>
+        </div>
+        <div class="bt-title">Description Copy</div>
+        <p class="bt-desc">Rewritten to sell, structured to skim, seeded with the long-tail terms guests search. Built for both the algorithm and the human reading on a phone.</p>
+        <div class="lo-bento-visual" aria-hidden="true">
+          <div class="lo-copy-sheet">
+            <span class="lo-copy-line"></span>
+            <span class="lo-copy-line"></span>
+            <span class="lo-copy-line"></span>
+            <div class="lo-copy-highlight"><span>near trailhead</span><span>fast Wi-Fi</span><span>family cabin</span></div>
+          </div>
+        </div>
+        <ul class="lo-bento-actions">
+          <li>Hook, space, neighborhood, logistics rewrites</li>
+          <li>Long-tail keyword seeding across all sections</li>
+          <li>Mobile-readable structure (short blocks, scannable)</li>
+        </ul>
+      </article>
+
+      <article class="lo-bento-tile lo-bento-tile--tags">
+        <div class="lo-bento-head">
+          <div class="lo-bento-kicker">
+            <div class="lo-bento-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M9 11l2 2 4-4"/>
+                <circle cx="12" cy="12" r="9"/>
+              </svg>
+            </div>
+            <div class="bt-eyebrow">Element 05</div>
+          </div>
+          <span class="lo-bento-num">130+ tags</span>
+        </div>
+        <div class="bt-title">Amenities &amp; Tags</div>
+        <p class="bt-desc">Completeness lifts ranking. We map your space to all 130+ Airbnb tags, including the new ones most hosts haven't even seen yet.</p>
+        <div class="lo-bento-visual" aria-hidden="true">
+          <div class="lo-tag-cloud">
+            <span>Hot tub</span><span>EV charger</span><span>Workspace</span><span>Lake access</span><span>Crib</span><span>Fire pit</span><span>Pet-friendly</span>
+          </div>
+          <div class="lo-tag-stat"><strong>130+</strong><span>fields mapped</span></div>
+        </div>
+        <ul class="lo-bento-actions">
+          <li>Full audit against the 130+ tag taxonomy</li>
+          <li>New-amenity adds tied to filter searches in your market</li>
+          <li>Re-audit every time Airbnb ships a tag change</li>
+        </ul>
+      </article>
+
+      <article class="lo-bento-tile lo-bento-tile--pricing">
+        <div class="lo-bento-head">
+          <div class="lo-bento-kicker">
+            <div class="lo-bento-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M3 17l4-4 4 3 6-7 4 4"/>
+                <path d="M3 21h18"/>
+              </svg>
+            </div>
+            <div class="bt-eyebrow">Element 06</div>
+          </div>
+          <span class="lo-bento-num">Demand curve</span>
+        </div>
+        <div class="bt-title">Pricing &amp; Promotions</div>
+        <p class="bt-desc">Length-of-stay discounts, weekend logic, monthly promos, tuned for booking probability without leaving revenue on the table.</p>
+        <div class="lo-bento-visual" aria-hidden="true">
+          <div class="lo-pricing-chart">
+            <svg viewBox="0 0 240 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8 94H232" stroke="#E0DCDA" stroke-width="1"/>
+              <path d="M8 67H232" stroke="#E0DCDA" stroke-width="1" stroke-dasharray="3 5"/>
+              <path d="M8 38H232" stroke="#E0DCDA" stroke-width="1" stroke-dasharray="3 5"/>
+              <path d="M15 82C43 78 49 57 74 59C101 61 98 82 126 75C153 68 149 38 177 34C204 30 209 51 225 43" stroke="var(--accent)" stroke-width="4" stroke-linecap="round"/>
+              <path d="M15 89C48 82 62 82 88 76C119 68 136 53 164 55C190 57 207 72 225 66" stroke="var(--accent-border)" stroke-width="3" stroke-linecap="round" stroke-dasharray="6 7"/>
+              <circle cx="177" cy="34" r="5" fill="var(--accent)"/>
+            </svg>
+          </div>
+          <div class="lo-pricing-chips"><span class="lo-pricing-chip">weekend logic</span><span class="lo-pricing-chip">promo window</span></div>
+        </div>
+        <ul class="lo-bento-actions">
+          <li>Base rate dialed in against your live comp set</li>
+          <li>Length-of-stay and weekday/weekend rule logic</li>
+          <li>Promo deployment when comps soften, pulled when they tighten</li>
+        </ul>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════════
+     HOW IT WORKS
+     ════════════════════════════════════════════════ -->
+<section class="hiw" id="how-it-works">
+  <div class="w">
+
+    <div class="hiw-header r">
+      <p class="hiw-eyebrow">The Process</p>
+      <h2 class="hiw-title">How we optimize your listing</h2>
+    </div>
+
+    <div class="hiw-layout">
+
+      <div class="hiw-visual r">
+        <div class="hiw-img-wrap">
+          <img src="/images/properties/livingroom-after.webp" alt="Optimized Airbnb listing managed by RevWhisper" loading="lazy">
+        </div>
+      </div>
+
+      <div class="hiw-steps-col">
+        <div class="hiw-vline"></div>
+
+        <div class="hiw-vstep r">
+          <div class="hiw-vstep-icon">
+            <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="16" cy="16" r="9"/>
+              <line x1="23" y1="23" x2="32" y2="32"/>
+              <line x1="16" y1="11" x2="16" y2="21"/>
+              <line x1="11" y1="16" x2="21" y2="16"/>
+            </svg>
+          </div>
+          <div class="hiw-vstep-body">
+            <span class="hiw-vstep-n">STEP 01</span>
+            <h3 class="hiw-vstep-title">Audit</h3>
+            <p class="hiw-vstep-desc">Search position, conversion rate, comp set, photos, copy, amenities. We benchmark every signal Airbnb grades you on so the optimizations are measurable.</p>
+          </div>
+        </div>
+
+        <div class="hiw-vstep r">
+          <div class="hiw-vstep-icon">
+            <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M8 10h24M8 18h18M8 26h22"/>
+              <circle cx="32" cy="10" r="2.5" fill="currentColor"/>
+              <circle cx="26" cy="18" r="2.5" fill="currentColor"/>
+              <circle cx="30" cy="26" r="2.5" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="hiw-vstep-body">
+            <span class="hiw-vstep-n">STEP 02</span>
+            <h3 class="hiw-vstep-title">Strategy</h3>
+            <p class="hiw-vstep-desc">A 30-day optimization plan ranked by ROI. You see exactly what we'd change first, why, and what the projected lift looks like, before we touch your listing.</p>
+          </div>
+        </div>
+
+        <div class="hiw-vstep r">
+          <div class="hiw-vstep-icon">
+            <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M8 32V12l12-6 12 6v20H8z"/>
+              <path d="M16 32V20h8v12"/>
+            </svg>
+          </div>
+          <div class="hiw-vstep-body">
+            <span class="hiw-vstep-n">STEP 03</span>
+            <h3 class="hiw-vstep-title">Deploy</h3>
+            <p class="hiw-vstep-desc">We rewrite the listing, direct photos, set pricing rules, and push everything live, all without disrupting a single booking already on the calendar.</p>
+          </div>
+        </div>
+
+        <div class="hiw-vstep r">
+          <div class="hiw-vstep-icon">
+            <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="4,24 10,24 14,12 18,30 22,18 26,26 30,20 36,20"/>
+            </svg>
+          </div>
+          <div class="hiw-vstep-body">
+            <span class="hiw-vstep-n">STEP 04</span>
+            <h3 class="hiw-vstep-title">Track</h3>
+            <p class="hiw-vstep-desc">Daily search-rank checks across major traveler-origin markets. Monthly performance reports. Continuous optimization that compounds month after month.</p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════════
+     CREDIBILITY
+     ════════════════════════════════════════════════ -->
+<section id="credibility" class="cred">
+  <div class="w cred-inner">
+
+    <div class="eyebrow r">Why trust us</div>
+    <h2 class="h2 r d1">We use <em class="em-mark" style="font-style:italic;color:var(--accent)">RevWhisper</em> on our own portfolio</h2>
+    <p class="sub r d2">We're not just running optimizations on someone else's listings. Our team operates real properties in real markets and stakes our own revenue on every change we ship. If it doesn't lift bookings on our portfolio, it doesn't ship to yours.</p>
+    <div class="r d3" style="text-align:center"><a href="/case-study" class="btn-accent">See a case study →</a></div>
+
+    <div class="cred-carousel-shell r d3" aria-label="RevWhisper team divisions">
+      <div class="cred-carousel-head">Meet the Faces Behind RevWhisper</div>
+      <div class="cred-carousel-wrap">
+        <div class="cred-carousel-track">
+          <div class="cred-team-card">
+            <div class="cred-team-photo"><img src="/images/team/marisa.webp" alt="Marisa - Graphic Design" loading="lazy"></div>
+            <div class="cred-team-name">Marisa</div>
+            <div class="cred-team-division">Graphic Design</div>
+          </div>
+          <div class="cred-team-card">
+            <div class="cred-team-photo"><img src="/images/team/david.webp" alt="David - Revenue Optimization" loading="lazy"></div>
+            <div class="cred-team-name">David</div>
+            <div class="cred-team-division">Revenue Optimization</div>
+          </div>
+          <div class="cred-team-card">
+            <div class="cred-team-photo"><img src="/images/team/bryan.webp" alt="Bryan - AI Integrations" loading="lazy"></div>
+            <div class="cred-team-name">Bryan</div>
+            <div class="cred-team-division">AI Integrations</div>
+          </div>
+          <div class="cred-team-card">
+            <div class="cred-team-photo"><img src="/images/team/spencer.webp" alt="Spencer - Vision" loading="lazy"></div>
+            <div class="cred-team-name">Spencer</div>
+            <div class="cred-team-division">Vision</div>
+          </div>
+          <div class="cred-team-card">
+            <div class="cred-team-photo"><img src="/images/team/alex.webp" alt="Alex - Strategist" loading="lazy"></div>
+            <div class="cred-team-name">Alex</div>
+            <div class="cred-team-division">Strategist</div>
+          </div>
+          <div class="cred-team-card">
+            <div class="cred-team-photo"><img src="/images/team/nic.webp" alt="Nicolas - Customer Relations" loading="lazy"></div>
+            <div class="cred-team-name">Nicolas</div>
+            <div class="cred-team-division">Customer Relations</div>
+          </div>
+          <div class="cred-team-card">
+            <div class="cred-team-photo"><img src="/images/team/chris.webp" alt="Chris - Property Improvements" loading="lazy"></div>
+            <div class="cred-team-name">Chris</div>
+            <div class="cred-team-division">Property Improvements</div>
+          </div>
+          <div class="cred-team-card">
+            <div class="cred-team-photo"><img src="/images/team/cady.webp" alt="Cady - Property Improvements" loading="lazy"></div>
+            <div class="cred-team-name">Cady</div>
+            <div class="cred-team-division">Property Improvements</div>
+          </div>
+
+          <div class="cred-team-card" aria-hidden="true">
+            <div class="cred-team-photo"><img src="/images/team/marisa.webp" alt="" loading="lazy"></div>
+            <div class="cred-team-name">Marisa</div>
+            <div class="cred-team-division">Graphic Design</div>
+          </div>
+          <div class="cred-team-card" aria-hidden="true">
+            <div class="cred-team-photo"><img src="/images/team/david.webp" alt="" loading="lazy"></div>
+            <div class="cred-team-name">David</div>
+            <div class="cred-team-division">Revenue Optimization</div>
+          </div>
+          <div class="cred-team-card" aria-hidden="true">
+            <div class="cred-team-photo"><img src="/images/team/bryan.webp" alt="" loading="lazy"></div>
+            <div class="cred-team-name">Bryan</div>
+            <div class="cred-team-division">AI Integrations</div>
+          </div>
+          <div class="cred-team-card" aria-hidden="true">
+            <div class="cred-team-photo"><img src="/images/team/spencer.webp" alt="" loading="lazy"></div>
+            <div class="cred-team-name">Spencer</div>
+            <div class="cred-team-division">Vision</div>
+          </div>
+          <div class="cred-team-card" aria-hidden="true">
+            <div class="cred-team-photo"><img src="/images/team/alex.webp" alt="" loading="lazy"></div>
+            <div class="cred-team-name">Alex</div>
+            <div class="cred-team-division">Strategist</div>
+          </div>
+          <div class="cred-team-card" aria-hidden="true">
+            <div class="cred-team-photo"><img src="/images/team/nic.webp" alt="" loading="lazy"></div>
+            <div class="cred-team-name">Nicolas</div>
+            <div class="cred-team-division">Customer Relations</div>
+          </div>
+          <div class="cred-team-card" aria-hidden="true">
+            <div class="cred-team-photo"><img src="/images/team/chris.webp" alt="" loading="lazy"></div>
+            <div class="cred-team-name">Chris</div>
+            <div class="cred-team-division">Property Improvements</div>
+          </div>
+          <div class="cred-team-card" aria-hidden="true">
+            <div class="cred-team-photo"><img src="/images/team/cady.webp" alt="" loading="lazy"></div>
+            <div class="cred-team-name">Cady</div>
+            <div class="cred-team-division">Property Improvements</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════════
+     PRICING
+     ════════════════════════════════════════════════ -->
+<section id="pricing">
+  <div class="w">
+    <div class="pricing-header r">
+      <span class="eyebrow">Pricing</span>
+      <h2 class="h2">Simple pricing.<br>Serious <em class="em-mark" style="font-style:italic;color:var(--accent)">results.</em></h2>
+      <p class="sub">One program, one price. Portfolio hosts, reach out for custom pricing.</p>
+    </div>
+    <div class="pricing-grid r d1">
+      <div class="price-card featured">
+        <div class="price-badge">Best Value</div>
+        <div class="price-amt" data-price="500">$500<span>/mo</span></div>
+        <div class="price-term">Billed annually · Save $3,000/year</div>
+        <div class="price-divider"></div>
+        <div class="price-features">
+          <div class="price-feat">Dedicated account manager</div>
+          <div class="price-feat">Full listing rewrite (title, copy, amenities)</div>
+          <div class="price-feat">Cover photo A/B testing &amp; photo direction</div>
+          <div class="price-feat">Pricing strategy &amp; promotion configuration</div>
+          <div class="price-feat">Daily ranking tracking + ongoing optimizations</div>
+          <div class="price-feat">Monthly performance report</div>
+        </div>
+        <a href="/checkout-form.html?plan=annual" class="btn-primary">Enroll now &rarr;</a>
+      </div>
+      <div class="price-card">
+        <div class="price-badge">10+ Properties</div>
+        <div class="price-name">Enterprise</div>
+        <div class="price-amt" style="font-size:36px;padding-top:6px">Custom</div>
+        <div class="price-term">Custom pricing for portfolios</div>
+        <div class="price-divider"></div>
+        <div class="price-features">
+          <div class="price-feat">Everything in our core plan, per property</div>
+          <div class="price-feat">Dedicated portfolio manager</div>
+          <div class="price-feat">Consolidated portfolio reporting</div>
+          <div class="price-feat">Cross-property market intelligence</div>
+          <div class="price-feat">Quarterly portfolio review</div>
+          <div class="price-feat">Custom reporting &amp; integrations</div>
+        </div>
+        <a href="/get-started" class="btn-outline">Contact us &rarr;</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════════
+     ONBOARDING
+     ════════════════════════════════════════════════ -->
+<section id="onboarding">
+  <div class="w">
+    <div class="onboard-header r">
+      <span class="eyebrow">How it starts</span>
+      <h2 class="h2">From signup to results in <em class="em-mark" style="font-style:italic;color:var(--accent)">30 days.</em></h2>
+    </div>
+    <div class="onboard-grid r d1">
+      <div class="onboard-step">
+        <div class="onboard-num">1</div>
+        <h3 class="onboard-title">Sign Up &amp; Pay Listing Optimization Fee</h3>
+        <p class="onboard-desc">$998 one-time fee per listing covers your full listing audit, market analysis, and account setup. Paid upfront. Your subscription starts once optimization is complete.</p>
+      </div>
+      <div class="onboard-step">
+        <div class="onboard-num">2</div>
+        <h3 class="onboard-title">We Audit Everything</h3>
+        <p class="onboard-desc">Deep dive into your listing, competitors, pricing history, photos, and search position.</p>
+      </div>
+      <div class="onboard-step">
+        <div class="onboard-num">3</div>
+        <h3 class="onboard-title">Optimization Begins</h3>
+        <p class="onboard-desc">We rewrite your title and copy, direct photo improvements, deploy pricing rules, and launch promotions.</p>
+      </div>
+      <div class="onboard-step">
+        <div class="onboard-num">4</div>
+        <h3 class="onboard-title">Results Within 30 Days</h3>
+        <p class="onboard-desc">Measurable changes in ranking and conversion in the first month, backed by a baseline-vs-after report.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════════
+     FAQ
+     ════════════════════════════════════════════════ -->
+<section class="lo-faq" id="faq">
+  <div class="w">
+    <div class="lo-faq-header r">
+      <span class="eyebrow">Frequently asked</span>
+      <h2 class="h2">Everything hosts ask before they hire us</h2>
+    </div>
+    <div class="lo-faq-list r d1">
+
+      <details class="lo-faq-item">
+        <summary>How does Airbnb's algorithm work?</summary>
+        <div class="lo-faq-answer">Airbnb's search algorithm evaluates roughly 800 signals to decide which listings appear first for a given search. The biggest categories are booking probability (how likely a guest is to click and convert), listing quality (photos, completeness, response rate, reviews, cancellation rate), and personalization to the searcher's preferences. Since the 2025 algorithm overhaul, conversion velocity replaced the old new-listing boost, meaning ranking is now earned, not granted.</div>
+      </details>
+
+      <details class="lo-faq-item">
+        <summary>Why is my Airbnb not getting bookings?</summary>
+        <div class="lo-faq-answer">If you're getting impressions but no bookings, the problem is conversion, not visibility. The most common causes are a weak cover photo (low click-through), a title that doesn't match the keywords guests search, missing amenity tags that disqualify you from filtered searches, and pricing that's misaligned with your competitive set. We diagnose all four in the first hour of an audit.</div>
+      </details>
+
+      <details class="lo-faq-item">
+        <summary>How long does listing optimization take to show results?</summary>
+        <div class="lo-faq-answer">Most hosts see measurable changes in search ranking and click-through rate within 14–21 days of the optimization going live. Booking lift typically follows in the first 30 days. We send a baseline performance snapshot the day we launch and a results report at the 30-day mark so you can verify the lift directly.</div>
+      </details>
+
+      <details class="lo-faq-item">
+        <summary>What does your listing optimization service include?</summary>
+        <div class="lo-faq-answer">Title rewrite, cover-photo selection and A/B testing, photo order and editing, full description rewrite, complete amenities mapping (against all 130+ Airbnb tags), pricing strategy with length-of-stay discount logic and weekend rules, promotion configuration, daily search-rank tracking from multiple traveler-origin markets, and a monthly performance report. Everything is done for you, you approve, we ship.</div>
+      </details>
+
+      <details class="lo-faq-item">
+        <summary>How much does Airbnb listing optimization cost?</summary>
+        <div class="lo-faq-answer">Our core program is $500/mo (billed annually, saves $3,000/year) with a one-time $998 listing optimization fee per property. The fee covers the full audit, market analysis, and account setup. Portfolios of 10+ properties get custom pricing. Most listing-optimization competitors hide pricing behind a sales call, we don't.</div>
+      </details>
+
+      <details class="lo-faq-item">
+        <summary>Can I optimize my Airbnb listing myself?</summary>
+        <div class="lo-faq-answer">Yes, and many hosts do successfully. The pieces that benefit most from a professional are (1) cover photo selection (it's the single biggest conversion lever and easy to get wrong), (2) the keyword research behind your title and description, and (3) competitive pricing strategy. If you want to DIY, our <a href="/blog" style="color:var(--accent)">blog</a> and <a href="https://app.revwhisper.com/search-ranking" style="color:var(--accent)">free Airbnb ranking tool</a> will get you most of the way.</div>
+      </details>
+
+      <details class="lo-faq-item">
+        <summary>Do you only work with Airbnb, or also VRBO and Booking.com?</summary>
+        <div class="lo-faq-answer">Airbnb is our primary platform, that's where the conversion gains compound fastest because of the algorithm's behavior. We do mirror optimizations to VRBO and Booking.com listings on request, though the algorithm dynamics are different and the lift is generally smaller.</div>
+      </details>
+
+      <details class="lo-faq-item">
+        <summary>Do I need to be a Superhost already?</summary>
+        <div class="lo-faq-answer">No. About a third of our clients aren't Superhosts when they start. Superhost status is itself a ranking signal we work toward, it's tied to response rate, cancellation rate, and rating thresholds, all of which are downstream of the optimizations we make.</div>
+      </details>
+
+      <details class="lo-faq-item">
+        <summary>What if my listing is brand new with no reviews?</summary>
+        <div class="lo-faq-answer">New listings have a different optimization playbook because the 2025 algorithm change removed the old new-listing boost. The priority shifts to driving fast initial bookings via aggressive launch pricing, an exceptional cover photo, and complete amenity coverage so the listing isn't filtered out. We've launched dozens of new listings, happy to walk through the playbook on the strategy call.</div>
+      </details>
+
+      <details class="lo-faq-item">
+        <summary>How is this different from tools like Rankbreeze or AutoRank?</summary>
+        <div class="lo-faq-answer">Tools like Rankbreeze and AutoRank are software, they show you the data and give you suggestions, but you still execute. RevWhisper is a managed service: we use those signals plus our own daily ranking checks to actually rewrite, deploy, and iterate on your listing for you. The combination is what most hosts actually need, data without execution rarely moves the needle.</div>
+      </details>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════════
+     FINAL CTA
+     ════════════════════════════════════════════════ -->
+<section id="cta">
+  <div class="w">
+    <div class="cta-card r">
+      <div class="cta-ripple-wrap"><div class="cta-ripple"></div><div class="cta-ripple"></div><div class="cta-ripple"></div></div>
+      <div class="cta-ey">Start now</div>
+      <h2 class="cta-h2">Stop Guessing. Start <em class="em-mark-w">Whispering.</em></h2>
+      <p class="cta-sub">Book a free strategy call. We'll audit your listing live and show you exactly what we'd rewrite first.</p>
+      <a href="/get-started" class="btn-white">Book your free strategy call &rarr;</a>
+      <p class="cta-note">No obligation. No pressure. Just data.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- FOOTER:START -->
+<footer class="site-footer">
+  <div class="w">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">
+          <div class="lm">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24" fill="none" aria-hidden="true">
+              <path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="#32302F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="#32302F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="footer-logo-name">RevWhisper</span>
+        </div>
+        <p class="footer-tag">A revenue intelligence team that layers into your Airbnb listing to accelerate performance and maximize earnings.</p>
+        <div class="footer-socials">
+          <a href="https://x.com/RevWhisper" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+          <a href="https://www.instagram.com/rev.whisper/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          </a>
+          <a href="https://www.facebook.com/groups/airbnblistingoptimization" target="_blank" rel="noopener noreferrer" aria-label="Facebook Group">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <p class="footer-col-title">Explore</p>
+        <a href="/" class="footer-link">Home</a>
+        <a href="/airbnb-listing-optimization" class="footer-link">Listing Optimization</a>
+        <a href="/revenue-management" class="footer-link">Revenue Management</a>
+        <a href="/photoediting" class="footer-link">Photo Editing</a>
+        <a href="/case-study" class="footer-link">Case Study</a>
+        <a href="/blog" class="footer-link">Blog</a>
+        <a href="/get-started" class="footer-link">Book a Strategy Call</a>
+      </div>
+      <div class="footer-col">
+        <p class="footer-col-title">Resources</p>
+        <a href="https://app.revwhisper.com/search-ranking" class="footer-link">Search Ranking Tool</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 MCO CORP d/b/a RevWhisper. All rights reserved.</span>
+      <nav class="footer-legal" aria-label="Legal">
+        <a href="/privacy">Privacy Policy</a>
+        <a href="/terms">Terms of Service</a>
+      </nav>
+      <span>Stop Guessing. Start Whispering.</span>
+    </div>
+  </div>
+</footer>
+<!-- FOOTER:END -->
+
+
+<!-- ════════════════════════════════════════════════
+     SCRIPTS
+     ════════════════════════════════════════════════ -->
+<script defer src="/assets/home.js"></script>
+<script>
+document.addEventListener('click',function(e){
+  var link=e.target.closest('a,button');
+  if(!link)return;
+  var text=(link.textContent||'').trim().substring(0,60);
+  var href=link.getAttribute('href')||'';
+  if(href.indexOf('checkout-form.html?plan=annual')!==-1){rwTrack('select_plan',{plan:'annual',page:'listing-optimization',cta_text:text});return;}
+  if(href==='/get-started'){rwTrack('cta_click',{destination:'get-started',cta_text:text,page:'listing-optimization'});return;}
+  if(href==='/case-study'){rwTrack('cta_click',{destination:'case-study',cta_text:text,page:'listing-optimization'});return;}
+  if(href.indexOf('app.revwhisper.com/search-ranking')!==-1){rwTrack('cta_click',{destination:'search-ranking-tool',cta_text:text,page:'listing-optimization'});return;}
+  if(/btn-(accent|primary|outline|white)/.test(link.className)){rwTrack('cta_click',{cta_text:text,page:'listing-optimization'});}
+});
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+/* RevWhisper site header — canonical styles
+   Source of truth for the floating nav. Loaded by every page that ships the shared header.
+   Markup lives in /_partials/header.html and is mirrored into pages via scripts/sync-partials.mjs.
+
+   The "is-open" class is the single source of truth for dropdown visibility — set/unset
+   by JS in /assets/header.js. We deliberately do NOT use :hover or :focus-within in CSS
+   because both have known stuck-state bugs (right-click focus, drag-released hover, etc.).
+   JS handles hover-intent, keyboard focus, and click in one place.
+
+   Dropdown layout: the menu IS the card (background, shadow, radius). An invisible ::before
+   sits above the menu as a hover-bridge so the cursor can travel from trigger to menu without
+   leaving the bounding box. Items live inside 8px of padding so their corners never collide
+   with the card's curve. */
+
+.float-bar{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:200;display:flex;align-items:center;max-width:1060px;width:calc(100% - 56px);background:var(--white,#fff);padding:8px 8px 8px 22px;border-radius:var(--radius,14px);box-shadow:0 2px 20px rgba(50,48,47,.08),0 0 0 1px rgba(50,48,47,.04);transition:box-shadow .3s ease,padding .3s ease}
+.float-bar.scrolled{box-shadow:0 4px 28px rgba(50,48,47,.12),0 0 0 1px rgba(50,48,47,.06)}
+
+.fb-logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--black,#32302F);flex-shrink:0;transition:opacity .2s ease}
+.fb-logo:hover{opacity:.7}
+.lm{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--accent,#4A6741)}
+.ln{font-family:var(--heading,'Lora','Georgia',serif);font-size:15px;font-weight:600;letter-spacing:-.02em}
+
+.fb-links{display:flex;align-items:center;gap:2px;margin:0 auto}
+.fb-link{font-family:var(--body,'DM Sans',system-ui,sans-serif);font-size:13px;font-weight:400;color:var(--g500,#706b68);text-decoration:none;padding:8px 16px;border-radius:var(--radius-sm,10px);transition:color .15s ease,background .15s ease;white-space:nowrap;border:none;background:none;cursor:pointer}
+.fb-link:hover{color:var(--black,#32302F);background:var(--g50,#f6f4f2)}
+.fb-link:focus-visible{outline:2px solid var(--accent,#4A6741);outline-offset:2px}
+.fb-link.active{color:var(--accent,#4A6741);background:var(--accent-light,#eaf0e6);font-weight:500}
+
+/* ── Dropdown ───────────────────────────────────────────── */
+
+.fb-dropdown{position:relative}
+.fb-dropdown-trigger{display:inline-flex;align-items:center;gap:6px;font-family:var(--body,'DM Sans',system-ui,sans-serif)}
+.fb-chevron{transition:transform .2s ease;opacity:.7;flex-shrink:0}
+
+.fb-dropdown.is-open .fb-dropdown-trigger{color:var(--black,#32302F);background:var(--g50,#f6f4f2)}
+.fb-dropdown.is-open .fb-chevron{transform:rotate(180deg)}
+
+.fb-menu{
+  position:absolute;
+  top:calc(100% + 12px);
+  left:50%;
+  min-width:380px;
+  background:var(--white,#fff);
+  border-radius:16px;
+  box-shadow:0 12px 40px rgba(50,48,47,.12),0 0 0 1px rgba(50,48,47,.04);
+  padding:8px;
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  pointer-events:none;
+  opacity:0;
+  visibility:hidden;
+  transform:translate(-50%,-4px);
+  transition:opacity .14s ease,transform .14s ease,visibility 0s linear .14s;
+  z-index:1;
+}
+/* Invisible bridge that fills the 12px gap above the menu so cursor can traverse without losing hover */
+.fb-menu::before{
+  content:'';
+  position:absolute;
+  top:-12px;
+  left:0;
+  right:0;
+  height:12px;
+}
+
+.fb-dropdown.is-open .fb-menu{
+  opacity:1;
+  visibility:visible;
+  pointer-events:auto;
+  transform:translate(-50%,0);
+  transition:opacity .14s ease,transform .14s ease,visibility 0s linear 0s;
+}
+
+/* Item: 40px icon tile + content column. Grid keeps the icon vertically centered across both rows. */
+.fb-menu-item{
+  display:grid;
+  grid-template-columns:40px 1fr;
+  gap:12px;
+  align-items:center;
+  padding:10px 12px;
+  border-radius:10px;
+  text-decoration:none;
+  color:var(--black,#32302F);
+  transition:background .12s ease;
+}
+.fb-menu-item:hover{background:var(--g50,#f6f4f2)}
+.fb-menu-item:focus-visible{outline:2px solid var(--accent,#4A6741);outline-offset:-2px;background:var(--g50,#f6f4f2)}
+.fb-menu-item.active{background:var(--accent-light,#eaf0e6)}
+.fb-menu-item.active .fb-menu-label{color:var(--accent,#4A6741)}
+.fb-menu-item.active .fb-menu-icon{background:var(--white,#fff);color:var(--accent,#4A6741)}
+
+.fb-menu-icon{
+  width:40px;
+  height:40px;
+  border-radius:10px;
+  background:var(--g50,#f6f4f2);
+  color:var(--accent,#4A6741);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+  transition:background .12s ease,color .12s ease;
+}
+.fb-menu-item:hover .fb-menu-icon{background:var(--white,#fff);box-shadow:0 0 0 1px rgba(50,48,47,.06)}
+
+.fb-menu-content{display:flex;flex-direction:column;gap:2px;min-width:0}
+.fb-menu-row{display:flex;align-items:center;gap:8px}
+.fb-menu-label{font-family:var(--body,'DM Sans',system-ui,sans-serif);font-size:14px;font-weight:500;letter-spacing:-.005em;color:var(--black,#32302F)}
+.fb-menu-desc{font-size:12.5px;font-weight:400;color:var(--g500,#706b68);line-height:1.45}
+.fb-menu-ext{color:var(--g400,#a39e9b);flex-shrink:0;opacity:.6}
+
+.fb-menu-badge{display:inline-flex;align-items:center;font-family:var(--mono,'DM Mono','Consolas',monospace);font-size:9px;font-weight:500;letter-spacing:.05em;text-transform:uppercase;color:var(--g500,#706b68);background:var(--g100,#f3f1ef);padding:2px 7px;border-radius:999px}
+
+.fb-menu-item.is-soon{cursor:default;color:var(--g500,#706b68)}
+.fb-menu-item.is-soon:hover{background:transparent}
+.fb-menu-item.is-soon:hover .fb-menu-icon{background:var(--g50,#f6f4f2);box-shadow:none}
+.fb-menu-item.is-soon .fb-menu-label{color:var(--g500,#706b68);font-weight:400}
+.fb-menu-item.is-soon .fb-menu-desc{color:var(--g400,#a39e9b)}
+.fb-menu-item.is-soon .fb-menu-icon{color:var(--g400,#a39e9b)}
+
+/* ── CTA / Hamburger ───────────────────────────────────── */
+
+.fb-cta{display:inline-flex;align-items:center;gap:6px;background:var(--accent,#4A6741);color:#fff;padding:10px 24px;border-radius:var(--radius,14px);font-family:var(--body,'DM Sans',system-ui,sans-serif);font-size:13px;font-weight:500;text-decoration:none;white-space:nowrap;flex-shrink:0;transition:transform .25s ease,box-shadow .25s ease;box-shadow:0 2px 8px rgba(74,103,65,.15)}
+.fb-cta:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(74,103,65,.25)}
+.fb-cta:focus-visible{outline:2px solid var(--accent,#4A6741);outline-offset:3px}
+
+.fb-hamburger{display:none;background:none;border:none;cursor:pointer;padding:10px;flex-direction:column;gap:5px;align-items:center;justify-content:center}
+.fb-ham-line{display:block;width:18px;height:2px;background:var(--black,#32302F);border-radius:1px;transition:transform .3s ease,opacity .3s ease}
+.fb-hamburger.open .fb-ham-line:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.fb-hamburger.open .fb-ham-line:nth-child(2){opacity:0}
+.fb-hamburger.open .fb-ham-line:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+.fb-link--mobile-cta{display:none}
+
+/* ── Mobile ────────────────────────────────────────────── */
+
+@media(max-width:900px){
+  .float-bar{position:static;top:auto;left:auto;transform:none;margin:14px auto 0;width:calc(100% - 32px);padding:8px 8px 8px 16px}
+
+  .fb-links{display:none;position:absolute;top:calc(100% + 10px);left:0;right:0;background:var(--white,#fff);border-radius:16px;padding:8px;flex-direction:column;align-items:stretch;gap:0;box-shadow:0 8px 32px rgba(50,48,47,.12),0 0 0 1px rgba(50,48,47,.04)}
+  .fb-links.open{display:flex}
+  .fb-link{padding:12px 16px;border-radius:12px;font-size:14px;width:100%;text-align:left;justify-content:space-between}
+
+  .fb-dropdown{width:100%}
+  .fb-dropdown-trigger{width:100%;display:flex;justify-content:space-between}
+
+  .fb-menu{position:static;transform:none;min-width:0;width:100%;padding:0;background:transparent;box-shadow:none;border-radius:0;visibility:hidden;opacity:0;height:0;overflow:hidden;transition:opacity .15s ease,height .2s ease}
+  .fb-menu::before{display:none}
+  .fb-dropdown.is-open .fb-menu{opacity:1;visibility:visible;height:auto;transform:none;padding:4px 0 8px 8px;pointer-events:auto}
+
+  .fb-menu-item{padding:10px 12px;grid-template-columns:32px 1fr;gap:10px}
+  .fb-menu-icon{width:32px;height:32px;border-radius:8px}
+  .fb-menu-icon svg{width:16px;height:16px}
+
+  .fb-link--mobile-cta{display:block;color:#fff;background:var(--accent,#4A6741);font-weight:500;margin-top:6px;text-align:center}
+  .fb-link--mobile-cta:hover{color:#fff;background:var(--accent,#4A6741);opacity:.92}
+
+  .fb-hamburger{display:flex;margin-left:auto}
+  .fb-cta{display:none}
+  .ln{font-size:13px}
+  .lm{width:28px;height:28px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .fb-menu,.fb-chevron,.fb-link,.fb-cta,.fb-menu-item,.fb-menu-icon{transition:none}
+}

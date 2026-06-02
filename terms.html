@@ -18,24 +18,26 @@
   }
 })();
 </script>
-<!-- Cookie Consent + GA4 (consent-mode) -->
+<!-- Cookie Consent + GA4 (consent-gated) -->
 <script>
 window.dataLayer=window.dataLayer||[];
 function gtag(){dataLayer.push(arguments);}
-gtag('consent','default',{'analytics_storage':'denied','ad_storage':'denied'});
-gtag('js',new Date());
-gtag('config','G-Y1FYZ5849B');
-(function(){var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-Y1FYZ5849B';document.head.appendChild(s);})();
-function rwTrack(e,p){gtag('event',e,p||{});}
+function rwLoadGA(){
+  var s=document.createElement('script');s.async=true;
+  s.src='https://www.googletagmanager.com/gtag/js?id=G-Y1FYZ5849B';
+  document.head.appendChild(s);
+  gtag('js',new Date());gtag('config','G-Y1FYZ5849B');
+}
+function rwTrack(e,p){if(localStorage.getItem('rw_cookie_consent')==='accepted')gtag('event',e,p||{});}
 (function(){
   var c=localStorage.getItem('rw_cookie_consent');
-  if(c==='accepted'){gtag('consent','update',{'analytics_storage':'granted','ad_storage':'granted'});return;}
+  if(c==='accepted'){rwLoadGA();return;}
   if(c==='declined')return;
   document.addEventListener('DOMContentLoaded',function(){
     var b=document.createElement('div');b.id='rw-consent';
     b.innerHTML='<div style="position:fixed;bottom:0;left:0;right:0;z-index:9999;padding:16px 24px;background:#32302F;color:#fff;font-family:DM Sans,system-ui,sans-serif;font-size:14px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;box-shadow:0 -4px 24px rgba(0,0,0,.15)"><span style="flex:1;min-width:240px;line-height:1.5">We use cookies to analyze site usage and improve your experience.</span><div style="display:flex;gap:10px;flex-shrink:0"><button id="rw-decline" style="background:transparent;color:#ccc8c5;border:1.5px solid #706b68;padding:8px 20px;border-radius:6px;font-size:13px;font-family:inherit;cursor:pointer">Decline</button><button id="rw-accept" style="background:#4A6741;color:#fff;border:none;padding:8px 20px;border-radius:6px;font-size:13px;font-family:inherit;cursor:pointer;font-weight:500">Accept</button></div></div>';
     document.body.appendChild(b);
-    document.getElementById('rw-accept').addEventListener('click',function(){localStorage.setItem('rw_cookie_consent','accepted');b.remove();gtag('consent','update',{'analytics_storage':'granted','ad_storage':'granted'});});
+    document.getElementById('rw-accept').addEventListener('click',function(){localStorage.setItem('rw_cookie_consent','accepted');b.remove();rwLoadGA();});
     document.getElementById('rw-decline').addEventListener('click',function(){localStorage.setItem('rw_cookie_consent','declined');b.remove();});
   });
 })();
@@ -50,68 +52,19 @@ n.queue=[];t=b.createElement(e);t.async=!0;
 t.src=v;s=b.getElementsByTagName(e)[0];
 s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '959022406709300');
+fbq('init', '595257495497929');
 fbq('track', 'PageView');
 </script>
-<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=959022406709300&ev=PageView&noscript=1"/></noscript>
-<script>
-document.addEventListener('DOMContentLoaded',function(){
-  document.addEventListener('click',function(e){
-    var el=e.target.closest('a,button');
-    if(!el)return;
-    var txt=(el.textContent||'').replace(/\s+/g,' ').trim().toLowerCase();
-    if(txt.indexOf('book your free strategy call')!==-1||txt.indexOf('book a call')!==-1||txt.indexOf('book a free strategy call')!==-1){
-      fbq('track','Lead',{content_name:'Book Strategy Call'});
-    }else if(txt.indexOf('check my search ranking')!==-1){
-      fbq('track','Lead',{content_name:'Check Search Ranking'});
-    }
-  });
-});
-</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=595257495497929&ev=PageView&noscript=1"/></noscript>
 <!-- End Meta Pixel -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>How to Run a Comp Set Analysis in 30 Minutes | RevWhisper Blog</title>
-<meta name="description" content="Your listing is invisible because you don't know who you're competing against. A comp set analysis shows you the 5-10 listings stealing your bookings. Here's how to do it in 30 minutes.">
-<link rel="canonical" href="https://revwhisper.com/blog/comp-set-analysis-30-minutes">
-<meta property="og:type" content="article">
-<meta property="og:title" content="How to Run a Comp Set Analysis in 30 Minutes | RevWhisper Blog">
-<meta property="og:description" content="Your listing is invisible because you don't know who you're competing against. A comp set analysis shows you the 5-10 listings stealing your bookings. Here's how to do it in 30 minutes.">
-<meta property="og:url" content="https://revwhisper.com/blog/comp-set-analysis-30-minutes">
-<meta property="og:site_name" content="RevWhisper">
-<meta property="og:image" content="https://revwhisper.com/images/analytics/analytical1.png">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="How to Run a Comp Set Analysis in 30 Minutes | RevWhisper Blog">
-<meta name="twitter:description" content="Your listing is invisible because you don't know who you're competing against. A comp set analysis shows you the 5-10 listings stealing your bookings.">
-<meta name="twitter:image" content="https://revwhisper.com/images/analytics/analytical1.png">
+<title>Terms of Service | RevWhisper</title>
+<meta name="description" content="The terms that govern your use of revwhisper.com and RevWhisper's services, operated by MCO CORP — including the free audit, fees, results disclaimer, and dispute resolution.">
+<link rel="canonical" href="https://revwhisper.com/terms">
 <link rel="icon" href="/icons/favicon-light.svg" type="image/svg+xml" media="(prefers-color-scheme: light)">
 <link rel="icon" href="/icons/favicon-dark.svg" type="image/svg+xml" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="/icons/favicon-light.svg" type="image/svg+xml">
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Article",
-  "headline": "How to Run a Comp Set Analysis in 30 Minutes",
-  "description": "Your listing is invisible because you don't know who you're competing against. A comp set analysis shows you the 5-10 listings stealing your bookings. Here's how to do it in 30 minutes.",
-  "image": "https://revwhisper.com/images/analytics/analytical1.png",
-  "datePublished": "2026-03-25",
-  "author": {
-    "@type": "Organization",
-    "name": "RevWhisper",
-    "url": "https://revwhisper.com"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "RevWhisper",
-    "url": "https://revwhisper.com",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "https://revwhisper.com/icons/favicon-light.svg"
-    }
-  },
-  "mainEntityOfPage": "https://revwhisper.com/blog/comp-set-analysis-30-minutes"
-}
-</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=DM+Sans:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
@@ -119,7 +72,7 @@ document.addEventListener('DOMContentLoaded',function(){
 /* ── Reset & Base ── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;overflow-x:hidden}
-body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#fff;color:#32302F;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#fff;color:#32302F;line-height:1.6;font-size:18px;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 
 /* ── Design Tokens ── */
 :root{
@@ -128,10 +81,16 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
   --accent:#4A6741;
   --accent-light:#dce6d8;
   --accent-border:#b3c5ab;
+  --green:#4A6741;
+  --red:#B85252;
+  --terra:#8B4A3E;
+  --gold:#9B7B3A;
+  --stone:#f3f1ef;
   --g50:#faf9f8;--g100:#f3f1ef;--g200:#E0DCDA;--g300:#ccc8c5;--g400:#a39e9b;--g500:#706b68;--g600:#58534f;--g700:#48433f;
   --radius:8px;--radius-sm:6px;
   --sh-sm:0 1px 3px rgba(50,48,47,.06),0 1px 2px rgba(50,48,47,.04);
   --sh:0 4px 16px rgba(50,48,47,.07),0 2px 6px rgba(50,48,47,.04);
+  --sh-lg:0 16px 48px rgba(50,48,47,.1),0 4px 12px rgba(50,48,47,.05);
   --heading:'Lora','Georgia',serif;
   --body:'DM Sans','system-ui','Helvetica Neue',sans-serif;
   --mono:'DM Mono','Consolas',monospace;
@@ -140,47 +99,61 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
 /* ── Layout ── */
 .w{max-width:1100px;margin:0 auto;padding:0 28px}
 
+/* ── Hero ── */
+.legal-hero{background:var(--accent);color:var(--white);padding:140px 28px 64px;text-align:center;position:relative;overflow:hidden}
+.legal-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% -20%,rgba(255,255,255,.08),transparent 50%),radial-gradient(ellipse at 70% 120%,rgba(0,0,0,.12),transparent 50%);pointer-events:none}
+.legal-hero .lh-inner{position:relative;z-index:1;max-width:760px;margin:0 auto}
+.legal-eyebrow{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;opacity:.65;margin-bottom:18px}
+.legal-hero h1{font-family:var(--heading);font-size:clamp(34px,5vw,52px);font-weight:400;line-height:1.15;letter-spacing:-.02em;margin-bottom:16px}
+.legal-updated{font-family:var(--mono);font-size:13px;color:rgba(255,255,255,.72);margin-bottom:18px}
+.legal-hero p{font-size:16px;line-height:1.7;color:rgba(255,255,255,.85);font-weight:300;max-width:560px;margin:0 auto}
+.legal-hero-nav{margin-top:26px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.legal-hero-nav a{font-family:var(--body);font-size:13px;font-weight:500;color:var(--white);text-decoration:none;border:1px solid rgba(255,255,255,.35);border-radius:100px;padding:7px 16px;transition:background .2s,border-color .2s}
+.legal-hero-nav a:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.6)}
+.legal-hero-nav a[aria-current="page"]{background:var(--white);color:var(--accent);border-color:var(--white)}
 
-/* ── Article Layout ── */
-.post-header{padding:140px 0 32px;text-align:center}
-.post-back{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--g400);text-decoration:none;margin-bottom:24px;transition:color .2s}
-.post-back:hover{color:var(--accent)}
-.post-tags{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:14px}
-.post-tag{font-family:var(--mono);font-size:11px;font-weight:500;color:var(--accent);background:var(--accent-light);padding:3px 10px;border-radius:20px}
-.post-header h1{font-family:var(--heading);font-size:clamp(28px,4.5vw,42px);font-weight:600;letter-spacing:-.02em;line-height:1.25;max-width:720px;margin:0 auto 14px}
-.post-meta{font-size:13px;color:var(--g400);font-family:var(--mono)}
+/* ── Body ── */
+.legal-body{max-width:760px;margin:0 auto;padding:64px 28px 80px}
+.legal-lead{font-size:18px;line-height:1.75;color:var(--g600);margin-bottom:8px}
 
-.post-hero-img{width:100%;max-width:900px;margin:0 auto 48px;display:block;border-radius:var(--radius);aspect-ratio:16/9;object-fit:cover}
+/* Table of contents */
+.legal-toc{background:var(--g50);border:1px solid var(--g200);border-radius:var(--radius);padding:24px 26px;margin:36px 0 52px}
+.legal-toc-title{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--g500);margin-bottom:16px}
+.legal-toc ol{list-style:none;counter-reset:toc;padding:0;margin:0;columns:2;column-gap:36px}
+.legal-toc li{counter-increment:toc;margin-bottom:9px;font-size:14px;break-inside:avoid}
+.legal-toc a{color:var(--g700);text-decoration:none;transition:color .2s}
+.legal-toc a::before{content:counter(toc) ". ";color:var(--accent);font-family:var(--mono);font-size:12px}
+.legal-toc a:hover{color:var(--accent)}
 
-/* ── Article Content ── */
-.post-content{max-width:680px;margin:0 auto;padding-bottom:64px}
-.post-content h2{font-family:var(--heading);font-size:24px;font-weight:600;margin:40px 0 14px;letter-spacing:-.01em}
-.post-content h3{font-family:var(--heading);font-size:19px;font-weight:600;margin:32px 0 10px}
-.post-content p{font-size:16px;line-height:1.75;color:var(--g600);margin-bottom:20px}
-.post-content ul,.post-content ol{margin:0 0 20px 24px;color:var(--g600);font-size:16px;line-height:1.75}
-.post-content li{margin-bottom:6px}
-.post-content blockquote{border-left:3px solid var(--accent);padding:12px 20px;margin:24px 0;background:var(--g50);border-radius:0 var(--radius) var(--radius) 0;font-style:italic;color:var(--g500)}
-.post-content img{width:100%;border-radius:var(--radius);margin:24px 0}
-.post-content a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}
-.post-content a:hover{color:var(--black)}
-.post-content strong{color:var(--black);font-weight:600}
+/* Prose */
+.legal-body h2{font-family:var(--heading);font-size:clamp(22px,3vw,28px);font-weight:400;letter-spacing:-.02em;line-height:1.25;color:var(--black);margin:52px 0 14px;scroll-margin-top:24px}
+.legal-body h3{font-family:var(--heading);font-size:18px;font-weight:500;color:var(--black);margin:26px 0 8px}
+.legal-body p{font-size:16px;line-height:1.75;color:var(--g700);margin-bottom:16px}
+.legal-body ul{margin:0 0 16px;padding-left:22px}
+.legal-body li{font-size:16px;line-height:1.7;color:var(--g700);margin-bottom:8px}
+.legal-body a{color:var(--accent);text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
+.legal-body a:hover{text-decoration-thickness:2px}
+.legal-body strong{color:var(--black);font-weight:600}
+.legal-body h2:first-of-type{margin-top:0}
 
-/* ── Time Badge ── */
-.step-time{display:inline-block;font-family:var(--mono);font-size:12px;color:var(--accent);background:var(--accent-light);padding:2px 10px;border-radius:12px;margin-bottom:16px}
+/* Callout note (Fern emphasis — used sparingly) */
+.legal-note{background:var(--accent-light);border:1px solid var(--accent-border);border-left:3px solid var(--accent);border-radius:var(--radius);padding:18px 22px;margin:24px 0}
+.legal-note p{color:var(--g700);margin:0}
+.legal-note p strong{color:var(--accent)}
 
-/* ── CTA Banner ── */
-.post-cta{max-width:680px;margin:0 auto 64px;padding:36px 32px;background:var(--g50);border:1px solid var(--g200);border-radius:var(--radius);text-align:center}
-.post-cta h3{font-family:var(--heading);font-size:22px;font-weight:600;margin-bottom:8px}
-.post-cta p{font-size:14px;color:var(--g500);margin-bottom:20px}
-.post-cta a{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#fff;padding:12px 28px;border-radius:var(--radius);font-size:14px;font-weight:500;text-decoration:none;transition:transform .25s,box-shadow .25s;box-shadow:0 2px 8px rgba(74,103,65,.15)}
-.post-cta a:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(74,103,65,.25)}
+/* Contact block */
+.legal-contact{margin-top:14px;background:var(--g50);border:1px solid var(--g200);border-radius:var(--radius);padding:22px 24px}
+.legal-contact p{margin:0 0 4px}
+.legal-contact .lc-name{font-weight:600;color:var(--black)}
 
-/* ── Footer ── */
 /* ── Responsive ── */
 @media(max-width:768px){
-  .post-header{padding:110px 0 24px}
-  .post-hero-img{border-radius:0}
-  .post-cta{margin-left:16px;margin-right:16px}
+  .legal-hero{padding:116px 20px 52px}
+  .legal-body{padding:48px 20px 64px}
+  .legal-toc ol{columns:1}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
 }
 </style>
 <link rel="stylesheet" href="/assets/header.css">
@@ -188,7 +161,6 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
 <link rel="stylesheet" href="/assets/footer.css">
 </head>
 <body>
-
 
 <!-- HEADER:START -->
 <nav class="float-bar" id="float-bar" aria-label="Primary">
@@ -338,95 +310,126 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
 </nav>
 <!-- HEADER:END -->
 
-<!-- ── Post Header ── -->
-<header class="post-header">
-  <div class="w">
-    <a href="/blog" class="post-back">&larr; Back to Blog</a>
-    <div class="post-tags">
-      <span class="post-tag">How-To Guide</span>
-      <span class="post-tag">Listing Optimization</span>
-    </div>
-    <h1>How to Run a Comp Set Analysis in 30 Minutes</h1>
-    <div class="post-meta">RevWhisper Team &middot; Mar 25, 2026</div>
+<!-- ════════════════════════════════════════════════
+     HERO
+     ════════════════════════════════════════════════ -->
+<section class="legal-hero">
+  <div class="lh-inner">
+    <div class="legal-eyebrow">Legal</div>
+    <h1>Terms of Service</h1>
+    <div class="legal-updated">Last updated: June 1, 2026</div>
+    <p>These terms govern your use of revwhisper.com and our services. Please read them before requesting an audit or enrolling.</p>
+    <nav class="legal-hero-nav" aria-label="Legal pages">
+      <a href="/privacy">Privacy Policy</a>
+      <a href="/terms" aria-current="page">Terms of Service</a>
+    </nav>
   </div>
-</header>
-<img class="post-hero-img" src="/images/analytics/analytical1.png" alt="Revenue management calendar showing daily pricing data and availability for comp set analysis">
+</section>
 
-<article class="post-content w">
+<!-- ════════════════════════════════════════════════
+     BODY
+     ════════════════════════════════════════════════ -->
+<main class="legal-body">
+  <p class="legal-lead">These Terms of Service (&ldquo;Terms&rdquo;) are between you and MCO CORP, doing business as <strong>RevWhisper</strong> (&ldquo;RevWhisper,&rdquo; &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;). They cover <strong>revwhisper.com</strong> and the audits, calls, and checkout flows offered through it.</p>
 
-  <p>Your listing is invisible because you do not know who you are competing against. A comp set analysis shows you the 5&ndash;10 listings stealing your bookings and exactly what they are doing differently. This takes 30 minutes and will tell you why your views are not converting.</p>
+  <nav class="legal-toc" aria-label="On this page">
+    <div class="legal-toc-title">On this page</div>
+    <ol>
+      <li><a href="#acceptance">Acceptance of these terms</a></li>
+      <li><a href="#who-we-are">Who we are</a></li>
+      <li><a href="#services">The services we provide</a></li>
+      <li><a href="#free-audit">The free listing audit</a></li>
+      <li><a href="#eligibility">Eligibility &amp; your responsibilities</a></li>
+      <li><a href="#fees">Fees, billing &amp; cancellation</a></li>
+      <li><a href="#no-guarantee">No guarantee of results</a></li>
+      <li><a href="#acceptable-use">Acceptable use of the site</a></li>
+      <li><a href="#ip">Intellectual property</a></li>
+      <li><a href="#third-party">Third-party platforms &amp; links</a></li>
+      <li><a href="#disclaimers">Disclaimers</a></li>
+      <li><a href="#liability">Limitation of liability</a></li>
+      <li><a href="#indemnification">Indemnification</a></li>
+      <li><a href="#governing-law">Governing law &amp; disputes</a></li>
+      <li><a href="#changes">Changes to these terms</a></li>
+      <li><a href="#contact">Contact us</a></li>
+    </ol>
+  </nav>
 
-  <h2>Before You Start</h2>
+  <h2 id="acceptance">1. Acceptance of these terms</h2>
+  <p>By accessing or using revwhisper.com, requesting an audit, booking a call, or enrolling, you agree to these Terms and to our <a href="/privacy">Privacy Policy</a>. If you do not agree, please do not use the site or our services.</p>
 
+  <h2 id="who-we-are">2. Who we are</h2>
+  <p>RevWhisper is a brand of <strong>MCO CORP</strong>. We provide revenue-optimization services for short-term rental hosts, including dynamic pricing, listing content optimization, and photo optimization. You can reach us at <a href="mailto:Admin@RevWhisper.com">Admin@RevWhisper.com</a>.</p>
+
+  <h2 id="services">3. The services we provide</h2>
+  <p>We offer done-for-you optimization of short-term rental listings. The specific scope, deliverables, and pricing of a paid engagement are set out in a separate <strong>Service Agreement</strong> that you review and accept at enrollment.</p>
+  <div class="legal-note">
+    <p><strong>The signed Service Agreement controls your engagement.</strong> If you enroll as a client, the Service Agreement you accept at checkout governs that engagement and prevails over these Terms wherever the two differ. These Terms govern your general use of the website.</p>
+  </div>
+
+  <h2 id="free-audit">4. The free listing audit</h2>
+  <p>We may offer a free audit of your listing&rsquo;s ranking, pricing, and conversion, delivered on a short call. The audit is provided for informational purposes to help you understand your listing. It does not create a client relationship, and requesting it carries no obligation to purchase. Any recommendations are our professional opinion, and you are responsible for deciding whether and how to act on them.</p>
+
+  <h2 id="eligibility">5. Eligibility &amp; your responsibilities</h2>
+  <p>To use our services, you must be at least 18 years old and able to enter into a binding agreement. You agree to:</p>
   <ul>
-    <li>Your listing URL and current search ranking position for your primary search term</li>
-    <li>Access to Airbnb search results in an incognito browser window to see unbiased rankings</li>
+    <li>Provide accurate, current, and complete information;</li>
+    <li>Confirm that you are the lawful owner or an authorized manager of any listing you submit, with authority to grant any access we need;</li>
+    <li>Keep any account credentials you use with us secure; and</li>
+    <li>Comply with the terms of Airbnb and any other platform connected to your listing.</li>
   </ul>
 
-  <h2>Step 1: Search as Your Guest Would</h2>
+  <h2 id="fees">6. Fees, billing &amp; cancellation</h2>
+  <p>Paid services may include a one-time listing optimization fee and an ongoing monthly subscription, as presented at checkout and detailed in your Service Agreement. Payments are processed by <strong>Stripe</strong>. Unless your Service Agreement states otherwise:</p>
+  <ul>
+    <li>The one-time listing optimization fee is charged upfront and is non-refundable;</li>
+    <li>Subscriptions renew automatically until cancelled in accordance with your plan; and</li>
+    <li>Cancellation terms, notice periods, and any early-termination fees are governed by your Service Agreement.</li>
+  </ul>
 
-  <p>Open incognito mode. Search your city, your dates, your guest count. Scroll through the first 20 listings. Screenshot the grid. These are your competitors. Your listing should be in this set. If it is not, your ranking problem is severe.</p>
+  <h2 id="no-guarantee">7. No guarantee of results</h2>
+  <p>We apply professional expertise and commercially reasonable effort, but <strong>we do not guarantee any specific level of revenue, occupancy, bookings, or search ranking</strong>. Results depend on many factors outside our control, including your property, market conditions, and platform changes. Any figures, case studies, or examples on this site are illustrative and are not a promise of your results.</p>
 
-  <blockquote><strong>Pro tip:</strong> Search on mobile app and desktop separately because Airbnb shows different results on each platform and mobile drives 64% of bookings.</blockquote>
+  <h2 id="acceptable-use">8. Acceptable use of the site</h2>
+  <p>You agree not to misuse the site. In particular, you will not:</p>
+  <ul>
+    <li>Use the site for any unlawful or fraudulent purpose;</li>
+    <li>Attempt to gain unauthorized access to the site, our systems, or other users&rsquo; data;</li>
+    <li>Interfere with or disrupt the site&rsquo;s operation, or introduce malware; or</li>
+    <li>Scrape, copy, or reproduce site content except as permitted by these Terms.</li>
+  </ul>
 
-  <p><strong>Common mistake:</strong> Searching while logged into your host account which skews results and hides your true ranking position.</p>
+  <h2 id="ip">9. Intellectual property</h2>
+  <p>The site and its content — including text, graphics, logos, the RevWhisper name and marks, and our proprietary tools, methodologies, frameworks, and processes — are owned by RevWhisper or its licensors and are protected by law. We grant you a limited, personal, non-transferable license to view the site for its intended purpose. For paid engagements, ownership of work product is addressed in your Service Agreement.</p>
 
-  <p class="step-time">Time: 5 minutes</p>
+  <h2 id="third-party">10. Third-party platforms &amp; links</h2>
+  <p>Our services work alongside third-party platforms such as Airbnb and other booking sites, and the site may link to third-party tools and resources. We do not control those platforms. Changes they make — including algorithm updates, policy changes, or account actions not caused by us — are outside our control and are not our responsibility. Your use of any third party is governed by its own terms.</p>
 
-  <h2>Step 2: Identify Your True Competitors</h2>
+  <h2 id="disclaimers">11. Disclaimers</h2>
+  <p>The site and the free audit are provided on an &ldquo;as is&rdquo; and &ldquo;as available&rdquo; basis, without warranties of any kind, whether express or implied, including implied warranties of merchantability, fitness for a particular purpose, and non-infringement, to the fullest extent permitted by law.</p>
 
-  <p>From the 20 results, pick the 5&ndash;7 listings that match your property type, bedroom count, and are priced within 20% of your rate. Ignore everything else. These are your comp set. Write down their listing IDs or save the URLs.</p>
+  <h2 id="liability">12. Limitation of liability</h2>
+  <p>To the fullest extent permitted by law, RevWhisper will not be liable for any indirect, incidental, special, consequential, or punitive damages, or for lost profits or revenue. For paid services, our total aggregate liability is limited as set out in your Service Agreement; for all other use of the site, our total liability will not exceed one hundred U.S. dollars ($100).</p>
 
-  <blockquote><strong>Pro tip:</strong> If most comps are Guest Favorites and you are not, that badge gap is costing you 15&ndash;30% of potential bookings in that search position.</blockquote>
+  <h2 id="indemnification">13. Indemnification</h2>
+  <p>You agree to indemnify and hold harmless RevWhisper from any claims arising out of your breach of these Terms, your violation of any platform&rsquo;s terms or applicable law, claims by guests or third parties related to your property, or your actions affecting listing performance.</p>
 
-  <p><strong>Common mistake:</strong> Comparing yourself to listings with different bedroom counts or property types which gives you useless data and wrong conclusions.</p>
+  <h2 id="governing-law">14. Governing law &amp; disputes</h2>
+  <p>These Terms are governed by the laws of the State of Delaware, without regard to its conflict-of-laws rules. Disputes will be resolved first through good-faith negotiation, then mediation if jointly agreed, and then binding arbitration in the State of Delaware before a single arbitrator. Nothing prevents either party from seeking injunctive relief to prevent irreparable harm.</p>
 
-  <p class="step-time">Time: 5 minutes</p>
+  <h2 id="changes">15. Changes to these terms</h2>
+  <p>We may update these Terms from time to time. When we do, we will revise the &ldquo;Last updated&rdquo; date above. Your continued use of the site after an update means you accept the revised Terms.</p>
 
-  <h2>Step 3: Audit Cover Photos and Titles</h2>
+  <h2 id="contact">16. Contact us</h2>
+  <p>Questions about these Terms? Get in touch.</p>
+  <div class="legal-contact">
+    <p class="lc-name">MCO CORP d/b/a RevWhisper</p>
+    <p>Email: <a href="mailto:Admin@RevWhisper.com">Admin@RevWhisper.com</a></p>
+  </div>
+</main>
 
-  <p>Open each comp listing. Look at their cover photo and title. Count how many have: exterior shots, lifestyle staging, bright natural light, titles with unique selling points or location callouts. Compare to yours. The click happens or dies here.</p>
-
-  <blockquote><strong>Pro tip:</strong> Listings with exterior cover photos showing curb appeal or views consistently rank higher because they signal property quality before the click.</blockquote>
-
-  <p><strong>Common mistake:</strong> Using interior-only cover photos when your exterior or view is your strongest asset and would differentiate you in the grid.</p>
-
-  <p class="step-time">Time: 7 minutes</p>
-
-  <h2>Step 4: Compare Amenity Counts and Guest-Favorite Features</h2>
-
-  <p>Scroll to the amenities section of each comp. Count total amenities listed. Note which ones appear in every top performer: EV charger, workspace, fast wifi speed, coffee maker type, parking details. Add the gaps to your listing today.</p>
-
-  <blockquote><strong>Pro tip:</strong> Listings with 40+ amenities rank significantly higher than those under 30 because Airbnb&rsquo;s algorithm treats completeness as a quality signal.</blockquote>
-
-  <p><strong>Common mistake:</strong> Listing generic amenities like wifi and parking without specifying speed, type, or quantity which makes you invisible in filtered searches.</p>
-
-  <p class="step-time">Time: 8 minutes</p>
-
-  <h2>Step 5: Document Pricing Gaps and Review Velocity</h2>
-
-  <p>Record each comp&rsquo;s price for your search dates. Calculate the average. Note how many reviews each has in the last 90 days. If your price is 10%+ above the comp set average and your review velocity is slower, you have a conversion problem not a visibility problem.</p>
-
-  <blockquote><strong>Pro tip:</strong> Review velocity matters more than total count for algorithm ranking because recent reviews signal active booking momentum and listing relevance.</blockquote>
-
-  <p><strong>Common mistake:</strong> Pricing 20%+ above comp set without Guest Favorite badge or Superhost status to justify the premium which kills your conversion rate.</p>
-
-  <p class="step-time">Time: 5 minutes</p>
-
-  <h2>What You Will Find</h2>
-
-  <p>You will know your exact ranking position, who is outranking you, and the 3&ndash;5 specific gaps in photos, amenities, or pricing causing your low conversion. Most hosts find 2&ndash;3 quick fixes worth 10&ndash;20% more visibility within 48 hours.</p>
-
-</article>
-
-<!-- ── CTA Banner ── -->
-<div class="post-cta">
-  <h3>Want Us to Run Your Comp Set Analysis?</h3>
-  <p>Our team will identify your top competitors, benchmark your listing, and build a custom action plan to close the gaps.</p>
-  <a href="/get-started">Book a Free Strategy Call &rarr;</a>
-</div>
-
-<!-- ── Footer ── -->
+<!-- ════════════════════════════════════════════════
+     FOOTER
+     ════════════════════════════════════════════════ -->
 
 <!-- FOOTER:START -->
 <footer class="site-footer">
@@ -482,6 +485,5 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
 </footer>
 <!-- FOOTER:END -->
 
-<script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>

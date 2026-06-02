@@ -1,3 +1,6 @@
 .vercel
 .DS_Store
 New Website Elements/
+.env
+.env.*
+!.env.example

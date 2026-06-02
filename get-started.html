@@ -19,7 +19,7 @@
 })();
 function rwAttribution(){try{return JSON.parse(sessionStorage.getItem('rw_attribution'))||{};}catch(e){return {};}}
 </script>
-<!-- Cookie Consent + GA4 (consent-mode) -->
+<!-- GA4 (consent-mode) — banner suppressed on this page; honors prior consent from other pages -->
 <script>
 window.dataLayer=window.dataLayer||[];
 function gtag(){dataLayer.push(arguments);}
@@ -29,16 +29,9 @@ gtag('config','G-Y1FYZ5849B');
 (function(){var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-Y1FYZ5849B';document.head.appendChild(s);})();
 function rwTrack(e,p){gtag('event',e,p||{});}
 (function(){
-  var c=localStorage.getItem('rw_cookie_consent');
-  if(c==='accepted'){gtag('consent','update',{'analytics_storage':'granted','ad_storage':'granted'});return;}
-  if(c==='declined')return;
-  document.addEventListener('DOMContentLoaded',function(){
-    var b=document.createElement('div');b.id='rw-consent';
-    b.innerHTML='<div style="position:fixed;bottom:0;left:0;right:0;z-index:9999;padding:16px 24px;background:#32302F;color:#fff;font-family:DM Sans,system-ui,sans-serif;font-size:14px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;box-shadow:0 -4px 24px rgba(0,0,0,.15)"><span style="flex:1;min-width:240px;line-height:1.5">We use cookies to analyze site usage and improve your experience.</span><div style="display:flex;gap:10px;flex-shrink:0"><button id="rw-decline" style="background:transparent;color:#ccc8c5;border:1.5px solid #706b68;padding:8px 20px;border-radius:6px;font-size:13px;font-family:inherit;cursor:pointer">Decline</button><button id="rw-accept" style="background:#4A6741;color:#fff;border:none;padding:8px 20px;border-radius:6px;font-size:13px;font-family:inherit;cursor:pointer;font-weight:500">Accept</button></div></div>';
-    document.body.appendChild(b);
-    document.getElementById('rw-accept').addEventListener('click',function(){localStorage.setItem('rw_cookie_consent','accepted');b.remove();gtag('consent','update',{'analytics_storage':'granted','ad_storage':'granted'});});
-    document.getElementById('rw-decline').addEventListener('click',function(){localStorage.setItem('rw_cookie_consent','declined');b.remove();});
-  });
+  if(localStorage.getItem('rw_cookie_consent')==='accepted'){
+    gtag('consent','update',{'analytics_storage':'granted','ad_storage':'granted'});
+  }
 })();
 </script>
 <!-- Meta Pixel -->
@@ -547,18 +540,325 @@ body::before{
   to{opacity:1;transform:translateY(0)}
 }
 
+/* ── Calendar (Date Picker) ── */
+.cal-shell{margin-bottom:32px;min-height:344px}
+.cal-nav{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:18px;
+}
+.cal-month-label{
+  font-family:var(--heading);font-size:18px;font-weight:500;color:var(--black);
+  letter-spacing:-.01em;
+}
+.cal-nav-btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:34px;height:34px;border-radius:var(--radius-sm);
+  border:1.5px solid var(--g200);background:#fff;color:var(--g500);
+  cursor:pointer;font-family:var(--body);
+  transition:border-color .25s,color .25s,transform .2s var(--ease-out-back),box-shadow .25s;
+}
+.cal-nav-btn:hover:not(:disabled){border-color:var(--g300);color:var(--black);transform:translateY(-1px);box-shadow:var(--sh-sm)}
+.cal-nav-btn:active:not(:disabled){transform:scale(.95)}
+.cal-nav-btn:disabled{opacity:.3;cursor:not-allowed}
+.cal-weekdays{
+  display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:8px;
+}
+.cal-weekday{
+  text-align:center;font-size:11px;font-weight:500;color:var(--g400);
+  letter-spacing:.08em;text-transform:uppercase;padding:6px 0;
+}
+.cal-grid{
+  display:grid;grid-template-columns:repeat(7,1fr);gap:6px;
+}
+.cal-day{
+  aspect-ratio:1;display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:400;color:var(--g700);background:transparent;
+  border:1.5px solid transparent;border-radius:var(--radius-sm);
+  cursor:default;font-family:var(--body);position:relative;
+  transition:border-color .25s,background .25s,color .25s,transform .25s var(--ease-out-back),box-shadow .25s;
+}
+.cal-day.empty{visibility:hidden}
+.cal-day.available{
+  border-color:var(--g200);background:#fff;color:var(--black);cursor:pointer;
+}
+.cal-day.available:hover{
+  border-color:var(--accent);color:var(--accent);transform:translateY(-1px);box-shadow:var(--sh-sm);
+}
+.cal-day.available:active{transform:scale(.95)}
+.cal-day.selected{
+  border-color:var(--accent);background:var(--accent);color:#fff;font-weight:600;
+}
+.cal-day.today::after{
+  content:'';position:absolute;bottom:5px;left:50%;transform:translateX(-50%);
+  width:4px;height:4px;border-radius:50%;background:var(--accent);
+}
+.cal-day.selected.today::after{background:#fff}
+.cal-day.unavailable{color:var(--g300);cursor:not-allowed}
+
+.cal-loading{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  padding:48px 0;color:var(--g500);font-size:13px;
+}
+.cal-spinner{
+  width:18px;height:18px;border:2px solid var(--g200);border-top-color:var(--accent);
+  border-radius:50%;animation:spin .8s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.cal-error{
+  padding:16px;border:1.5px solid #f0d4d4;background:#fbf3f3;color:#8b3a3a;
+  border-radius:var(--radius);font-size:13px;margin-bottom:20px;line-height:1.5;
+}
+.cal-error a{color:#8b3a3a;font-weight:600;text-decoration:underline}
+
+/* ── Time Slot List ── */
+.slot-shell{margin-bottom:32px}
+.slot-date-label{
+  font-family:var(--heading);font-size:19px;font-weight:500;color:var(--black);
+  letter-spacing:-.01em;margin-bottom:18px;
+}
+.slot-tz{
+  display:inline-block;font-family:var(--body);font-size:11px;font-weight:500;
+  color:var(--g500);background:var(--g100);border-radius:100px;
+  padding:3px 10px;margin-left:8px;letter-spacing:.02em;vertical-align:middle;
+}
+.slot-list{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px;
+  max-height:340px;overflow-y:auto;padding:2px;
+}
+.slot-btn{
+  padding:13px 8px;border:1.5px solid var(--g200);border-radius:var(--radius);
+  background:#fff;color:var(--g700);font-size:14px;font-weight:500;
+  font-family:var(--body);text-align:center;cursor:pointer;
+  transition:border-color .25s,color .25s,background .25s,transform .25s var(--ease-out-back),box-shadow .25s;
+}
+.slot-btn:hover:not(:disabled){
+  border-color:var(--accent);color:var(--accent);transform:translateY(-2px);box-shadow:var(--sh-sm);
+}
+.slot-btn:active:not(:disabled){transform:scale(.97)}
+.slot-btn:disabled{opacity:.4;cursor:not-allowed}
+.slot-btn.booking{
+  border-color:var(--accent);color:var(--accent);
+  background:var(--accent-light);position:relative;
+}
+.slot-btn.booking::after{
+  content:'';position:absolute;top:50%;right:8px;transform:translateY(-50%);
+  width:12px;height:12px;border:2px solid var(--accent);border-top-color:transparent;
+  border-radius:50%;animation:spin .7s linear infinite;
+}
+.slot-empty{
+  text-align:center;color:var(--g500);font-size:13px;padding:32px 0;
+}
+
+/* ── Booking Loader (step between time picker and success) ── */
+.booking-loader{
+  text-align:center;padding:48px 0 32px;
+}
+.booking-loader-icon{
+  width:76px;height:76px;margin:0 auto 28px;position:relative;
+}
+.booking-loader-icon::before{
+  content:'';position:absolute;inset:0;
+  border:3px solid var(--g200);border-top-color:var(--accent);
+  border-radius:50%;
+  animation:loaderSpin .9s cubic-bezier(.5,0,.5,1) infinite;
+}
+.booking-loader-icon::after{
+  content:'';position:absolute;inset:26px;
+  background:var(--accent);border-radius:50%;
+  animation:loaderPulse 1.6s ease-in-out infinite;
+}
+@keyframes loaderSpin{to{transform:rotate(360deg)}}
+@keyframes loaderPulse{
+  0%,100%{opacity:.35;transform:scale(.9)}
+  50%{opacity:1;transform:scale(1.15)}
+}
+.booking-loader-meta{
+  font-size:14px;color:var(--g500);font-weight:300;margin-top:12px;
+}
+.booking-loader-meta strong{color:var(--black);font-weight:500}
+
+/* ── Host strip (date picker) — clean horizontal header, no chrome ── */
+.host-strip{
+  display:flex;align-items:center;gap:14px;margin-bottom:22px;
+}
+.host-avatars{display:inline-flex;flex-shrink:0;align-items:center}
+.host-avatar{
+  width:40px;height:40px;border-radius:50%;
+  border:2px solid #fff;
+  box-shadow:0 1px 4px rgba(50,48,47,.12), 0 0 0 1px var(--g200);
+  object-fit:cover;object-position:center 15%;
+  background:var(--g100);
+  transition:transform .35s var(--ease-out-back);
+}
+.host-avatar + .host-avatar{margin-left:-10px}
+.host-strip:hover .host-avatar:nth-child(1){transform:translateX(-2px)}
+.host-strip:hover .host-avatar:nth-child(2){transform:translateX(2px)}
+
+.host-meta{
+  display:flex;flex-wrap:wrap;align-items:center;
+  gap:6px 14px;
+  font-size:12px;font-weight:500;color:var(--g500);letter-spacing:.01em;
+  line-height:1.4;
+}
+.host-meta-item{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.host-meta-item svg{flex-shrink:0;display:block;color:var(--g400)}
+.host-meta-item.is-meet svg{color:initial}
+
+.host-blurb{
+  font-size:14px;color:var(--g500);line-height:1.65;font-weight:300;
+  margin:0 0 32px;max-width:480px;
+}
+.host-blurb em{font-style:italic;color:var(--accent);font-weight:400}
+
+@media(max-width:480px){
+  .host-strip{gap:12px;margin-bottom:18px}
+  .host-avatar{width:36px;height:36px}
+  .host-avatar + .host-avatar{margin-left:-9px}
+  .host-meta{font-size:11.5px;gap:4px 12px}
+}
+
+/* ── Step entrance animations for new step elements ── */
+.step.active .host-strip,
+.step.enter-from-below .host-strip,
+.step.enter-from-above .host-strip{animation:fadeSlideUp .5s var(--ease-out-expo) .12s both}
+
+.step.active .host-avatar:nth-child(1),
+.step.enter-from-below .host-avatar:nth-child(1),
+.step.enter-from-above .host-avatar:nth-child(1){animation:avatarPop .55s var(--ease-out-back) .2s both}
+.step.active .host-avatar:nth-child(2),
+.step.enter-from-below .host-avatar:nth-child(2),
+.step.enter-from-above .host-avatar:nth-child(2){animation:avatarPop .55s var(--ease-out-back) .27s both}
+@keyframes avatarPop{
+  from{opacity:0;transform:scale(.6)}
+  to{opacity:1;transform:scale(1)}
+}
+
+.step.active .host-meta-item,
+.step.enter-from-below .host-meta-item,
+.step.enter-from-above .host-meta-item{
+  animation:fadeSlideUp .45s var(--ease-out-expo) calc(var(--idx, 0) * 70ms + .3s) both;
+}
+
+.step.active .host-blurb,
+.step.enter-from-below .host-blurb,
+.step.enter-from-above .host-blurb{animation:fadeSlideUp .5s var(--ease-out-expo) .42s both}
+
+.step.active .booking-loader-icon,
+.step.enter-from-below .booking-loader-icon,
+.step.enter-from-above .booking-loader-icon{animation:fadeSlideUp .5s var(--ease-out-expo) .15s both}
+.step.active .booking-loader-meta,
+.step.enter-from-below .booking-loader-meta,
+.step.enter-from-above .booking-loader-meta{animation:fadeSlideUp .5s var(--ease-out-expo) .35s both}
+
+.step.active .cal-nav,
+.step.enter-from-below .cal-nav,
+.step.enter-from-above .cal-nav{animation:fadeSlideUp .5s var(--ease-out-expo) .5s both}
+
+.step.active .cal-weekdays,
+.step.enter-from-below .cal-weekdays,
+.step.enter-from-above .cal-weekdays{animation:fadeSlideUp .5s var(--ease-out-expo) .56s both}
+
+.step.active .slot-date-label,
+.step.enter-from-below .slot-date-label,
+.step.enter-from-above .slot-date-label{animation:fadeSlideUp .5s var(--ease-out-expo) .42s both}
+
+/* Cell wave — opacity-only so hover transform isn't fought */
+.step.active .cal-day,
+.step.enter-from-below .cal-day,
+.step.enter-from-above .cal-day{
+  animation:dayFadeIn .42s var(--ease-out-expo) calc(var(--idx, 0) * 12ms + .65s) both;
+}
+@keyframes dayFadeIn{
+  from{opacity:0}
+  to{opacity:1}
+}
+
+/* Slot wave — slightly more pronounced */
+.step.active .slot-btn,
+.step.enter-from-below .slot-btn,
+.step.enter-from-above .slot-btn{
+  animation:slotPop .45s var(--ease-out-back) calc(var(--idx, 0) * 22ms + .5s) both;
+}
+@keyframes slotPop{
+  from{opacity:0;transform:translateY(8px) scale(.96)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+
+/* ── Smoother step transition curves ── */
+.step.exit-up{
+  transition:opacity .42s var(--ease-out-expo), transform .42s var(--ease-out-expo), filter .42s var(--ease-out-expo), visibility 0s .42s;
+  filter:blur(2px);
+}
+.step.exit-down{
+  transition:opacity .42s var(--ease-out-expo), transform .42s var(--ease-out-expo), filter .42s var(--ease-out-expo), visibility 0s .42s;
+  filter:blur(2px);
+}
+.step.enter-from-below,
+.step.enter-from-above{
+  transition:opacity .55s var(--ease-out-expo) .12s, transform .55s var(--ease-out-expo) .12s, filter .55s var(--ease-out-expo) .12s;
+  filter:blur(0);
+}
+
 /* ── Responsive ── */
 @media(max-width:640px){
   html,body{overflow-x:hidden;overflow-y:auto}
-  body{padding:20px}
-  .radio-group{grid-template-columns:repeat(3,1fr)}
-  .form-shell{max-width:100%;padding:20px}
-  .step-title{font-size:26px}
-  .phone-code{width:84px;padding:13px 10px;font-size:13px}
+  body{padding:18px 16px;align-items:flex-start}
+  .form-shell{max-width:100%;padding:18px 4px;margin-top:24px}
+  .radio-group{grid-template-columns:repeat(3,1fr);gap:8px}
+  .step-eyebrow{margin-bottom:10px}
+  .step-title{font-size:26px;line-height:1.18;margin-bottom:8px}
+  .step-desc{font-size:14px;line-height:1.6;margin-bottom:28px}
+  .field{margin-bottom:16px}
+  /* 16px input font keeps iOS from auto-zooming on focus */
+  .field-input{padding:12px 14px;font-size:16px}
+  .input-icon-wrap .field-input{padding-left:38px}
+  .phone-code{width:80px;padding:12px 10px;font-size:14px}
+  .phone-input{font-size:16px}
+  .form-actions{margin-top:4px}
+  .btn-next{padding:14px 22px;font-size:14px}
+  .btn-back{padding:14px 14px;font-size:13px}
+  .open-airbnb-wrap{margin-top:14px}
+  .open-airbnb-btn{padding:11px 14px;font-size:13px}
+  .fee-badges{margin-bottom:24px}
+
+  /* Calendar */
+  .cal-shell{margin-bottom:24px;min-height:auto}
+  .cal-nav{margin-bottom:14px}
+  .cal-month-label{font-size:16px}
+  .cal-nav-btn{width:32px;height:32px}
+  .cal-weekdays{gap:4px;margin-bottom:6px}
+  .cal-weekday{font-size:10px;padding:4px 0;letter-spacing:.06em}
+  .cal-grid{gap:4px}
+  .cal-day{font-size:13px}
+
+  /* Time slots — bigger touch targets, no inner scroll on phones */
+  .slot-shell{margin-bottom:24px}
+  .slot-date-label{font-size:17px;margin-bottom:14px}
+  .slot-tz{font-size:10px;padding:2px 8px;margin-left:6px}
+  .slot-list{grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px;max-height:none}
+  .slot-btn{padding:14px 6px;font-size:14px}
+
+  /* Host strip */
+  .host-strip{margin-bottom:18px}
+  .host-blurb{font-size:13px;margin-bottom:24px}
+}
+
+/* iPhone SE / very narrow phones */
+@media(max-width:380px){
+  body{padding:14px 12px}
+  .form-shell{padding:14px 0}
+  .host-strip{flex-direction:column;align-items:flex-start;gap:10px;margin-bottom:16px}
+  .host-meta{font-size:11px;gap:4px 10px}
+  .step-title{font-size:24px}
+  .cal-grid{gap:3px}
+  .cal-day{font-size:12px}
+  .slot-list{grid-template-columns:repeat(3,1fr)}
+  .phone-code{width:74px;font-size:13px}
 }
 </style>
 </head>
 <body>
+
 
 <div class="form-shell">
   <div class="steps-viewport">
@@ -613,7 +913,7 @@ body::before{
       </div>
       <div class="form-actions">
         <button class="btn-back" onclick="prevStep()"><span class="arrow">←</span> Back</button>
-        <button class="btn-next" onclick="nextStep()" id="btn-step1">Skip <span class="arrow">→</span></button>
+        <button class="btn-next" onclick="nextStep()" id="btn-step1">Next <span class="arrow">→</span></button>
       </div>
       <div class="open-airbnb-wrap">
         <span class="open-airbnb-divider">Don't have it handy?</span>
@@ -665,21 +965,108 @@ body::before{
       </div>
       <div class="form-actions">
         <button class="btn-back" onclick="prevStep()"><span class="arrow">←</span> Back</button>
-        <button class="btn-next" onclick="submitForm()" id="btn-step2">Submit <span class="arrow">→</span></button>
+        <button class="btn-next" onclick="submitForm()" id="btn-step2">Pick a time <span class="arrow">→</span></button>
+      </div>
+    </div>
+
+    <!-- Step 4: Date Picker -->
+    <div class="step" data-step="3">
+      <div class="host-strip">
+        <div class="host-avatars">
+          <img class="host-avatar" src="/images/team/bryan.webp" alt="Bryan" loading="lazy">
+          <img class="host-avatar" src="/images/team/nic.webp" alt="Nicolas" loading="lazy">
+        </div>
+        <div class="host-meta">
+          <span class="host-meta-item" style="--idx:0">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            30 min
+          </span>
+          <span class="host-meta-item is-meet" style="--idx:1">
+            <svg width="13" height="13" viewBox="0 0 48 48" aria-hidden="true">
+              <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
+              <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/>
+              <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/>
+              <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
+            </svg>
+            Google Meet
+          </span>
+          <span class="host-meta-item" style="--idx:2">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14.5 14.5 0 0 1 0 18M12 3a14.5 14.5 0 0 0 0 18"/></svg>
+            <span id="host-tz">UTC</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="step-eyebrow">Pick a Date</div>
+      <h2 class="step-title">When works <em>for you?</em></h2>
+      <p class="host-blurb"><em>30 min, no fluff</em> — a clear look at the revenue you're leaving on the table and exactly what we'd fix first.</p>
+
+      <div id="cal-error-slot"></div>
+
+      <div class="cal-shell">
+        <div class="cal-nav">
+          <button type="button" class="cal-nav-btn" id="cal-prev" aria-label="Previous month">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+          </button>
+          <div class="cal-month-label" id="cal-month-label">—</div>
+          <button type="button" class="cal-nav-btn" id="cal-next" aria-label="Next month">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+        </div>
+        <div class="cal-weekdays">
+          <div class="cal-weekday">Sun</div>
+          <div class="cal-weekday">Mon</div>
+          <div class="cal-weekday">Tue</div>
+          <div class="cal-weekday">Wed</div>
+          <div class="cal-weekday">Thu</div>
+          <div class="cal-weekday">Fri</div>
+          <div class="cal-weekday">Sat</div>
+        </div>
+        <div class="cal-grid" id="cal-grid">
+          <div class="cal-loading" style="grid-column:1/-1"><div class="cal-spinner"></div><span>Loading availability…</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 5: Time Picker -->
+    <div class="step" data-step="4">
+      <div class="step-eyebrow">Pick a Time</div>
+      <h2 class="step-title">Choose your <em>time slot.</em></h2>
+      <p class="step-desc">Times are shown in your local timezone. Click a time to confirm your booking.</p>
+
+      <div id="slot-error-slot"></div>
+
+      <div class="slot-shell">
+        <div class="slot-date-label" id="slot-date-label">—<span class="slot-tz" id="slot-tz">UTC</span></div>
+        <div class="slot-list" id="slot-list"></div>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn-back" onclick="prevStep()"><span class="arrow">←</span> Back</button>
+      </div>
+    </div>
+
+    <!-- Step 6: Booking in flight -->
+    <div class="step" data-step="5">
+      <div class="booking-loader">
+        <div class="booking-loader-icon"></div>
+        <div class="step-eyebrow">One Moment</div>
+        <h2 class="step-title">Locking in your <em>time…</em></h2>
+        <p class="booking-loader-meta" id="loader-when">Confirming with our team</p>
       </div>
     </div>
 
     <!-- Success State -->
-    <div class="step" data-step="3">
+    <div class="step" data-step="6">
       <div class="success-state" id="success-state">
         <div class="success-icon">
           <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="#4A6741" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
         </div>
-        <h2 class="success-title">You're <em>all set.</em></h2>
-        <p class="success-desc">We've received your information and we'll be in touch shortly. Check your inbox for next steps.</p>
+        <h2 class="success-title">You're <em>all booked.</em></h2>
+        <p class="success-desc" id="success-desc">We'll see you on your scheduled call. A calendar invite is on its way to your inbox.</p>
         <div class="success-detail">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="var(--accent)" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-          <span>Confirmation sent to <strong id="confirm-email">your email</strong></span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="var(--accent)" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></svg>
+          <span id="success-when">Confirmed</span>
         </div>
       </div>
     </div>
@@ -692,9 +1079,25 @@ body::before{
 
 <script>
 let current = 0;
-const totalSteps = 3;
+const totalSteps = 7;
 let isTransitioning = false;
 const FORM_WEBHOOK_ENDPOINT = '/api/form-webhook';
+const CAL_SLOTS_ENDPOINT = '/api/cal-slots';
+const CAL_BOOKING_ENDPOINT = '/api/cal-booking';
+const CAL_FALLBACK_BASE = 'https://cal.com/team/revwhisper/discovery';
+
+const booking = {
+  timeZone: (Intl.DateTimeFormat().resolvedOptions().timeZone) || 'UTC',
+  slotsByDate: {},
+  rangeStart: null,
+  rangeEnd: null,
+  loaded: false,
+  loading: false,
+  selectedDate: null,
+  selectedSlot: null,
+  bookingInFlight: false,
+  visibleMonth: null
+};
 
 // Auto-advance when a listing count is selected
 document.querySelectorAll('input[name="listings"]').forEach(r => {
@@ -702,7 +1105,32 @@ document.querySelectorAll('input[name="listings"]').forEach(r => {
     document.getElementById('btn-step0').disabled = false;
     rwTrack('select_portfolio_size',{size:r.value,page:'get-started'});
     nextStep();
+    // Prefetch availability NOW — by the time they finish the form it'll be ready
+    if (!booking.loaded && !booking.loading) loadSlots();
   });
+});
+
+// Show the user's IANA timezone in the host-strip on the date picker.
+document.addEventListener('DOMContentLoaded', function(){
+  const tzEl = document.getElementById('host-tz');
+  if (tzEl) tzEl.textContent = booking.timeZone;
+});
+
+// Secondary prefetch trigger: when they touch the URL field, fire if we haven't yet
+document.addEventListener('DOMContentLoaded', function(){
+  const urlInput = document.getElementById('airbnb-url');
+  if (urlInput) {
+    const trigger = function(){ if (!booking.loaded && !booking.loading) loadSlots(); };
+    urlInput.addEventListener('focus', trigger, { once: true });
+    urlInput.addEventListener('input', trigger, { once: true });
+  }
+  // Also fire on email focus as a safety net (in case they tabbed straight past step 1)
+  const emailInput = document.getElementById('email');
+  if (emailInput) {
+    emailInput.addEventListener('focus', function(){
+      if (!booking.loaded && !booking.loading) loadSlots();
+    }, { once: true });
+  }
 });
 
 function transitionStep(from, to, direction) {
@@ -815,14 +1243,10 @@ function launchConfetti() {
 }
 
 var webhookSent = false;
-async function submitForm() {
+function submitForm() {
   if (!validateStep(2)) return;
-  if (webhookSent) return;
-  webhookSent = true;
   const btn = document.getElementById('btn-step2');
   btn.disabled = true;
-  const originalLabel = btn.innerHTML;
-  btn.textContent = 'Submitting...';
 
   const fullName = document.getElementById('full-name').value.trim();
   const email = document.getElementById('email').value.trim();
@@ -845,51 +1269,387 @@ async function submitForm() {
     attribution: rwAttribution()
   };
 
-  console.log('Form submitted:', data);
-  rwTrack('generate_lead',{page:'get-started',listings:data.listings});
+  // Cache for the booking call later
+  booking.lead = data;
 
-  try {
-    const response = await fetch(FORM_WEBHOOK_ENDPOINT, {
+  // Fire-and-forget the webhook — don't gate the step transition on Make.com latency.
+  // Cal.com is the source of truth for the booking; the webhook only updates the CRM.
+  if (!webhookSent) {
+    webhookSent = true;
+    rwTrack('generate_lead',{page:'get-started',listings:data.listings});
+    fetch(FORM_WEBHOOK_ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        event_type: 'get_started',
-        payload: data
-      })
+      body: JSON.stringify({ event_type: 'get_started', payload: data })
+    }).then(function(r){
+      if (!r.ok) console.warn('form-webhook returned', r.status);
+    }).catch(function(err){
+      console.warn('form-webhook failed:', err);
     });
+  }
 
-    if (!response.ok) {
-      let message = 'We could not submit your information. Please try again.';
-      try {
-        const payload = await response.json();
-        if (payload && payload.error) message = payload.error;
-      } catch (error) {}
-      throw new Error(message);
+  // Advance to the date picker step immediately
+  const from = current;
+  current++;
+  rwTrack('form_step',{step:current,page:'get-started'});
+  transitionStep(from, current, 'forward');
+
+  // Make sure slots are loading (idempotent — won't refetch if already loaded/loading)
+  loadSlots();
+}
+
+// ── Cal.com integration ──
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function fallbackToCalRedirect(reason) {
+  const lead = booking.lead || {};
+  console.warn('Booking falling back to cal.com redirect:', reason);
+  rwTrack('booking_fallback',{reason:reason||'unknown'});
+  const params = new URLSearchParams({
+    name: lead.name || '',
+    email: lead.email || '',
+    phone: lead.phone || ''
+  });
+  window.location.href = `${CAL_FALLBACK_BASE}?${params.toString()}`;
+}
+
+function showCalError(message, options) {
+  const slot = document.getElementById('cal-error-slot');
+  if (!slot) return;
+  const showRetry = options && options.retry !== false;
+  const showFallback = options && options.fallback;
+  slot.innerHTML = `
+    <div class="cal-error">
+      <div>${esc(message)}</div>
+      <div style="margin-top:8px">
+        ${showRetry ? '<a href="#" id="cal-retry">Try again</a>' : ''}
+        ${showFallback ? (showRetry ? ' &nbsp;·&nbsp; ' : '') + '<a href="#" id="cal-fallback">Pick a time on Cal.com instead</a>' : ''}
+      </div>
+    </div>`;
+  const retryEl = document.getElementById('cal-retry');
+  if (retryEl) retryEl.addEventListener('click', function(e){ e.preventDefault(); slot.innerHTML=''; booking.loaded=false; booking.loading=false; loadSlots(); });
+  const fbEl = document.getElementById('cal-fallback');
+  if (fbEl) fbEl.addEventListener('click', function(e){ e.preventDefault(); fallbackToCalRedirect('user_chose_fallback'); });
+}
+
+function recoverStaleSlot() {
+  booking.bookingInFlight = false;
+  booking.loaded = false; booking.loading = false;
+  rwTrack('booking_slot_taken',{page:'get-started'});
+  const fromLoader = current; current = 3; // back to the date picker (step 3)
+  transitionStep(fromLoader, current, 'backward');
+  showCalError("That time was just booked by someone else. Here are the latest open times — please pick another.", { retry: false, fallback: true });
+  loadSlots();
+}
+
+async function loadSlots() {
+  if (booking.loading || booking.loaded) return;
+  booking.loading = true;
+  const grid = document.getElementById('cal-grid');
+  if (grid) {
+    grid.innerHTML = '<div class="cal-loading" style="grid-column:1/-1"><div class="cal-spinner"></div><span>Loading availability…</span></div>';
+  }
+
+  const start = new Date();
+  start.setHours(0,0,0,0);
+  const end = new Date(start.getTime());
+  end.setDate(end.getDate() + 60);
+
+  booking.rangeStart = start;
+  booking.rangeEnd = end;
+  booking.visibleMonth = booking.visibleMonth || new Date(start.getFullYear(), start.getMonth(), 1);
+
+  const params = new URLSearchParams({
+    start: start.toISOString(),
+    end: end.toISOString(),
+    timeZone: booking.timeZone
+  });
+
+  try {
+    const res = await fetch(`${CAL_SLOTS_ENDPOINT}?${params.toString()}`);
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      throw new Error(body.error || `Cal.com returned ${res.status}`);
     }
-  } catch (error) {
-    console.error('Get started webhook failed:', error);
-    webhookSent = false;
-    btn.disabled = false;
-    btn.innerHTML = originalLabel;
-    alert(error.message || 'We could not submit your information. Please try again.');
+    const json = await res.json();
+    const data = (json && json.data) || {};
+    booking.slotsByDate = {};
+    Object.keys(data).forEach(function(dateKey){
+      const arr = data[dateKey];
+      if (Array.isArray(arr) && arr.length > 0) {
+        booking.slotsByDate[dateKey] = arr.map(function(item){
+          return typeof item === 'string' ? item : (item && item.start) || null;
+        }).filter(Boolean);
+      }
+    });
+    booking.loaded = true;
+    renderCalendar();
+    if (Object.keys(booking.slotsByDate).length === 0) {
+      showCalError("We don't have open times in the next 60 days right now. You can grab a time directly on Cal.com.", { retry: true, fallback: true });
+    }
+  } catch (err) {
+    console.error('loadSlots failed:', err);
+    showCalError(err && err.message ? `We couldn't load availability: ${err.message}` : "We couldn't load availability.", { retry: true, fallback: true });
+    if (grid) grid.innerHTML = '';
+  } finally {
+    booking.loading = false;
+  }
+}
+
+function ymdKey(date) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
+
+function sameDay(a, b) {
+  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+}
+
+function renderCalendar() {
+  const grid = document.getElementById('cal-grid');
+  const label = document.getElementById('cal-month-label');
+  const prevBtn = document.getElementById('cal-prev');
+  const nextBtn = document.getElementById('cal-next');
+  if (!grid || !label) return;
+
+  const month = booking.visibleMonth;
+  const monthStart = new Date(month.getFullYear(), month.getMonth(), 1);
+  const monthEnd = new Date(month.getFullYear(), month.getMonth() + 1, 0);
+  const today = new Date(); today.setHours(0,0,0,0);
+
+  label.textContent = monthStart.toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+
+  const rangeStartMonth = new Date(booking.rangeStart.getFullYear(), booking.rangeStart.getMonth(), 1);
+  const rangeEndMonth = new Date(booking.rangeEnd.getFullYear(), booking.rangeEnd.getMonth(), 1);
+  if (prevBtn) prevBtn.disabled = monthStart <= rangeStartMonth;
+  if (nextBtn) nextBtn.disabled = monthStart >= rangeEndMonth;
+
+  const cells = [];
+  for (let i = 0; i < monthStart.getDay(); i++) cells.push(null);
+  for (let d = 1; d <= monthEnd.getDate(); d++) cells.push(new Date(month.getFullYear(), month.getMonth(), d));
+  while (cells.length < 42) cells.push(null);
+
+  grid.innerHTML = '';
+  cells.forEach(function(date, i){
+    const cell = document.createElement('div');
+    cell.className = 'cal-day';
+    cell.style.setProperty('--idx', String(i));
+    if (!date) { cell.classList.add('empty'); grid.appendChild(cell); return; }
+
+    cell.textContent = date.getDate();
+    if (sameDay(date, today)) cell.classList.add('today');
+
+    const key = ymdKey(date);
+    const isPast = date < today;
+    const inRange = date >= booking.rangeStart && date <= booking.rangeEnd;
+    const hasSlots = !!booking.slotsByDate[key];
+
+    if (!isPast && inRange && hasSlots) {
+      cell.classList.add('available');
+      cell.setAttribute('role','button');
+      cell.setAttribute('tabindex','0');
+      cell.addEventListener('click', function(){ selectDate(key); });
+      cell.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectDate(key); } });
+    } else {
+      cell.classList.add('unavailable');
+    }
+
+    grid.appendChild(cell);
+  });
+}
+
+function selectDate(dateKey) {
+  booking.selectedDate = dateKey;
+  rwTrack('select_booking_date',{date:dateKey,page:'get-started'});
+  renderSlots();
+  const from = current;
+  current++;
+  transitionStep(from, current, 'forward');
+}
+
+function renderSlots() {
+  const list = document.getElementById('slot-list');
+  const label = document.getElementById('slot-date-label');
+  const tzEl = document.getElementById('slot-tz');
+  const errEl = document.getElementById('slot-error-slot');
+  if (errEl) errEl.innerHTML = '';
+  if (!list || !label) return;
+
+  const slots = booking.slotsByDate[booking.selectedDate] || [];
+  const dateObj = new Date(booking.selectedDate + 'T12:00:00');
+  const formatted = dateObj.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
+  label.firstChild.textContent = formatted + ' ';
+  if (tzEl) tzEl.textContent = booking.timeZone;
+
+  if (slots.length === 0) {
+    list.innerHTML = '<div class="slot-empty" style="grid-column:1/-1">No times available — pick another day.</div>';
     return;
   }
 
-  // Redirect to Cal.com with pre-filled params
-  const calParams = new URLSearchParams({
-    name: fullName,
-    email: email,
-    phone: phoneFull,
+  list.innerHTML = '';
+  slots.forEach(function(iso, i){
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'slot-btn';
+    btn.style.setProperty('--idx', String(i));
+    const t = new Date(iso);
+    btn.textContent = t.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+    btn.dataset.iso = iso;
+    btn.addEventListener('click', function(){ selectSlot(iso, btn); });
+    list.appendChild(btn);
   });
-  window.location.href = `https://cal.com/team/revwhisper/discovery?${calParams.toString()}`;
 }
 
-// Toggle step 1 button between Skip / Next based on URL input
-document.getElementById('airbnb-url').addEventListener('input', function() {
-  var btn = document.getElementById('btn-step1');
-  var label = this.value.trim() ? 'Next' : 'Skip';
-  btn.innerHTML = label + ' <span class="arrow">→</span>';
+function showSlotError(message) {
+  const errEl = document.getElementById('slot-error-slot');
+  if (!errEl) return;
+  errEl.innerHTML = `<div class="cal-error">${esc(message)} <a href="#" id="slot-fallback">Pick a time on Cal.com instead</a></div>`;
+  const fb = document.getElementById('slot-fallback');
+  if (fb) fb.addEventListener('click', function(e){ e.preventDefault(); fallbackToCalRedirect('booking_error'); });
+}
+
+async function selectSlot(iso, btn) {
+  if (booking.bookingInFlight) return;
+  booking.bookingInFlight = true;
+  booking.selectedSlot = iso;
+  rwTrack('select_booking_time',{time:iso,page:'get-started'});
+
+  const allBtns = document.querySelectorAll('#slot-list .slot-btn');
+  allBtns.forEach(function(b){ b.disabled = true; });
+
+  // Populate the loader's "confirming … " line with the chosen slot
+  const t = new Date(iso);
+  const loaderWhen = document.getElementById('loader-when');
+  if (loaderWhen) {
+    const dateStr = t.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
+    const timeStr = t.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+    loaderWhen.innerHTML = `Confirming <strong>${dateStr} at ${timeStr}</strong>`;
+  }
+
+  // Transition to the loader step immediately
+  const fromTimePicker = current;
+  current++;
+  transitionStep(fromTimePicker, current, 'forward');
+
+  const startedAt = Date.now();
+  const MIN_LOADER_MS = 1100;  // keep the loader visible long enough that it doesn't flash
+
+  const lead = booking.lead || {};
+  const payload = {
+    start: iso,
+    name: lead.name,
+    email: lead.email,
+    phone: lead.phone,
+    timeZone: booking.timeZone,
+    listings: lead.listings,
+    airbnbUrl: lead.airbnbUrl,
+    source: lead.source || 'get-started',
+    attribution: lead.attribution || {}
+  };
+
+  let bookingResult = null;
+  let bookingError = null;
+  let shouldFallback = false;
+  let slotUnavailable = false;
+
+  try {
+    const res = await fetch(CAL_BOOKING_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const body = await res.json().catch(() => ({}));
+    if (!res.ok || !body.ok) {
+      if (body && body.code === 'slot_unavailable') { slotUnavailable = true; }
+      else if (body && body.fallback) { shouldFallback = true; }
+      else throw new Error((body && body.error) || `Cal.com returned ${res.status}`);
+    } else {
+      bookingResult = body.booking;
+    }
+  } catch (err) {
+    bookingError = err;
+  }
+
+  // Hold the loader on screen for the minimum display time
+  const elapsed = Date.now() - startedAt;
+  if (elapsed < MIN_LOADER_MS) {
+    await new Promise(function(r){ setTimeout(r, MIN_LOADER_MS - elapsed); });
+  }
+
+  if (shouldFallback) {
+    fallbackToCalRedirect('upstream_error');
+    return;
+  }
+
+  if (slotUnavailable) {
+    recoverStaleSlot();
+    return;
+  }
+
+  if (bookingError) {
+    console.error('Booking failed:', bookingError);
+    booking.bookingInFlight = false;
+    // Slide back to the time picker and surface the error
+    const fromLoader = current;
+    current--;
+    transitionStep(fromLoader, current, 'backward');
+    setTimeout(function(){
+      allBtns.forEach(function(b){ b.disabled = false; });
+      showSlotError(bookingError.message ? `That didn't work: ${bookingError.message}.` : "We couldn't book that slot.");
+    }, 450);
+    return;
+  }
+
+  // Success path
+  rwTrack('booking_confirmed',{time:iso,page:'get-started'});
+  renderSuccess(bookingResult);
+  const fromLoader = current;
+  current++;
+  transitionStep(fromLoader, current, 'forward');
+  setTimeout(launchConfetti, 300);
+  setTimeout(function(){
+    const ss = document.getElementById('success-state');
+    if (ss) ss.classList.add('revealed');
+  }, 50);
+  booking.bookingInFlight = false;
+}
+
+function renderSuccess(bookingData) {
+  const desc = document.getElementById('success-desc');
+  const when = document.getElementById('success-when');
+  const start = bookingData && bookingData.start ? new Date(bookingData.start) : null;
+  if (start && desc) {
+    const dateStr = start.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
+    const timeStr = start.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+    desc.textContent = `We'll see you ${dateStr} at ${timeStr}. A calendar invite is on its way to your inbox.`;
+  }
+  if (when) {
+    if (start) {
+      when.textContent = start.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' }) +
+        ' · ' + start.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' }) +
+        ' (' + booking.timeZone + ')';
+    } else {
+      when.textContent = 'Confirmed';
+    }
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+  const prev = document.getElementById('cal-prev');
+  const next = document.getElementById('cal-next');
+  if (prev) prev.addEventListener('click', function(){
+    const m = booking.visibleMonth;
+    booking.visibleMonth = new Date(m.getFullYear(), m.getMonth() - 1, 1);
+    renderCalendar();
+  });
+  if (next) next.addEventListener('click', function(){
+    const m = booking.visibleMonth;
+    booking.visibleMonth = new Date(m.getFullYear(), m.getMonth() + 1, 1);
+    renderCalendar();
+  });
 });
+
 
 // Clear error on input
 document.querySelectorAll('.field-input').forEach(input => {
@@ -902,12 +1662,15 @@ document.querySelectorAll('.field-input').forEach(input => {
 document.addEventListener('keydown', function(e) {
   if (e.key !== 'Enter') return;
   if (e.target.tagName === 'TEXTAREA') return;
-  if (current === totalSteps - 1) {
+  // Step 2 is the contact form — Enter triggers submit (which calls Cal.com)
+  if (current === 2) {
     e.preventDefault();
     submitForm();
     return;
   }
-  if (current < totalSteps) {
+  // Steps 3+ are click-only (date picker, time picker, loader, success)
+  if (current >= 3) return;
+  if (current < 2) {
     e.preventDefault();
     nextStep();
   }

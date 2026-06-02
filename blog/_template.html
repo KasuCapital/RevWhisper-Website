@@ -146,27 +146,6 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
 /* ── Layout ── */
 .w{max-width:1100px;margin:0 auto;padding:0 28px}
 
-/* ── Floating Nav Bar ── */
-@keyframes fbSlideIn{from{opacity:0;transform:translate(-50%,-20px)}to{opacity:1;transform:translate(-50%,0)}}
-.float-bar{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:200;display:flex;align-items:center;max-width:1060px;width:calc(100% - 56px);background:var(--white);padding:8px 8px 8px 22px;border-radius:var(--radius);box-shadow:0 2px 20px rgba(50,48,47,.08),0 0 0 1px rgba(50,48,47,.04);animation:fbSlideIn .6s cubic-bezier(.34,1.56,.64,1) both;transition:box-shadow .3s ease,padding .3s ease}
-.float-bar.scrolled{box-shadow:0 4px 28px rgba(50,48,47,.12),0 0 0 1px rgba(50,48,47,.06)}
-.fb-logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--black);flex-shrink:0;transition:opacity .2s ease}
-.fb-logo:hover{opacity:.7}
-.lm{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--accent)}
-.ln{font-family:var(--heading);font-size:15px;font-weight:600;letter-spacing:-.02em}
-.fb-links{display:flex;align-items:center;gap:2px;margin:0 auto}
-.fb-link{font-family:var(--body);font-size:13px;font-weight:400;color:var(--g500);text-decoration:none;padding:8px 16px;border-radius:var(--radius-sm);transition:color .2s ease,background .2s ease;white-space:nowrap}
-.fb-link:hover{color:var(--black);background:var(--g50)}
-.fb-link.active{color:var(--accent);background:var(--accent-light);font-weight:500}
-.fb-cta{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#fff;padding:10px 24px;border-radius:var(--radius);font-family:var(--body);font-size:13px;font-weight:500;text-decoration:none;white-space:nowrap;flex-shrink:0;transition:transform .25s ease,box-shadow .25s ease;box-shadow:0 2px 8px rgba(74,103,65,.15)}
-.fb-cta:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(74,103,65,.25)}
-
-/* Hamburger */
-.fb-hamburger{display:none;flex-direction:column;justify-content:center;gap:5px;width:36px;height:36px;padding:6px;cursor:pointer;background:none;border:none;flex-shrink:0}
-.fb-hamburger span{display:block;width:100%;height:2px;background:var(--black);border-radius:2px;transition:transform .3s ease,opacity .3s ease}
-.fb-hamburger.open span:first-child{transform:translateY(3.5px) rotate(45deg)}
-.fb-hamburger.open span:nth-child(2){opacity:0}
-.fb-hamburger.open span:last-child{transform:translateY(-3.5px) rotate(-45deg)}
 
 /* ── Article Layout ── */
 .post-header{padding:140px 0 32px;text-align:center}
@@ -200,53 +179,167 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
 .post-cta a:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(74,103,65,.25)}
 
 /* ── Footer ── */
-footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
-.footer-grid{display:grid;grid-template-columns:1fr auto;gap:24px 48px;margin-bottom:36px}
-.footer-logo{display:flex;align-items:center;gap:8px;margin-bottom:10px}
-.footer-tag{font-size:13px;color:var(--g400);max-width:420px;line-height:1.6}
-.footer-socials{display:flex;gap:12px;margin-top:14px}
-.footer-socials a{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;background:var(--g100);color:var(--g400);transition:background .2s,color .2s}
-.footer-socials a:hover{background:var(--g200);color:var(--black)}
-.footer-bottom{display:flex;align-items:center;justify-content:space-between;padding-top:24px;border-top:1px solid var(--g200);font-size:12px;color:var(--g400);font-family:var(--mono)}
-
 /* ── Responsive ── */
 @media(max-width:768px){
-  .float-bar{width:calc(100% - 32px);padding:6px 6px 6px 16px}
-  .fb-links{display:none;position:absolute;top:calc(100% + 8px);left:0;right:0;background:var(--white);flex-direction:column;padding:12px;border-radius:var(--radius);box-shadow:var(--sh-lg);gap:2px}
-  .fb-links.open{display:flex}
-  .fb-hamburger{display:flex}
   .post-header{padding:110px 0 24px}
   .post-hero-img{border-radius:0}
   .post-cta{margin-left:16px;margin-right:16px}
-  footer{padding:40px 0 30px}
-  .footer-bottom{flex-direction:column;gap:10px;align-items:flex-start}
 }
 </style>
+<link rel="stylesheet" href="/assets/header.css">
+<script defer src="/assets/header.js"></script>
+<link rel="stylesheet" href="/assets/footer.css">
 </head>
 <body>
 
-<!-- ── Floating Nav ── -->
-<nav class="float-bar" id="float-bar">
+
+<!-- HEADER:START -->
+<nav class="float-bar" id="float-bar" aria-label="Primary">
   <a href="/" class="fb-logo">
-    <div class="lm">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="28" height="28" fill="none">
-        <path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </div>
+    <div class="lm"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24" fill="none" aria-hidden="true"><path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
     <span class="ln">RevWhisper</span>
   </a>
+
   <div class="fb-links" id="fb-links">
-    <a href="/" class="fb-link">Home</a>
-    <a href="/blog" class="fb-link active">Blog</a>
-    <a href="/#solution" class="fb-link">Solution</a>
-    <a href="/#pricing" class="fb-link">Pricing</a>
+
+    <!-- Services dropdown -->
+    <div class="fb-dropdown" data-dropdown>
+      <button class="fb-link fb-dropdown-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="fb-menu-services">
+        Services
+        <svg class="fb-chevron" viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="fb-menu" id="fb-menu-services">
+
+        <!-- Listing Optimization: paper + wavy text lines + sparkle (optimization mark) -->
+        <a href="/airbnb-listing-optimization" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M6.5 3.5h11a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1v-15a1 1 0 0 1 1-1Z"/>
+              <path d="M8.5 9c1.3-.7 2.7-.7 4 0s2.7.7 3 0"/>
+              <path d="M8.5 13c1.3-.7 2.7-.7 4 0s2.7.7 3 0"/>
+              <path d="M8.5 17q1.5-.7 3 0"/>
+              <path d="M16.5 5v2.5M15.3 6.2h2.4"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Listing Optimization</span>
+            </span>
+            <span class="fb-menu-desc">Title, description, and amenities tuned for conversion</span>
+          </span>
+        </a>
+
+        <!-- Revenue Management: hand-drawn stacked coins with squiggle on top -->
+        <a href="/revenue-management" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <ellipse cx="12" cy="6" rx="6" ry="2"/>
+              <path d="M6 6v12.5c0 1.1 2.7 2 6 2s6-.9 6-2V6"/>
+              <path d="M6 10c0 1.1 2.7 2 6 2s6-.9 6-2"/>
+              <path d="M6 14c0 1.1 2.7 2 6 2s6-.9 6-2"/>
+              <path d="M9.5 6q1.2-.7 2.5 0t2.5 0"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Revenue Management</span>
+            </span>
+            <span class="fb-menu-desc">Dynamic pricing, minimum stays, seasonal strategy</span>
+          </span>
+        </a>
+
+        <!-- Photo Optimization: frame + sun + horizon wave (contained inside the frame) -->
+        <a href="/photoediting" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4.5 5h15a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-15a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z"/>
+              <circle cx="8.5" cy="9.5" r="1.4" fill="currentColor"/>
+              <path d="M5 15.5c2-1.5 4-3 6.5-2s5 .5 7.5-1"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Photo Optimization</span>
+            </span>
+            <span class="fb-menu-desc">Cover photos, photo order, professional editing</span>
+          </span>
+        </a>
+
+      </div>
+    </div>
+
+    <!-- Resources dropdown -->
+    <div class="fb-dropdown" data-dropdown>
+      <button class="fb-link fb-dropdown-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="fb-menu-resources">
+        Resources
+        <svg class="fb-chevron" viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="fb-menu" id="fb-menu-resources">
+
+        <!-- Blog: notebook with binding + wavy lines -->
+        <a href="/blog" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M6 3.5h12a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-15a1 1 0 0 1 1-1Z"/>
+              <path d="M8.5 3.5v3M12 3.5v3M15.5 3.5v3"/>
+              <path d="M8 12c1.3-.7 2.7-.7 4 0s2.7.7 4 0"/>
+              <path d="M8 16c1.3-.7 2.7-.7 4 0s2 .3 2.5 0"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Blog</span>
+            </span>
+            <span class="fb-menu-desc">Strategies, data, and host insights</span>
+          </span>
+        </a>
+
+        <!-- Case Studies: open book -->
+        <a href="/case-study" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 6c2-1 4.5-1.5 7-1q1.5.4 2 2v13q-.5-1.5-2-2c-2.5-.5-5 0-7 1Z"/>
+              <path d="M21 6c-2-1-4.5-1.5-7-1q-1.5.4-2 2v13q.5-1.5 2-2c2.5-.5 5 0 7 1Z"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Case Studies</span>
+            </span>
+            <span class="fb-menu-desc">Real revenue lifts from real listings</span>
+          </span>
+        </a>
+
+        <!-- Search Ranking Tool: clean magnifying glass -->
+        <a href="https://app.revwhisper.com/search-ranking" class="fb-menu-item" target="_blank" rel="noopener">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="10.5" cy="10.5" r="6.5"/>
+              <path d="m15.5 15.5 4 4"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Search Ranking Tool</span>
+              <svg class="fb-menu-ext" viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M4 2h6v6M10 2L4 8M5 4H2v6h6V7" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <span class="fb-menu-desc">Free Airbnb ranking checker</span>
+          </span>
+        </a>
+      </div>
+    </div>
+
+    <a href="/get-started" class="fb-link fb-link--mobile-cta">Book a Strategy Call</a>
   </div>
-  <button class="fb-hamburger" id="fb-hamburger" aria-label="Menu" aria-expanded="false">
-    <span></span><span></span><span></span>
-  </button>
+
   <a href="/get-started" class="fb-cta">Book a Strategy Call</a>
+  <button class="fb-hamburger" id="fb-hamburger" aria-label="Toggle navigation" aria-expanded="false">
+    <span class="fb-ham-line"></span>
+    <span class="fb-ham-line"></span>
+    <span class="fb-ham-line"></span>
+  </button>
 </nav>
+<!-- HEADER:END -->
 
 <!-- ── Post Header ── -->
 <header class="post-header">
@@ -302,65 +395,61 @@ footer{padding:48px 0 36px;border-top:1px solid var(--g200)}
 </div>
 
 <!-- ── Footer ── -->
-<footer>
+
+<!-- FOOTER:START -->
+<footer class="site-footer">
   <div class="w">
     <div class="footer-grid">
       <div>
         <div class="footer-logo">
           <div class="lm">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24" fill="none">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24" fill="none" aria-hidden="true">
               <path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="#32302F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
               <path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="#32302F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </div>
-          <span style="font-family:var(--heading);font-weight:600">RevWhisper</span>
+          <span class="footer-logo-name">RevWhisper</span>
         </div>
         <p class="footer-tag">A revenue intelligence team that layers into your Airbnb listing to accelerate performance and maximize earnings.</p>
         <div class="footer-socials">
           <a href="https://x.com/RevWhisper" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
           </a>
           <a href="https://www.instagram.com/rev.whisper/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
           </a>
           <a href="https://www.facebook.com/groups/airbnblistingoptimization" target="_blank" rel="noopener noreferrer" aria-label="Facebook Group">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
           </a>
         </div>
       </div>
-      <div>
-        <p style="font-family:var(--heading);font-weight:600;font-size:14px;margin-bottom:10px">Resources</p>
-        <a href="/blog" style="display:block;font-size:13px;color:var(--g400);text-decoration:none;margin-bottom:6px;transition:color .2s" onmouseover="this.style.color='#32302F'" onmouseout="this.style.color='#a39e9b'">Blog</a>
-        <a href="https://app.revwhisper.com/search-ranking" style="display:block;font-size:13px;color:var(--g400);text-decoration:none;margin-bottom:6px;transition:color .2s" onmouseover="this.style.color='#32302F'" onmouseout="this.style.color='#a39e9b'">Search Ranking Report</a>
+      <div class="footer-col">
+        <p class="footer-col-title">Explore</p>
+        <a href="/" class="footer-link">Home</a>
+        <a href="/airbnb-listing-optimization" class="footer-link">Listing Optimization</a>
+        <a href="/revenue-management" class="footer-link">Revenue Management</a>
+        <a href="/photoediting" class="footer-link">Photo Editing</a>
+        <a href="/case-study" class="footer-link">Case Study</a>
+        <a href="/blog" class="footer-link">Blog</a>
+        <a href="/get-started" class="footer-link">Book a Strategy Call</a>
+      </div>
+      <div class="footer-col">
+        <p class="footer-col-title">Resources</p>
+        <a href="https://app.revwhisper.com/search-ranking" class="footer-link">Search Ranking Tool</a>
       </div>
     </div>
     <div class="footer-bottom">
       <span>&copy; 2026 MCO CORP d/b/a RevWhisper. All rights reserved.</span>
+      <nav class="footer-legal" aria-label="Legal">
+        <a href="/privacy">Privacy Policy</a>
+        <a href="/terms">Terms of Service</a>
+      </nav>
       <span>Stop Guessing. Start Whispering.</span>
     </div>
   </div>
 </footer>
+<!-- FOOTER:END -->
 
-<!-- ── Nav scroll & hamburger ── -->
-<script>
-(function() {
-  var floatBar = document.getElementById('float-bar');
-  if (floatBar) {
-    window.addEventListener('scroll', function() {
-      floatBar.classList.toggle('scrolled', window.pageYOffset > 60);
-    }, { passive: true });
-  }
-  var hamburger = document.getElementById('fb-hamburger');
-  var fbLinks = document.getElementById('fb-links');
-  if (hamburger && fbLinks) {
-    hamburger.addEventListener('click', function() {
-      var isOpen = fbLinks.classList.toggle('open');
-      hamburger.classList.toggle('open');
-      hamburger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-    });
-  }
-})();
-</script>
 <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>

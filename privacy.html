@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Attribution tracking (cookie-free) -->
+<script>
+(function(){
+  var key='rw_attribution';
+  var params=new URLSearchParams(window.location.search);
+  var utmFields=['utm_source','utm_medium','utm_campaign','utm_term','utm_content'];
+  var hasUtm=utmFields.some(function(f){return params.has(f);});
+  if(hasUtm||!sessionStorage.getItem(key)){
+    var data={};
+    utmFields.forEach(function(f){if(params.get(f))data[f]=params.get(f);});
+    try{data.referrer=document.referrer?new URL(document.referrer).hostname:'direct';}catch(e){data.referrer=document.referrer||'direct';}
+    data.landing_page=window.location.pathname;
+    data.arrived_at=new Date().toISOString();
+    sessionStorage.setItem(key,JSON.stringify(data));
+  }
+})();
+</script>
+<!-- Cookie Consent + GA4 (consent-gated) -->
+<script>
+window.dataLayer=window.dataLayer||[];
+function gtag(){dataLayer.push(arguments);}
+function rwLoadGA(){
+  var s=document.createElement('script');s.async=true;
+  s.src='https://www.googletagmanager.com/gtag/js?id=G-Y1FYZ5849B';
+  document.head.appendChild(s);
+  gtag('js',new Date());gtag('config','G-Y1FYZ5849B');
+}
+function rwTrack(e,p){if(localStorage.getItem('rw_cookie_consent')==='accepted')gtag('event',e,p||{});}
+(function(){
+  var c=localStorage.getItem('rw_cookie_consent');
+  if(c==='accepted'){rwLoadGA();return;}
+  if(c==='declined')return;
+  document.addEventListener('DOMContentLoaded',function(){
+    var b=document.createElement('div');b.id='rw-consent';
+    b.innerHTML='<div style="position:fixed;bottom:0;left:0;right:0;z-index:9999;padding:16px 24px;background:#32302F;color:#fff;font-family:DM Sans,system-ui,sans-serif;font-size:14px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;box-shadow:0 -4px 24px rgba(0,0,0,.15)"><span style="flex:1;min-width:240px;line-height:1.5">We use cookies to analyze site usage and improve your experience.</span><div style="display:flex;gap:10px;flex-shrink:0"><button id="rw-decline" style="background:transparent;color:#ccc8c5;border:1.5px solid #706b68;padding:8px 20px;border-radius:6px;font-size:13px;font-family:inherit;cursor:pointer">Decline</button><button id="rw-accept" style="background:#4A6741;color:#fff;border:none;padding:8px 20px;border-radius:6px;font-size:13px;font-family:inherit;cursor:pointer;font-weight:500">Accept</button></div></div>';
+    document.body.appendChild(b);
+    document.getElementById('rw-accept').addEventListener('click',function(){localStorage.setItem('rw_cookie_consent','accepted');b.remove();rwLoadGA();});
+    document.getElementById('rw-decline').addEventListener('click',function(){localStorage.setItem('rw_cookie_consent','declined');b.remove();});
+  });
+})();
+</script>
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '595257495497929');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=595257495497929&ev=PageView&noscript=1"/></noscript>
+<!-- End Meta Pixel -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy Policy | RevWhisper</title>
+<meta name="description" content="How RevWhisper (MCO CORP) collects, uses, and protects the information you share with us — including audit and enrollment form data, analytics, cookies, and your privacy choices.">
+<link rel="canonical" href="https://revwhisper.com/privacy">
+<link rel="icon" href="/icons/favicon-light.svg" type="image/svg+xml" media="(prefers-color-scheme: light)">
+<link rel="icon" href="/icons/favicon-dark.svg" type="image/svg+xml" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/icons/favicon-light.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=DM+Sans:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ── Reset & Base ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#fff;color:#32302F;line-height:1.6;font-size:18px;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+/* ── Design Tokens ── */
+:root{
+  --black:#32302F;
+  --white:#ffffff;
+  --accent:#4A6741;
+  --accent-light:#dce6d8;
+  --accent-border:#b3c5ab;
+  --green:#4A6741;
+  --red:#B85252;
+  --terra:#8B4A3E;
+  --gold:#9B7B3A;
+  --stone:#f3f1ef;
+  --g50:#faf9f8;--g100:#f3f1ef;--g200:#E0DCDA;--g300:#ccc8c5;--g400:#a39e9b;--g500:#706b68;--g600:#58534f;--g700:#48433f;
+  --radius:8px;--radius-sm:6px;
+  --sh-sm:0 1px 3px rgba(50,48,47,.06),0 1px 2px rgba(50,48,47,.04);
+  --sh:0 4px 16px rgba(50,48,47,.07),0 2px 6px rgba(50,48,47,.04);
+  --sh-lg:0 16px 48px rgba(50,48,47,.1),0 4px 12px rgba(50,48,47,.05);
+  --heading:'Lora','Georgia',serif;
+  --body:'DM Sans','system-ui','Helvetica Neue',sans-serif;
+  --mono:'DM Mono','Consolas',monospace;
+}
+
+/* ── Layout ── */
+.w{max-width:1100px;margin:0 auto;padding:0 28px}
+
+/* ── Hero ── */
+.legal-hero{background:var(--accent);color:var(--white);padding:140px 28px 64px;text-align:center;position:relative;overflow:hidden}
+.legal-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% -20%,rgba(255,255,255,.08),transparent 50%),radial-gradient(ellipse at 70% 120%,rgba(0,0,0,.12),transparent 50%);pointer-events:none}
+.legal-hero .lh-inner{position:relative;z-index:1;max-width:760px;margin:0 auto}
+.legal-eyebrow{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;opacity:.65;margin-bottom:18px}
+.legal-hero h1{font-family:var(--heading);font-size:clamp(34px,5vw,52px);font-weight:400;line-height:1.15;letter-spacing:-.02em;margin-bottom:16px}
+.legal-updated{font-family:var(--mono);font-size:13px;color:rgba(255,255,255,.72);margin-bottom:18px}
+.legal-hero p{font-size:16px;line-height:1.7;color:rgba(255,255,255,.85);font-weight:300;max-width:560px;margin:0 auto}
+.legal-hero-nav{margin-top:26px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.legal-hero-nav a{font-family:var(--body);font-size:13px;font-weight:500;color:var(--white);text-decoration:none;border:1px solid rgba(255,255,255,.35);border-radius:100px;padding:7px 16px;transition:background .2s,border-color .2s}
+.legal-hero-nav a:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.6)}
+.legal-hero-nav a[aria-current="page"]{background:var(--white);color:var(--accent);border-color:var(--white)}
+
+/* ── Body ── */
+.legal-body{max-width:760px;margin:0 auto;padding:64px 28px 80px}
+.legal-lead{font-size:18px;line-height:1.75;color:var(--g600);margin-bottom:8px}
+
+/* Table of contents */
+.legal-toc{background:var(--g50);border:1px solid var(--g200);border-radius:var(--radius);padding:24px 26px;margin:36px 0 52px}
+.legal-toc-title{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--g500);margin-bottom:16px}
+.legal-toc ol{list-style:none;counter-reset:toc;padding:0;margin:0;columns:2;column-gap:36px}
+.legal-toc li{counter-increment:toc;margin-bottom:9px;font-size:14px;break-inside:avoid}
+.legal-toc a{color:var(--g700);text-decoration:none;transition:color .2s}
+.legal-toc a::before{content:counter(toc) ". ";color:var(--accent);font-family:var(--mono);font-size:12px}
+.legal-toc a:hover{color:var(--accent)}
+
+/* Prose */
+.legal-body h2{font-family:var(--heading);font-size:clamp(22px,3vw,28px);font-weight:400;letter-spacing:-.02em;line-height:1.25;color:var(--black);margin:52px 0 14px;scroll-margin-top:24px}
+.legal-body h3{font-family:var(--heading);font-size:18px;font-weight:500;color:var(--black);margin:26px 0 8px}
+.legal-body p{font-size:16px;line-height:1.75;color:var(--g700);margin-bottom:16px}
+.legal-body ul{margin:0 0 16px;padding-left:22px}
+.legal-body li{font-size:16px;line-height:1.7;color:var(--g700);margin-bottom:8px}
+.legal-body a{color:var(--accent);text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
+.legal-body a:hover{text-decoration-thickness:2px}
+.legal-body strong{color:var(--black);font-weight:600}
+.legal-body h2:first-of-type{margin-top:0}
+
+/* Callout note (Fern emphasis — used sparingly) */
+.legal-note{background:var(--accent-light);border:1px solid var(--accent-border);border-left:3px solid var(--accent);border-radius:var(--radius);padding:18px 22px;margin:24px 0}
+.legal-note p{color:var(--g700);margin:0}
+.legal-note p strong{color:var(--accent)}
+
+/* Contact block */
+.legal-contact{margin-top:14px;background:var(--g50);border:1px solid var(--g200);border-radius:var(--radius);padding:22px 24px}
+.legal-contact p{margin:0 0 4px}
+.legal-contact .lc-name{font-weight:600;color:var(--black)}
+
+/* ── Responsive ── */
+@media(max-width:768px){
+  .legal-hero{padding:116px 20px 52px}
+  .legal-body{padding:48px 20px 64px}
+  .legal-toc ol{columns:1}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+}
+</style>
+<link rel="stylesheet" href="/assets/header.css">
+<script defer src="/assets/header.js"></script>
+<link rel="stylesheet" href="/assets/footer.css">
+</head>
+<body>
+
+<!-- HEADER:START -->
+<nav class="float-bar" id="float-bar" aria-label="Primary">
+  <a href="/" class="fb-logo">
+    <div class="lm"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24" fill="none" aria-hidden="true"><path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <span class="ln">RevWhisper</span>
+  </a>
+
+  <div class="fb-links" id="fb-links">
+
+    <!-- Services dropdown -->
+    <div class="fb-dropdown" data-dropdown>
+      <button class="fb-link fb-dropdown-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="fb-menu-services">
+        Services
+        <svg class="fb-chevron" viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="fb-menu" id="fb-menu-services">
+
+        <!-- Listing Optimization: paper + wavy text lines + sparkle (optimization mark) -->
+        <a href="/airbnb-listing-optimization" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M6.5 3.5h11a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1v-15a1 1 0 0 1 1-1Z"/>
+              <path d="M8.5 9c1.3-.7 2.7-.7 4 0s2.7.7 3 0"/>
+              <path d="M8.5 13c1.3-.7 2.7-.7 4 0s2.7.7 3 0"/>
+              <path d="M8.5 17q1.5-.7 3 0"/>
+              <path d="M16.5 5v2.5M15.3 6.2h2.4"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Listing Optimization</span>
+            </span>
+            <span class="fb-menu-desc">Title, description, and amenities tuned for conversion</span>
+          </span>
+        </a>
+
+        <!-- Revenue Management: hand-drawn stacked coins with squiggle on top -->
+        <a href="/revenue-management" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <ellipse cx="12" cy="6" rx="6" ry="2"/>
+              <path d="M6 6v12.5c0 1.1 2.7 2 6 2s6-.9 6-2V6"/>
+              <path d="M6 10c0 1.1 2.7 2 6 2s6-.9 6-2"/>
+              <path d="M6 14c0 1.1 2.7 2 6 2s6-.9 6-2"/>
+              <path d="M9.5 6q1.2-.7 2.5 0t2.5 0"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Revenue Management</span>
+            </span>
+            <span class="fb-menu-desc">Dynamic pricing, minimum stays, seasonal strategy</span>
+          </span>
+        </a>
+
+        <!-- Photo Optimization: frame + sun + horizon wave (contained inside the frame) -->
+        <a href="/photoediting" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4.5 5h15a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-15a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z"/>
+              <circle cx="8.5" cy="9.5" r="1.4" fill="currentColor"/>
+              <path d="M5 15.5c2-1.5 4-3 6.5-2s5 .5 7.5-1"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Photo Optimization</span>
+            </span>
+            <span class="fb-menu-desc">Cover photos, photo order, professional editing</span>
+          </span>
+        </a>
+
+      </div>
+    </div>
+
+    <!-- Resources dropdown -->
+    <div class="fb-dropdown" data-dropdown>
+      <button class="fb-link fb-dropdown-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="fb-menu-resources">
+        Resources
+        <svg class="fb-chevron" viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="fb-menu" id="fb-menu-resources">
+
+        <!-- Blog: notebook with binding + wavy lines -->
+        <a href="/blog" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M6 3.5h12a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-15a1 1 0 0 1 1-1Z"/>
+              <path d="M8.5 3.5v3M12 3.5v3M15.5 3.5v3"/>
+              <path d="M8 12c1.3-.7 2.7-.7 4 0s2.7.7 4 0"/>
+              <path d="M8 16c1.3-.7 2.7-.7 4 0s2 .3 2.5 0"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Blog</span>
+            </span>
+            <span class="fb-menu-desc">Strategies, data, and host insights</span>
+          </span>
+        </a>
+
+        <!-- Case Studies: open book -->
+        <a href="/case-study" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 6c2-1 4.5-1.5 7-1q1.5.4 2 2v13q-.5-1.5-2-2c-2.5-.5-5 0-7 1Z"/>
+              <path d="M21 6c-2-1-4.5-1.5-7-1q-1.5.4-2 2v13q.5-1.5 2-2c2.5-.5 5 0 7 1Z"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Case Studies</span>
+            </span>
+            <span class="fb-menu-desc">Real revenue lifts from real listings</span>
+          </span>
+        </a>
+
+        <!-- Search Ranking Tool: clean magnifying glass -->
+        <a href="https://app.revwhisper.com/search-ranking" class="fb-menu-item" target="_blank" rel="noopener">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="10.5" cy="10.5" r="6.5"/>
+              <path d="m15.5 15.5 4 4"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Search Ranking Tool</span>
+              <svg class="fb-menu-ext" viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M4 2h6v6M10 2L4 8M5 4H2v6h6V7" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <span class="fb-menu-desc">Free Airbnb ranking checker</span>
+          </span>
+        </a>
+      </div>
+    </div>
+
+    <a href="/get-started" class="fb-link fb-link--mobile-cta">Book a Strategy Call</a>
+  </div>
+
+  <a href="/get-started" class="fb-cta">Book a Strategy Call</a>
+  <button class="fb-hamburger" id="fb-hamburger" aria-label="Toggle navigation" aria-expanded="false">
+    <span class="fb-ham-line"></span>
+    <span class="fb-ham-line"></span>
+    <span class="fb-ham-line"></span>
+  </button>
+</nav>
+<!-- HEADER:END -->
+
+<!-- ════════════════════════════════════════════════
+     HERO
+     ════════════════════════════════════════════════ -->
+<section class="legal-hero">
+  <div class="lh-inner">
+    <div class="legal-eyebrow">Legal</div>
+    <h1>Privacy Policy</h1>
+    <div class="legal-updated">Last updated: June 1, 2026</div>
+    <p>This policy explains what information RevWhisper collects, how we use it, and the choices you have. We keep it plain on purpose.</p>
+    <nav class="legal-hero-nav" aria-label="Legal pages">
+      <a href="/privacy" aria-current="page">Privacy Policy</a>
+      <a href="/terms">Terms of Service</a>
+    </nav>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     BODY
+     ════════════════════════════════════════════════ -->
+<main class="legal-body">
+  <p class="legal-lead">RevWhisper is a revenue-optimization service for short-term rental hosts, operated by MCO CORP (&ldquo;RevWhisper,&rdquo; &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;). This Privacy Policy applies to <strong>revwhisper.com</strong> and the forms, audits, and checkout flows hosted on it.</p>
+
+  <nav class="legal-toc" aria-label="On this page">
+    <div class="legal-toc-title">On this page</div>
+    <ol>
+      <li><a href="#who-we-are">Who we are</a></li>
+      <li><a href="#information-we-collect">Information we collect</a></li>
+      <li><a href="#how-we-use">How we use your information</a></li>
+      <li><a href="#cookies">Cookies &amp; tracking technologies</a></li>
+      <li><a href="#how-we-share">How we share information</a></li>
+      <li><a href="#advertising-choices">Advertising &amp; analytics choices</a></li>
+      <li><a href="#retention">Data retention</a></li>
+      <li><a href="#security">How we protect your information</a></li>
+      <li><a href="#your-rights">Your privacy rights</a></li>
+      <li><a href="#third-party">Third-party sites &amp; platforms</a></li>
+      <li><a href="#children">Children&rsquo;s privacy</a></li>
+      <li><a href="#international">International visitors</a></li>
+      <li><a href="#changes">Changes to this policy</a></li>
+      <li><a href="#contact">Contact us</a></li>
+    </ol>
+  </nav>
+
+  <h2 id="who-we-are">1. Who we are</h2>
+  <p>RevWhisper is a brand of <strong>MCO CORP</strong>. We help short-term rental hosts increase listing performance through pricing, content, and photo optimization. You can reach us any time at <a href="mailto:Admin@RevWhisper.com">Admin@RevWhisper.com</a>. We are the controller responsible for the personal information described in this policy.</p>
+
+  <h2 id="information-we-collect">2. Information we collect</h2>
+
+  <h3>Information you give us</h3>
+  <p>When you request a free audit, book a strategy call, or enroll, you may provide:</p>
+  <ul>
+    <li>Your name, email address, and phone number;</li>
+    <li>Your Airbnb (or other short-term rental) listing links;</li>
+    <li>Details about your situation — for example, how many listings you host and the issue you want help with;</li>
+    <li>Your acceptance of our Service Agreement at enrollment; and</li>
+    <li>Anything else you choose to send us, such as the contents of an email.</li>
+  </ul>
+
+  <h3>Information we collect automatically</h3>
+  <p>When you visit the site, we and our analytics providers may collect:</p>
+  <ul>
+    <li>Device and browser type, approximate location derived from your IP address, and similar technical data;</li>
+    <li>Pages you view, links you click, and how you move through the site;</li>
+    <li>The website that referred you; and</li>
+    <li>Marketing campaign parameters (such as UTM tags) so we know which ad or link brought you here.</li>
+  </ul>
+
+  <h3>Payment information</h3>
+  <p>Payments are processed by <strong>Stripe</strong>. When you enroll, your card details are entered on Stripe&rsquo;s secure checkout — <strong>we never receive or store your full card number</strong>. We retain a record of your transaction (such as plan, amount, and confirmation status) for accounting and support.</p>
+
+  <h2 id="how-we-use">3. How we use your information</h2>
+  <p>We use the information above to:</p>
+  <ul>
+    <li>Prepare and deliver your listing audit and walkthrough call;</li>
+    <li>Contact you about your audit, your call, your enrollment, or your account;</li>
+    <li>Provide, operate, and improve our services;</li>
+    <li>Process payments and manage your subscription;</li>
+    <li>Measure and improve our marketing, including which campaigns work;</li>
+    <li>Protect against fraud, abuse, and security threats; and</li>
+    <li>Comply with our legal obligations.</li>
+  </ul>
+
+  <h2 id="cookies">4. Cookies &amp; tracking technologies</h2>
+  <p>We use cookies and similar browser storage to run the site, remember your preferences, and understand how the site is used. When you first visit, a banner lets you <strong>Accept</strong> or <strong>Decline</strong> analytics and advertising cookies. Essential storage needed to operate the site — such as remembering your cookie choice and the campaign that referred you — is always active.</p>
+  <p>The main technologies we use are:</p>
+  <ul>
+    <li><strong>Google Analytics 4</strong> — to measure site traffic and usage. Analytics only loads after you accept the cookie banner.</li>
+    <li><strong>Meta Pixel</strong> — to measure ad performance and reach relevant audiences on Facebook and Instagram.</li>
+    <li><strong>Vercel</strong> — privacy-friendly performance and visit metrics for the hosting platform.</li>
+  </ul>
+  <p>You can change your choice at any time by clearing this site&rsquo;s storage in your browser, which brings the banner back, or by using the browser and platform controls described in <a href="#advertising-choices">Advertising &amp; analytics choices</a>.</p>
+
+  <h2 id="how-we-share">5. How we share information</h2>
+  <p>We share personal information only as described here:</p>
+  <ul>
+    <li><strong>Service providers</strong> who work on our behalf — including Stripe (payments), Google (analytics), Meta (advertising measurement), Make.com (routing your form submissions into our CRM), and Vercel (hosting). They may use your information only to provide their service to us.</li>
+    <li><strong>Legal and safety</strong> — when we believe disclosure is required by law, or is necessary to enforce our agreements or protect the rights, safety, and property of RevWhisper, our clients, or others.</li>
+    <li><strong>Business transfers</strong> — if RevWhisper is involved in a merger, acquisition, or sale of assets, your information may be transferred as part of that transaction.</li>
+  </ul>
+  <div class="legal-note">
+    <p><strong>We do not sell or rent the contact details you submit.</strong> Your name, email, phone number, and listing links are used to prepare your audit and reach you about your call — never sold or traded. We do use the advertising and analytics cookies described above; you can opt out of those at any time.</p>
+  </div>
+
+  <h2 id="advertising-choices">6. Advertising &amp; analytics choices</h2>
+  <p>You have several ways to control measurement and advertising:</p>
+  <ul>
+    <li><strong>Our cookie banner</strong> — choose Decline to keep analytics from loading.</li>
+    <li><strong>Google</strong> — opt out of Google Analytics with the <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener">Google Analytics Opt-out Browser Add-on</a>, and manage ad personalization in your <a href="https://adssettings.google.com" target="_blank" rel="noopener">Google Ads Settings</a>.</li>
+    <li><strong>Meta</strong> — manage ad preferences in your <a href="https://www.facebook.com/settings?tab=ads" target="_blank" rel="noopener">Facebook Ad Preferences</a> or Instagram settings.</li>
+    <li><strong>Your browser</strong> — block or delete cookies, and many browsers offer a &ldquo;Do Not Track&rdquo; or &ldquo;Global Privacy Control&rdquo; signal, which we honor where required by law.</li>
+  </ul>
+
+  <h2 id="retention">7. Data retention</h2>
+  <p>We keep personal information for as long as needed to provide our services and for the purposes described in this policy — for example, while you are a client and for a reasonable period afterward — and as required to meet our legal, tax, and accounting obligations. When information is no longer needed, we delete or de-identify it.</p>
+
+  <h2 id="security">8. How we protect your information</h2>
+  <p>We use commercially reasonable administrative, technical, and physical safeguards to protect your information, and we limit access to those who need it. No method of transmission or storage is completely secure, however, so we cannot guarantee absolute security.</p>
+
+  <h2 id="your-rights">9. Your privacy rights</h2>
+  <p>Depending on where you live, you may have the right to access, correct, delete, or receive a copy of your personal information, and to opt out of certain uses. To exercise any of these rights, email us at <a href="mailto:Admin@RevWhisper.com">Admin@RevWhisper.com</a> and we will respond as required by applicable law. We will not discriminate against you for exercising your rights.</p>
+  <ul>
+    <li><strong>California residents</strong> — you may request the categories and specific pieces of personal information we have collected, request deletion, and opt out of any &ldquo;sale&rdquo; or &ldquo;sharing&rdquo; of personal information. As noted above, we do not sell the contact details you submit.</li>
+    <li><strong>EEA &amp; UK residents</strong> — you may have rights to access, rectify, erase, restrict, or object to processing, and to data portability. You also have the right to lodge a complaint with your local data protection authority.</li>
+  </ul>
+
+  <h2 id="third-party">10. Third-party sites &amp; platforms</h2>
+  <p>Our site links to and works alongside third-party platforms such as Airbnb and other booking sites, our application at app.revwhisper.com, and our scheduling and payment providers. This policy does not cover those third parties. Please review their privacy policies, since their handling of your information is governed by their own terms.</p>
+
+  <h2 id="children">11. Children&rsquo;s privacy</h2>
+  <p>RevWhisper is a service for businesses and property hosts. It is not directed to children, and we do not knowingly collect personal information from anyone under 16. If you believe a child has provided us information, contact us and we will delete it.</p>
+
+  <h2 id="international">12. International visitors</h2>
+  <p>RevWhisper is operated from the United States. If you access the site from outside the U.S., your information will be processed in the United States, where data protection laws may differ from those in your country.</p>
+
+  <h2 id="changes">13. Changes to this policy</h2>
+  <p>We may update this policy from time to time. When we do, we will revise the &ldquo;Last updated&rdquo; date above. Material changes will be made clear on this page. Your continued use of the site after an update means you accept the revised policy.</p>
+
+  <h2 id="contact">14. Contact us</h2>
+  <p>Questions about this policy or your information? We&rsquo;re happy to help.</p>
+  <div class="legal-contact">
+    <p class="lc-name">MCO CORP d/b/a RevWhisper</p>
+    <p>Email: <a href="mailto:Admin@RevWhisper.com">Admin@RevWhisper.com</a></p>
+  </div>
+</main>
+
+<!-- ════════════════════════════════════════════════
+     FOOTER
+     ════════════════════════════════════════════════ -->
+
+<!-- FOOTER:START -->
+<footer class="site-footer">
+  <div class="w">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">
+          <div class="lm">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24" fill="none" aria-hidden="true">
+              <path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="#32302F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="#32302F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="footer-logo-name">RevWhisper</span>
+        </div>
+        <p class="footer-tag">A revenue intelligence team that layers into your Airbnb listing to accelerate performance and maximize earnings.</p>
+        <div class="footer-socials">
+          <a href="https://x.com/RevWhisper" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+          <a href="https://www.instagram.com/rev.whisper/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          </a>
+          <a href="https://www.facebook.com/groups/airbnblistingoptimization" target="_blank" rel="noopener noreferrer" aria-label="Facebook Group">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <p class="footer-col-title">Explore</p>
+        <a href="/" class="footer-link">Home</a>
+        <a href="/airbnb-listing-optimization" class="footer-link">Listing Optimization</a>
+        <a href="/revenue-management" class="footer-link">Revenue Management</a>
+        <a href="/photoediting" class="footer-link">Photo Editing</a>
+        <a href="/case-study" class="footer-link">Case Study</a>
+        <a href="/blog" class="footer-link">Blog</a>
+        <a href="/get-started" class="footer-link">Book a Strategy Call</a>
+      </div>
+      <div class="footer-col">
+        <p class="footer-col-title">Resources</p>
+        <a href="https://app.revwhisper.com/search-ranking" class="footer-link">Search Ranking Tool</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 MCO CORP d/b/a RevWhisper. All rights reserved.</span>
+      <nav class="footer-legal" aria-label="Legal">
+        <a href="/privacy">Privacy Policy</a>
+        <a href="/terms">Terms of Service</a>
+      </nav>
+      <span>Stop Guessing. Start Whispering.</span>
+    </div>
+  </div>
+</footer>
+<!-- FOOTER:END -->
+
+</body>
+</html>

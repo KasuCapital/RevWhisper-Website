@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Attribution tracking (cookie-free) -->
+<script>
+(function(){
+  var key='rw_attribution';
+  var params=new URLSearchParams(window.location.search);
+  var utmFields=['utm_source','utm_medium','utm_campaign','utm_term','utm_content'];
+  var hasUtm=utmFields.some(function(f){return params.has(f);});
+  if(hasUtm||!sessionStorage.getItem(key)){
+    var data={};
+    utmFields.forEach(function(f){if(params.get(f))data[f]=params.get(f);});
+    try{data.referrer=document.referrer?new URL(document.referrer).hostname:'direct';}catch(e){data.referrer=document.referrer||'direct';}
+    data.landing_page=window.location.pathname;
+    data.arrived_at=new Date().toISOString();
+    sessionStorage.setItem(key,JSON.stringify(data));
+  }
+})();
+function rwAttribution(){try{return JSON.parse(sessionStorage.getItem('rw_attribution'))||{};}catch(e){return {};}}
+</script>
+<!-- GA4 (consent-mode) — honors prior consent from other pages; banner suppressed on this paid LP -->
+<script>
+window.dataLayer=window.dataLayer||[];
+function gtag(){dataLayer.push(arguments);}
+gtag('consent','default',{'analytics_storage':'denied','ad_storage':'denied'});
+gtag('js',new Date());
+gtag('config','G-Y1FYZ5849B');
+(function(){var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-Y1FYZ5849B';document.head.appendChild(s);})();
+function rwTrack(e,p){gtag('event',e,p||{});}
+(function(){
+  if(localStorage.getItem('rw_cookie_consent')==='accepted'){
+    gtag('consent','update',{'analytics_storage':'granted','ad_storage':'granted'});
+  }
+})();
+</script>
+<!-- Meta Pixel — PageView only. NOTE: Lead fires on form submit (submitForm), never on page load. -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '959022406709300');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=959022406709300&ev=PageView&noscript=1"/></noscript>
+<!-- End Meta Pixel -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Airbnb Listing Audit | RevWhisper</title>
+<meta name="description" content="Get a free audit of your Airbnb listing's ranking, pricing, and conversion. See exactly where you're leaving bookings on the table, plus what to fix first, walked through with you, live.">
+<!-- Paid-only landing page: keep it out of the index -->
+<meta name="robots" content="noindex, nofollow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Free Airbnb Listing Audit | RevWhisper">
+<meta property="og:description" content="See exactly where your listing is leaking bookings. A free audit of your ranking, pricing, and conversion.">
+<meta property="og:image" content="https://revwhisper.com/images/properties/livingroom-after.webp">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="icons/favicon-light.svg" type="image/svg+xml" media="(prefers-color-scheme: light)">
+<link rel="icon" href="icons/favicon-dark.svg" type="image/svg+xml" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="icons/favicon-light.svg" type="image/svg+xml">
+<!-- Self-hosted variable fonts (latin subset) — no render-blocking third-party CSS; preload the two on the critical path -->
+<link rel="preload" href="/fonts/lora-normal-400-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/dm-sans-normal-300-700.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+/* ───────────────────────── Self-hosted fonts (latin, variable) ───────────────────────── */
+@font-face{font-family:'Lora';font-style:normal;font-weight:400 700;font-display:swap;src:url(/fonts/lora-normal-400-700.woff2) format('woff2')}
+@font-face{font-family:'Lora';font-style:italic;font-weight:400 700;font-display:swap;src:url(/fonts/lora-italic-400-700.woff2) format('woff2')}
+@font-face{font-family:'DM Sans';font-style:normal;font-weight:300 700;font-display:swap;src:url(/fonts/dm-sans-normal-300-700.woff2) format('woff2')}
+/* ───────────────────────── Reset & Tokens ───────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#fff;color:#32302F;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+:root{
+  --black:#32302F;--white:#fff;
+  --accent:#4A6741;--accent-light:#dce6d8;--accent-border:#b3c5ab;
+  --red:#B85252;--red-bg:#EDD8D8;--terra:#8B4A3E;--terra-bg:#EDE0DD;--gold:#9B7B3A;--gold-bg:#EDE6D6;
+  --stone:#f3f1ef;
+  --g50:#faf9f8;--g100:#f3f1ef;--g200:#E0DCDA;--g300:#ccc8c5;--g400:#a39e9b;--g500:#706b68;--g600:#58534f;--g700:#48433f;
+  --radius:8px;--radius-sm:6px;--radius-lg:16px;
+  --sh-sm:0 1px 3px rgba(50,48,47,.06),0 1px 2px rgba(50,48,47,.04);
+  --sh:0 4px 16px rgba(50,48,47,.07),0 2px 6px rgba(50,48,47,.04);
+  --sh-lg:0 16px 48px rgba(50,48,47,.1),0 4px 12px rgba(50,48,47,.05);
+  --heading:'Lora','Georgia',serif;--body:'DM Sans','system-ui','Helvetica Neue',sans-serif;
+  --ease-out-expo:cubic-bezier(.16,1,.3,1);--ease-out-back:cubic-bezier(.34,1.56,.64,1);
+}
+img{max-width:100%;display:block}
+a{color:inherit}
+
+/* ───────────────────────── Layout primitives ───────────────────────── */
+.w{max-width:1120px;margin:0 auto;padding:0 28px}
+.sec{padding:clamp(44px,6vw,72px) 0}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:16px}
+.h2{font-family:var(--heading);font-size:clamp(30px,4.4vw,46px);font-weight:400;letter-spacing:-.02em;line-height:1.14;color:var(--black)}
+.h2 em{font-style:italic;color:var(--accent)}
+.lead{font-size:clamp(16px,1.8vw,18px);color:var(--g500);line-height:1.65;font-weight:300;max-width:600px}
+/* heading → subheading rhythm (was 0 — caused the cramped look) */
+.h2 + .lead{margin-top:22px}
+.center{text-align:center}.center .lead{margin-left:auto;margin-right:auto}
+.em-mark{position:relative;display:inline;white-space:nowrap;font-style:italic;color:var(--accent)}
+.em-mark::after{content:'';position:absolute;left:-2%;right:-2%;bottom:-6px;height:13px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 16' preserveAspectRatio='none'%3E%3Cpath d='M2 11 C25 4, 75 4, 98 11' fill='none' stroke='%234A6741' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center/100% 100%;pointer-events:none;transform:rotate(-.5deg)}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--body);font-size:15px;font-weight:500;letter-spacing:.01em;padding:15px 30px;border-radius:var(--radius);text-decoration:none;border:none;cursor:pointer;transition:transform .25s var(--ease-out-back),box-shadow .3s}
+.btn-accent{background:var(--accent);color:#fff}
+.btn-accent:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(74,103,65,.28)}
+.btn-accent:active{transform:translateY(0) scale(.98)}
+.btn .arrow{transition:transform .25s var(--ease-out-expo)}
+.btn:hover .arrow{transform:translateX(3px)}
+
+/* ───────────────────────── Hero (centered — headline + sub stacked above the form) ───────────────────────── */
+#hero{position:relative;overflow:hidden;padding:clamp(40px,7vw,76px) 0 clamp(16px,2.5vw,28px);background:linear-gradient(180deg,#f6f8f4 0%,#fff 80%)}
+.hero-glow{position:absolute;top:-140px;left:50%;transform:translateX(-50%);width:1100px;max-width:130vw;height:560px;background:radial-gradient(ellipse at 50% 30%,rgba(74,103,65,.12) 0%,transparent 64%);pointer-events:none;z-index:0}
+.hero-inner{position:relative;z-index:1;text-align:center;max-width:720px;margin:0 auto 36px}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--accent-light);border:1px solid var(--accent-border);color:var(--accent);font-size:12px;font-weight:600;padding:6px 14px;border-radius:100px;margin-bottom:22px}
+.hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.hero-h1{font-family:var(--heading);font-size:clamp(36px,5.4vw,58px);font-weight:400;letter-spacing:-.025em;line-height:1.08;color:var(--black);margin:0 auto 20px}
+.hero-sub{font-size:clamp(16px,1.9vw,19px);color:var(--g500);line-height:1.65;font-weight:300;max-width:560px;margin:0 auto}
+/* hero credibility row — honest trust signals (no numbers/logos we don't have); green icons keep terracotta exclusive to actions */
+.hero-trust{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:9px 15px;margin:20px auto 0;max-width:600px}
+.hero-trust .ht-item{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:500;color:var(--g600);letter-spacing:.005em;white-space:nowrap}
+.hero-trust .ht-item svg{flex-shrink:0;color:var(--accent)}
+
+/* ───────────────────────── Form card ───────────────────────── */
+.form-card{background:#fff;border:1px solid var(--g200);border-radius:var(--radius-lg);box-shadow:var(--sh-lg);padding:28px 28px 24px;position:relative;max-width:560px;width:100%;margin:0 auto}
+.fc-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:20px}
+.fc-progress{display:flex;gap:6px;flex:1;max-width:180px}
+.fc-seg{height:5px;flex:1;border-radius:100px;background:var(--g200);overflow:hidden;position:relative}
+.fc-seg::after{content:'';position:absolute;inset:0;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .45s var(--ease-out-expo)}
+.fc-seg.on::after{transform:scaleX(1)}
+.fc-count{font-size:12px;font-weight:500;color:var(--g400);letter-spacing:.02em;white-space:nowrap}
+.fc-secure{display:flex;align-items:center;justify-content:center;gap:7px;margin-top:16px;font-size:12px;color:var(--g400);font-weight:300;line-height:1.4;text-align:center}
+.fc-secure svg{flex-shrink:0;color:var(--accent);opacity:.7}
+
+/* steps machinery — height-animated viewport for smooth, non-jumpy transitions */
+.steps-viewport{position:relative;transition:height .42s var(--ease-out-expo)}
+.step{position:absolute;top:0;left:0;right:0;opacity:0;visibility:hidden;transform:translateY(14px);transition:none;pointer-events:none}
+.step.active{position:relative;opacity:1;visibility:visible;transform:translateY(0);pointer-events:auto}
+.step.exit-up{position:absolute;opacity:0;visibility:visible;transform:translateY(-14px);transition:opacity .28s var(--ease-out-expo),transform .28s var(--ease-out-expo),visibility 0s .28s;pointer-events:none}
+.step.exit-down{position:absolute;opacity:0;visibility:visible;transform:translateY(14px);transition:opacity .28s var(--ease-out-expo),transform .28s var(--ease-out-expo),visibility 0s .28s;pointer-events:none}
+.step.enter-from-below,.step.enter-from-above{position:relative;opacity:1;visibility:visible;transform:translateY(0);transition:opacity .4s var(--ease-out-expo) .06s,transform .4s var(--ease-out-expo) .06s;pointer-events:auto}
+.step.active .step-eyebrow,.step.enter-from-below .step-eyebrow,.step.enter-from-above .step-eyebrow{animation:fadeSlideUp .4s var(--ease-out-expo) .05s both}
+.step.active .step-title,.step.enter-from-below .step-title,.step.enter-from-above .step-title{animation:fadeSlideUp .42s var(--ease-out-expo) .11s both}
+.step.active .step-desc,.step.enter-from-below .step-desc,.step.enter-from-above .step-desc{animation:fadeSlideUp .42s var(--ease-out-expo) .17s both}
+.step.active .radio-group,.step.active .option-cards,.step.active .field,.step.enter-from-below .radio-group,.step.enter-from-below .option-cards,.step.enter-from-below .field,.step.enter-from-above .radio-group,.step.enter-from-above .option-cards,.step.enter-from-above .field{animation:fadeSlideUp .4s var(--ease-out-expo) .21s both}
+.step.active .field ~ .field,.step.enter-from-below .field ~ .field,.step.enter-from-above .field ~ .field{animation-delay:.27s}
+.step.active .field ~ .field ~ .field,.step.enter-from-below .field ~ .field ~ .field,.step.enter-from-above .field ~ .field ~ .field{animation-delay:.32s}
+.step.active .field ~ .field ~ .field ~ .field{animation-delay:.37s}
+.step.active .form-actions,.step.enter-from-below .form-actions,.step.enter-from-above .form-actions{animation:fadeSlideUp .4s var(--ease-out-expo) .3s both}
+@keyframes fadeSlideUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+.step-eyebrow{font-size:11px;font-weight:600;color:var(--accent);letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px}
+.step-title{font-family:var(--heading);font-size:clamp(24px,3vw,30px);font-weight:400;letter-spacing:-.02em;line-height:1.15;color:var(--black);margin-bottom:8px}
+.step-title em{font-style:italic;color:var(--accent)}
+.step-desc{font-size:14px;color:var(--g500);line-height:1.6;font-weight:300;margin-bottom:26px;max-width:440px}
+
+/* radio cards */
+.radio-group{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:10px;margin-bottom:8px}
+.radio-card{position:relative;cursor:pointer}
+.radio-card input{position:absolute;opacity:0;width:0;height:0}
+.radio-card .rc-label{display:flex;align-items:center;justify-content:center;padding:16px 8px;border:1.5px solid var(--g200);border-radius:var(--radius);background:#fff;font-size:15px;font-weight:500;color:var(--g700);text-align:center;cursor:pointer;position:relative;overflow:hidden;transition:border-color .25s,color .25s,box-shadow .25s,transform .2s var(--ease-out-back)}
+.radio-card .rc-label::before{content:'';position:absolute;inset:0;background:var(--accent-light);border-radius:var(--radius);opacity:0;transform:scale(.8);transition:opacity .3s,transform .35s var(--ease-out-expo)}
+.radio-card .rc-label:hover{border-color:var(--g300);transform:translateY(-2px);box-shadow:var(--sh)}
+.radio-card input:checked + .rc-label{border-color:var(--accent);color:var(--accent);font-weight:600;box-shadow:0 0 0 1.5px var(--accent)}
+.radio-card input:checked + .rc-label::before{opacity:1;transform:scale(1)}
+.radio-card .rc-label span{position:relative;z-index:1}
+
+/* option cards */
+.option-cards{display:flex;flex-direction:column;gap:10px;margin-bottom:8px}
+.option-card{position:relative;cursor:pointer}
+.option-card input{position:absolute;opacity:0;width:0;height:0}
+.option-card .oc-label{display:flex;align-items:center;gap:13px;padding:15px 18px;border:1.5px solid var(--g200);border-radius:var(--radius);background:#fff;font-size:14.5px;font-weight:400;color:var(--black);cursor:pointer;position:relative;overflow:hidden;transition:border-color .3s,color .3s,box-shadow .3s,transform .25s var(--ease-out-back)}
+.option-card .oc-label::before{content:'';position:absolute;inset:0;background:var(--accent-light);opacity:0;transform:scaleX(0);transform-origin:left;transition:opacity .35s,transform .4s var(--ease-out-expo)}
+.option-card .oc-label:hover{border-color:var(--g300);transform:translateY(-2px);box-shadow:var(--sh)}
+.option-card input:checked + .oc-label{border-color:var(--accent);color:var(--accent);font-weight:500;box-shadow:0 0 0 1.5px var(--accent)}
+.option-card input:checked + .oc-label::before{opacity:1;transform:scaleX(1)}
+.oc-radio{width:20px;height:20px;border-radius:50%;border:2px solid var(--g300);flex-shrink:0;display:flex;align-items:center;justify-content:center;position:relative;z-index:1;transition:all .3s var(--ease-out-back)}
+.option-card input:checked + .oc-label .oc-radio{border-color:var(--accent);background:var(--accent)}
+.oc-radio::after{content:'';width:8px;height:8px;border-radius:50%;background:#fff;opacity:0;transform:scale(0);transition:opacity .25s,transform .3s var(--ease-out-back)}
+.option-card input:checked + .oc-label .oc-radio::after{opacity:1;transform:scale(1)}
+.oc-label > span:last-child{position:relative;z-index:1}
+
+/* fields */
+.field{margin-bottom:16px}
+.field-label{display:block;font-size:13px;font-weight:500;color:var(--black);margin-bottom:7px;transition:color .2s}
+.field-label .opt{color:var(--g400);font-weight:400}
+.field-input{width:100%;padding:13px 16px;border:1.5px solid var(--g200);border-radius:var(--radius);font-size:15px;font-family:var(--body);color:var(--black);background:#fff;outline:none;transition:border-color .3s,box-shadow .3s var(--ease-out-expo),transform .2s var(--ease-out-expo)}
+.field-input::placeholder{color:var(--g400);font-weight:300}
+.field-input:hover{border-color:var(--g300)}
+.field-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(74,103,65,.1)}
+.field:focus-within .field-label{color:var(--accent)}
+.field-input.error{border-color:var(--red);box-shadow:0 0 0 3px rgba(184,82,82,.08);animation:inputShake .4s var(--ease-out-expo)}
+@keyframes inputShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(2px)}}
+.field-hint{font-size:12px;color:var(--g400);margin-top:5px;font-weight:300}
+.field-error{font-size:12px;color:var(--red);margin-top:5px;font-weight:400;display:none}
+.field-input.error ~ .field-error{display:block;animation:fadeSlideUp .3s var(--ease-out-expo)}
+.field-input.error ~ .field-hint{display:none}
+/* ── Open Airbnb helper (mirrors get-started / checkout-form) ── */
+.open-airbnb-wrap{margin-top:16px;margin-bottom:18px}
+.open-airbnb-divider{display:block;font-size:12px;color:var(--g400);font-weight:400;text-align:center;margin-bottom:12px;position:relative}
+.open-airbnb-divider::before,.open-airbnb-divider::after{content:'';position:absolute;top:50%;width:calc(50% - 80px);height:1px;background:var(--g200)}
+.open-airbnb-divider::before{left:0}
+.open-airbnb-divider::after{right:0}
+.open-airbnb-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px 16px;border-radius:var(--radius);border:1.5px solid var(--g200);background:var(--g50);font-size:13px;font-weight:400;color:var(--g500);font-family:var(--body);text-decoration:none;cursor:pointer;transition:border-color .25s,color .25s,background .25s,transform .2s var(--ease-out-back),box-shadow .25s}
+.open-airbnb-btn:hover{border-color:var(--g300);color:var(--black);background:#fff;transform:translateY(-1px);box-shadow:var(--sh-sm)}
+.open-airbnb-btn:active{transform:scale(.98)}
+.open-airbnb-btn svg{flex-shrink:0;opacity:.6;transition:opacity .25s}
+.open-airbnb-btn:hover svg{opacity:1}
+.step.active .open-airbnb-wrap,.step.enter-from-below .open-airbnb-wrap,.step.enter-from-above .open-airbnb-wrap{animation:fadeSlideUp .42s var(--ease-out-expo) .25s both}
+.input-icon-wrap{position:relative}
+.input-icon-wrap .field-input{padding-left:42px}
+.input-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--g400);display:flex;align-items:center;transition:color .3s;z-index:2;pointer-events:none}
+.field:focus-within .input-icon{color:var(--accent)}
+.phone-wrap{display:flex;gap:8px}
+.phone-code{width:92px;padding:13px 12px;border:1.5px solid var(--g200);border-radius:var(--radius);font-size:14px;font-family:var(--body);color:var(--black);background:#fff;outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23a39e9b' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;transition:border-color .3s,box-shadow .3s}
+.phone-code:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(74,103,65,.1)}
+.phone-input{flex:1}
+
+/* form buttons */
+.form-actions{display:flex;align-items:center;gap:12px;margin-top:18px}
+.btn-next{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--accent);color:#fff;font-size:15px;font-weight:500;padding:15px 28px;border-radius:var(--radius);border:none;cursor:pointer;font-family:var(--body);flex:1;transition:transform .25s var(--ease-out-back),box-shadow .3s,opacity .3s}
+.btn-next:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 22px rgba(74,103,65,.26)}
+.btn-next:active:not(:disabled){transform:translateY(0) scale(.98)}
+.btn-next:disabled{opacity:.35;cursor:not-allowed}
+.btn-next .arrow{transition:transform .25s var(--ease-out-expo)}
+.btn-next:hover:not(:disabled) .arrow{transform:translateX(3px)}
+.btn-back{display:inline-flex;align-items:center;gap:6px;background:transparent;color:var(--g500);font-size:13px;font-weight:400;padding:15px 16px;border-radius:var(--radius);border:1.5px solid var(--g200);cursor:pointer;font-family:var(--body);transition:border-color .25s,color .25s,transform .2s}
+.btn-back:hover{border-color:var(--g300);color:var(--black)}
+
+
+/* ───────────────────────── Pillars ───────────────────────── */
+.pillar-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:48px}
+.pillar{background:#fff;border:1px solid var(--g200);border-radius:var(--radius-lg);padding:30px 26px;box-shadow:var(--sh-sm);transition:transform .3s var(--ease-out-expo),box-shadow .3s}
+.pillar:hover{transform:translateY(-4px);box-shadow:var(--sh)}
+.pillar-icon{width:50px;height:50px;border-radius:12px;background:var(--accent-light);border:1px solid var(--accent-border);display:flex;align-items:center;justify-content:center;color:var(--accent);margin-bottom:18px}
+.pillar h3{font-family:var(--heading);font-size:21px;font-weight:500;color:var(--black);margin-bottom:9px}
+.pillar p{font-size:14.5px;color:var(--g500);line-height:1.65;font-weight:300}
+.pillar .pillar-q{display:block;font-size:13px;color:var(--accent);font-weight:500;margin-top:14px}
+
+/* ───────────────────────── How it works ───────────────────────── */
+.how{background:var(--stone)}
+.how-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:48px}
+.how-step{position:relative;padding-top:8px}
+.how-num{font-family:var(--heading);font-size:15px;font-weight:600;color:#fff;background:var(--accent);width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+.how-step h3{font-family:var(--heading);font-size:20px;font-weight:500;color:var(--black);margin-bottom:8px}
+.how-step p{font-size:14.5px;color:var(--g500);line-height:1.65;font-weight:300}
+.how-cta{margin-top:48px;text-align:center}
+
+/* ───────────────────────── Proof ───────────────────────── */
+/* plain stats — no boxes, just the numbers with light dividers */
+.stat-band{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:0;margin:48px 0 54px;text-align:center}
+.stat-cell{padding:6px clamp(26px,5vw,60px)}
+.stat-cell + .stat-cell{border-left:1px solid var(--g200)}
+.stat-val{font-family:var(--heading);font-size:clamp(42px,6vw,60px);font-weight:600;color:var(--accent);line-height:1;margin-bottom:8px}
+.stat-val em{font-style:normal;color:var(--accent)}
+.stat-lbl{font-size:13.5px;color:var(--g500);font-weight:400;letter-spacing:.02em}
+/* case studies — auto-scrolling marquee (mirrors the home-page logo carousel) */
+.case-carousel{position:relative;width:100%;overflow:hidden}
+.case-track{display:flex;align-items:stretch;width:max-content;animation:caseScroll 60s linear infinite}
+.case-carousel:hover .case-track{animation-play-state:paused}
+.case-track .case{width:300px;flex-shrink:0;margin-right:20px}
+@keyframes caseScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.case{background:#fff;border:1px solid var(--g200);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--sh-sm);transition:transform .3s var(--ease-out-expo),box-shadow .3s;text-decoration:none;color:inherit;display:flex;flex-direction:column}
+.case:hover{transform:translateY(-4px);box-shadow:var(--sh-lg)}
+.case-photo{position:relative;aspect-ratio:16/10;background:var(--g100);overflow:hidden}
+.case-photo img{width:100%;height:100%;object-fit:cover}
+.case-delta{position:absolute;top:12px;right:12px;background:var(--accent);color:#fff;font-size:14px;font-weight:700;padding:6px 12px;border-radius:100px;box-shadow:var(--sh)}
+.case-body{padding:20px 22px 22px;display:flex;flex-direction:column;flex:1}
+.case-loc{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--g400);margin-bottom:5px}
+.case-name{font-family:var(--heading);font-size:19px;font-weight:500;color:var(--black);margin-bottom:4px}
+.case-tag{font-size:12px;color:var(--g500);font-weight:400;margin-bottom:18px}
+.case-metrics{display:flex;gap:22px;margin-top:auto;padding-top:6px}
+.case-metric .cm-flow{display:flex;align-items:center;gap:7px;font-size:15px;font-weight:600;color:var(--black)}
+.case-metric .cm-flow .was{color:var(--g400);font-weight:400;text-decoration:line-through;text-decoration-color:var(--g300)}
+.case-metric .cm-flow svg{color:var(--accent)}
+.case-metric .cm-lbl{font-size:11px;color:var(--g500);margin-top:3px;font-weight:300}
+
+
+/* ───────────────────────── FAQ ───────────────────────── */
+.faq-wrap{max-width:760px;margin:48px auto 0}
+.faq{border-bottom:1px solid var(--g200)}
+.faq summary{list-style:none;cursor:pointer;padding:22px 4px;display:flex;align-items:center;justify-content:space-between;gap:16px;font-family:var(--heading);font-size:clamp(17px,2.2vw,20px);font-weight:500;color:var(--black)}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary .fq-ico{flex-shrink:0;width:26px;height:26px;border-radius:50%;border:1.5px solid var(--g300);display:flex;align-items:center;justify-content:center;color:var(--g500);transition:transform .3s var(--ease-out-expo),border-color .3s,color .3s}
+.faq.is-open summary .fq-ico{transform:rotate(45deg);border-color:var(--accent);color:var(--accent)}
+.faq summary{transition:color .2s}
+.faq.is-open summary{color:var(--accent)}
+.faq-a{padding:0 4px 24px;font-size:15px;color:var(--g500);line-height:1.7;font-weight:300;max-width:660px;overflow:hidden;transition:max-height .38s var(--ease-out-expo),opacity .3s ease,padding .38s var(--ease-out-expo)}
+/* collapsed resting state — independent of native <details> hiding so it's bulletproof */
+.faq:not(.is-open) .faq-a{max-height:0;opacity:0;padding-top:0;padding-bottom:0}
+
+/* ───────────────────────── Final CTA ───────────────────────── */
+.final{background:var(--accent);color:#fff;text-align:center;position:relative;overflow:hidden}
+.final::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% -20%,rgba(255,255,255,.1),transparent 50%),radial-gradient(ellipse at 70% 120%,rgba(0,0,0,.14),transparent 50%);pointer-events:none}
+.final .w{position:relative;z-index:1}
+.final h2{font-family:var(--heading);font-size:clamp(30px,4.6vw,48px);font-weight:400;line-height:1.12;margin-bottom:18px}
+.final h2 em{font-style:italic}
+.final p{font-size:clamp(16px,1.9vw,18px);color:rgba(255,255,255,.82);max-width:520px;margin:0 auto 32px;font-weight:300;line-height:1.6}
+.btn-onaccent{background:#fff;color:var(--accent);font-weight:600}
+.btn-onaccent:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(0,0,0,.2)}
+.final-note{margin-top:18px;font-size:13px;color:rgba(255,255,255,.6);font-weight:300}
+
+/* ───────────────────────── Footer ───────────────────────── */
+.mini-footer{padding:36px 0;border-top:1px solid var(--g200);background:#fff}
+.mf-row{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+.mf-logo{display:flex;align-items:center;gap:9px;font-family:var(--heading);font-size:17px;color:var(--black);font-weight:500}
+.mf-links{display:flex;align-items:center;gap:20px;font-size:13px;color:var(--g500)}
+.mf-links a{text-decoration:none;color:var(--g500);transition:color .2s}
+.mf-links a:hover{color:var(--accent)}
+.mf-copy{font-size:12px;color:var(--g400);margin-top:14px}
+.mf-tag{font-style:italic;color:var(--g400)}
+
+/* ───────────────────────── Sticky mobile CTA ───────────────────────── */
+.sticky-cta{position:fixed;left:0;right:0;bottom:0;z-index:50;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-top:1px solid var(--g200);padding:12px 16px calc(12px + env(safe-area-inset-bottom));display:none;box-shadow:0 -4px 20px rgba(50,48,47,.08);transform:translateY(130%);transition:transform .32s var(--ease-out-expo);pointer-events:none}
+.sticky-cta .btn{width:100%;padding:15px}
+
+/* ───────────────────────── Responsive ───────────────────────── */
+@media(max-width:920px){
+  .pillar-grid,.how-grid{grid-template-columns:1fr;gap:16px}
+}
+@media(max-width:640px){
+  .w{padding:0 20px}
+  .sec{padding:clamp(48px,11vw,72px) 0}
+  #hero{padding:24px 0 30px}
+  .hero-inner{margin-bottom:22px}
+  .hero-trust{margin-top:15px;gap:7px 16px}
+  .hero-trust .ht-item{font-size:12px}
+  .hero-h1{font-size:clamp(33px,8.4vw,42px)}
+  .form-card{padding:20px 18px 18px;border-radius:14px}
+  .radio-group{grid-template-columns:repeat(3,1fr)}
+  /* 16px inputs prevent iOS zoom-on-focus */
+  .field-input{font-size:16px}.phone-input{font-size:16px}
+  .stat-band{flex-direction:column;gap:24px}
+  .stat-cell{padding:0}
+  .stat-cell + .stat-cell{border-left:none}
+  .case-metrics{gap:18px}
+  .mf-row{flex-direction:column;align-items:flex-start;gap:12px}
+  .sticky-cta{display:block}
+  .sticky-cta.show{transform:translateY(0);pointer-events:auto}
+  body{padding-bottom:84px}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms!important;transition-duration:.001ms!important}
+  html{scroll-behavior:auto}
+  /* case marquee → static centered wrap; hide the duplicated set */
+  .case-track{animation:none!important;transform:none!important;width:100%;flex-wrap:wrap;justify-content:center;gap:20px}
+  .case-track .case{margin-right:0}
+  .case-track .case[data-clone]{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════ HERO + FORM ════════════════════ -->
+<section id="hero">
+  <div class="hero-glow"></div>
+  <div class="w">
+    <div class="hero-inner">
+      <div class="hero-badge"><span class="dot"></span> Free Airbnb listing audit</div>
+      <h1 class="hero-h1" id="hero-h1">See exactly where your listing is <span class="em-mark">leaking revenue</span>.</h1>
+      <p class="hero-sub" id="hero-sub">A free audit of your ranking, pricing, and conversion. We show you exactly what's costing you bookings, and what to fix first.</p>
+      <div class="hero-trust">
+        <span class="ht-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.8 12 3.5l9 7.3"/><path d="M5.5 9.7V20h13V9.7"/></svg>Built by hosts, for hosts</span>
+        <span class="ht-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.4 12.4l2.4 2.4 4.8-5.2"/></svg>Yours to keep, no obligation</span>
+      </div>
+      <!-- inline headline swap: mirrors the ad angle (message match) -->
+      <script>
+      (function(){
+        var MAP={
+          'views-not-bookings':{h1:'Getting views but <span class="em-mark">not bookings</span>?',sub:'A free audit of your ranking, pricing, and conversion. We pinpoint exactly what’s costing you reservations.'},
+          'pricing':{h1:'Your calendar is <span class="em-mark">underpriced</span>. Let’s prove it.',sub:'A free audit of your pricing, ranking, and conversion. We show you the nights you’re underpriced and the revenue you’re leaving behind.'},
+          'shoulder-season':{h1:'Your off-season is <span class="em-mark">costing you more</span> than you think.',sub:'A free audit of your pricing, ranking, and conversion. We show you the revenue your calendar is leaving behind.'},
+          'ranking':{h1:'If guests can’t <span class="em-mark">find your listing</span>, they can’t book it.',sub:'A free audit of your search ranking, pricing, and conversion, plus exactly what to fix first.'},
+          'occupancy':{h1:'Empty nights you <span class="em-mark">can’t get back</span>.',sub:'A free audit of your ranking, pricing, and conversion. We show you exactly what to fix first.'}
+        };
+        try{
+          var a=(JSON.parse(sessionStorage.getItem('rw_attribution'))||{});
+          var key=(a.utm_content||a.utm_term||'').toLowerCase();
+          if(MAP[key]){
+            document.getElementById('hero-h1').innerHTML=MAP[key].h1;
+            document.getElementById('hero-sub').textContent=MAP[key].sub;
+          }
+        }catch(e){}
+      })();
+      </script>
+    </div>
+
+    <!-- multi-step lead form — centered focal point -->
+    <div class="form-card" id="audit-form">
+        <div class="fc-head">
+          <div class="fc-progress" aria-hidden="true">
+            <span class="fc-seg on" data-seg="0"></span>
+            <span class="fc-seg" data-seg="1"></span>
+            <span class="fc-seg" data-seg="2"></span>
+          </div>
+          <div class="fc-count">Step <span id="fc-cur">1</span> of 3</div>
+        </div>
+
+        <div class="steps-viewport">
+          <!-- Step 0: portfolio size (zero-friction tap) -->
+          <div class="step active" data-step="0">
+            <div class="step-eyebrow">Your portfolio</div>
+            <h2 class="step-title">How many listings do you <em>host?</em></h2>
+            <p class="step-desc">Tap one to start. Your audit takes about 2 minutes to request.</p>
+            <div class="radio-group">
+              <label class="radio-card"><input type="radio" name="listings" value="1"><div class="rc-label"><span>1</span></div></label>
+              <label class="radio-card"><input type="radio" name="listings" value="2-5"><div class="rc-label"><span>2–5</span></div></label>
+              <label class="radio-card"><input type="radio" name="listings" value="6-10"><div class="rc-label"><span>6–10</span></div></label>
+              <label class="radio-card"><input type="radio" name="listings" value="11-25"><div class="rc-label"><span>11–25</span></div></label>
+              <label class="radio-card"><input type="radio" name="listings" value="25+"><div class="rc-label"><span>25+</span></div></label>
+            </div>
+          </div>
+
+          <!-- Step 1: biggest issue (light qualifier, maps to pillars) -->
+          <div class="step" data-step="1">
+            <div class="step-eyebrow">What's going on</div>
+            <h2 class="step-title">What's the biggest issue <em>right now?</em></h2>
+            <p class="step-desc">No wrong answer. It just tells us where to look first.</p>
+            <div class="option-cards">
+              <label class="option-card"><input type="radio" name="issue" value="views-no-bookings"><div class="oc-label"><span class="oc-radio"></span><span>I'm getting views but not enough bookings</span></div></label>
+              <label class="option-card"><input type="radio" name="issue" value="bookings-slowed"><div class="oc-label"><span class="oc-radio"></span><span>My bookings have slowed down</span></div></label>
+              <label class="option-card"><input type="radio" name="issue" value="pricing"><div class="oc-label"><span class="oc-radio"></span><span>I don't think my pricing is right</span></div></label>
+              <label class="option-card"><input type="radio" name="issue" value="not-sure"><div class="oc-label"><span class="oc-radio"></span><span>Not sure, that's what I want to find out</span></div></label>
+            </div>
+            <div class="form-actions">
+              <button class="btn-back" type="button" onclick="prevStep()"><span class="arrow">←</span> Back</button>
+            </div>
+          </div>
+
+          <!-- Step 2: the ask (listing + contact) -->
+          <div class="step" data-step="2">
+            <div class="step-eyebrow">Where to send it</div>
+            <h2 class="step-title">Last step: <em>your details.</em></h2>
+            <p class="step-desc">We'll start preparing your audit and show you how to get your findings, walked through with you.</p>
+            <div class="field">
+              <label class="field-label" for="airbnb-url">Your Airbnb listing URL or host profile</label>
+              <div class="input-icon-wrap">
+                <div class="input-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg></div>
+                <input type="url" class="field-input" id="airbnb-url" placeholder="airbnb.com/rooms/… or /users/show/…" autocomplete="off" inputmode="url">
+              </div>
+              <div class="field-error">Please add your Airbnb listing URL or host profile</div>
+            </div>
+            <div class="open-airbnb-wrap">
+              <span class="open-airbnb-divider">Don't have it handy?</span>
+              <a href="https://www.airbnb.com" target="_blank" rel="noopener" class="open-airbnb-btn" id="open-airbnb-btn">
+                Open Airbnb — copy your listing URL, then come back
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6m4-3h6m0 0v6m0-6L10 14"/></svg>
+              </a>
+            </div>
+            <div class="field">
+              <label class="field-label" for="full-name">Full name</label>
+              <input type="text" class="field-input" id="full-name" placeholder="Jane Doe" autocomplete="name">
+              <div class="field-error">Please enter your name</div>
+            </div>
+            <div class="field">
+              <label class="field-label" for="email">Email</label>
+              <div class="input-icon-wrap">
+                <div class="input-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div>
+                <input type="email" class="field-input" id="email" placeholder="jane@example.com" autocomplete="email" inputmode="email">
+              </div>
+              <div class="field-error">Please enter a valid email</div>
+            </div>
+            <div class="field">
+              <label class="field-label" for="phone">Phone</label>
+              <div class="phone-wrap">
+                <select class="phone-code" id="phone-code" aria-label="Country code">
+                  <option value="+1">🇺🇸 +1</option><option value="+44">🇬🇧 +44</option><option value="+61">🇦🇺 +61</option><option value="+33">🇫🇷 +33</option><option value="+49">🇩🇪 +49</option><option value="+52">🇲🇽 +52</option><option value="+34">🇪🇸 +34</option><option value="+39">🇮🇹 +39</option><option value="+55">🇧🇷 +55</option>
+                </select>
+                <input type="tel" class="field-input phone-input" id="phone" placeholder="(555) 123-4567" autocomplete="tel" inputmode="tel">
+              </div>
+              <div class="field-error">Please enter a valid phone number</div>
+            </div>
+            <div class="form-actions">
+              <button class="btn-back" type="button" onclick="prevStep()"><span class="arrow">←</span></button>
+              <button class="btn-next" type="button" id="btn-submit" onclick="submitForm()">Get my free audit <span class="arrow">→</span></button>
+            </div>
+            <div class="fc-secure">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Your info stays private. We only use it to prepare your audit. Next, you'll pick a time to get it walked through, live.
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+</section>
+
+<!-- ════════════════════ WHAT WE LOOK AT (three pillars, above the case studies) ════════════════════ -->
+<section class="sec">
+  <div class="w center">
+    <div class="eyebrow">What we look at</div>
+    <h2 class="h2">Three things decide what your listing <em>earns</em>.</h2>
+    <p class="lead">Your audit covers all three, using the same framework behind the results below. No fluff, no generic checklist.</p>
+  </div>
+  <div class="w">
+    <div class="pillar-grid">
+      <div class="pillar">
+        <div class="pillar-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20v-4q0-1 1-1h1.5q1 0 1 1v4"/><path d="M11 20v-9q0-1 1-1h1.5q1 0 1 1v9"/><path d="M17 20V5q0-1 1-1h1.5q1 0 1 1v15"/><path d="M3 20.5q9.5.5 19 0"/></svg></div>
+        <h3>Ranking</h3>
+        <p>Where you actually land in search, why your impressions dropped, and the levers that move you back up the results.</p>
+        <span class="pillar-q">“Why has my visibility fallen?”</span>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M14.8 9.3c-.5-1-1.6-1.6-2.8-1.6-1.7 0-3 .9-3 2.2s1.3 1.8 3 2.1 3 .9 3 2.2-1.3 2.2-3 2.2c-1.2 0-2.3-.6-2.8-1.6"/><path d="M12 6.2v11.6"/></svg></div>
+        <h3>Pricing</h3>
+        <p>The nights you're underpriced, the peaks you're missing, and the minimum-stay rules quietly costing you revenue.</p>
+        <span class="pillar-q">“What am I leaving on the table?”</span>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 5h15a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-15a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z"/><circle cx="8.5" cy="9.5" r="1.4" fill="currentColor"/><path d="M5 15.5c2-1.5 4-3 6.5-2s5 .5 7.5-1"/></svg></div>
+        <h3>Conversion</h3>
+        <p>Why lookers aren't booking: your photos, title, and first three lines, plus the fixes that turn views into reservations.</p>
+        <span class="pillar-q">“Why aren't my views converting?”</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ PROOF / CASE STUDIES (social proof, below the three pillars) ════════════════════
+     Card 3 (Gulfstream Villa, Englewood) uses the real figures + photo from /case-study-2.
+     Cards 1–2 mirror the listings on /case-study. Cards are static (no navigation) by request.
+══════════════════════════════════════════════════════════════════ -->
+<section class="sec results">
+  <div class="w center">
+    <div class="eyebrow">The results</div>
+    <h2 class="h2">What changes when the <em>fundamentals</em> are fixed.</h2>
+    <p class="lead">Three real listings, audited and optimized. No renovations, no new photos required.</p>
+  </div>
+  <div class="w">
+    <div class="stat-band">
+      <div class="stat-cell"><div class="stat-val">+33%</div><div class="stat-lbl">Average revenue lift</div></div>
+      <div class="stat-cell"><div class="stat-val">+19 pts</div><div class="stat-lbl">Average occupancy gain</div></div>
+      <div class="stat-cell"><div class="stat-val">90 days</div><div class="stat-lbl">To measurable results</div></div>
+    </div>
+    <div class="case-carousel">
+      <div class="case-track" id="case-track">
+      <!-- Case 1 — Poolside Retreat (from /case-study) -->
+      <div class="case">
+        <div class="case-photo">
+          <img src="/images/properties/case-study-1.webp" alt="Poolside retreat, Gulf Coast Florida" loading="lazy" width="400" height="250">
+          <span class="case-delta">+25%</span>
+        </div>
+        <div class="case-body">
+          <div class="case-loc">Gulf Coast, FL</div>
+          <div class="case-name">Poolside Retreat</div>
+          <div class="case-tag">4 BR · Private Pool</div>
+          <div class="case-metrics">
+            <div class="case-metric">
+              <div class="cm-flow"><span class="was">$18.8k</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>$23.5k</div>
+              <div class="cm-lbl">Monthly revenue</div>
+            </div>
+            <div class="case-metric">
+              <div class="cm-flow"><span class="was">74%</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>91%</div>
+              <div class="cm-lbl">Occupancy</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Case 2 — Modern Villa (from /case-study) -->
+      <div class="case">
+        <div class="case-photo">
+          <img src="/images/properties/case-study-2.webp" alt="Modern villa, Tampa Bay area" loading="lazy" width="400" height="250">
+          <span class="case-delta">+33%</span>
+        </div>
+        <div class="case-body">
+          <div class="case-loc">Tampa Bay, FL</div>
+          <div class="case-name">Modern Villa</div>
+          <div class="case-tag">5 BR · Heated Pool</div>
+          <div class="case-metrics">
+            <div class="case-metric">
+              <div class="cm-flow"><span class="was">$21.9k</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>$29.2k</div>
+              <div class="cm-lbl">Monthly revenue</div>
+            </div>
+            <div class="case-metric">
+              <div class="cm-flow"><span class="was">76%</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>95%</div>
+              <div class="cm-lbl">Occupancy</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Case 3 — Gulfstream Villa, Englewood FL (real figures from /case-study-2) -->
+      <div class="case">
+        <div class="case-photo">
+          <img src="/images/properties/gulfstream/hero-after.webp" alt="Gulfstream Villa pool deck at golden hour, Englewood FL" loading="lazy" width="400" height="250">
+          <span class="case-delta">+40%</span>
+        </div>
+        <div class="case-body">
+          <div class="case-loc">Englewood, FL</div>
+          <div class="case-name">Gulfstream Villa</div>
+          <div class="case-tag">3 BR · Heated Pool · Sleeps 9</div>
+          <div class="case-metrics">
+            <div class="case-metric">
+              <div class="cm-flow"><span class="was">$39.7k</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>~$55k</div>
+              <div class="cm-lbl">12-mo revenue</div>
+            </div>
+            <div class="case-metric">
+              <div class="cm-flow"><span class="was">Page 7</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>#1</div>
+              <div class="cm-lbl">Search rank, open dates</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ───── DUMMY case studies (placeholders — swap for real data) ───── -->
+      <div class="case">
+        <div class="case-photo">
+          <img src="/images/properties/backyardbbq-after-800.webp" alt="Lakeside cabin" loading="lazy" width="400" height="250">
+          <span class="case-delta">+28%</span>
+        </div>
+        <div class="case-body">
+          <div class="case-loc">Lake Tahoe, CA</div>
+          <div class="case-name">Lakeside Cabin</div>
+          <div class="case-tag">3 BR · Lakefront</div>
+          <div class="case-metrics">
+            <div class="case-metric">
+              <div class="cm-flow"><span class="was">$16.2k</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>$20.7k</div>
+              <div class="cm-lbl">Monthly revenue</div>
+            </div>
+            <div class="case-metric">
+              <div class="cm-flow"><span class="was">71%</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>88%</div>
+              <div class="cm-lbl">Occupancy</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="case">
+        <div class="case-photo">
+          <img src="/images/properties/livingroom-after.webp" alt="Downtown loft" loading="lazy" width="400" height="250">
+          <span class="case-delta">+31%</span>
+        </div>
+        <div class="case-body">
+          <div class="case-loc">Austin, TX</div>
+          <div class="case-name">Downtown Loft</div>
+          <div class="case-tag">2 BR · Walk to 6th St</div>
+          <div class="case-metrics">
+            <div class="case-metric">
+              <div class="cm-flow"><span class="was">$9.4k</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>$12.3k</div>
+              <div class="cm-lbl">Monthly revenue</div>
+            </div>
+            <div class="case-metric">
+              <div class="cm-flow"><span class="was">68%</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>90%</div>
+              <div class="cm-lbl">Occupancy</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="case">
+        <div class="case-photo">
+          <img src="/images/properties/gulfstream/exterior-after.webp" alt="Desert villa" loading="lazy" width="400" height="250">
+          <span class="case-delta">+37%</span>
+        </div>
+        <div class="case-body">
+          <div class="case-loc">Scottsdale, AZ</div>
+          <div class="case-name">Desert Villa</div>
+          <div class="case-tag">4 BR · Heated Pool</div>
+          <div class="case-metrics">
+            <div class="case-metric">
+              <div class="cm-flow"><span class="was">$24.8k</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>$34k</div>
+              <div class="cm-lbl">Monthly revenue</div>
+            </div>
+            <div class="case-metric">
+              <div class="cm-flow"><span class="was">73%</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>92%</div>
+              <div class="cm-lbl">Occupancy</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div><!-- /.case-track -->
+    </div><!-- /.case-carousel -->
+  </div>
+</section>
+
+<!-- ════════════════════ HOW IT WORKS ════════════════════ -->
+<section class="sec how">
+  <div class="w center">
+    <div class="eyebrow">How it works</div>
+    <h2 class="h2">From request to <em>real answers</em> in three steps.</h2>
+  </div>
+  <div class="w">
+    <div class="how-grid">
+      <div class="how-step">
+        <div class="how-num">1</div>
+        <h3>Tell us about your listing</h3>
+        <p>Answer three quick questions above. Takes about two minutes. No software, nothing to install.</p>
+      </div>
+      <div class="how-step">
+        <div class="how-num">2</div>
+        <h3>We audit ranking, pricing &amp; conversion</h3>
+        <p>Our team digs into your listing and your market the same way we do for every listing we optimize.</p>
+      </div>
+      <div class="how-step">
+        <div class="how-num">3</div>
+        <h3>You get your audit, walked through live</h3>
+        <p>We share exactly what we found, what to fix first, and what it's worth, in about 20 minutes. Yours to keep.</p>
+      </div>
+    </div>
+    <div class="how-cta">
+      <a class="btn btn-accent js-to-form" href="#audit-form">Get my free audit <span class="arrow">→</span></a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════ FAQ / OBJECTIONS ════════════════════ -->
+<section class="sec" style="background:var(--g50)">
+  <div class="w center">
+    <div class="eyebrow">Before you ask</div>
+    <h2 class="h2">The honest answers.</h2>
+  </div>
+  <div class="w">
+    <div class="faq-wrap">
+      <details class="faq">
+        <summary>Is the audit really free?<span class="fq-ico"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+        <div class="faq-a">Yes, completely free, and there's no card required. We walk through it with you live so we can go through <em>your</em> listing together and answer your questions in real time. That's it. If you want help implementing afterward, we'll talk about it, but the audit is yours either way.</div>
+      </details>
+      <details class="faq">
+        <summary>Who's actually doing the audit?<span class="fq-ico"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+        <div class="faq-a">The RevWhisper team: short-term rental optimization specialists. You're getting the exact framework behind the case studies above, applied to your listing.</div>
+      </details>
+      <details class="faq">
+        <summary>Is this just a generic report or a sales pitch?<span class="fq-ico"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+        <div class="faq-a">Neither. It's specific to your listing and your market, delivered live so you can ask questions and push back. You leave with concrete things to fix, whether or not you ever work with us.</div>
+      </details>
+      <details class="faq">
+        <summary>What do you do with my information?<span class="fq-ico"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+        <div class="faq-a">We only use it to prepare your audit and reach you about your walkthrough. Your details stay private. We don't sell or share them.</div>
+      </details>
+      <details class="faq">
+        <summary>How much time does this take?<span class="fq-ico"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+        <div class="faq-a">About two minutes to request, and around 20 minutes to walk through your audit together. We keep it tight and useful, no fluff.</div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ FINAL CTA ════════════════════ -->
+<section class="sec final">
+  <div class="w">
+    <h2>Find out what your listing <em>should</em> be earning.</h2>
+    <p>It's free, it's specific to you, and you'll know what to fix first. We take a limited number of audits each week.</p>
+    <a class="btn btn-onaccent js-to-form" href="#audit-form">Get my free audit <span class="arrow">→</span></a>
+    <div class="final-note">Free · No software to install · Walked through with you, live</div>
+  </div>
+</section>
+
+<!-- ════════════════════ MINI FOOTER ════════════════════ -->
+<footer class="mini-footer">
+  <div class="w">
+    <div class="mf-row">
+      <div class="mf-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="22" height="22" fill="none" aria-hidden="true"><path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="#32302F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="#32302F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        RevWhisper
+      </div>
+      <div class="mf-links">
+        <a href="/privacy" target="_blank" rel="noopener">Privacy</a>
+        <a href="/terms" target="_blank" rel="noopener">Terms</a>
+        <span class="mf-tag">Stop Guessing. Start Whispering.</span>
+      </div>
+    </div>
+    <div class="mf-copy">&copy; 2026 MCO CORP d/b/a RevWhisper. All rights reserved.</div>
+  </div>
+</footer>
+
+<!-- ════════════════════ STICKY MOBILE CTA ════════════════════ -->
+<div class="sticky-cta">
+  <a class="btn btn-accent js-to-form" href="#audit-form">Get my free audit <span class="arrow">→</span></a>
+</div>
+
+<script>
+/* ───────────────────────── Multi-step lead form ───────────────────────── */
+let current = 0;
+const totalSteps = 3;
+let isTransitioning = false;
+const FORM_WEBHOOK_ENDPOINT = '/api/form-webhook';
+
+function updateProgress(){
+  document.querySelectorAll('.fc-seg').forEach(function(s,i){ s.classList.toggle('on', i<=current); });
+  var cur=document.getElementById('fc-cur'); if(cur) cur.textContent=String(current+1);
+}
+
+/* Keep the active form step in view on smaller screens — glide the card's top to a comfortable offset */
+function scrollFormToTop(){
+  var card=document.getElementById('audit-form'); if(!card) return;
+  var OFFSET=16;
+  var top=Math.max(0, window.pageYOffset + card.getBoundingClientRect().top - OFFSET);
+  if(Math.abs(top-window.pageYOffset)<2) return; // already aligned — don't nudge
+  var reduce=window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  window.scrollTo({top:top, behavior:reduce?'auto':'smooth'});
+}
+
+function transitionStep(from,to,direction){
+  if(isTransitioning) return;
+  isTransitioning=true;
+  const vp=document.querySelector('.steps-viewport');
+  const fromEl=document.querySelector(`.step[data-step="${from}"]`);
+  const toEl=document.querySelector(`.step[data-step="${to}"]`);
+  if(!fromEl||!toEl){isTransitioning=false;return;}
+  // measure current height, then the incoming step's height, and animate the gap
+  const startH=vp.offsetHeight;
+  // stable geometry: the card's top doesn't move as steps swap — only its height changes below it
+  const card=document.getElementById('audit-form');
+  const cardTopBefore=card?card.getBoundingClientRect().top:0;
+  const chromeH=card?(card.offsetHeight-startH):0;
+  fromEl.classList.remove('active','enter-from-below','enter-from-above');
+  fromEl.classList.add(direction==='forward'?'exit-up':'exit-down');
+  toEl.classList.remove('active','exit-up','exit-down');
+  // stage the incoming step off-screen with transitions OFF, then commit via reflow
+  toEl.style.transition='none';
+  toEl.style.position='relative';toEl.style.opacity='0';toEl.style.visibility='visible';
+  toEl.style.transform=direction==='forward'?'translateY(14px)':'translateY(-14px)';
+  toEl.style.pointerEvents='auto';
+  void toEl.offsetHeight;
+  const endH=toEl.offsetHeight;
+  // if the incoming step won't fully fit (common on phones), glide its title to the top of the viewport
+  const vpH=window.innerHeight||document.documentElement.clientHeight;
+  if(card && !(cardTopBefore>=0 && (cardTopBefore+chromeH+endH)<=vpH)) scrollFormToTop();
+  // animate the card height from old → new
+  vp.style.height=startH+'px';
+  void vp.offsetHeight;
+  vp.style.height=endH+'px';
+  // enable transitions and move the step to its resting state (no rAF — reflow already committed the start)
+  toEl.style.transition='';
+  toEl.classList.add(direction==='forward'?'enter-from-below':'enter-from-above');
+  toEl.style.position='';toEl.style.opacity='';toEl.style.visibility='';toEl.style.transform='';toEl.style.pointerEvents='';
+  setTimeout(function(){
+    fromEl.classList.remove('exit-up','exit-down');fromEl.style.position='';
+    vp.style.height='';            // release to auto so inline errors can expand the step
+    isTransitioning=false;
+  },480);
+  updateProgress();
+}
+
+function validateStep(step){
+  let valid=true;
+  if(step===2){
+    const url=document.getElementById('airbnb-url');
+    const val=url.value.trim();
+    // Airbnb URL (listing or host profile) is required
+    if(!val || !val.toLowerCase().includes('airbnb.')){url.classList.add('error');valid=false;}else{url.classList.remove('error');}
+    const name=document.getElementById('full-name');
+    const email=document.getElementById('email');
+    const phone=document.getElementById('phone');
+    if(!name.value.trim()){name.classList.add('error');valid=false;}else{name.classList.remove('error');}
+    if(!email.value.trim()||!email.value.includes('@')){email.classList.add('error');valid=false;}else{email.classList.remove('error');}
+    if(!phone.value.trim()){phone.classList.add('error');valid=false;}else{phone.classList.remove('error');}
+  }
+  return valid;
+}
+
+function nextStep(){
+  if(current>=totalSteps-1) return;
+  if(!validateStep(current)) return;
+  const from=current;current++;
+  rwTrack('form_step',{step:current,page:'audit'});
+  transitionStep(from,current,'forward');
+}
+function prevStep(){
+  if(current>0){const from=current;current--;transitionStep(from,current,'backward');}
+}
+
+/* Auto-advance taps (step 0 listings, step 1 issue) */
+document.querySelectorAll('input[name="listings"]').forEach(function(r){
+  r.addEventListener('change',function(){ rwTrack('select_portfolio_size',{size:r.value,page:'audit'}); setTimeout(nextStep,180); });
+});
+document.querySelectorAll('input[name="issue"]').forEach(function(r){
+  r.addEventListener('change',function(){ rwTrack('select_issue',{issue:r.value,page:'audit'}); setTimeout(nextStep,180); });
+});
+
+/* Clear field error as the user types */
+document.querySelectorAll('.field-input').forEach(function(input){
+  input.addEventListener('input',function(){input.classList.remove('error');});
+});
+
+/* Submit — fire Lead, post webhook, stash context, go to booking page */
+var submitted=false;
+function submitForm(){
+  if(!validateStep(2)) return;
+  if(submitted) return;
+  const btn=document.getElementById('btn-submit');
+  btn.disabled=true;
+
+  const phoneCode=document.getElementById('phone-code').value.trim();
+  const phoneNumber=document.getElementById('phone').value.trim();
+  const phoneFull=(phoneCode+' '+phoneNumber).trim();
+  const data={
+    listings:(document.querySelector('input[name="listings"]:checked')||{}).value||'',
+    issue:(document.querySelector('input[name="issue"]:checked')||{}).value||'',
+    airbnbUrl:document.getElementById('airbnb-url').value.trim(),
+    name:document.getElementById('full-name').value.trim(),
+    email:document.getElementById('email').value.trim(),
+    phone_code:phoneCode,
+    phone_number:phoneNumber,
+    phone:phoneFull,
+    source:'audit',
+    submittedAt:new Date().toISOString(),
+    attribution:rwAttribution()
+  };
+
+  submitted=true;
+
+  // hand the lead context to the booking page
+  try{ sessionStorage.setItem('rw_audit_lead', JSON.stringify(data)); }catch(e){}
+
+  // Meta Lead (with an event_id so server-side CAPI can dedupe later)
+  var eventId='lead_'+Date.now()+'_'+Math.random().toString(36).slice(2,10);
+  try{ sessionStorage.setItem('rw_lead_event_id', eventId); }catch(e){}
+  try{ fbq('track','Lead',{content_name:'Free Audit',content_category:'Audit Lead'},{eventID:eventId}); }catch(e){}
+  rwTrack('generate_lead',{page:'audit',listings:data.listings,issue:data.issue});
+
+  // CRM webhook (fire-and-forget — don't block the redirect on Make.com latency)
+  fetch(FORM_WEBHOOK_ENDPOINT,{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({event_type:'get_started',payload:data}),
+    keepalive:true
+  }).catch(function(){});
+
+  // straight to the live-audit booking page
+  window.location.href='/audit-booking';
+}
+
+/* Enter key advances / submits */
+document.addEventListener('keydown',function(e){
+  if(e.key!=='Enter') return;
+  if(e.target.tagName==='TEXTAREA') return;
+  if(current===2){e.preventDefault();submitForm();}
+});
+
+/* Smooth-scroll CTAs to the form + focus first option */
+document.querySelectorAll('.js-to-form').forEach(function(a){
+  a.addEventListener('click',function(e){
+    e.preventDefault();
+    scrollFormToTop();
+    setTimeout(function(){
+      if(current===0){var first=document.querySelector('input[name="listings"]');if(first)first.focus();}
+    },400);
+  });
+});
+
+updateProgress();
+
+/* FAQ accordion — smooth max-height + opacity; fixed-duration cleanup (no transitionend dependency) */
+document.querySelectorAll('.faq').forEach(function(d){
+  var summary=d.querySelector('summary');
+  var c=d.querySelector('.faq-a');
+  if(!summary||!c) return;
+  var DUR=400;
+  summary.addEventListener('click',function(e){
+    e.preventDefault();
+    if(d.dataset.anim==='1') return;
+    d.dataset.anim='1';
+    if(d.classList.contains('is-open')){
+      // close
+      c.style.maxHeight=c.scrollHeight+'px'; c.style.opacity='1';
+      void c.offsetHeight;
+      d.classList.remove('is-open');
+      c.style.maxHeight='0px'; c.style.opacity='0';
+      setTimeout(function(){ d.open=false; c.style.maxHeight=''; c.style.opacity=''; d.dataset.anim='0'; },DUR);
+    } else {
+      // open
+      d.open=true; d.classList.add('is-open');
+      c.style.maxHeight='0px'; c.style.opacity='0';
+      void c.offsetHeight;
+      c.style.maxHeight=c.scrollHeight+'px'; c.style.opacity='1';
+      setTimeout(function(){ if(d.classList.contains('is-open')){ c.style.maxHeight='none'; c.style.opacity=''; } d.dataset.anim='0'; },DUR);
+    }
+  });
+});
+
+/* Duplicate the case-study cards so the marquee loops seamlessly (clones flagged for reduced-motion) */
+(function(){var t=document.getElementById('case-track');if(!t)return;[].slice.call(t.children).forEach(function(c){var d=c.cloneNode(true);d.setAttribute('aria-hidden','true');d.setAttribute('data-clone','');t.appendChild(d);});})();
+
+/* Sticky mobile CTA: only show once the hero form has scrolled out of view (hidden while the form is on screen) */
+(function(){
+  var bar=document.querySelector('.sticky-cta'), form=document.getElementById('audit-form');
+  if(!bar||!form) return;
+  function update(){ bar.classList.toggle('show', form.getBoundingClientRect().bottom < 10); }
+  window.addEventListener('scroll', update, {passive:true});
+  window.addEventListener('resize', update);
+  update();
+})();
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>

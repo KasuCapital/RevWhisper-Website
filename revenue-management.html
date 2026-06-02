@@ -45,7 +45,6 @@ function rwTrack(e,p){gtag('event',e,p||{});}
 fbq('init','959022406709300');
 fbq('track','PageView');
 </script>
-<!-- Deferred loader: fetch tracker scripts on first interaction or idle -->
 <script>
 (function(){
   var loaded=false;
@@ -66,10 +65,8 @@ document.addEventListener('DOMContentLoaded',function(){
     var el=e.target.closest('a,button');
     if(!el)return;
     var txt=(el.textContent||'').replace(/\s+/g,' ').trim().toLowerCase();
-    if(txt.indexOf('book your free strategy call')!==-1||txt.indexOf('book a call')!==-1){
+    if(txt.indexOf('book your free strategy call')!==-1||txt.indexOf('book a strategy call')!==-1||txt.indexOf('book a call')!==-1){
       fbq('track','Lead',{content_name:'Book Strategy Call'});
-    }else if(txt.indexOf('check my search ranking')!==-1){
-      fbq('track','Lead',{content_name:'Check Search Ranking'});
     }
   });
 });
@@ -77,18 +74,18 @@ document.addEventListener('DOMContentLoaded',function(){
 <!-- End Meta Pixel -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RevWhisper: Airbnb Revenue & Listing Optimization</title>
-<meta name="description" content="Fully managed Airbnb revenue & listing optimization — dynamic pricing, professional photos, copy, and daily search-rank tracking, all done for you by experts.">
-<link rel="canonical" href="https://revwhisper.com">
+<title>Airbnb Revenue Management Service | Dynamic Pricing Done For You | RevWhisper</title>
+<meta name="description" content="Done-for-you Airbnb revenue management — dynamic pricing, minimum-stay strategy, seasonal calendars, and comp-set monitoring tuned every night by experts. 10–40% revenue lift typical.">
+<link rel="canonical" href="https://revwhisper.com/revenue-management">
 <meta property="og:type" content="website">
-<meta property="og:title" content="RevWhisper: Airbnb Revenue & Listing Optimization">
-<meta property="og:description" content="Fully managed Airbnb revenue & listing optimization — dynamic pricing, professional photos, copy, and daily search-rank tracking, all done for you by experts.">
-<meta property="og:url" content="https://revwhisper.com">
+<meta property="og:title" content="Airbnb Revenue Management Service | Done For You | RevWhisper">
+<meta property="og:description" content="Dynamic pricing, minimum-stay strategy, seasonal calendars, and comp-set monitoring tuned every night by our team. 10–40% revenue lift typical.">
+<meta property="og:url" content="https://revwhisper.com/revenue-management">
 <meta property="og:site_name" content="RevWhisper">
 <meta property="og:image" content="https://revwhisper.com/images/properties/livingroom-after.webp">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="RevWhisper: Airbnb Revenue & Listing Optimization">
-<meta name="twitter:description" content="Fully managed Airbnb revenue & listing optimization — dynamic pricing, photos, copy, and daily rank tracking, done for you by experts.">
+<meta name="twitter:title" content="Airbnb Revenue Management Service | Done For You | RevWhisper">
+<meta name="twitter:description" content="Dynamic pricing, minimum-stay strategy, and comp-set monitoring tuned every night. 10–40% revenue lift typical.">
 <meta name="twitter:image" content="https://revwhisper.com/images/properties/livingroom-after.webp">
 <link rel="icon" href="/icons/favicon-light.svg" type="image/svg+xml" media="(prefers-color-scheme: light)">
 <link rel="icon" href="/icons/favicon-dark.svg" type="image/svg+xml" media="(prefers-color-scheme: dark)">
@@ -96,45 +93,149 @@ document.addEventListener('DOMContentLoaded',function(){
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "RevWhisper",
-  "legalName": "MCO CORP",
-  "url": "https://revwhisper.com",
-  "logo": "https://revwhisper.com/icons/favicon-light.svg",
-  "description": "RevWhisper helps Airbnb hosts maximize revenue with AI-powered listing optimization, professional photography direction, and data-driven pricing strategies.",
-  "sameAs": [
-    "https://x.com/RevWhisper",
-    "https://www.instagram.com/rev.whisper/"
-  ],
-  "contactPoint": {
-    "@type": "ContactPoint",
-    "url": "https://revwhisper.com/get-started",
-    "contactType": "sales"
+  "@type": "Service",
+  "name": "Airbnb Revenue Management",
+  "serviceType": "Short-Term Rental Revenue Management",
+  "description": "Done-for-you Airbnb and short-term rental revenue management: dynamic pricing, minimum-stay strategy, seasonal calendars, comp-set monitoring, and promotions, tuned every night by RevWhisper revenue managers.",
+  "provider": {
+    "@type": "Organization",
+    "name": "RevWhisper",
+    "legalName": "MCO CORP",
+    "url": "https://revwhisper.com",
+    "logo": "https://revwhisper.com/icons/favicon-light.svg"
+  },
+  "areaServed": {
+    "@type": "Country",
+    "name": "United States"
+  },
+  "url": "https://revwhisper.com/revenue-management",
+  "offers": {
+    "@type": "Offer",
+    "price": "500",
+    "priceCurrency": "USD",
+    "priceSpecification": {
+      "@type": "UnitPriceSpecification",
+      "price": "500",
+      "priceCurrency": "USD",
+      "unitText": "MONTH"
+    },
+    "url": "https://revwhisper.com/get-started"
   }
 }
 </script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": "RevWhisper",
-  "url": "https://revwhisper.com"
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What does an Airbnb revenue manager do?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "An Airbnb revenue manager sets and adjusts your nightly rate, minimum stays, and length-of-stay discounts based on demand, seasonality, local events, and competitor pricing. The goal is to maximize total revenue across the calendar — not just the headline nightly rate. RevWhisper does this for you nightly, using PriceLabs as the pricing engine plus human judgment."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much does Airbnb revenue management cost?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Most independent Airbnb revenue managers charge 5–8% of your gross revenue for small portfolios, or 1–3% for larger ones. RevWhisper charges a flat $500 per month per listing, billed annually, which includes revenue management, listing copy and SEO, photo direction, and daily search-rank tracking."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need a revenue manager if I already use Airbnb Smart Pricing?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Airbnb's Smart Pricing tends to underprice peak dates and overweights occupancy. It does not consider your competitive set, local events, length-of-stay strategy, or minimum-stay calibration. Most hosts who switch from Smart Pricing to a real revenue management strategy see a 10–40% revenue lift on the same listing."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What pricing tools do you use?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "We use PriceLabs as our pricing engine. The tool is a small part of the work — configuring base rates, min/max guardrails, customizations, length-of-stay discounts, minimum-stay rules, and orphan-night logic, and revisiting all of it monthly, is where revenue management actually happens. We do that for you."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much can dynamic pricing increase Airbnb revenue?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Hosts who switch from a flat nightly rate to a properly tuned dynamic pricing strategy typically see a 10–40% revenue lift, with the average around 22%. Hosts who adjust prices at least once a month earn roughly 13% more than hosts who set rates and forget."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "When will I see results from RevWhisper revenue management?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Pricing and minimum-stay changes go live within the first week of onboarding. Most hosts see measurable booking-pace and revenue improvements inside the first 30 days. Compounding gains — better seasonal positioning, refined length-of-stay strategy, smarter promotions — show up over months two and three."
+      }
+    }
+  ]
 }
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://i.ytimg.com">
-<link rel="dns-prefetch" href="https://www.youtube.com">
-<link rel="preload" as="image" href="https://i.ytimg.com/vi_webp/MFiPKRFp7tE/maxresdefault.webp" fetchpriority="high">
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
 <link rel="preload" href="/assets/header.css" as="style">
 <link rel="stylesheet" href="/assets/header.css">
-<link rel="preload" href="assets/home.css?v=3" as="style">
-<link rel="stylesheet" href="assets/home.css?v=3">
+<link rel="preload" href="/assets/home.css?v=3" as="style">
+<link rel="stylesheet" href="/assets/home.css?v=3">
 <script defer src="/assets/header.js"></script>
 <link rel="stylesheet" href="/assets/footer.css">
+<style>
+/* ── Page-specific tweaks ── */
+.rm-tile-visual{flex:1;min-height:110px;background:linear-gradient(180deg,var(--g50) 0%,#fff 100%);border-radius:var(--radius-sm);border:1px dashed var(--g200);margin-top:14px;padding:12px;position:relative;overflow:hidden}
+.rm-tile-visual svg{width:100%;height:100%;display:block}
+
+/* FAQ section */
+#faq{padding:100px 0 80px;background:#fff}
+.faq-header{text-align:center;max-width:620px;margin:0 auto 48px}
+.faq-list{max-width:780px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+.faq-item{border:1.5px solid var(--g200);border-radius:var(--radius);background:#fff;transition:border-color .2s ease,box-shadow .2s ease;overflow:hidden}
+.faq-item[open]{border-color:var(--accent-border);box-shadow:0 4px 16px rgba(74,103,65,.06)}
+.faq-q{font-family:var(--heading);font-size:clamp(16px,1.6vw,18px);font-weight:500;color:var(--black);padding:20px 56px 20px 24px;cursor:pointer;list-style:none;position:relative;line-height:1.4;letter-spacing:-.01em}
+.faq-q::-webkit-details-marker{display:none}
+.faq-q::after{content:'';position:absolute;right:24px;top:50%;width:10px;height:10px;border-right:2px solid var(--g400);border-bottom:2px solid var(--g400);transform:translateY(-70%) rotate(45deg);transition:transform .25s ease,border-color .25s ease}
+.faq-item[open] .faq-q::after{transform:translateY(-30%) rotate(-135deg);border-color:var(--accent)}
+.faq-q:hover{color:var(--accent)}
+.faq-a{padding:0 24px 22px;font-family:var(--body);font-size:15px;color:var(--g600);line-height:1.75;font-weight:300}
+.faq-a strong{color:var(--black);font-weight:500}
+
+/* Pillar bento — five tiles, custom layout */
+.rm-bento{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+.rm-bento .bento-tile{grid-column:span 2}
+.rm-bento .bento-tile.wide{grid-column:span 3}
+@media (max-width:760px){
+  .rm-bento{grid-template-columns:1fr}
+  .rm-bento .bento-tile,.rm-bento .bento-tile.wide{grid-column:span 1}
+}
+
+/* Mini SVG visual styles */
+.rm-svg-line{fill:none;stroke:var(--accent);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.rm-svg-area{fill:var(--accent);opacity:.10}
+.rm-svg-grid{stroke:var(--g200);stroke-width:.5}
+.rm-svg-axis-text{font-family:var(--mono);font-size:8px;fill:var(--g400)}
+.rm-svg-bar{fill:var(--accent);opacity:.85}
+.rm-svg-bar-low{fill:var(--accent);opacity:.30}
+.rm-svg-bar-mid{fill:var(--accent);opacity:.55}
+.rm-cal-cell{fill:var(--g100);stroke:var(--g200);stroke-width:.5}
+.rm-cal-cell.peak{fill:var(--accent);opacity:.85}
+.rm-cal-cell.shoulder{fill:var(--accent);opacity:.45}
+.rm-cal-cell.low{fill:var(--g200)}
+.rm-cal-text{font-family:var(--mono);font-size:7px;fill:var(--g400);text-anchor:middle}
+.rm-radar-ring{fill:none;stroke:var(--g200);stroke-width:.5}
+.rm-radar-poly-you{fill:var(--accent);fill-opacity:.13;stroke:var(--accent);stroke-width:1.6}
+.rm-radar-poly-comp{fill:rgba(184,82,82,.06);stroke:rgba(184,82,82,.45);stroke-width:1}
+.rm-stay-pill{font-family:var(--mono);font-size:9px;fill:#fff}
+</style>
 </head>
 <body>
 
@@ -292,11 +393,10 @@ document.addEventListener('DOMContentLoaded',function(){
 <section id="hero">
   <div class="hero-glow"></div>
   <div class="w">
-    <h1 class="hero-h1 r d1"><em class="em-mark">Fully Managed</em> Airbnb Revenue &amp; Listing Optimization</h1>
-    <p class="hero-sub r d2">Our team tracks your Airbnb search position daily, deploys algorithm-timed pricing, and optimizes every part of your listing so you earn more without lifting a finger.</p>
-    <!-- Calculator Widget -->
+    <h1 class="hero-h1 r d1">Airbnb Revenue Management, <em class="em-mark">Fully Managed.</em></h1>
+    <p class="hero-sub r d2">Dynamic pricing, minimum-stay strategy, and seasonal calendars tuned every night by our team — so you stop leaving money on the table.</p>
     <div class="calc-widget r d2">
-      <a href="https://app.revwhisper.com/search-ranking" class="calc-btn" style="display:inline-block;border-radius:var(--radius);padding:16px 32px;font-size:15px;text-decoration:none;">Check My Search Ranking →</a>
+      <a href="/get-started" class="calc-btn" style="display:inline-block;border-radius:var(--radius);padding:16px 32px;font-size:15px;text-decoration:none;">Book a Strategy Call →</a>
     </div>
     <div class="hero-trust r d3" style="margin-top:16px">
       <span class="ht-item">✓ No CapEx required</span>
@@ -304,13 +404,6 @@ document.addEventListener('DOMContentLoaded',function(){
       <span class="ht-item">✓ Fully managed</span>
       <div class="ht-sep"></div>
       <span class="ht-item">✓ Results in 30 days</span>
-    </div>
-    <!-- YouTube Video -->
-    <div class="hero-video r d3" style="margin-top:1.5rem;max-width:720px;margin-left:auto;margin-right:auto;border-radius:16px;overflow:hidden;">
-      <button class="yt-facade" data-video="MFiPKRFp7tE" data-query="si=lZzKRYnxRijJEpIx" aria-label="Play video: RevWhisper intro">
-        <img src="https://i.ytimg.com/vi_webp/MFiPKRFp7tE/maxresdefault.webp" alt="" width="720" height="405" decoding="async" loading="eager" fetchpriority="high" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/MFiPKRFp7tE/hqdefault.jpg';">
-        <svg class="yt-play" viewBox="0 0 68 48" aria-hidden="true"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55c-2.93.78-4.63 3.26-5.42 6.19C.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="#f00"/><path d="M45 24 27 14v20" fill="#fff"/></svg>
-      </button>
     </div>
     <div class="logo-carousel r d3">
       <div class="logo-track">
@@ -331,9 +424,8 @@ document.addEventListener('DOMContentLoaded',function(){
   </div>
 </section>
 
-
 <!-- ════════════════════════════════════════════════
-     PROBLEM
+     PROBLEM — The Pricing Gap
      ════════════════════════════════════════════════ -->
 <section class="problem">
   <div class="w">
@@ -347,41 +439,37 @@ document.addEventListener('DOMContentLoaded',function(){
         </div>
       </div>
     </div>
-    <!-- Subtitle -->
-    <p class="rg-sub r d1">The average annual revenue gap between self-managed and professionally optimized Airbnb listings.</p>
-    <!-- Divider -->
+    <p class="rg-sub r d1">The annual revenue gap between flat-rate and dynamically priced listings on the same street.</p>
     <div class="rg-divider">
       <div class="rg-divider-line"></div>
       <div class="rg-divider-dot"></div>
       <div class="rg-divider-line"></div>
     </div>
-    <!-- 3 Cards -->
     <div class="rg-cards r d2">
       <div class="rg-card">
         <div class="rg-card-num">01</div>
-        <h3>When's the last time you checked your ranking?</h3>
+        <h3>Set-and-forget rates that don't move with demand.</h3>
         <div class="rg-card-bar"></div>
-        <p>Most hosts obsess over nightly rates. But Airbnb's algorithm weighs conversion velocity, response time, and booking momentum. A well-priced listing on page three still loses.</p>
+        <p>Most hosts pick a nightly rate once and adjust it twice a year. Demand moves daily — by event, by weather, by competitor calendars filling up. A flat rate is the single most expensive habit in short-term rental.</p>
       </div>
       <div class="rg-card">
         <div class="rg-card-num">02</div>
-        <h3>Did you adjust when the algorithm changed?</h3>
+        <h3>Min-stays you set once and never revisited.</h3>
         <div class="rg-card-bar"></div>
-        <p>Airbnb overhauled its ranking system in 2025. The new listing boost is gone. Conversion-based weighting replaced it. Hosts who didn't adapt are being quietly buried, and most of them don't know it yet.</p>
+        <p>The right minimum-stay isn't a number — it's a schedule. Two nights for shoulder weekends. One for orphan gaps. Three for holidays. Most listings carry the same 2-night rule all year and quietly leak occupancy on both ends.</p>
       </div>
       <div class="rg-card">
         <div class="rg-card-num">03</div>
-        <h3>Your competition isn't other hosts anymore.</h3>
+        <h3>Smart Pricing underprices your peaks.</h3>
         <div class="rg-card-bar"></div>
-        <p>Revenue management companies now run dynamic pricing, automated messaging, and A/B-tested listing copy across thousands of properties. The bar moved. The question is whether your listing moved with it.</p>
+        <p>Airbnb's built-in pricing optimizes for occupancy, not revenue. It drops your rate to fill the calendar — which is exactly the wrong move on the dates you should be charging the most.</p>
       </div>
     </div>
-    <!-- Closing CTA -->
     <div class="rg-closing r d3">
-      <p class="rg-closing-line">You don't need to work harder.</p>
-      <p class="rg-closing-em">You need to see what you're missing.</p>
-      <a href="https://app.revwhisper.com/search-ranking" class="rg-cta">
-        Check My Search Ranking <span class="rg-cta-arrow">→</span>
+      <p class="rg-closing-line">You don't need a smarter algorithm.</p>
+      <p class="rg-closing-em">You need someone running it for you.</p>
+      <a href="/get-started" class="rg-cta">
+        Book a Strategy Call <span class="rg-cta-arrow">→</span>
       </a>
     </div>
 
@@ -389,242 +477,167 @@ document.addEventListener('DOMContentLoaded',function(){
 </section>
 
 <!-- ════════════════════════════════════════════════
-     SOLUTION
+     SOLUTION — What Revenue Management Actually Means
      ════════════════════════════════════════════════ -->
 <section id="solution">
   <div class="w">
     <div class="solution-header r">
       <span class="eyebrow">What We Do</span>
-      <h2 class="h2">We handle <em class="em-mark" style="font-style:italic;color:var(--accent)">everything.</em></h2>
-      <p class="sub">Pricing, photos, copy, promotions, and review responses. A fully managed acceleration engine so you collect more revenue without lifting a finger.</p>
+      <h2 class="h2">Pricing tuned every night. <em class="em-mark" style="font-style:italic;color:var(--accent)">Built for your market.</em></h2>
+      <p class="sub">Five pillars of revenue management, run by humans, every day. No dashboards for you to learn. No algorithms for you to babysit. Just more revenue from the same listing.</p>
     </div>
-    <div class="bento-grid r d1">
-      <div class="bento-tile bento-revenue">
-        <div class="bt-eyebrow">Revenue Management</div>
+    <div class="rm-bento r d1">
+
+      <!-- Pillar 1: Dynamic Pricing -->
+      <div class="bento-tile">
+        <div class="bt-eyebrow">Pillar 01</div>
         <div class="bt-title">Dynamic Pricing</div>
-        <p class="bt-desc">Rate optimization that adapts nightly to demand, competitors, and seasonality.</p>
-        <div class="bt-chart">
-          <svg viewBox="0 0 260 140" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="fern-fade" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="var(--accent)"/>
-                <stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/>
-              </linearGradient>
-            </defs>
-            <!-- Horizontal grid lines -->
-            <line class="bt-chart-grid" x1="30" y1="15" x2="250" y2="15"/>
-            <line class="bt-chart-grid" x1="30" y1="40" x2="250" y2="40"/>
-            <line class="bt-chart-grid" x1="30" y1="65" x2="250" y2="65"/>
-            <line class="bt-chart-grid" x1="30" y1="90" x2="250" y2="90"/>
-            <line class="bt-chart-grid" x1="30" y1="115" x2="250" y2="115"/>
-            <!-- Y-axis labels -->
-            <text class="bt-chart-axis" x="26" y="18" text-anchor="end">$18k</text>
-            <text class="bt-chart-axis" x="26" y="43" text-anchor="end">$16k</text>
-            <text class="bt-chart-axis" x="26" y="68" text-anchor="end">$14k</text>
-            <text class="bt-chart-axis" x="26" y="93" text-anchor="end">$12k</text>
-            <text class="bt-chart-axis" x="26" y="118" text-anchor="end">$10k</text>
-            <!-- X-axis labels -->
-            <text class="bt-chart-axis" x="40" y="130" text-anchor="middle">Jan</text>
-            <text class="bt-chart-axis" x="75" y="130" text-anchor="middle">Feb</text>
-            <text class="bt-chart-axis" x="110" y="130" text-anchor="middle">Mar</text>
-            <text class="bt-chart-axis" x="145" y="130" text-anchor="middle">Apr</text>
-            <text class="bt-chart-axis" x="180" y="130" text-anchor="middle">May</text>
-            <text class="bt-chart-axis" x="215" y="130" text-anchor="middle">Jun</text>
-            <text class="bt-chart-axis" x="250" y="130" text-anchor="middle">Jul</text>
-            <!-- Area fill + line (shifted to chart area) -->
-            <path class="bt-chart-area" d="M40,100 75,85 110,90 145,65 180,55 215,35 250,18 250,115 40,115Z"/>
-            <polyline class="bt-chart-line" points="40,100 75,85 110,90 145,65 180,55 215,35 250,18"/>
-            <!-- Data points -->
-            <circle class="bt-chart-dot" cx="40" cy="100" r="3"/>
-            <circle class="bt-chart-dot" cx="75" cy="85" r="3"/>
-            <circle class="bt-chart-dot" cx="110" cy="90" r="3"/>
-            <circle class="bt-chart-dot" cx="145" cy="65" r="3"/>
-            <circle class="bt-chart-dot" cx="180" cy="55" r="3"/>
-            <circle class="bt-chart-dot" cx="215" cy="35" r="3"/>
-            <circle class="bt-chart-dot" cx="250" cy="18" r="3"/>
+        <p class="bt-desc">Nightly rate optimization that adapts to demand, comp-set occupancy, weather, events, and your booking pace — repriced every day, not every quarter.</p>
+        <div class="rm-tile-visual">
+          <svg viewBox="0 0 240 100" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+            <line class="rm-svg-grid" x1="0" y1="20" x2="240" y2="20"/>
+            <line class="rm-svg-grid" x1="0" y1="50" x2="240" y2="50"/>
+            <line class="rm-svg-grid" x1="0" y1="80" x2="240" y2="80"/>
+            <path class="rm-svg-area" d="M0,75 30,68 60,72 90,55 120,48 150,32 180,40 210,22 240,14 240,100 0,100Z"/>
+            <polyline class="rm-svg-line" points="0,75 30,68 60,72 90,55 120,48 150,32 180,40 210,22 240,14"/>
+            <circle cx="0" cy="75" r="2.5" fill="var(--accent)"/>
+            <circle cx="60" cy="72" r="2.5" fill="var(--accent)"/>
+            <circle cx="120" cy="48" r="2.5" fill="var(--accent)"/>
+            <circle cx="180" cy="40" r="2.5" fill="var(--accent)"/>
+            <circle cx="240" cy="14" r="2.5" fill="var(--accent)"/>
           </svg>
         </div>
       </div>
 
-      <div class="bento-tile bento-listing r d2">
-        <div class="bt-eyebrow">Listing Optimization</div>
-        <div class="bt-title">Algorithm-First Content</div>
-        <p class="bt-desc">Every word, tag, and detail engineered for search ranking and guest conversion.</p>
-        <div class="bt-rank-wrap">
-          <div class="bt-rank-card">
-            <div class="bt-rank-header">
-              <span>Search Results</span>
-              <span class="bt-rank-header-dot"></span>
-            </div>
-            <div class="bt-rank-list">
-              <!-- Row 1: Competitor A (starts #1, ends #2) -->
-              <div class="bt-rank-row" data-start="1" data-end="2">
-                <div class="bt-rank-badge"><span class="bt-rank-num-old">1</span><span class="bt-rank-num-new">2</span></div>
-                <img class="bt-rank-thumb" src="/images/properties/kitchen-after.webp" alt="Mountain View Lodge">
-                <div class="bt-rank-info">
-                  <div class="bt-rank-name">Mountain View Lodge</div>
-                  <div class="bt-rank-score-line">
-                    <span class="bt-rank-score" data-target="91.3">0.0</span>
-                    <div class="bt-rank-bar"><div class="bt-rank-bar-fill" data-width="74"></div></div>
-                  </div>
-                </div>
-              </div>
-              <!-- Row 2: Competitor B (starts #2, ends #3) -->
-              <div class="bt-rank-row" data-start="2" data-end="3">
-                <div class="bt-rank-badge"><span class="bt-rank-num-old">2</span><span class="bt-rank-num-new">3</span></div>
-                <img class="bt-rank-thumb" src="/images/properties/backyardbbq-after.webp" alt="Lakeside Retreat">
-                <div class="bt-rank-info">
-                  <div class="bt-rank-name">Lakeside Retreat</div>
-                  <div class="bt-rank-score-line">
-                    <span class="bt-rank-score" data-target="87.2">0.0</span>
-                    <div class="bt-rank-bar"><div class="bt-rank-bar-fill" data-width="68"></div></div>
-                  </div>
-                </div>
-              </div>
-              <!-- Row 3: Competitor C (starts #3, ends #4) -->
-              <div class="bt-rank-row" data-start="3" data-end="4">
-                <div class="bt-rank-badge"><span class="bt-rank-num-old">3</span><span class="bt-rank-num-new">4</span></div>
-                <img class="bt-rank-thumb" src="/images/properties/bunkroom-after.webp" alt="Sunset Ridge Cabin">
-                <div class="bt-rank-info">
-                  <div class="bt-rank-name">Sunset Ridge Cabin</div>
-                  <div class="bt-rank-score-line">
-                    <span class="bt-rank-score" data-target="84.1">0.0</span>
-                    <div class="bt-rank-bar"><div class="bt-rank-bar-fill" data-width="62"></div></div>
-                  </div>
-                </div>
-              </div>
-              <!-- Row 4: Your Property (starts #4, ends #1) -->
-              <div class="bt-rank-row yours" data-start="4" data-end="1">
-                <div class="bt-rank-badge"><span class="bt-rank-num-old">4</span><span class="bt-rank-num-new">1</span></div>
-                <img class="bt-rank-thumb" src="/images/properties/livingroom-after.webp" alt="Your Property">
-                <div class="bt-rank-info">
-                  <div class="bt-rank-name">
-                    Your Property
-                    <span class="bt-rank-arrow"><svg viewBox="0 0 12 12" fill="none"><path d="M6 10V3M6 3L3 6M6 3l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-                  </div>
-                  <div class="bt-rank-score-line">
-                    <span class="bt-rank-score" data-target="96.4" data-initial="68.5">0.0</span>
-                    <div class="bt-rank-bar"><div class="bt-rank-bar-fill" data-width="52" data-width2="92"></div></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+      <!-- Pillar 2: Minimum Stay Strategy -->
+      <div class="bento-tile">
+        <div class="bt-eyebrow">Pillar 02</div>
+        <div class="bt-title">Minimum Stay Strategy</div>
+        <p class="bt-desc">Different min-stays for weekdays, weekends, holidays, and orphan gaps — calibrated to your market's booking patterns and tightened or relaxed week by week.</p>
+        <div class="rm-tile-visual">
+          <svg viewBox="0 0 240 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <text x="20" y="14" class="rm-svg-axis-text">M</text>
+            <text x="50" y="14" class="rm-svg-axis-text">T</text>
+            <text x="80" y="14" class="rm-svg-axis-text">W</text>
+            <text x="110" y="14" class="rm-svg-axis-text">T</text>
+            <text x="140" y="14" class="rm-svg-axis-text">F</text>
+            <text x="170" y="14" class="rm-svg-axis-text">S</text>
+            <text x="200" y="14" class="rm-svg-axis-text">S</text>
+            <rect x="10" y="22" width="22" height="22" rx="3" class="rm-cal-cell low"/>
+            <rect x="40" y="22" width="22" height="22" rx="3" class="rm-cal-cell low"/>
+            <rect x="70" y="22" width="22" height="22" rx="3" class="rm-cal-cell shoulder"/>
+            <rect x="100" y="22" width="22" height="22" rx="3" class="rm-cal-cell shoulder"/>
+            <rect x="130" y="22" width="22" height="22" rx="3" class="rm-cal-cell peak"/>
+            <rect x="160" y="22" width="22" height="22" rx="3" class="rm-cal-cell peak"/>
+            <rect x="190" y="22" width="22" height="22" rx="3" class="rm-cal-cell peak"/>
+            <text x="21" y="37" class="rm-stay-pill" text-anchor="middle" fill="var(--g500)">1</text>
+            <text x="51" y="37" class="rm-stay-pill" text-anchor="middle" fill="var(--g500)">1</text>
+            <text x="81" y="37" class="rm-stay-pill" text-anchor="middle" fill="#fff">2</text>
+            <text x="111" y="37" class="rm-stay-pill" text-anchor="middle" fill="#fff">2</text>
+            <text x="141" y="37" class="rm-stay-pill" text-anchor="middle" fill="#fff">3</text>
+            <text x="171" y="37" class="rm-stay-pill" text-anchor="middle" fill="#fff">3</text>
+            <text x="201" y="37" class="rm-stay-pill" text-anchor="middle" fill="#fff">3</text>
+            <text x="20" y="62" class="rm-svg-axis-text">Min nights</text>
+            <text x="20" y="86" class="rm-svg-axis-text">Calibrated weekly</text>
+          </svg>
         </div>
       </div>
 
-      <div class="bento-tile bento-intel r d2">
-        <div class="bt-eyebrow">Competitor Intelligence</div>
+      <!-- Pillar 3: Comp Set Monitoring (now top row, span 2) -->
+      <div class="bento-tile">
+        <div class="bt-eyebrow">Pillar 03</div>
         <div class="bt-title">Comp Set Monitoring</div>
-        <p class="bt-desc">We track your competitors nightly so you never leave money on the table.</p>
-        <div class="bt-radar-wrap">
-          <svg class="bt-radar-svg" viewBox="0 0 300 280" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <!-- Grid rings -->
-            <polygon class="bt-radar-ring" points="150,107 178.6,123.5 178.6,156.5 150,173 121.4,156.5 121.4,123.5"/>
-            <polygon class="bt-radar-ring" points="150,74 207.2,107 207.2,173 150,206 92.8,173 92.8,107"/>
-            <polygon class="bt-radar-ring" points="150,40 236.6,90 236.6,190 150,240 63.4,190 63.4,90"/>
-            <!-- Axis lines -->
-            <line class="bt-radar-axis" x1="150" y1="140" x2="150" y2="40"/>
-            <line class="bt-radar-axis" x1="150" y1="140" x2="236.6" y2="90"/>
-            <line class="bt-radar-axis" x1="150" y1="140" x2="236.6" y2="190"/>
-            <line class="bt-radar-axis" x1="150" y1="140" x2="150" y2="240"/>
-            <line class="bt-radar-axis" x1="150" y1="140" x2="63.4" y2="190"/>
-            <line class="bt-radar-axis" x1="150" y1="140" x2="63.4" y2="90"/>
-            <!-- Competitor C -->
-            <polygon class="bt-radar-poly bt-radar-c3" points="150,62 189,117.5 206.3,172.5 150,190 102.4,167.5 87.6,104"/>
-            <!-- Competitor B -->
-            <polygon class="bt-radar-poly bt-radar-c2" points="150,80 212.4,104 193.3,165 150,215 91.1,174 99.8,111"/>
-            <!-- Competitor A -->
-            <polygon class="bt-radar-poly bt-radar-c1" points="150,70 197.6,112.5 219.3,180 150,200 79,181 93.7,107.5"/>
-            <!-- Your Property (on top) -->
-            <polygon class="bt-radar-poly bt-radar-you" points="150,48 226.2,96 232.3,187.5 150,230 85,177.5 76.4,97.5"/>
-            <!-- Axis labels -->
-            <text class="bt-radar-label" x="150" y="28">PRICE</text>
-            <text class="bt-radar-label" x="250" y="87" text-anchor="start">PHOTOS</text>
-            <text class="bt-radar-label" x="250" y="197" text-anchor="start">REVIEWS</text>
-            <text class="bt-radar-label" x="150" y="262">RESPONSE</text>
-            <text class="bt-radar-label" x="50" y="197" text-anchor="end">LOCATION</text>
-            <text class="bt-radar-label" x="50" y="87" text-anchor="end">AMENITIES</text>
-          </svg>
-        </div>
-        <div class="bt-legend">
-          <span class="bt-legend-item"><span class="bt-radar-dot" style="background:var(--accent)"></span>You</span>
-          <span class="bt-legend-item"><span class="bt-radar-dot" style="background:rgba(184,82,82,.6)"></span>A</span>
-          <span class="bt-legend-item"><span class="bt-radar-dot" style="background:rgba(155,123,58,.6)"></span>B</span>
-          <span class="bt-legend-item"><span class="bt-radar-dot" style="background:rgba(139,74,62,.6)"></span>C</span>
-        </div>
-      </div>
-
-      <div class="bento-tile bento-ranking r d2">
-        <div class="bt-eyebrow">Ranking Intelligence</div>
-        <div class="bt-title">Multi-Region Search Tracking</div>
-        <p class="bt-desc">We check your ranking from every major traveler origin, then optimize for the markets that book you most.</p>
-        <div class="bt-map-wrap">
-          <svg class="bt-map-svg" viewBox="0 0 360 210" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <!-- Simplified continental US silhouette -->
-            <path class="bt-map-land" d="M28,42 C35,38 50,34 70,32 L110,30 C130,28 150,26 175,25 C200,24 220,25 245,27 C265,28 280,30 295,34 C305,36 312,40 318,46 C322,52 326,60 328,70 C330,80 328,92 325,102 C322,112 318,120 312,128 C306,136 298,144 288,150 C280,155 272,158 262,162 C252,166 244,168 235,166 C226,164 218,160 210,155 C202,150 196,148 188,150 C180,153 172,160 162,168 C152,175 142,178 130,176 C120,174 110,168 100,160 C92,154 84,148 76,150 C68,152 60,158 52,162 C44,165 36,165 30,160 C24,154 20,144 18,132 C16,120 16,108 18,95 C20,82 22,70 24,60 C26,52 28,46 28,42 Z"/>
-            <!-- Dot-grid texture overlay for land -->
-            <pattern id="dotgrid" x="0" y="0" width="12" height="12" patternUnits="userSpaceOnUse">
-              <circle cx="6" cy="6" r=".6" fill="var(--g300)" opacity=".4"/>
-            </pattern>
-            <path d="M28,42 C35,38 50,34 70,32 L110,30 C130,28 150,26 175,25 C200,24 220,25 245,27 C265,28 280,30 295,34 C305,36 312,40 318,46 C322,52 326,60 328,70 C330,80 328,92 325,102 C322,112 318,120 312,128 C306,136 298,144 288,150 C280,155 272,158 262,162 C252,166 244,168 235,166 C226,164 218,160 210,155 C202,150 196,148 188,150 C180,153 172,160 162,168 C152,175 142,178 130,176 C120,174 110,168 100,160 C92,154 84,148 76,150 C68,152 60,158 52,162 C44,165 36,165 30,160 C24,154 20,144 18,132 C16,120 16,108 18,95 C20,82 22,70 24,60 C26,52 28,46 28,42 Z" fill="url(#dotgrid)"/>
-            <!-- Traveler origin arcs converging on Your Property -->
-            <path class="bt-map-arc" d="M85,58 Q180,20 268,72"/>
-            <path class="bt-map-arc" d="M38,118 Q150,60 268,72"/>
-            <path class="bt-map-arc" d="M200,62 Q240,40 268,72"/>
-            <path class="bt-map-arc" d="M305,148 Q300,100 268,72"/>
-            <path class="bt-map-arc" d="M175,135 Q220,90 268,72"/>
-            <!-- City pins: traveler origins -->
-            <g class="bt-map-pin" data-delay="0">
-              <circle class="bt-map-pin-ring" cx="85" cy="58" r="6"/>
-              <circle class="bt-map-pin-dot" cx="85" cy="58" r="2.5"/>
-              <text class="bt-map-label" x="85" y="50" text-anchor="middle">CHICAGO</text>
-            </g>
-            <g class="bt-map-pin" data-delay="80">
-              <circle class="bt-map-pin-ring" cx="38" cy="118" r="6"/>
-              <circle class="bt-map-pin-dot" cx="38" cy="118" r="2.5"/>
-              <text class="bt-map-label" x="48" y="126" text-anchor="start">LA</text>
-            </g>
-            <g class="bt-map-pin" data-delay="160">
-              <circle class="bt-map-pin-ring" cx="200" cy="62" r="6"/>
-              <circle class="bt-map-pin-dot" cx="200" cy="62" r="2.5"/>
-              <text class="bt-map-label" x="200" y="54" text-anchor="middle">BOSTON</text>
-            </g>
-            <g class="bt-map-pin" data-delay="240">
-              <circle class="bt-map-pin-ring" cx="305" cy="148" r="6"/>
-              <circle class="bt-map-pin-dot" cx="305" cy="148" r="2.5"/>
-              <text class="bt-map-label" x="295" y="158" text-anchor="end">MIAMI</text>
-            </g>
-            <g class="bt-map-pin" data-delay="320">
-              <circle class="bt-map-pin-ring" cx="175" cy="135" r="6"/>
-              <circle class="bt-map-pin-dot" cx="175" cy="135" r="2.5"/>
-              <text class="bt-map-label" x="165" y="145" text-anchor="end">DALLAS</text>
-            </g>
-            <!-- Your Property pin (highlighted) -->
-            <g class="bt-map-pin bt-map-pin-prop" data-delay="500">
-              <circle class="bt-map-pulse" cx="268" cy="72" r="8"/>
-              <circle class="bt-map-pin-ring" cx="268" cy="72" r="8"/>
-              <circle class="bt-map-pin-dot" cx="268" cy="72" r="3.5"/>
-              <text class="bt-map-label-prop" x="268" y="62" text-anchor="middle">YOUR PROPERTY</text>
-            </g>
+        <p class="bt-desc">We track the calendar, ADR, and occupancy of every meaningful competitor in your market every day — and adjust yours within hours.</p>
+        <div class="rm-tile-visual" style="display:flex;align-items:center;justify-content:center;min-height:140px">
+          <svg viewBox="0 0 220 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <polygon class="rm-radar-ring" points="110,67 134,82 134,108 110,123 86,108 86,82"/>
+            <polygon class="rm-radar-ring" points="110,40 158,67 158,123 110,150 62,123 62,67"/>
+            <polygon class="rm-radar-ring" points="110,10 184,52 184,138 110,180 36,138 36,52"/>
+            <line class="rm-radar-ring" x1="110" y1="95" x2="110" y2="10"/>
+            <line class="rm-radar-ring" x1="110" y1="95" x2="184" y2="52"/>
+            <line class="rm-radar-ring" x1="110" y1="95" x2="184" y2="138"/>
+            <line class="rm-radar-ring" x1="110" y1="95" x2="110" y2="180"/>
+            <line class="rm-radar-ring" x1="110" y1="95" x2="36" y2="138"/>
+            <line class="rm-radar-ring" x1="110" y1="95" x2="36" y2="52"/>
+            <polygon class="rm-radar-poly-comp" points="110,52 148,80 162,128 110,142 70,118 76,72"/>
+            <polygon class="rm-radar-poly-comp" points="110,40 162,64 168,134 110,158 60,128 70,68"/>
+            <polygon class="rm-radar-poly-you" points="110,18 178,58 184,140 110,170 56,128 44,60"/>
+            <text x="110" y="6" class="rm-cal-text">RATE</text>
+            <text x="190" y="50" class="rm-cal-text" text-anchor="start">PHOTOS</text>
+            <text x="190" y="143" class="rm-cal-text" text-anchor="start">REVIEWS</text>
+            <text x="110" y="178" class="rm-cal-text">RESPONSE</text>
+            <text x="32" y="143" class="rm-cal-text" text-anchor="end">LOCATION</text>
+            <text x="32" y="50" class="rm-cal-text" text-anchor="end">AMENITIES</text>
           </svg>
         </div>
       </div>
 
-      <div class="bento-tile bento-photo r d3">
-        <div class="bt-eyebrow">Visual Optimization</div>
-        <div class="bt-title">Professional Photo Pipeline</div>
-        <p class="bt-desc">Quality scoring and enhancement that converts clicks to bookings.</p>
-        <div class="bt-histo">
-          <svg class="bt-histo-svg" viewBox="0 0 240 130" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <line x1="0" y1="18" x2="240" y2="18" stroke="var(--g100)" stroke-width=".5"/>
-            <line x1="0" y1="51" x2="240" y2="51" stroke="var(--g100)" stroke-width=".5"/>
-            <line x1="0" y1="84" x2="240" y2="84" stroke="var(--g100)" stroke-width=".5"/>
-            <line x1="0" y1="118" x2="240" y2="118" stroke="var(--g200)" stroke-width=".5"/>
+      <!-- Pillar 4: Seasonal Calendar (wide) -->
+      <div class="bento-tile wide">
+        <div class="bt-eyebrow">Pillar 04</div>
+        <div class="bt-title">Seasonal Calendar</div>
+        <p class="bt-desc">Peak, shoulder, and low-season banding tuned to your local demand curve — with rate floors and ceilings that protect you from the algorithm's worst instincts. We map out your year and reset the floors and caps every quarter.</p>
+        <div class="rm-tile-visual" style="min-height:140px">
+          <svg viewBox="0 0 360 130" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+            <rect x="10" y="20" width="26" height="80" class="rm-svg-bar-low"/>
+            <rect x="38" y="20" width="26" height="80" class="rm-svg-bar-low"/>
+            <rect x="66" y="20" width="26" height="80" class="rm-svg-bar-mid"/>
+            <rect x="94" y="20" width="26" height="80" class="rm-svg-bar-mid"/>
+            <rect x="122" y="20" width="26" height="80" class="rm-svg-bar"/>
+            <rect x="150" y="20" width="26" height="80" class="rm-svg-bar"/>
+            <rect x="178" y="20" width="26" height="80" class="rm-svg-bar"/>
+            <rect x="206" y="20" width="26" height="80" class="rm-svg-bar"/>
+            <rect x="234" y="20" width="26" height="80" class="rm-svg-bar-mid"/>
+            <rect x="262" y="20" width="26" height="80" class="rm-svg-bar-mid"/>
+            <rect x="290" y="20" width="26" height="80" class="rm-svg-bar-low"/>
+            <rect x="318" y="20" width="26" height="80" class="rm-svg-bar-low"/>
+            <text x="23" y="118" class="rm-svg-axis-text" text-anchor="middle">JAN</text>
+            <text x="51" y="118" class="rm-svg-axis-text" text-anchor="middle">FEB</text>
+            <text x="79" y="118" class="rm-svg-axis-text" text-anchor="middle">MAR</text>
+            <text x="107" y="118" class="rm-svg-axis-text" text-anchor="middle">APR</text>
+            <text x="135" y="118" class="rm-svg-axis-text" text-anchor="middle">MAY</text>
+            <text x="163" y="118" class="rm-svg-axis-text" text-anchor="middle">JUN</text>
+            <text x="191" y="118" class="rm-svg-axis-text" text-anchor="middle">JUL</text>
+            <text x="219" y="118" class="rm-svg-axis-text" text-anchor="middle">AUG</text>
+            <text x="247" y="118" class="rm-svg-axis-text" text-anchor="middle">SEP</text>
+            <text x="275" y="118" class="rm-svg-axis-text" text-anchor="middle">OCT</text>
+            <text x="303" y="118" class="rm-svg-axis-text" text-anchor="middle">NOV</text>
+            <text x="331" y="118" class="rm-svg-axis-text" text-anchor="middle">DEC</text>
           </svg>
-          <div class="bt-histo-axis"><span>Shadows</span><span>Midtones</span><span>Highlights</span></div>
         </div>
       </div>
+
+      <!-- Pillar 5: Promotions & LOS Discounts (wide) -->
+      <div class="bento-tile wide">
+        <div class="bt-eyebrow">Pillar 05</div>
+        <div class="bt-title">Promotions &amp; Length-of-Stay Discounts</div>
+        <p class="bt-desc">Last-minute discounts that catch the bookings you'd otherwise miss. Weekly and monthly tiers tuned to your turnover cost. Opportunistic promotions when a comp set softens. We deploy and pull these every week — not once at setup.</p>
+        <div class="rm-tile-visual" style="min-height:140px">
+          <svg viewBox="0 0 360 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <text x="10" y="14" class="rm-svg-axis-text">Stay length →</text>
+            <line class="rm-svg-grid" x1="0" y1="105" x2="360" y2="105"/>
+            <rect x="20" y="55" width="40" height="50" rx="3" class="rm-svg-bar"/>
+            <text x="40" y="120" class="rm-svg-axis-text" text-anchor="middle">1n</text>
+            <text x="40" y="48" class="rm-svg-axis-text" text-anchor="middle">$240</text>
+            <rect x="80" y="62" width="40" height="43" rx="3" class="rm-svg-bar"/>
+            <text x="100" y="120" class="rm-svg-axis-text" text-anchor="middle">3n</text>
+            <text x="100" y="55" class="rm-svg-axis-text" text-anchor="middle">$220</text>
+            <rect x="140" y="70" width="40" height="35" rx="3" class="rm-svg-bar"/>
+            <text x="160" y="120" class="rm-svg-axis-text" text-anchor="middle">5n</text>
+            <text x="160" y="63" class="rm-svg-axis-text" text-anchor="middle">$200</text>
+            <rect x="200" y="76" width="40" height="29" rx="3" class="rm-svg-bar-mid"/>
+            <text x="220" y="120" class="rm-svg-axis-text" text-anchor="middle">7n</text>
+            <text x="220" y="69" class="rm-svg-axis-text" text-anchor="middle">$180 –10%</text>
+            <rect x="260" y="83" width="40" height="22" rx="3" class="rm-svg-bar-mid"/>
+            <text x="280" y="120" class="rm-svg-axis-text" text-anchor="middle">14n</text>
+            <text x="280" y="76" class="rm-svg-axis-text" text-anchor="middle">$160 –20%</text>
+            <rect x="320" y="90" width="40" height="15" rx="3" class="rm-svg-bar-low"/>
+            <text x="340" y="120" class="rm-svg-axis-text" text-anchor="middle">28n</text>
+            <text x="340" y="83" class="rm-svg-axis-text" text-anchor="middle">$140 –30%</text>
+          </svg>
+        </div>
+      </div>
+
     </div>
     <div style="text-align:center;margin-top:36px" class="r d2">
       <div><a href="/get-started" class="btn-accent">Book your free strategy call →</a></div>
@@ -638,21 +651,17 @@ document.addEventListener('DOMContentLoaded',function(){
 <section class="hiw" id="how-it-works">
   <div class="w">
 
-    <!-- Header -->
     <div class="hiw-header r">
       <p class="hiw-eyebrow">The Process</p>
-      <h2 class="hiw-title">How It Works</h2>
+      <h2 class="hiw-title">How Our Revenue Management Works</h2>
     </div>
 
-    <!-- Two-column layout -->
     <div class="hiw-layout">
 
-      <!-- Left: Photo + Calendar overlay -->
       <div class="hiw-visual r">
         <div class="hiw-img-wrap">
-          <img src="/images/properties/livingroom-after.webp" alt="Beautiful vacation rental living room managed by RevWhisper" loading="lazy">
+          <img src="/images/properties/livingroom-after.webp" alt="Vacation rental living room with revenue management deployed by RevWhisper" loading="lazy">
         </div>
-        <!-- Before / After floating calendar cards -->
         <div class="hiw-ba-wrap">
           <div class="onboard-ba-card before hiw-ba-float">
             <div class="onboard-ba-label">Before</div>
@@ -677,7 +686,6 @@ document.addEventListener('DOMContentLoaded',function(){
         </div>
       </div>
 
-      <!-- Right: Vertical steps -->
       <div class="hiw-steps-col">
         <div class="hiw-vline"></div>
 
@@ -686,46 +694,28 @@ document.addEventListener('DOMContentLoaded',function(){
             <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="16" cy="16" r="9"/>
               <line x1="23" y1="23" x2="32" y2="32"/>
-              <line x1="16" y1="11" x2="16" y2="21"/>
-              <line x1="11" y1="16" x2="21" y2="16"/>
             </svg>
           </div>
           <div class="hiw-vstep-body">
             <span class="hiw-vstep-n">STEP 01</span>
-            <h3 class="hiw-vstep-title">Audit</h3>
-            <p class="hiw-vstep-desc">We analyze your listing performance, pricing gaps, and market positioning to build a clear picture of where revenue is being left behind.</p>
+            <h3 class="hiw-vstep-title">Market &amp; Comp Audit</h3>
+            <p class="hiw-vstep-desc">We scrape your comp set's calendar, ADR, and occupancy curves and benchmark you against the listings actually competing for your guests — not a generic city average.</p>
           </div>
         </div>
 
         <div class="hiw-vstep r">
           <div class="hiw-vstep-icon">
             <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="16" cy="14" r="5"/>
-              <path d="M6 32c0-5.523 4.477-10 10-10s10 4.477 10 10"/>
-              <line x1="30" y1="14" x2="30" y2="22"/>
-              <line x1="26" y1="18" x2="34" y2="18"/>
+              <rect x="6" y="8" width="28" height="24" rx="2"/>
+              <line x1="6" y1="16" x2="34" y2="16"/>
+              <line x1="14" y1="4" x2="14" y2="12"/>
+              <line x1="26" y1="4" x2="26" y2="12"/>
             </svg>
           </div>
           <div class="hiw-vstep-body">
             <span class="hiw-vstep-n">STEP 02</span>
-            <h3 class="hiw-vstep-title">Onboarding</h3>
-            <p class="hiw-vstep-desc">We audit your listing, optimize photos, rewrite copy, and set up pricing algorithms, all without disrupting a single booking.</p>
-          </div>
-        </div>
-
-        <div class="hiw-vstep r">
-          <div class="hiw-vstep-icon">
-            <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="6" y="6" width="12" height="12" rx="2"/>
-              <rect x="22" y="6" width="12" height="12" rx="2"/>
-              <rect x="6" y="22" width="12" height="12" rx="2"/>
-              <rect x="22" y="22" width="12" height="12" rx="2"/>
-            </svg>
-          </div>
-          <div class="hiw-vstep-body">
-            <span class="hiw-vstep-n">STEP 03</span>
-            <h3 class="hiw-vstep-title">Listing Optimization</h3>
-            <p class="hiw-vstep-desc">From photos and copy to pricing and search ranking, we refine every element guests and the algorithm evaluate.</p>
+            <h3 class="hiw-vstep-title">Pricing Engine Setup</h3>
+            <p class="hiw-vstep-desc">We deploy PriceLabs and dial in base rates, min/max guardrails, length-of-stay discounts, minimum-stay rules, and orphan-night logic. The tool is one part. The configuration is the rest.</p>
           </div>
         </div>
 
@@ -736,9 +726,25 @@ document.addEventListener('DOMContentLoaded',function(){
             </svg>
           </div>
           <div class="hiw-vstep-body">
+            <span class="hiw-vstep-n">STEP 03</span>
+            <h3 class="hiw-vstep-title">Algorithm-Timed Daily Adjustments</h3>
+            <p class="hiw-vstep-desc">Demand signals shift every day — booking pace, comp-set occupancy, weather, events, last-minute cancellations. Our team monitors every signal and re-tunes your calendar nightly so you don't underprice peaks or oversleep on a soft window.</p>
+          </div>
+        </div>
+
+        <div class="hiw-vstep r">
+          <div class="hiw-vstep-icon">
+            <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="6" y="6" width="28" height="28" rx="2"/>
+              <line x1="6" y1="14" x2="34" y2="14"/>
+              <line x1="12" y1="22" x2="22" y2="22"/>
+              <line x1="12" y1="28" x2="28" y2="28"/>
+            </svg>
+          </div>
+          <div class="hiw-vstep-body">
             <span class="hiw-vstep-n">STEP 04</span>
-            <h3 class="hiw-vstep-title">Ongoing Revenue Management</h3>
-            <p class="hiw-vstep-desc">Dynamic pricing, performance monitoring, and continuous adjustments that compound returns month after month.</p>
+            <h3 class="hiw-vstep-title">Monthly Performance Report</h3>
+            <p class="hiw-vstep-desc">Every month: ADR, RevPAR, occupancy, booking pace, and what we changed and why. So you always know what your money bought.</p>
           </div>
         </div>
 
@@ -750,29 +756,29 @@ document.addEventListener('DOMContentLoaded',function(){
 </section>
 
 <!-- ════════════════════════════════════════════════
-     SECTION 5 – CREDIBILITY & SOCIAL PROOF
+     CREDIBILITY — Why Hosts Make More
      ════════════════════════════════════════════════ -->
 <section id="credibility" class="cred">
   <div class="w cred-inner">
 
-    <div class="eyebrow r">Why trust us</div>
-    <h2 class="h2 r d1">We use <em class="em-mark" style="font-style:italic;color:var(--accent)">RevWhisper</em> on our own portfolio</h2>
-    <p class="sub r d2">We're not just building tools. We're hosts who depend on them. Our team manages properties, competes in real markets, and stakes our own revenue on every feature we ship.</p>
-    <div class="r d3" style="text-align:center"><a href="https://app.revwhisper.com/search-ranking" class="btn-accent">Check My Search Ranking →</a></div>
+    <div class="eyebrow r">The Numbers</div>
+    <h2 class="h2 r d1">10–40% more revenue, <em class="em-mark" style="font-style:italic;color:var(--accent)">on average.</em></h2>
+    <p class="sub r d2">Hosts who switch from a flat nightly rate to a properly tuned dynamic strategy see double-digit revenue lift in the same market. Hosts who reprice their calendar at least monthly earn roughly 13% more than hosts who set rates and forget. We're the ones doing the repricing.</p>
+    <div class="r d3" style="text-align:center"><a href="/get-started" class="btn-accent">Book a Strategy Call →</a></div>
 
-    <div class="cred-carousel-shell r d3" aria-label="RevWhisper team divisions">
-      <div class="cred-carousel-head">Meet the Faces Behind RevWhisper</div>
+    <div class="cred-carousel-shell r d3" aria-label="RevWhisper team">
+      <div class="cred-carousel-head">Meet the team running your revenue</div>
       <div class="cred-carousel-wrap">
         <div class="cred-carousel-track">
-          <div class="cred-team-card">
-            <div class="cred-team-photo"><img src="/images/team/marisa.webp" alt="Marisa - Graphic Design" loading="lazy"></div>
-            <div class="cred-team-name">Marisa</div>
-            <div class="cred-team-division">Graphic Design</div>
-          </div>
           <div class="cred-team-card">
             <div class="cred-team-photo"><img src="/images/team/david.webp" alt="David - Revenue Optimization" loading="lazy"></div>
             <div class="cred-team-name">David</div>
             <div class="cred-team-division">Revenue Optimization</div>
+          </div>
+          <div class="cred-team-card">
+            <div class="cred-team-photo"><img src="/images/team/alex.webp" alt="Alex - Strategist" loading="lazy"></div>
+            <div class="cred-team-name">Alex</div>
+            <div class="cred-team-division">Strategist</div>
           </div>
           <div class="cred-team-card">
             <div class="cred-team-photo"><img src="/images/team/bryan.webp" alt="Bryan - AI Integrations" loading="lazy"></div>
@@ -785,14 +791,14 @@ document.addEventListener('DOMContentLoaded',function(){
             <div class="cred-team-division">Vision</div>
           </div>
           <div class="cred-team-card">
-            <div class="cred-team-photo"><img src="/images/team/alex.webp" alt="Alex - Strategist" loading="lazy"></div>
-            <div class="cred-team-name">Alex</div>
-            <div class="cred-team-division">Strategist</div>
-          </div>
-          <div class="cred-team-card">
             <div class="cred-team-photo"><img src="/images/team/nic.webp" alt="Nicolas - Customer Relations" loading="lazy"></div>
             <div class="cred-team-name">Nicolas</div>
             <div class="cred-team-division">Customer Relations</div>
+          </div>
+          <div class="cred-team-card">
+            <div class="cred-team-photo"><img src="/images/team/marisa.webp" alt="Marisa - Graphic Design" loading="lazy"></div>
+            <div class="cred-team-name">Marisa</div>
+            <div class="cred-team-division">Graphic Design</div>
           </div>
           <div class="cred-team-card">
             <div class="cred-team-photo"><img src="/images/team/chris.webp" alt="Chris - Property Improvements" loading="lazy"></div>
@@ -806,42 +812,42 @@ document.addEventListener('DOMContentLoaded',function(){
           </div>
 
           <div class="cred-team-card" aria-hidden="true">
-            <div class="cred-team-photo"><img src="/images/team/marisa.webp" alt="Marisa - Graphic Design" loading="lazy"></div>
-            <div class="cred-team-name">Marisa</div>
-            <div class="cred-team-division">Graphic Design</div>
-          </div>
-          <div class="cred-team-card" aria-hidden="true">
-            <div class="cred-team-photo"><img src="/images/team/david.webp" alt="David - Revenue Optimization" loading="lazy"></div>
+            <div class="cred-team-photo"><img src="/images/team/david.webp" alt="" loading="lazy"></div>
             <div class="cred-team-name">David</div>
             <div class="cred-team-division">Revenue Optimization</div>
           </div>
           <div class="cred-team-card" aria-hidden="true">
-            <div class="cred-team-photo"><img src="/images/team/bryan.webp" alt="Bryan - AI Integrations" loading="lazy"></div>
-            <div class="cred-team-name">Bryan</div>
-            <div class="cred-team-division">AI Integrations</div>
-          </div>
-          <div class="cred-team-card" aria-hidden="true">
-            <div class="cred-team-photo"><img src="/images/team/spencer.webp" alt="Spencer - Vision" loading="lazy"></div>
-            <div class="cred-team-name">Spencer</div>
-            <div class="cred-team-division">Vision</div>
-          </div>
-          <div class="cred-team-card" aria-hidden="true">
-            <div class="cred-team-photo"><img src="/images/team/alex.webp" alt="Alex - Strategist" loading="lazy"></div>
+            <div class="cred-team-photo"><img src="/images/team/alex.webp" alt="" loading="lazy"></div>
             <div class="cred-team-name">Alex</div>
             <div class="cred-team-division">Strategist</div>
           </div>
           <div class="cred-team-card" aria-hidden="true">
-            <div class="cred-team-photo"><img src="/images/team/nic.webp" alt="Nicolas - Customer Relations" loading="lazy"></div>
+            <div class="cred-team-photo"><img src="/images/team/bryan.webp" alt="" loading="lazy"></div>
+            <div class="cred-team-name">Bryan</div>
+            <div class="cred-team-division">AI Integrations</div>
+          </div>
+          <div class="cred-team-card" aria-hidden="true">
+            <div class="cred-team-photo"><img src="/images/team/spencer.webp" alt="" loading="lazy"></div>
+            <div class="cred-team-name">Spencer</div>
+            <div class="cred-team-division">Vision</div>
+          </div>
+          <div class="cred-team-card" aria-hidden="true">
+            <div class="cred-team-photo"><img src="/images/team/nic.webp" alt="" loading="lazy"></div>
             <div class="cred-team-name">Nicolas</div>
             <div class="cred-team-division">Customer Relations</div>
           </div>
           <div class="cred-team-card" aria-hidden="true">
-            <div class="cred-team-photo"><img src="/images/team/chris.webp" alt="Chris - Property Improvements" loading="lazy"></div>
+            <div class="cred-team-photo"><img src="/images/team/marisa.webp" alt="" loading="lazy"></div>
+            <div class="cred-team-name">Marisa</div>
+            <div class="cred-team-division">Graphic Design</div>
+          </div>
+          <div class="cred-team-card" aria-hidden="true">
+            <div class="cred-team-photo"><img src="/images/team/chris.webp" alt="" loading="lazy"></div>
             <div class="cred-team-name">Chris</div>
             <div class="cred-team-division">Property Improvements</div>
           </div>
           <div class="cred-team-card" aria-hidden="true">
-            <div class="cred-team-photo"><img src="/images/team/cady.webp" alt="Cady - Property Improvements" loading="lazy"></div>
+            <div class="cred-team-photo"><img src="/images/team/cady.webp" alt="" loading="lazy"></div>
             <div class="cred-team-name">Cady</div>
             <div class="cred-team-division">Property Improvements</div>
           </div>
@@ -861,7 +867,7 @@ document.addEventListener('DOMContentLoaded',function(){
     <div class="pricing-header r">
       <span class="eyebrow">Pricing</span>
       <h2 class="h2">Simple pricing.<br>Serious <em class="em-mark" style="font-style:italic;color:var(--accent)">results.</em></h2>
-      <p class="sub">One program, one price. Portfolio hosts, reach out for custom pricing.</p>
+      <p class="sub">Most revenue managers charge 5–8% of your gross. We don't. Flat fee, more deliverables, no surprises.</p>
     </div>
     <div class="pricing-grid r d1">
       <div class="price-card featured">
@@ -870,11 +876,11 @@ document.addEventListener('DOMContentLoaded',function(){
         <div class="price-term">Billed annually · Save $3,000/year</div>
         <div class="price-divider"></div>
         <div class="price-features">
-          <div class="price-feat">Dedicated account manager</div>
-          <div class="price-feat">Expert revenue management</div>
-          <div class="price-feat">Professional photo direction &amp; edits</div>
-          <div class="price-feat">Listing copy &amp; SEO rewrites</div>
-          <div class="price-feat">Daily ranking tracking + optimizations</div>
+          <div class="price-feat">Dedicated revenue manager</div>
+          <div class="price-feat">Dynamic pricing, configured &amp; tuned nightly</div>
+          <div class="price-feat">Minimum-stay &amp; LOS discount strategy</div>
+          <div class="price-feat">Seasonal calendar &amp; rate floors/ceilings</div>
+          <div class="price-feat">Daily comp-set monitoring</div>
           <div class="price-feat">Monthly performance report</div>
         </div>
         <a href="/checkout-form.html?plan=annual" class="btn-primary">Enroll now &rarr;</a>
@@ -900,306 +906,53 @@ document.addEventListener('DOMContentLoaded',function(){
 </section>
 
 <!-- ════════════════════════════════════════════════
-     ONBOARDING PROCESS
+     FAQ
      ════════════════════════════════════════════════ -->
-<section id="onboarding">
+<section id="faq">
   <div class="w">
-    <div class="onboard-header r">
-      <span class="eyebrow">How It Starts</span>
-      <h2 class="h2">From signup to results in <em class="em-mark" style="font-style:italic;color:var(--accent)">30 days.</em></h2>
+    <div class="faq-header r">
+      <span class="eyebrow">FAQ</span>
+      <h2 class="h2">Common Questions</h2>
     </div>
-    <div class="onboard-grid r d1">
-      <div class="onboard-step">
-        <div class="onboard-num">1</div>
-        <h3 class="onboard-title">Sign Up & Pay Listing Optimization Fee</h3>
-        <p class="onboard-desc">$998 one-time fee per listing covers your full listing audit, market analysis, and account setup. Paid upfront. Your subscription starts once optimization is complete.</p>
-      </div>
-      <div class="onboard-step">
-        <div class="onboard-num">2</div>
-        <h3 class="onboard-title">We Audit Everything</h3>
-        <p class="onboard-desc">Deep dive into your listing, competitors, pricing history, photos, and search position.</p>
-      </div>
-      <div class="onboard-step">
-        <div class="onboard-num">3</div>
-        <h3 class="onboard-title">Optimization Begins</h3>
-        <p class="onboard-desc">We deploy pricing algorithms, rewrite your copy, direct photo improvements, and launch promotions.</p>
-      </div>
-      <div class="onboard-step">
-        <div class="onboard-num">4</div>
-        <h3 class="onboard-title">Results Within 30 Days</h3>
-        <p class="onboard-desc">You see measurable revenue improvements within the first month.</p>
-      </div>
+    <div class="faq-list r d1">
+      <details class="faq-item">
+        <summary class="faq-q">What does an Airbnb revenue manager do?</summary>
+        <div class="faq-a">An Airbnb revenue manager sets and adjusts your nightly rate, minimum stays, and length-of-stay discounts based on demand, seasonality, local events, and competitor pricing. The goal is to maximize <strong>total revenue across the calendar</strong> — not just the headline nightly rate. RevWhisper does this for you nightly, using PriceLabs as the pricing engine plus human judgment.</div>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-q">How much does Airbnb revenue management cost?</summary>
+        <div class="faq-a">Most independent Airbnb revenue managers charge <strong>5–8% of your gross revenue</strong> for small portfolios, or 1–3% for larger ones. RevWhisper charges a flat <strong>$500 per month per listing</strong>, billed annually, which includes revenue management, listing copy and SEO, photo direction, and daily search-rank tracking — not just pricing.</div>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-q">Do I need a revenue manager if I already use Airbnb Smart Pricing?</summary>
+        <div class="faq-a">Airbnb's Smart Pricing tends to <strong>underprice peak dates</strong> and overweight occupancy. It does not consider your competitive set, local events, length-of-stay strategy, or minimum-stay calibration. Most hosts who switch from Smart Pricing to a real revenue management strategy see a 10–40% revenue lift on the same listing.</div>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-q">What pricing tools do you use?</summary>
+        <div class="faq-a">We use <strong>PriceLabs</strong> as our pricing engine. The tool is a small part of the work. Configuring base rates, min/max guardrails, customizations, length-of-stay discounts, minimum-stay rules, and orphan-night logic — and revisiting all of it monthly — is where revenue management actually happens. We do that for you.</div>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-q">How much can dynamic pricing increase Airbnb revenue?</summary>
+        <div class="faq-a">Hosts who switch from a flat nightly rate to a properly tuned dynamic pricing strategy typically see a <strong>10–40% revenue lift</strong>, with the average around 22%. Hosts who adjust prices at least once a month earn roughly 13% more than hosts who set rates and forget.</div>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-q">When will I see results from RevWhisper revenue management?</summary>
+        <div class="faq-a">Pricing and minimum-stay changes go live within the first week of onboarding. Most hosts see measurable booking-pace and revenue improvements <strong>inside the first 30 days</strong>. Compounding gains — better seasonal positioning, refined length-of-stay strategy, smarter promotions — show up over months two and three.</div>
+      </details>
     </div>
   </div>
 </section>
 
 <!-- ════════════════════════════════════════════════
-     STAKES
+     FINAL CTA
      ════════════════════════════════════════════════ -->
-<section id="stakes" class="stakes">
-  <div class="stakes-fill">
-    <svg class="stakes-fill-wave" viewBox="0 0 1200 14" preserveAspectRatio="none"><path d="M0,7 C150,2 300,12 450,7 C600,2 750,12 900,7 C1050,2 1200,12 1200,7 L1200,14 L0,14 Z" fill="#f5f4f1"/></svg>
-  </div>
-  <svg class="stakes-bg" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <pattern id="stakes-topo" x="0" y="0" width="240" height="240" patternUnits="userSpaceOnUse">
-        <circle cx="120" cy="120" r="40" fill="none" stroke="rgba(255,255,255,.025)" stroke-width=".6"/>
-        <circle cx="120" cy="120" r="70" fill="none" stroke="rgba(255,255,255,.018)" stroke-width=".5"/>
-        <circle cx="120" cy="120" r="100" fill="none" stroke="rgba(255,255,255,.012)" stroke-width=".4"/>
-        <circle cx="0" cy="0" r="50" fill="none" stroke="rgba(255,255,255,.018)" stroke-width=".5"/>
-        <circle cx="240" cy="240" r="55" fill="none" stroke="rgba(255,255,255,.018)" stroke-width=".5"/>
-        <circle cx="240" cy="0" r="45" fill="none" stroke="rgba(255,255,255,.015)" stroke-width=".4"/>
-        <circle cx="0" cy="240" r="60" fill="none" stroke="rgba(255,255,255,.015)" stroke-width=".4"/>
-      </pattern>
-    </defs>
-    <rect width="100%" height="100%" fill="url(#stakes-topo)"/>
-  </svg>
-
-  <div class="w stakes-inner">
-    <div class="stakes-layout">
-
-      <!-- Narrative -->
-      <div class="stakes-content">
-        <span class="stakes-eyebrow r">The Reality</span>
-        <h2 class="stakes-h2 r d1">Airbnb supply is increasing.<br><span class="stakes-red">Your rank isn't.</span></h2>
-        <div class="stakes-body r d2">
-          <div class="stakes-block stakes-block--red">
-            <h4 class="stakes-block-label">The old game is over</h4>
-            <p>Two years ago, your listing competed against other individual hosts. People adjusting prices by feel, refreshing photos when they remembered, writing descriptions once and hoping for the best. <span class="stakes-highlight">That market is gone.</span></p>
-          </div>
-          <div class="stakes-block">
-            <h4 class="stakes-block-label">The new competition</h4>
-            <p>Institutional operators now manage <span class="stakes-highlight">over 30% of top-performing short-term rentals</span> in most major markets. They deploy revenue management teams, professional photographers on retainer, algorithmic pricing that updates <span class="stakes-highlight">340+ times per day</span>, and A/B-tested listing copy refined across thousands of properties.</p>
-          </div>
-          <div class="stakes-block">
-            <h4 class="stakes-block-label">The algorithm shifted</h4>
-            <p>Airbnb restructured its algorithm. Static listings that don't demonstrate consistent conversion momentum, fresh content signals, and competitive pricing responsiveness are being <span class="stakes-highlight">deprioritized</span>. A fraction of a position per week. Invisible until you check your bookings three months later and realize what happened.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Ranking Decay Visualization -->
-      <div class="stakes-viz r d2">
-        <div class="stakes-callout">
-          <p>Nothing changed. <span>Everything around you did.</span></p>
-        </div>
-        <div class="stakes-card">
-          <div class="stakes-card-header">
-            <span>Search Results · Poconos, PA</span>
-            <span class="stakes-live"><span class="stakes-live-dot"></span>Live</span>
-          </div>
-          <div class="stakes-list" id="stakesRankList">
-            <div class="stakes-row managed" data-drift="-0.09">
-              <div class="stakes-pos">1</div>
-              <div class="stakes-thumb">
-                <img src="images/airbnbs/creekstone-lodge.webp" alt="Creekstone Lodge" width="96" height="96" loading="lazy" decoding="async">
-              </div>
-              <div class="stakes-info">
-                <div class="stakes-name">Creekstone Lodge</div>
-                <div class="stakes-meta"><span class="stakes-tag">Managed</span><span class="stakes-score" data-revenue="214">$214k/yr</span></div>
-              </div>
-            </div>
-            <div class="stakes-row managed" data-drift="-0.06">
-              <div class="stakes-pos">2</div>
-              <div class="stakes-thumb">
-                <img src="images/airbnbs/timber-ridge-retreat.webp" alt="Timber Ridge Retreat" width="96" height="96" loading="lazy" decoding="async">
-              </div>
-              <div class="stakes-info">
-                <div class="stakes-name">Timber Ridge Retreat</div>
-                <div class="stakes-meta"><span class="stakes-tag">Managed</span><span class="stakes-score" data-revenue="206">$206k/yr</span></div>
-              </div>
-            </div>
-            <div class="stakes-row" data-drift="0.025">
-              <div class="stakes-pos">3</div>
-              <div class="stakes-thumb">
-                <img src="images/airbnbs/pine-valley-cabin.webp" alt="Pine Valley Cabin" width="96" height="96" loading="lazy" decoding="async">
-              </div>
-              <div class="stakes-info">
-                <div class="stakes-name">Pine Valley Cabin</div>
-                <div class="stakes-meta"><span class="stakes-score" data-revenue="189">$189k/yr</span></div>
-              </div>
-            </div>
-            <div class="stakes-row yours" data-drift="0.14">
-              <div class="stakes-pos">4</div>
-              <div class="stakes-thumb">
-                <img src="images/airbnbs/your-listing.webp" alt="Your Listing" width="96" height="96" loading="lazy" decoding="async">
-              </div>
-              <div class="stakes-info">
-                <div class="stakes-name">Your Listing</div>
-                <div class="stakes-meta"><span class="stakes-score" data-revenue="182">$182k/yr</span></div>
-              </div>
-            </div>
-            <div class="stakes-row managed" data-drift="-0.08">
-              <div class="stakes-pos">5</div>
-              <div class="stakes-thumb">
-                <img src="images/airbnbs/summit-view-chalet.webp" alt="Summit View Chalet" width="96" height="96" loading="lazy" decoding="async">
-              </div>
-              <div class="stakes-info">
-                <div class="stakes-name">Summit View Chalet</div>
-                <div class="stakes-meta"><span class="stakes-tag">Managed</span><span class="stakes-score" data-revenue="175">$175k/yr</span></div>
-              </div>
-            </div>
-            <div class="stakes-row" data-drift="0.04">
-              <div class="stakes-pos">6</div>
-              <div class="stakes-thumb">
-                <img src="images/airbnbs/lakeview-hideaway.webp" alt="Lakeview Hideaway" width="96" height="96" loading="lazy" decoding="async">
-              </div>
-              <div class="stakes-info">
-                <div class="stakes-name">Lakeview Hideaway</div>
-                <div class="stakes-meta"><span class="stakes-score" data-revenue="169">$169k/yr</span></div>
-              </div>
-            </div>
-            <div class="stakes-row managed" data-drift="-0.11">
-              <div class="stakes-pos">7</div>
-              <div class="stakes-thumb">
-                <img src="images/airbnbs/birchwood-estate.webp" alt="Birchwood Estate" width="96" height="96" loading="lazy" decoding="async">
-              </div>
-              <div class="stakes-info">
-                <div class="stakes-name">Birchwood Estate</div>
-                <div class="stakes-meta"><span class="stakes-tag">Managed</span><span class="stakes-score" data-revenue="163">$163k/yr</span></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <p class="stakes-caption">Simulated annual revenue (USD). Drift is illustrative.</p>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- ════════════════════════════════════════════════
-     COMPARISON
-     ════════════════════════════════════════════════ -->
-<section id="compare">
-  <div class="w">
-    <div class="compare-header r">
-      <span class="eyebrow">Why RevWhisper</span>
-      <h2 class="h2">Your listing isn't average.<br>Don't price like it.</h2>
-      <p class="sub">Pricing tools price you to the average. Ranking tools show you data without action. RevWhisper does both and executes for you.</p>
-    </div>
-    <div class="compare-table r d1">
-      <div class="compare-row compare-head">
-        <div class="compare-feat"></div>
-        <div class="compare-col">PriceLabs</div>
-        <div class="compare-col">RankBreeze</div>
-        <div class="compare-col compare-ours">RevWhisper</div>
-      </div>
-      <div class="compare-row">
-        <div class="compare-feat">Dynamic pricing</div>
-        <div class="compare-col"><span class="compare-yes">&#10003;</span></div>
-        <div class="compare-col"><span class="compare-no">&mdash;</span></div>
-        <div class="compare-col compare-ours"><span class="compare-yes">&#10003;</span></div>
-      </div>
-      <div class="compare-row">
-        <div class="compare-feat">Search ranking tracking</div>
-        <div class="compare-col"><span class="compare-no">&mdash;</span></div>
-        <div class="compare-col"><span class="compare-yes">&#10003;</span></div>
-        <div class="compare-col compare-ours"><span class="compare-yes">&#10003;</span></div>
-      </div>
-      <div class="compare-row">
-        <div class="compare-feat">Listing copy optimization</div>
-        <div class="compare-col"><span class="compare-no">&mdash;</span></div>
-        <div class="compare-col"><span class="compare-no">&mdash;</span></div>
-        <div class="compare-col compare-ours"><span class="compare-yes">&#10003;</span></div>
-      </div>
-      <div class="compare-row">
-        <div class="compare-feat">Professional image editing</div>
-        <div class="compare-col"><span class="compare-no">&mdash;</span></div>
-        <div class="compare-col"><span class="compare-no">&mdash;</span></div>
-        <div class="compare-col compare-ours"><span class="compare-yes">&#10003;</span></div>
-      </div>
-      <div class="compare-row">
-        <div class="compare-feat">Multi-region rank tracking</div>
-        <div class="compare-col"><span class="compare-no">&mdash;</span></div>
-        <div class="compare-col"><span class="compare-yes">&#10003;</span></div>
-        <div class="compare-col compare-ours"><span class="compare-yes">&#10003;</span></div>
-      </div>
-      <div class="compare-row">
-        <div class="compare-feat">Competitor intelligence</div>
-        <div class="compare-col"><span class="compare-partial">Limited</span></div>
-        <div class="compare-col"><span class="compare-partial">Limited</span></div>
-        <div class="compare-col compare-ours"><span class="compare-yes">&#10003;</span></div>
-      </div>
-      <div class="compare-row">
-        <div class="compare-feat">Fully managed (done for you)</div>
-        <div class="compare-col"><span class="compare-no">&mdash;</span></div>
-        <div class="compare-col"><span class="compare-no">&mdash;</span></div>
-        <div class="compare-col compare-ours"><span class="compare-yes">&#10003;</span></div>
-      </div>
-      <div class="compare-row">
-        <div class="compare-feat">Ranking by unbooked dates</div>
-        <div class="compare-col"><span class="compare-no">&mdash;</span></div>
-        <div class="compare-col"><span class="compare-no">&mdash;</span></div>
-        <div class="compare-col compare-ours"><span class="compare-yes">&#10003;</span></div>
-      </div>
-      <div class="compare-row">
-        <div class="compare-feat">View volume insights for unbooked dates</div>
-        <div class="compare-col"><span class="compare-no">&mdash;</span></div>
-        <div class="compare-col"><span class="compare-no">&mdash;</span></div>
-        <div class="compare-col compare-ours"><span class="compare-yes">&#10003;</span></div>
-      </div>
-      <div class="compare-row">
-        <div class="compare-feat">Optimal guest insights</div>
-        <div class="compare-col"><span class="compare-no">&mdash;</span></div>
-        <div class="compare-col"><span class="compare-no">&mdash;</span></div>
-        <div class="compare-col compare-ours"><span class="compare-yes">&#10003;</span></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ════════════════════════════════════════════════
-     WEBINAR BANNER
-     ════════════════════════════════════════════════ -->
-<section class="webinar-banner r" id="webinar">
-  <div class="wb-particle"></div>
-  <div class="wb-particle"></div>
-  <div class="wb-particle"></div>
-  <div class="wb-particle"></div>
-  <div class="wb-particle"></div>
-  <div class="wb-particle"></div>
-  <div class="w">
-    <div class="wb-eyebrow"><span class="wb-live-dot"></span> Live Every Wednesday at 12pm EST</div>
-    <h2 class="wb-headline">Learn How Top Hosts<br><em>Maximize Revenue</em></h2>
-    <p class="wb-sub">Join our free live webinar where we break down proven strategies, share exactly what we do for clients, and give you actionable advice you can implement today.</p>
-    <div class="wb-countdown">
-      <div class="wb-countdown-label">Next webinar starts in</div>
-      <div class="wb-timer" id="wb-timer">
-        <div class="wb-time-unit"><span class="wb-num" id="wb-days">0</span><span class="wb-unit">days</span></div>
-        <span class="wb-sep">:</span>
-        <div class="wb-time-unit"><span class="wb-num" id="wb-hours">0</span><span class="wb-unit">hrs</span></div>
-        <span class="wb-sep">:</span>
-        <div class="wb-time-unit"><span class="wb-num" id="wb-mins">0</span><span class="wb-unit">min</span></div>
-        <span class="wb-sep">:</span>
-        <div class="wb-time-unit"><span class="wb-num" id="wb-secs">0</span><span class="wb-unit">sec</span></div>
-      </div>
-    </div>
-    <div class="wb-spots"><span class="wb-spots-dot"></span> Select listings audited live each session</div>
-    <br>
-    <a href="/webinar" class="wb-cta">Reserve Your Spot <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-  </div>
-</section>
-
-<section id="community" class="r" style="display:none">
-  <div class="w" style="max-width:620px;padding:80px 24px 40px;text-align:center">
-    <p style="font-family:var(--mono);font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin-bottom:12px">By hosts, for hosts</p>
-    <h2 style="font-family:var(--heading);font-size:clamp(28px,4vw,40px);font-weight:400;letter-spacing:-.02em;color:var(--black);line-height:1.25;margin-bottom:20px">Join Our Free Airbnb Host Community</h2>
-    <p style="font-size:15px;color:var(--g500);line-height:1.75;font-weight:300;margin-bottom:32px">We're Airbnb owners who got obsessed with what actually moves the needle on listing performance. A place to share real strategies, data-backed tips, and honest conversations about growing your revenue.</p>
-    <a href="https://www.facebook.com/share/g/1CN9cPC877/" target="_blank" rel="noopener" class="btn-accent" style="display:inline-flex;align-items:center;gap:8px">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-      Join Our Facebook Group
-    </a>
-  </div>
-</section>
-
 <section id="cta">
   <div class="w">
     <div class="cta-card r">
       <div class="cta-ripple-wrap"><div class="cta-ripple"></div><div class="cta-ripple"></div><div class="cta-ripple"></div></div>
       <div class="cta-ey">Start now</div>
-      <h2 class="cta-h2">Stop Guessing. Start <em class="em-mark-w">Whispering.</em></h2>
-      <p class="cta-sub">Book a free strategy call. We'll show you exactly where your listing is leaking revenue and walk you through what we'd fix first.</p>
+      <h2 class="cta-h2">Stop guessing. Start <em class="em-mark-w">whispering.</em></h2>
+      <p class="cta-sub">Book a free strategy call. We'll show you exactly where your pricing is leaking revenue and walk you through what we'd fix first.</p>
       <a href="/get-started" class="btn-white">Book your free strategy call &rarr;</a>
       <p class="cta-note">No obligation. No pressure. Just data.</p>
     </div>
@@ -1264,25 +1017,18 @@ document.addEventListener('DOMContentLoaded',function(){
 <!-- ════════════════════════════════════════════════
      SCRIPTS
      ════════════════════════════════════════════════ -->
-<script defer src="assets/home.js"></script>
-<!-- GA4 Custom Events -->
+<script defer src="/assets/home.js"></script>
 <script>
-function normalizeAirbnbUrl(raw){var s=raw.trim().replace(/^["'<]+|["'>]+$/g,'');if(!/^https?:\/\//i.test(s))s='https://'+s.replace(/^\/\//,'');var url;try{url=new URL(s)}catch(e){return null}var host=url.hostname.replace(/^www\./,'');if(!/^airbnb\.[a-z.]+$/i.test(host))return null;var path=url.pathname.replace(/\/+$/,'');if(/^\/rooms\/\d+/.test(path))return url.href;if(/^\/h\/[a-zA-Z0-9_-]+/.test(path))return url.href;if(/^\/users\/show\/\d+/.test(path))return url.href;if(/^\/p\/[a-zA-Z0-9_-]+/.test(path))return url.href;var sys=['hosting','login','signup','help','account','settings','experiences','s','luxury','wishlists','messages','trips','notifications','manage-listing','resources'];var seg=path.split('/')[1];if(seg&&sys.indexOf(seg)===-1&&/^[a-zA-Z0-9_-]+$/.test(seg))return url.href;return null}
 document.addEventListener('click',function(e){
   var link=e.target.closest('a,button');
   if(!link)return;
   var text=(link.textContent||'').trim().substring(0,60);
   var href=link.getAttribute('href')||'';
-  if(link.classList.contains('calc-btn')){rwTrack('calculator_click',{page:'homepage'});var u=document.querySelector('.calc-input');var v=u?u.value.trim():'';if(v){var nv=normalizeAirbnbUrl(v);window.location.href='https://app.revwhisper.com/search-ranking?url='+encodeURIComponent(nv||v);}else{window.location.href='https://app.revwhisper.com/search-ranking';}return;}
-  if(href.indexOf('checkout-form.html?plan=monthly')!==-1){rwTrack('select_plan',{plan:'monthly',page:'homepage',cta_text:text});return;}
-  if(href.indexOf('checkout-form.html?plan=annual')!==-1){rwTrack('select_plan',{plan:'annual',page:'homepage',cta_text:text});return;}
-  if(href==='/get-started'){rwTrack('cta_click',{destination:'get-started',cta_text:text,page:'homepage'});return;}
-  if(href==='/checkout'){rwTrack('cta_click',{destination:'checkout',cta_text:text,page:'homepage'});return;}
-  if(href.indexOf('fillout.com')!==-1){rwTrack('cta_click',{destination:'fillout_form',cta_text:text,page:'homepage'});return;}
-  if(/btn-(accent|primary|outline|white|guar|pill)/.test(link.className)){rwTrack('cta_click',{cta_text:text,page:'homepage'});}
+  if(href==='/get-started'){rwTrack('cta_click',{destination:'get-started',cta_text:text,page:'revenue-management'});return;}
+  if(href.indexOf('checkout-form.html?plan=annual')!==-1){rwTrack('select_plan',{plan:'annual',page:'revenue-management',cta_text:text});return;}
+  if(/btn-(accent|primary|outline|white)/.test(link.className)){rwTrack('cta_click',{cta_text:text,page:'revenue-management'});}
 });
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
-<img src="https://tracker.metricool.com/c3po.jpg?hash=75df2c2b89fa3a69e39a2fae0e13bd91" style="position:absolute;left:-9999px" alt="" />
 </body>
 </html>
