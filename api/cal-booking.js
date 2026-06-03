@@ -65,6 +65,10 @@ function buildMetadata(body) {
   // also delivered to the CRM via the form webhook. We deliberately do NOT put it in
   // attendee.phoneNumber, which Cal.com validates as an international number.
   add('phone', body.phone);
+  // Meta dedup + match signals — read back by /api/cal-webhook to fire a deduped CAPI Schedule.
+  add('fbEventId', body.fbEventId);
+  add('fbp', body.fbp);
+  add('fbc', body.fbc);
   if (body.attribution && typeof body.attribution === 'object' && !Array.isArray(body.attribution)) {
     for (const [k, v] of Object.entries(body.attribution)) add(k, v);
   }

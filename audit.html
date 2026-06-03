@@ -279,6 +279,7 @@ a{color:inherit}
 .case-metric .cm-flow .was{color:var(--g400);font-weight:400;text-decoration:line-through;text-decoration-color:var(--g300)}
 .case-metric .cm-flow svg{color:var(--accent)}
 .case-metric .cm-lbl{font-size:11px;color:var(--g500);margin-top:3px;font-weight:300}
+.case-basis{margin-top:14px;padding-top:11px;border-top:1px solid var(--g100);font-size:10.5px;letter-spacing:.04em;color:var(--g400);font-weight:400}
 
 
 /* ───────────────────────── FAQ ───────────────────────── */
@@ -465,16 +466,6 @@ a{color:inherit}
               </div>
               <div class="field-error">Please enter a valid email</div>
             </div>
-            <div class="field">
-              <label class="field-label" for="phone">Phone</label>
-              <div class="phone-wrap">
-                <select class="phone-code" id="phone-code" aria-label="Country code">
-                  <option value="+1">🇺🇸 +1</option><option value="+44">🇬🇧 +44</option><option value="+61">🇦🇺 +61</option><option value="+33">🇫🇷 +33</option><option value="+49">🇩🇪 +49</option><option value="+52">🇲🇽 +52</option><option value="+34">🇪🇸 +34</option><option value="+39">🇮🇹 +39</option><option value="+55">🇧🇷 +55</option>
-                </select>
-                <input type="tel" class="field-input phone-input" id="phone" placeholder="(555) 123-4567" autocomplete="tel" inputmode="tel">
-              </div>
-              <div class="field-error">Please enter a valid phone number</div>
-            </div>
             <div class="form-actions">
               <button class="btn-back" type="button" onclick="prevStep()"><span class="arrow">←</span></button>
               <button class="btn-next" type="button" id="btn-submit" onclick="submitForm()">Get my free audit <span class="arrow">→</span></button>
@@ -521,68 +512,143 @@ a{color:inherit}
 </section>
 
 <!-- ════════════════════ PROOF / CASE STUDIES (social proof, below the three pillars) ════════════════════
-     Card 3 (Gulfstream Villa, Englewood) uses the real figures + photo from /case-study-2.
-     Cards 1–2 mirror the listings on /case-study. Cards are static (no navigation) by request.
+     Real client performance from the May 2026 PriceLabs snapshot.
+     Cards 1–4: standardized single-month YoY gain (May 2026 vs May 2025).
+     Card 5 (ASH2): new build, no prior year → shown as YTD / high-ADR proof.
+     Card 6 (Gulfstream): /case-study-2 client → trailing-12-month revenue + search rank.
+     Photos are representative placeholders from /images/properties (we don't publish client photos).
+     Cards are static (no navigation) by request; JS auto-clones the children for the scroll loop.
 ══════════════════════════════════════════════════════════════════ -->
 <section class="sec results">
   <div class="w center">
     <div class="eyebrow">The results</div>
     <h2 class="h2">What changes when the <em>fundamentals</em> are fixed.</h2>
-    <p class="lead">Three real listings, audited and optimized. No renovations, no new photos required.</p>
+    <p class="lead">Six real listings across five markets, audited and optimized. No renovations, no new photos required.</p>
   </div>
   <div class="w">
     <div class="stat-band">
-      <div class="stat-cell"><div class="stat-val">+33%</div><div class="stat-lbl">Average revenue lift</div></div>
-      <div class="stat-cell"><div class="stat-val">+19 pts</div><div class="stat-lbl">Average occupancy gain</div></div>
-      <div class="stat-cell"><div class="stat-val">90 days</div><div class="stat-lbl">To measurable results</div></div>
+      <div class="stat-cell"><div class="stat-val">+$85K</div><div class="stat-lbl">Forward revenue added (May–Aug)</div></div>
+      <div class="stat-cell"><div class="stat-val">+25 pts</div><div class="stat-lbl">Avg occupancy gain (May–Aug)</div></div>
+      <div class="stat-cell"><div class="stat-val">30 days</div><div class="stat-lbl">To measurable results</div></div>
     </div>
     <div class="case-carousel">
       <div class="case-track" id="case-track">
-      <!-- Case 1 — Poolside Retreat (from /case-study) -->
+      <!-- Case 1 — Waters Edge Hideaway, Tobyhanna PA (May YoY) -->
       <div class="case">
         <div class="case-photo">
-          <img src="/images/properties/case-study-1.webp" alt="Poolside retreat, Gulf Coast Florida" loading="lazy" width="400" height="250">
-          <span class="case-delta">+25%</span>
+          <img src="/images/properties/case-study-3.webp" alt="Pocono Mountains rental home, Tobyhanna PA" loading="lazy" width="400" height="250">
+          <span class="case-delta">+37%</span>
         </div>
         <div class="case-body">
-          <div class="case-loc">Gulf Coast, FL</div>
-          <div class="case-name">Poolside Retreat</div>
-          <div class="case-tag">4 BR · Private Pool</div>
+          <div class="case-loc">Tobyhanna, PA</div>
+          <div class="case-name">Waters Edge Hideaway</div>
+          <div class="case-tag">5 BR · Pocono Mountains</div>
           <div class="case-metrics">
             <div class="case-metric">
-              <div class="cm-flow"><span class="was">$18.8k</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>$23.5k</div>
-              <div class="cm-lbl">Monthly revenue</div>
+              <div class="cm-flow"><span class="was">$7.3k</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>$10.0k</div>
+              <div class="cm-lbl">May revenue</div>
             </div>
             <div class="case-metric">
-              <div class="cm-flow"><span class="was">74%</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>91%</div>
-              <div class="cm-lbl">Occupancy</div>
+              <div class="cm-flow"><span class="was">39%</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>48%</div>
+              <div class="cm-lbl">May occupancy</div>
             </div>
           </div>
+          <div class="case-basis">May 2026 vs. 2025</div>
         </div>
       </div>
-      <!-- Case 2 — Modern Villa (from /case-study) -->
+      <!-- Case 2 — 61 Sombrero, Marathon FL (May YoY) -->
       <div class="case">
         <div class="case-photo">
-          <img src="/images/properties/case-study-2.webp" alt="Modern villa, Tampa Bay area" loading="lazy" width="400" height="250">
-          <span class="case-delta">+33%</span>
+          <img src="/images/properties/backyardbbq-after-800.webp" alt="Florida Keys waterfront pool home, Marathon FL" loading="lazy" width="400" height="250">
+          <span class="case-delta">+169%</span>
         </div>
         <div class="case-body">
-          <div class="case-loc">Tampa Bay, FL</div>
-          <div class="case-name">Modern Villa</div>
-          <div class="case-tag">5 BR · Heated Pool</div>
+          <div class="case-loc">Marathon, FL</div>
+          <div class="case-name">61 Sombrero</div>
+          <div class="case-tag">4 BR · Keys waterfront</div>
           <div class="case-metrics">
             <div class="case-metric">
-              <div class="cm-flow"><span class="was">$21.9k</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>$29.2k</div>
-              <div class="cm-lbl">Monthly revenue</div>
+              <div class="cm-flow"><span class="was">$4.7k</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>$12.6k</div>
+              <div class="cm-lbl">May revenue</div>
             </div>
             <div class="case-metric">
-              <div class="cm-flow"><span class="was">76%</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>95%</div>
-              <div class="cm-lbl">Occupancy</div>
+              <div class="cm-flow"><span class="was">48%</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>84%</div>
+              <div class="cm-lbl">May occupancy</div>
             </div>
           </div>
+          <div class="case-basis">May 2026 vs. 2025</div>
         </div>
       </div>
-      <!-- Case 3 — Gulfstream Villa, Englewood FL (real figures from /case-study-2) -->
+      <!-- Case 3 — Moonlit Peak, Tobyhanna Twp PA (May YoY) -->
+      <div class="case">
+        <div class="case-photo">
+          <img src="/images/properties/case-study-1.webp" alt="Lake-area rental home, Pocono Mountains PA" loading="lazy" width="400" height="250">
+          <span class="case-delta">+59%</span>
+        </div>
+        <div class="case-body">
+          <div class="case-loc">Tobyhanna Twp, PA</div>
+          <div class="case-name">Moonlit Peak</div>
+          <div class="case-tag">4 BR · Luxe lake escape</div>
+          <div class="case-metrics">
+            <div class="case-metric">
+              <div class="cm-flow"><span class="was">$6.7k</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>$10.7k</div>
+              <div class="cm-lbl">May revenue</div>
+            </div>
+            <div class="case-metric">
+              <div class="cm-flow"><span class="was">42%</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>52%</div>
+              <div class="cm-lbl">May occupancy</div>
+            </div>
+          </div>
+          <div class="case-basis">May 2026 vs. 2025</div>
+        </div>
+      </div>
+      <!-- Case 4 — 1820 House Steps to Ski Shuttle, Stowe VT (May YoY, off-season window) -->
+      <div class="case">
+        <div class="case-photo">
+          <img src="/images/properties/livingroom-after.webp" alt="Mountain rental interior, Stowe VT" loading="lazy" width="400" height="250">
+          <span class="case-delta">+575%</span>
+        </div>
+        <div class="case-body">
+          <div class="case-loc">Stowe, VT</div>
+          <div class="case-name">1820 House</div>
+          <div class="case-tag">4 BR · Steps to ski shuttle</div>
+          <div class="case-metrics">
+            <div class="case-metric">
+              <div class="cm-flow"><span class="was">$1.0k</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>$7.0k</div>
+              <div class="cm-lbl">May revenue</div>
+            </div>
+            <div class="case-metric">
+              <div class="cm-flow"><span class="was">6%</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>39%</div>
+              <div class="cm-lbl">May occupancy</div>
+            </div>
+          </div>
+          <div class="case-basis">May 2026 vs. 2025</div>
+        </div>
+      </div>
+      <!-- Case 5 — ASH2 Estate, Candler NC (new build, no prior year → YTD / high-ADR proof) -->
+      <div class="case">
+        <div class="case-photo">
+          <img src="/images/properties/case-study-2.webp" alt="Six-bedroom estate with pool and sport court, Candler NC" loading="lazy" width="400" height="250">
+          <span class="case-delta">$1.39k ADR</span>
+        </div>
+        <div class="case-body">
+          <div class="case-loc">Candler, NC</div>
+          <div class="case-name">ASH2 Estate</div>
+          <div class="case-tag">6 BR · Sleeps 18 · Heated pool</div>
+          <div class="case-metrics">
+            <div class="case-metric">
+              <div class="cm-flow">77%</div>
+              <div class="cm-lbl">Occupancy, YTD</div>
+            </div>
+            <div class="case-metric">
+              <div class="cm-flow">$933</div>
+              <div class="cm-lbl">Avg ADR, YTD</div>
+            </div>
+          </div>
+          <div class="case-basis">Year-to-date · new in 2026</div>
+        </div>
+      </div>
+      <!-- Case 6 — Gulfstream Villa, Englewood FL (real figures from /case-study-2, trailing 12 mo) -->
       <div class="case">
         <div class="case-photo">
           <img src="/images/properties/gulfstream/hero-after.webp" alt="Gulfstream Villa pool deck at golden hour, Englewood FL" loading="lazy" width="400" height="250">
@@ -602,70 +668,7 @@ a{color:inherit}
               <div class="cm-lbl">Search rank, open dates</div>
             </div>
           </div>
-        </div>
-      </div>
-      <!-- ───── DUMMY case studies (placeholders — swap for real data) ───── -->
-      <div class="case">
-        <div class="case-photo">
-          <img src="/images/properties/backyardbbq-after-800.webp" alt="Lakeside cabin" loading="lazy" width="400" height="250">
-          <span class="case-delta">+28%</span>
-        </div>
-        <div class="case-body">
-          <div class="case-loc">Lake Tahoe, CA</div>
-          <div class="case-name">Lakeside Cabin</div>
-          <div class="case-tag">3 BR · Lakefront</div>
-          <div class="case-metrics">
-            <div class="case-metric">
-              <div class="cm-flow"><span class="was">$16.2k</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>$20.7k</div>
-              <div class="cm-lbl">Monthly revenue</div>
-            </div>
-            <div class="case-metric">
-              <div class="cm-flow"><span class="was">71%</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>88%</div>
-              <div class="cm-lbl">Occupancy</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="case">
-        <div class="case-photo">
-          <img src="/images/properties/livingroom-after.webp" alt="Downtown loft" loading="lazy" width="400" height="250">
-          <span class="case-delta">+31%</span>
-        </div>
-        <div class="case-body">
-          <div class="case-loc">Austin, TX</div>
-          <div class="case-name">Downtown Loft</div>
-          <div class="case-tag">2 BR · Walk to 6th St</div>
-          <div class="case-metrics">
-            <div class="case-metric">
-              <div class="cm-flow"><span class="was">$9.4k</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>$12.3k</div>
-              <div class="cm-lbl">Monthly revenue</div>
-            </div>
-            <div class="case-metric">
-              <div class="cm-flow"><span class="was">68%</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>90%</div>
-              <div class="cm-lbl">Occupancy</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="case">
-        <div class="case-photo">
-          <img src="/images/properties/gulfstream/exterior-after.webp" alt="Desert villa" loading="lazy" width="400" height="250">
-          <span class="case-delta">+37%</span>
-        </div>
-        <div class="case-body">
-          <div class="case-loc">Scottsdale, AZ</div>
-          <div class="case-name">Desert Villa</div>
-          <div class="case-tag">4 BR · Heated Pool</div>
-          <div class="case-metrics">
-            <div class="case-metric">
-              <div class="cm-flow"><span class="was">$24.8k</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>$34k</div>
-              <div class="cm-lbl">Monthly revenue</div>
-            </div>
-            <div class="case-metric">
-              <div class="cm-flow"><span class="was">73%</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>92%</div>
-              <div class="cm-lbl">Occupancy</div>
-            </div>
-          </div>
+          <div class="case-basis">Trailing 12 months</div>
         </div>
       </div>
       </div><!-- /.case-track -->
@@ -842,10 +845,8 @@ function validateStep(step){
     if(!val || !val.toLowerCase().includes('airbnb.')){url.classList.add('error');valid=false;}else{url.classList.remove('error');}
     const name=document.getElementById('full-name');
     const email=document.getElementById('email');
-    const phone=document.getElementById('phone');
     if(!name.value.trim()){name.classList.add('error');valid=false;}else{name.classList.remove('error');}
     if(!email.value.trim()||!email.value.includes('@')){email.classList.add('error');valid=false;}else{email.classList.remove('error');}
-    if(!phone.value.trim()){phone.classList.add('error');valid=false;}else{phone.classList.remove('error');}
   }
   return valid;
 }
@@ -882,19 +883,14 @@ function submitForm(){
   const btn=document.getElementById('btn-submit');
   btn.disabled=true;
 
-  const phoneCode=document.getElementById('phone-code').value.trim();
-  const phoneNumber=document.getElementById('phone').value.trim();
-  const phoneFull=(phoneCode+' '+phoneNumber).trim();
   const data={
     listings:(document.querySelector('input[name="listings"]:checked')||{}).value||'',
     issue:(document.querySelector('input[name="issue"]:checked')||{}).value||'',
     airbnbUrl:document.getElementById('airbnb-url').value.trim(),
     name:document.getElementById('full-name').value.trim(),
     email:document.getElementById('email').value.trim(),
-    phone_code:phoneCode,
-    phone_number:phoneNumber,
-    phone:phoneFull,
-    source:'audit',
+    phone:'',
+    source:'facebook-ads',
     submittedAt:new Date().toISOString(),
     attribution:rwAttribution()
   };
@@ -904,11 +900,14 @@ function submitForm(){
   // hand the lead context to the booking page
   try{ sessionStorage.setItem('rw_audit_lead', JSON.stringify(data)); }catch(e){}
 
-  // Meta Lead (with an event_id so server-side CAPI can dedupe later)
+  // Meta Lead — fired browser-side now, and again server-side from /api/form-webhook
+  // (CAPI) using this same event_id, so Meta deduplicates the pair into one Lead.
   var eventId='lead_'+Date.now()+'_'+Math.random().toString(36).slice(2,10);
   try{ sessionStorage.setItem('rw_lead_event_id', eventId); }catch(e){}
   try{ fbq('track','Lead',{content_name:'Free Audit',content_category:'Audit Lead'},{eventID:eventId}); }catch(e){}
   rwTrack('generate_lead',{page:'audit',listings:data.listings,issue:data.issue});
+  // Hand the event_id + content name to the server so its CAPI Lead dedupes with the above.
+  data.fbEventId=eventId; data.fbContentName='Free Audit';
 
   // CRM webhook (fire-and-forget — don't block the redirect on Make.com latency)
   fetch(FORM_WEBHOOK_ENDPOINT,{

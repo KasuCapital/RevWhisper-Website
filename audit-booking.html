@@ -4,6 +4,7 @@
 <!-- Attribution tracking (cookie-free) -->
 <script>
 function rwAttribution(){try{return JSON.parse(sessionStorage.getItem('rw_attribution'))||{};}catch(e){return {};}}
+function rwCookie(n){try{var m=document.cookie.match(new RegExp('(?:^|; )'+n.replace(/([.$?*|{}()\[\]\\\/+^])/g,'\\$1')+'=([^;]*)'));return m?decodeURIComponent(m[1]):'';}catch(e){return '';}}
 </script>
 <!-- GA4 (consent-mode) — honors prior consent -->
 <script>
@@ -92,6 +93,26 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 .btn-back{display:inline-flex;align-items:center;gap:6px;background:transparent;color:var(--g500);font-size:13px;font-weight:400;padding:13px 16px;border-radius:var(--radius-sm);border:1.5px solid var(--g200);cursor:pointer;font-family:var(--body);transition:border-color .25s,color .25s,transform .2s var(--ease-out-back)}
 .btn-back:hover{border-color:var(--g300);color:var(--black)}
 .btn-back .arrow{transition:transform .25s}.btn-back:hover .arrow{transform:translateX(-3px)}
+
+/* ── Confirm + phone step ── */
+.confirm-summary{display:flex;align-items:center;gap:10px;background:var(--g50);border:1px solid var(--g200);border-radius:var(--radius);padding:12px 15px;font-size:13.5px;color:var(--g600);line-height:1.4;margin-bottom:20px}
+.confirm-summary svg{flex-shrink:0;color:var(--accent)}
+.confirm-summary strong{color:var(--black);font-weight:600}
+.book-field{margin-bottom:6px}
+.book-field-label{display:block;font-size:13px;font-weight:500;color:var(--black);margin-bottom:7px}
+.book-phone-wrap{display:flex;gap:8px}
+.book-phone-code{width:92px;padding:13px 12px;border:1.5px solid var(--g200);border-radius:var(--radius);font-size:16px;font-family:var(--body);color:var(--black);background:#fff;outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23a39e9b' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;transition:border-color .25s,box-shadow .25s}
+.book-phone-input{flex:1;width:100%;padding:13px 16px;border:1.5px solid var(--g200);border-radius:var(--radius);font-size:16px;font-family:var(--body);color:var(--black);background:#fff;outline:none;transition:border-color .25s,box-shadow .25s}
+.book-phone-input::placeholder{color:var(--g400)}
+.book-phone-input:focus,.book-phone-code:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(74,103,65,.1)}
+.book-phone-input.error{border-color:#B85252;box-shadow:0 0 0 3px rgba(184,82,82,.1)}
+.book-field-hint{font-size:12px;color:var(--g400);margin-top:8px;font-weight:300;line-height:1.45}
+.btn-confirm{display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;background:var(--accent);color:#fff;font-size:15px;font-weight:500;padding:15px 24px;border-radius:var(--radius);border:none;cursor:pointer;font-family:var(--body);margin-top:18px;transition:transform .2s var(--ease-out-back),box-shadow .3s,opacity .3s}
+.btn-confirm .arrow{transition:transform .25s var(--ease-out-expo)}
+.btn-confirm:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 22px rgba(74,103,65,.26)}
+.btn-confirm:hover:not(:disabled) .arrow{transform:translateX(3px)}
+.btn-confirm:active:not(:disabled){transform:translateY(0) scale(.98)}
+.btn-confirm:disabled{opacity:.5;cursor:not-allowed}
 
 /* ── Host strip ── */
 .host-strip{display:flex;align-items:center;gap:14px;margin-bottom:20px}
@@ -248,8 +269,31 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
         <div class="form-actions"><button class="btn-back" type="button" onclick="prevStep()"><span class="arrow">←</span> Back</button></div>
       </div>
 
-      <!-- Step 2: Booking in flight -->
+      <!-- Step 2: Confirm + phone -->
       <div class="step" data-step="2">
+        <div class="step-eyebrow">Last step</div>
+        <h2 class="step-title">Where should we <em>reach you?</em></h2>
+        <div class="confirm-summary">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></svg>
+          <span>Your audit — <strong id="confirm-when">your selected time</strong></span>
+        </div>
+        <div id="confirm-error-slot"></div>
+        <div class="book-field">
+          <label class="book-field-label" for="book-phone">Phone number</label>
+          <div class="book-phone-wrap">
+            <select class="book-phone-code" id="book-phone-code" aria-label="Country code">
+              <option value="+1">🇺🇸 +1</option><option value="+44">🇬🇧 +44</option><option value="+61">🇦🇺 +61</option><option value="+33">🇫🇷 +33</option><option value="+49">🇩🇪 +49</option><option value="+52">🇲🇽 +52</option><option value="+34">🇪🇸 +34</option><option value="+39">🇮🇹 +39</option><option value="+55">🇧🇷 +55</option>
+            </select>
+            <input type="tel" class="book-phone-input" id="book-phone" placeholder="(555) 123-4567" autocomplete="tel" inputmode="tel">
+          </div>
+          <div class="book-field-hint">We'll text your Google Meet link and a reminder before your audit — nothing else.</div>
+        </div>
+        <button class="btn-confirm" type="button" id="confirm-btn" onclick="confirmBooking()">Confirm my audit <span class="arrow">→</span></button>
+        <div class="form-actions"><button class="btn-back" type="button" onclick="prevStep()"><span class="arrow">←</span> Back</button></div>
+      </div>
+
+      <!-- Step 3: Booking in flight -->
+      <div class="step" data-step="3">
         <div class="booking-loader">
           <div class="booking-loader-icon"></div>
           <div class="step-eyebrow">One moment</div>
@@ -258,8 +302,8 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
         </div>
       </div>
 
-      <!-- Step 3: Success -->
-      <div class="step" data-step="3">
+      <!-- Step 4: Success -->
+      <div class="step" data-step="4">
         <div class="success-state" id="success-state">
           <div class="success-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#4A6741" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div>
           <h2 class="success-title">You're <em>all booked.</em></h2>
@@ -476,20 +520,52 @@ function showSlotError(message){
   const fb=document.getElementById('slot-fallback'); if(fb) fb.addEventListener('click',function(e){e.preventDefault();fallbackToCalRedirect('booking_error');});
 }
 
-async function selectSlot(iso,btn){
+/* Tap a time → go to the confirm + phone step (does NOT book yet) */
+function selectSlot(iso,btn){
   if(booking.bookingInFlight) return;
-  booking.bookingInFlight=true;booking.selectedSlot=iso;
+  booking.selectedSlot=iso;
   rwTrack('select_booking_time',{time:iso,page:'audit-booking'});
-  document.querySelectorAll('#slot-list .slot-btn').forEach(function(b){b.disabled=true;});
   const t=new Date(iso);
-  const loaderWhen=document.getElementById('loader-when');
-  if(loaderWhen){
-    loaderWhen.innerHTML=`Confirming <strong>${t.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})} at ${t.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'})}</strong>`;
-  }
-  const fromTime=current;current++;transitionStep(fromTime,current,'forward');
+  const when=t.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})+' at '+t.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});
+  const cw=document.getElementById('confirm-when'); if(cw) cw.textContent=when;
+  const lw=document.getElementById('loader-when'); if(lw) lw.innerHTML='Confirming <strong>'+esc(when)+'</strong>';
+  const errEl=document.getElementById('confirm-error-slot'); if(errEl) errEl.innerHTML='';
+  const cb=document.getElementById('confirm-btn'); if(cb) cb.disabled=false; // re-enable on (re)entry
+  const from=current;current++;transitionStep(from,current,'forward'); // time → confirm
+  setTimeout(function(){const p=document.getElementById('book-phone'); if(p) p.focus();},540);
+}
+
+function showConfirmError(message){
+  const errEl=document.getElementById('confirm-error-slot'); if(!errEl) return;
+  errEl.innerHTML='<div class="cal-error">'+esc(message)+'</div>';
+}
+
+/* Confirm step → validate phone, then actually book */
+async function confirmBooking(){
+  if(booking.bookingInFlight) return;
+  const phoneEl=document.getElementById('book-phone');
+  const codeEl=document.getElementById('book-phone-code');
+  const phoneNum=phoneEl?phoneEl.value.trim():'';
+  if(!phoneNum){ if(phoneEl){phoneEl.classList.add('error');phoneEl.focus();} showConfirmError('Please add a phone number so we can send your call details.'); return; }
+  if(phoneEl) phoneEl.classList.remove('error');
+  const ce=document.getElementById('confirm-error-slot'); if(ce) ce.innerHTML='';
+  const phoneCode=codeEl?codeEl.value.trim():'';
+  const phoneFull=(phoneCode+' '+phoneNum).trim();
+  booking.bookingInFlight=true;
+  const cbtn=document.getElementById('confirm-btn'); if(cbtn) cbtn.disabled=true;
+  // persist the phone into the lead context (payload + any Cal.com fallback link)
+  booking.lead.phone=phoneFull;booking.lead.phone_code=phoneCode;booking.lead.phone_number=phoneNum;
+  try{const s=JSON.parse(sessionStorage.getItem('rw_audit_lead'))||{};s.phone=phoneFull;s.phone_code=phoneCode;s.phone_number=phoneNum;sessionStorage.setItem('rw_audit_lead',JSON.stringify(s));}catch(e){}
+  const iso=booking.selectedSlot;
+  const from=current;current++;transitionStep(from,current,'forward'); // confirm → loader
   const startedAt=Date.now();const MIN_LOADER_MS=1100;
   const l=booking.lead||{};
-  const payload={start:iso,name:l.name,email:l.email,phone:l.phone,timeZone:booking.timeZone,listings:l.listings,airbnbUrl:l.airbnbUrl,source:l.source||'audit-booking',attribution:l.attribution||{}};
+  // Meta Schedule event_id — generated up front so it rides along in the Cal.com booking
+  // metadata, letting /api/cal-webhook fire a server-side Schedule that dedupes with the
+  // browser event below. _fbp/_fbc raise match quality for that server event.
+  var evId='sched_'+Date.now()+'_'+Math.random().toString(36).slice(2,10);
+  var fbp=rwCookie('_fbp'), fbc=rwCookie('_fbc');
+  const payload={start:iso,name:l.name,email:l.email,phone:phoneFull,timeZone:booking.timeZone,listings:l.listings,airbnbUrl:l.airbnbUrl,source:l.source||'audit-booking',attribution:l.attribution||{},fbEventId:evId,fbp:fbp,fbc:fbc};
   let bookingResult=null,bookingError=null,shouldFallback=false,slotUnavailable=false;
   try{
     const res=await fetch(CAL_BOOKING_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
@@ -508,20 +584,20 @@ async function selectSlot(iso,btn){
   if(bookingError){
     console.error('Booking failed:',bookingError);
     booking.bookingInFlight=false;
-    const fromLoader=current;current--;transitionStep(fromLoader,current,'backward');
+    const fromLoader=current;current--;transitionStep(fromLoader,current,'backward'); // loader → confirm
     setTimeout(function(){
-      document.querySelectorAll('#slot-list .slot-btn').forEach(function(b){b.disabled=false;});
-      showSlotError(bookingError.message?`That didn't work: ${bookingError.message}.`:"We couldn't book that slot.");
+      const cb2=document.getElementById('confirm-btn'); if(cb2) cb2.disabled=false;
+      showConfirmError(bookingError.message?`That didn't work: ${bookingError.message}.`:"We couldn't book that slot. Please try again.");
     },450);
     return;
   }
-  // Success → fire Call Booked (Schedule) + custom event
-  var evId='sched_'+Date.now()+'_'+Math.random().toString(36).slice(2,10);
+  // Success → fire Call Booked (Schedule). The same event_id is in the booking metadata,
+  // so the CAPI Schedule from /api/cal-webhook dedupes against this browser event.
   try{ fbq('track','Schedule',{content_name:'Audit Call Booked',content_category:'Audit'},{eventID:evId}); }catch(e){}
   rwTrack('call_booked',{time:iso,page:'audit-booking',listings:l.listings});
   rwTrack('booking_confirmed',{time:iso,page:'audit-booking'});
   renderSuccess(bookingResult);
-  const fromLoader=current;current++;transitionStep(fromLoader,current,'forward');
+  const fromLoader=current;current++;transitionStep(fromLoader,current,'forward'); // loader → success
   // hide the now-redundant below-card extras
   var sc=document.getElementById('scarcity'); if(sc) sc.style.display='none';
   setTimeout(launchConfetti,300);

@@ -16,6 +16,8 @@ const WEBHOOK_URLS = {
 const INTAKE_WEBHOOK_URL = 'https://hook.us2.make.com/9x8k27nrk3ll6rfrjtfrn469cnslxpuj';
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
 
+const { sendCapiEvent, buildUserData } = require('./_meta-capi');
+
 async function sendConfirmationEmail(name, email) {
   if (!RESEND_API_KEY) {
     console.warn('RESEND_API_KEY not set — skipping confirmation email.');
@@ -119,7 +121,6 @@ function payloadError(eventType, payload) {
 
   if (eventType === 'get_started') {
     if (!String(payload.name || '').trim()) return 'A name is required.';
-    if (!String(payload.phone || '').trim()) return 'A phone number is required.';
   }
 
   if (eventType === 'checkout') {
@@ -193,16 +194,41 @@ module.exports = async function handler(req, res) {
     return sendJson(res, 502, { error: 'Notification webhook rejected the request.' });
   }
 
-  // For get_started submissions: send confirmation email + intake webhook
+  // For get_started submissions: confirmation email + intake webhook, plus the
+  // server-side Meta CAPI Lead (deduped with the browser Pixel via the shared fbEventId).
   if (eventType === 'get_started') {
     const name = String(payload.name || '').trim();
     const email = String(payload.email || '').trim();
 
-    // Fire both in parallel — don't block the response on them
-    await Promise.allSettled([
+    const tasks = [
       sendConfirmationEmail(name, email),
       sendIntakeWebhook(name, email)
-    ]);
+    ];
+
+    // Only the audit funnel sends an fbEventId. Scope the CAPI Lead to it so we never
+    // emit a server Lead for a page that didn't fire a browser Lead to dedupe against.
+    if (payload.fbEventId) {
+      const [firstName, ...rest] = name.split(' ');
+      tasks.push(sendCapiEvent({
+        eventName: 'Lead',
+        eventId: String(payload.fbEventId),
+        eventSourceUrl: req.headers.referer || req.headers.referrer || undefined,
+        userData: buildUserData({
+          email,
+          phone: payload.phone,
+          firstName,
+          lastName: rest.join(' '),
+          req
+        }),
+        customData: {
+          content_name: payload.fbContentName || 'Free Audit',
+          content_category: 'Audit Lead'
+        }
+      }));
+    }
+
+    // Don't block the response on side-effects
+    await Promise.allSettled(tasks);
   }
 
   return sendJson(res, 200, { received: true });
