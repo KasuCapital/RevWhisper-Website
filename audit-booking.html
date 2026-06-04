@@ -350,7 +350,6 @@ let current=0;
 let isTransitioning=false;
 const CAL_SLOTS_ENDPOINT='/api/cal-slots';
 const CAL_BOOKING_ENDPOINT='/api/cal-booking';
-const CAL_FALLBACK_BASE='https://cal.com/team/revwhisper/discovery';
 const booking={
   timeZone:(Intl.DateTimeFormat().resolvedOptions().timeZone)||'UTC',
   slotsByDate:{},rangeStart:null,rangeEnd:null,loaded:false,loading:false,
@@ -391,19 +390,11 @@ function transitionStep(from,to,direction){
 function prevStep(){ if(current>0){const from=current;current--;transitionStep(from,current,'backward');} }
 
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
-function fallbackToCalRedirect(reason){
-  const l=booking.lead||{};
-  rwTrack('booking_fallback',{reason:reason||'unknown',page:'audit-booking'});
-  const params=new URLSearchParams({name:l.name||'',email:l.email||'',phone:l.phone||''});
-  window.location.href=`${CAL_FALLBACK_BASE}?${params.toString()}`;
-}
 function showCalError(message,options){
   const slot=document.getElementById('cal-error-slot'); if(!slot) return;
   const showRetry=options&&options.retry!==false;
-  const showFallback=options&&options.fallback;
-  slot.innerHTML=`<div class="cal-error"><div>${esc(message)}</div><div style="margin-top:8px">${showRetry?'<a href="#" id="cal-retry">Try again</a>':''}${showFallback?(showRetry?' &nbsp;·&nbsp; ':'')+'<a href="#" id="cal-fallback">Pick a time on Cal.com instead</a>':''}</div></div>`;
+  slot.innerHTML=`<div class="cal-error"><div>${esc(message)}</div>${showRetry?'<div style="margin-top:8px"><a href="#" id="cal-retry">Try again</a></div>':''}</div>`;
   const r=document.getElementById('cal-retry'); if(r) r.addEventListener('click',function(e){e.preventDefault();slot.innerHTML='';booking.loaded=false;booking.loading=false;loadSlots();});
-  const f=document.getElementById('cal-fallback'); if(f) f.addEventListener('click',function(e){e.preventDefault();fallbackToCalRedirect('user_chose_fallback');});
 }
 function recoverStaleSlot(){
   booking.bookingInFlight=false;
@@ -436,7 +427,7 @@ async function loadSlots(){
     });
     booking.loaded=true;renderCalendar();
     if(Object.keys(booking.slotsByDate).length===0){
-      showCalError("We don't have open times in the next 60 days right now. You can grab a time directly on Cal.com.",{retry:true,fallback:true});
+      showCalError("We don't have open times in the next 60 days right now. Please try again shortly.",{retry:true});
     }
   }catch(err){
     console.error('loadSlots failed:',err);
@@ -516,8 +507,7 @@ function renderSlots(){
 }
 function showSlotError(message){
   const errEl=document.getElementById('slot-error-slot'); if(!errEl) return;
-  errEl.innerHTML=`<div class="cal-error">${esc(message)} <a href="#" id="slot-fallback">Pick a time on Cal.com instead</a></div>`;
-  const fb=document.getElementById('slot-fallback'); if(fb) fb.addEventListener('click',function(e){e.preventDefault();fallbackToCalRedirect('booking_error');});
+  errEl.innerHTML=`<div class="cal-error">${esc(message)}</div>`;
 }
 
 /* Tap a time → go to the confirm + phone step (does NOT book yet) */
@@ -560,9 +550,9 @@ async function confirmBooking(){
   const from=current;current++;transitionStep(from,current,'forward'); // confirm → loader
   const startedAt=Date.now();const MIN_LOADER_MS=1100;
   const l=booking.lead||{};
-  // Meta Schedule event_id — generated up front so it rides along in the Cal.com booking
-  // metadata, letting /api/cal-webhook fire a server-side Schedule that dedupes with the
-  // browser event below. _fbp/_fbc raise match quality for that server event.
+  // Meta Schedule event_id — generated up front and sent with the booking so /api/cal-booking
+  // can fire a server-side Schedule (CAPI) with the SAME id, deduped against the browser event
+  // below. _fbp/_fbc raise match quality for that server event.
   var evId='sched_'+Date.now()+'_'+Math.random().toString(36).slice(2,10);
   var fbp=rwCookie('_fbp'), fbc=rwCookie('_fbc');
   const payload={start:iso,name:l.name,email:l.email,phone:phoneFull,timeZone:booking.timeZone,listings:l.listings,airbnbUrl:l.airbnbUrl,source:l.source||'audit-booking',attribution:l.attribution||{},fbEventId:evId,fbp:fbp,fbc:fbc};
@@ -579,20 +569,21 @@ async function confirmBooking(){
   }catch(err){ bookingError=err; }
   const elapsed=Date.now()-startedAt;
   if(elapsed<MIN_LOADER_MS){ await new Promise(function(r){setTimeout(r,MIN_LOADER_MS-elapsed);}); }
-  if(shouldFallback){ fallbackToCalRedirect('upstream_error'); return; }
   if(slotUnavailable){ recoverStaleSlot(); return; }
-  if(bookingError){
-    console.error('Booking failed:',bookingError);
+  // Booking didn't go through (Cal.com error/upstream hiccup/network) → keep the customer on
+  // our page, re-enable the button, and let them retry. No off-site redirect.
+  if(shouldFallback||bookingError){
+    console.error('Booking failed:',bookingError||'scheduler_unavailable');
     booking.bookingInFlight=false;
     const fromLoader=current;current--;transitionStep(fromLoader,current,'backward'); // loader → confirm
     setTimeout(function(){
       const cb2=document.getElementById('confirm-btn'); if(cb2) cb2.disabled=false;
-      showConfirmError(bookingError.message?`That didn't work: ${bookingError.message}.`:"We couldn't book that slot. Please try again.");
+      showConfirmError(bookingError&&bookingError.message?`That didn't work: ${bookingError.message}.`:"We couldn't reach the scheduler just now. Please try again in a moment.");
     },450);
     return;
   }
-  // Success → fire Call Booked (Schedule). The same event_id is in the booking metadata,
-  // so the CAPI Schedule from /api/cal-webhook dedupes against this browser event.
+  // Success → fire Call Booked (Schedule). /api/cal-booking fires the same event server-side
+  // (CAPI) with this same event_id, so Meta dedupes the browser + server pair into one.
   try{ fbq('track','Schedule',{content_name:'Audit Call Booked',content_category:'Audit'},{eventID:evId}); }catch(e){}
   rwTrack('call_booked',{time:iso,page:'audit-booking',listings:l.listings});
   rwTrack('booking_confirmed',{time:iso,page:'audit-booking'});

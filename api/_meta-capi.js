@@ -81,7 +81,8 @@ async function sendCapiEvent({
   eventSourceUrl,
   actionSource = 'website',
   userData = {},
-  customData
+  customData,
+  timeoutMs = 8000
 } = {}) {
   const accessToken = (process.env.META_CAPI_ACCESS_TOKEN || '').trim();
   const pixelId = (process.env.META_PIXEL_ID || DEFAULT_PIXEL_ID).trim();
@@ -109,7 +110,7 @@ async function sendCapiEvent({
   const url = `https://graph.facebook.com/${GRAPH_VERSION}/${pixelId}/events?access_token=${encodeURIComponent(accessToken)}`;
 
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 8000);
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
   try {
     const r = await fetch(url, {
       method: 'POST',

@@ -4,6 +4,8 @@ const TEAM_SLUG = 'revwhisper';
 const EVENT_TYPE_SLUG = 'discovery';
 const UPSTREAM_TIMEOUT_MS = 15000;
 
+const { sendCapiEvent, buildUserData } = require('./_meta-capi');
+
 // Cal.com metadata limits (per API docs): <=50 keys, key <=40 chars, string value <=500 chars.
 const META_MAX_KEYS = 50;
 const META_MAX_KEY_LEN = 40;
@@ -65,10 +67,6 @@ function buildMetadata(body) {
   // also delivered to the CRM via the form webhook. We deliberately do NOT put it in
   // attendee.phoneNumber, which Cal.com validates as an international number.
   add('phone', body.phone);
-  // Meta dedup + match signals — read back by /api/cal-webhook to fire a deduped CAPI Schedule.
-  add('fbEventId', body.fbEventId);
-  add('fbp', body.fbp);
-  add('fbc', body.fbc);
   if (body.attribution && typeof body.attribution === 'object' && !Array.isArray(body.attribution)) {
     for (const [k, v] of Object.entries(body.attribution)) add(k, v);
   }
@@ -184,6 +182,31 @@ module.exports = async function handler(req, res) {
   }
 
   const data = upstreamBody && upstreamBody.data ? upstreamBody.data : null;
+
+  // Server-side Meta CAPI "Schedule" — fires on every booking made through our widget,
+  // deduped with the browser event via the shared fbEventId. This endpoint is browser-called,
+  // so req carries the visitor's _fbp/_fbc/IP/UA for strong match quality.
+  if (body.fbEventId) {
+    const fullName = String(body.name || '').trim();
+    const nameParts = fullName.split(' ');
+    await sendCapiEvent({
+      eventName: 'Schedule',
+      eventId: String(body.fbEventId),
+      eventSourceUrl: req.headers.referer || req.headers.referrer || 'https://revwhisper.com/audit-booking',
+      userData: buildUserData({
+        email: body.email,
+        phone: body.phone,
+        firstName: nameParts[0],
+        lastName: nameParts.slice(1).join(' '),
+        fbp: body.fbp,
+        fbc: body.fbc,
+        req
+      }),
+      customData: { content_name: 'Audit Call Booked', content_category: 'Audit' },
+      timeoutMs: 4000
+    });
+  }
+
   return sendJson(res, 201, {
     ok: true,
     booking: data
