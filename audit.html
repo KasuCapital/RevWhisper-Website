@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta charset="UTF-8">
 <!-- Attribution tracking (cookie-free) -->
 <script>
 (function(){
@@ -49,7 +50,6 @@ fbq('track', 'PageView');
 </script>
 <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=959022406709300&ev=PageView&noscript=1"/></noscript>
 <!-- End Meta Pixel -->
-<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Free Airbnb Listing Audit | RevWhisper</title>
 <meta name="description" content="Get a free audit of your Airbnb listing's ranking, pricing, and conversion. See exactly where you're leaving bookings on the table, plus what to fix first, walked through with you, live.">
@@ -85,7 +85,7 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
   --sh-sm:0 1px 3px rgba(50,48,47,.06),0 1px 2px rgba(50,48,47,.04);
   --sh:0 4px 16px rgba(50,48,47,.07),0 2px 6px rgba(50,48,47,.04);
   --sh-lg:0 16px 48px rgba(50,48,47,.1),0 4px 12px rgba(50,48,47,.05);
-  --heading:'Lora','Georgia',serif;--body:'DM Sans','system-ui','Helvetica Neue',sans-serif;
+  --heading:'Lora','Georgia',serif;--body:'DM Sans','system-ui','Helvetica Neue',sans-serif;--mono:'DM Mono',ui-monospace,'SF Mono',Menlo,monospace;
   --ease-out-expo:cubic-bezier(.16,1,.3,1);--ease-out-back:cubic-bezier(.34,1.56,.64,1);
 }
 img{max-width:100%;display:block}
@@ -233,23 +233,104 @@ a{color:inherit}
 .btn-back:hover{border-color:var(--g300);color:var(--black)}
 
 
-/* ───────────────────────── Pillars ───────────────────────── */
-.pillar-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:48px}
-.pillar{background:#fff;border:1px solid var(--g200);border-radius:var(--radius-lg);padding:30px 26px;box-shadow:var(--sh-sm);transition:transform .3s var(--ease-out-expo),box-shadow .3s}
-.pillar:hover{transform:translateY(-4px);box-shadow:var(--sh)}
-.pillar-icon{width:50px;height:50px;border-radius:12px;background:var(--accent-light);border:1px solid var(--accent-border);display:flex;align-items:center;justify-content:center;color:var(--accent);margin-bottom:18px}
-.pillar h3{font-family:var(--heading);font-size:21px;font-weight:500;color:var(--black);margin-bottom:9px}
-.pillar p{font-size:14.5px;color:var(--g500);line-height:1.65;font-weight:300}
-.pillar .pillar-q{display:block;font-size:13px;color:var(--accent);font-weight:500;margin-top:14px}
+/* ───────────────────────── What we look at — split (Airbnb card + copy) ───────────────────────── */
+.look-split{display:grid;grid-template-columns:1fr minmax(0,.92fr);grid-template-areas:"head media" "list media";column-gap:clamp(36px,5vw,68px);align-items:center}
+.look-media{grid-area:media;align-self:center}
+.look-head{grid-area:head;align-self:end}
+.look-head .eyebrow{margin-bottom:14px}
+.look-head .lead{margin-top:18px}
+.look-list{grid-area:list;align-self:start;margin-top:28px;display:flex;flex-direction:column;gap:2px}
 
-/* ───────────────────────── How it works ───────────────────────── */
+/* Airbnb-style listing card */
+.bnb-card{max-width:430px;margin:0 auto;font-family:var(--body)}
+.bnb-photo{position:relative;aspect-ratio:1/1;border-radius:14px;overflow:hidden;background:var(--g100);box-shadow:var(--sh)}
+.bnb-photo img{width:100%;height:100%;object-fit:cover}
+.bnb-heart{position:absolute;top:14px;right:14px;width:26px;height:26px;line-height:0;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
+.bnb-heart svg{width:26px;height:26px;fill:rgba(0,0,0,.35);stroke:#fff;stroke-width:2}
+.bnb-info{padding:15px 4px 0}
+.bnb-title{font-size:16px;font-weight:600;color:var(--black);letter-spacing:-.01em;line-height:1.3}
+.bnb-meta{font-size:15px;color:var(--g500);margin-top:3px;font-weight:300}
+.bnb-host{display:flex;align-items:center;gap:11px;margin-top:15px;padding-top:15px;border-top:1px solid var(--g200)}
+.bnb-avatar{position:relative;width:31px;height:31px;border-radius:50%;background:linear-gradient(135deg,#c98a6b,var(--terra));display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:600;flex-shrink:0;font-family:var(--heading)}
+.bnb-avatar-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:50%}
+.bnb-badge{position:absolute;right:-3px;bottom:-3px;width:14px;height:14px;border-radius:50%;background:#FF385C;border:2px solid #fff;display:flex;align-items:center;justify-content:center}
+.bnb-badge svg{width:8px;height:8px;color:#fff;fill:#fff}
+.bnb-host-name{font-size:14.5px;font-weight:600;color:var(--black)}
+.bnb-host-sub{font-size:13.5px;color:var(--g500);margin-top:1px}
+
+/* compact three-up list (right column) */
+.look-item{display:flex;gap:15px;padding:15px 16px;border-radius:var(--radius-lg);transition:background .25s var(--ease-out-expo)}
+.look-item:hover{background:var(--g50)}
+.look-ico{width:42px;height:42px;flex-shrink:0;border-radius:11px;background:var(--accent-light);border:1px solid var(--accent-border);display:flex;align-items:center;justify-content:center;color:var(--accent)}
+.look-item h3{font-family:var(--heading);font-size:18px;font-weight:500;color:var(--black);margin-bottom:4px}
+.look-item p{font-size:14px;color:var(--g500);line-height:1.6;font-weight:300}
+.look-item .pillar-q{display:block;font-size:13px;color:var(--accent);font-weight:500;margin-top:9px}
+
+/* ───────────────────────── Your report (the deliverable) ───────────────────────── */
 .how{background:var(--stone)}
-.how-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:48px}
-.how-step{position:relative;padding-top:8px}
-.how-num{font-family:var(--heading);font-size:15px;font-weight:600;color:#fff;background:var(--accent);width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:16px}
-.how-step h3{font-family:var(--heading);font-size:20px;font-weight:500;color:var(--black);margin-bottom:8px}
-.how-step p{font-size:14.5px;color:var(--g500);line-height:1.65;font-weight:300}
-.how-cta{margin-top:48px;text-align:center}
+.report-split{display:grid;grid-template-columns:minmax(0,1.04fr) 1fr;grid-template-areas:"media copy";column-gap:clamp(40px,5.5vw,84px);align-items:center;margin-top:6px}
+.report-media{grid-area:media;display:flex;justify-content:center;padding:16px 0}
+.report-copy{grid-area:copy}
+.report-copy .lead{margin-top:18px}
+.report-list{margin-top:28px;display:flex;flex-direction:column;gap:4px}
+.rep-item{display:flex;gap:16px;padding:14px 16px;border-radius:var(--radius-lg);transition:background .25s var(--ease-out-expo)}
+.rep-item:hover{background:rgba(255,255,255,.66)}
+.rep-ico{width:42px;height:42px;flex-shrink:0;border-radius:11px;background:var(--accent-light);border:1px solid var(--accent-border);display:flex;align-items:center;justify-content:center;color:var(--accent)}
+.rep-item h3{font-family:var(--heading);font-size:18px;font-weight:500;color:var(--black);margin-bottom:5px;letter-spacing:-.01em}
+.rep-item p{font-size:14px;color:var(--g500);line-height:1.6;font-weight:300}
+
+/* document mockup — a stack of report sheets */
+.report-stage{position:relative;width:100%;max-width:412px}
+.report-stage::before{content:'';position:absolute;inset:-7% -5% -9% -5%;background:radial-gradient(58% 54% at 50% 42%,rgba(74,103,65,.08),transparent 72%);z-index:0}
+.rd-back{position:absolute;left:0;top:0;width:100%;height:100%;background:#fff;border:1px solid var(--g200);border-radius:var(--radius-lg);box-shadow:var(--sh)}
+.rd-back.b2{transform:rotate(-4deg) translate(-13px,15px);background:var(--g50)}
+.rd-back.b1{transform:rotate(2.4deg) translate(11px,7px)}
+.rd-front{position:relative;z-index:1;background:#fff;border:1px solid var(--g200);border-radius:var(--radius-lg);box-shadow:var(--sh-lg);padding:22px 22px 18px;transition:transform .45s var(--ease-out-expo)}
+.report-stage:hover .rd-front{transform:translateY(-6px)}
+
+.rd-top{display:flex;align-items:center;justify-content:space-between}
+.rd-brand{display:flex;align-items:center;gap:7px;font-family:var(--heading);font-size:14.5px;color:var(--black);letter-spacing:-.01em}
+.rd-brand .rd-mark{width:18px;height:18px;flex-shrink:0;color:var(--accent)}
+.rd-brand b{color:var(--accent);font-weight:400}
+.rd-stamp{font-size:8.5px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--g400);border:1px solid var(--g200);border-radius:100px;padding:4px 9px}
+.rd-titlewrap{margin-top:15px;padding-bottom:13px;border-bottom:1px solid var(--g200)}
+.rd-title{font-family:var(--heading);font-size:17px;font-weight:400;color:var(--black);letter-spacing:-.01em}
+.rd-sub{font-family:var(--mono);font-size:10.5px;color:var(--g400);margin-top:5px;letter-spacing:.01em}
+
+.rd-block{padding:13px 0;border-bottom:1px solid var(--g100)}
+.rd-block:last-of-type{border-bottom:none;padding-bottom:2px}
+.rd-bhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.rd-blabel{display:flex;align-items:center;gap:8px;font-size:10.5px;font-weight:600;letter-spacing:.05em;color:var(--g600);text-transform:uppercase}
+.rd-bdot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0}
+.rd-bnum{font-family:var(--mono);font-size:9px;color:var(--g300);font-weight:500}
+
+/* ranking sparkline */
+.rd-rank{display:flex;align-items:center;gap:13px}
+.rd-spark{flex:1;height:44px;display:block;overflow:visible}
+.rd-ranknow{text-align:right;flex-shrink:0;line-height:1}
+.rd-ranknow .rn-v{font-family:var(--mono);font-size:20px;font-weight:500;color:var(--accent)}
+.rd-ranknow .rn-l{font-size:8.5px;color:var(--g400);letter-spacing:.04em;margin-top:4px;text-transform:uppercase}
+
+/* pricing comparison rows */
+.rd-rows{display:flex;flex-direction:column;gap:9px}
+.rd-row{display:flex;align-items:center;gap:11px}
+.rd-row .rr-k{font-size:10.5px;color:var(--g500);width:104px;flex-shrink:0}
+.rd-row .rr-track{flex:1;height:8px;border-radius:100px;background:var(--g100);overflow:hidden}
+.rd-row .rr-track i{display:block;height:100%;border-radius:100px;background:var(--g300)}
+.rd-row .rr-track i.up{background:var(--gold)}
+.rd-row .rr-v{font-family:var(--mono);font-size:11px;color:var(--g500);width:42px;text-align:right;flex-shrink:0}
+.rd-row .rr-v.hi{color:var(--gold);font-weight:500}
+.rd-pricenote{font-size:9.5px;color:var(--g400);margin-top:9px;letter-spacing:.01em}
+.rd-pricenote b{color:var(--gold);font-weight:500}
+
+/* conversion checklist */
+.rd-checks{display:flex;flex-direction:column;gap:8px}
+.rd-check{display:flex;align-items:center;gap:9px;font-size:11px;color:var(--g600)}
+.rd-cico{width:16px;height:16px;border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700}
+.rd-cico.flag{background:var(--terra-bg);color:var(--terra)}
+.rd-cico.ok{background:var(--accent-light);color:var(--accent)}
+
+.how-cta{margin-top:52px;text-align:center}
 
 /* ───────────────────────── Proof ───────────────────────── */
 /* plain stats — no boxes, just the numbers with light dividers */
@@ -263,23 +344,35 @@ a{color:inherit}
 .case-carousel{position:relative;width:100%;overflow:hidden}
 .case-track{display:flex;align-items:stretch;width:max-content;animation:caseScroll 60s linear infinite}
 .case-carousel:hover .case-track{animation-play-state:paused}
-.case-track .case{width:300px;flex-shrink:0;margin-right:20px}
+.case-track .case{width:268px;flex-shrink:0;margin-right:16px}
 @keyframes caseScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-.case{background:#fff;border:1px solid var(--g200);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--sh-sm);transition:transform .3s var(--ease-out-expo),box-shadow .3s;text-decoration:none;color:inherit;display:flex;flex-direction:column}
-.case:hover{transform:translateY(-4px);box-shadow:var(--sh-lg)}
-.case-photo{position:relative;aspect-ratio:16/10;background:var(--g100);overflow:hidden}
-.case-photo img{width:100%;height:100%;object-fit:cover}
-.case-delta{position:absolute;top:12px;right:12px;background:var(--accent);color:#fff;font-size:14px;font-weight:700;padding:6px 12px;border-radius:100px;box-shadow:var(--sh)}
-.case-body{padding:20px 22px 22px;display:flex;flex-direction:column;flex:1}
-.case-loc{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--g400);margin-bottom:5px}
-.case-name{font-family:var(--heading);font-size:19px;font-weight:500;color:var(--black);margin-bottom:4px}
-.case-tag{font-size:12px;color:var(--g500);font-weight:400;margin-bottom:18px}
-.case-metrics{display:flex;gap:22px;margin-top:auto;padding-top:6px}
-.case-metric .cm-flow{display:flex;align-items:center;gap:7px;font-size:15px;font-weight:600;color:var(--black)}
-.case-metric .cm-flow .was{color:var(--g400);font-weight:400;text-decoration:line-through;text-decoration-color:var(--g300)}
-.case-metric .cm-flow svg{color:var(--accent)}
-.case-metric .cm-lbl{font-size:11px;color:var(--g500);margin-top:3px;font-weight:300}
-.case-basis{margin-top:14px;padding-top:11px;border-top:1px solid var(--g100);font-size:10.5px;letter-spacing:.04em;color:var(--g400);font-weight:400}
+/* Result cards mirror the Marathon (.bnb-*) Airbnb card exactly: square photo, DM Sans title/meta, same host row — then a standout RevWhisper numbers panel below. */
+.case{font-family:var(--body);background:none;border:none;box-shadow:none;transition:transform .3s var(--ease-out-expo);text-decoration:none;color:inherit;display:flex;flex-direction:column}
+.case:hover{transform:translateY(-2px)}
+.case:hover .case-photo img{transform:scale(1.04)}
+.case-photo{position:relative;aspect-ratio:1/1;background:var(--g100);overflow:hidden;border-radius:12px}
+.case-photo img{width:100%;height:100%;object-fit:cover;transition:transform .4s var(--ease-out-expo)}
+.case-heart{position:absolute;top:14px;right:14px;width:24px;height:24px;line-height:0;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
+.case-heart svg{width:24px;height:24px;fill:rgba(0,0,0,.4);stroke:#fff;stroke-width:2}
+.case-delta{position:absolute;top:12px;left:12px;background:#fff;color:var(--black);font-size:12.5px;font-weight:600;padding:5px 11px;border-radius:100px;box-shadow:0 2px 6px rgba(0,0,0,.16);letter-spacing:0}
+.case-body{padding:13px 2px 0;display:flex;flex-direction:column;flex:1}
+.case-name{font-size:15px;font-weight:600;color:#222;letter-spacing:-.01em;line-height:1.25}
+.case-tag{font-size:15px;color:#717171;font-weight:400;margin-top:2px;line-height:1.3}
+.case-host{display:flex;align-items:center;gap:10px;margin-top:14px;padding-top:14px;border-top:1px solid var(--g200)}
+.case-avatar{position:relative;width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#c98a6b,var(--terra));display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:600;flex-shrink:0}
+.case-avatar-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:50%}
+.case-badge{position:absolute;right:-3px;bottom:-3px;width:14px;height:14px;border-radius:50%;background:#FF385C;border:2px solid #fff;display:flex;align-items:center;justify-content:center}
+.case-badge svg{width:8px;height:8px;fill:#fff}
+.case-host-name{font-size:14px;font-weight:600;color:#222}
+.case-host-sub{font-size:13px;color:#717171;margin-top:1px}
+.case-results{margin-top:14px}
+.case-metrics{display:flex;gap:14px}
+.case-metric{flex:1;min-width:0}
+.case-metric .cm-flow{display:flex;align-items:baseline;gap:7px;font-size:15px;font-weight:600;color:var(--accent);letter-spacing:-.01em;white-space:nowrap}
+.case-metric .cm-flow .was{font-size:13px;color:#9b9b9b;font-weight:400;text-decoration:line-through;text-decoration-color:#c4c4c4}
+.case-metric .cm-flow svg{display:none}
+.case-metric .cm-lbl{font-size:12px;color:#717171;margin-top:2px;font-weight:400;letter-spacing:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.case-basis{margin-top:8px;font-size:12px;letter-spacing:0;color:#9b9b9b;font-weight:400}
 
 
 /* ───────────────────────── FAQ ───────────────────────── */
@@ -322,10 +415,22 @@ a{color:inherit}
 
 /* ───────────────────────── Responsive ───────────────────────── */
 @media(max-width:920px){
-  .pillar-grid,.how-grid{grid-template-columns:1fr;gap:16px}
+  .report-split{grid-template-columns:1fr;grid-template-areas:"copy" "media";row-gap:10px;text-align:center}
+  .report-copy .lead{margin-left:auto;margin-right:auto}
+  .report-media{margin-top:30px}
+  .report-list{margin-top:24px;text-align:left;max-width:480px;margin-left:auto;margin-right:auto}
+  .how-cta{margin-top:40px}
+  .look-split{grid-template-columns:1fr;grid-template-areas:"head" "media" "list";row-gap:6px}
+  .look-head{align-self:auto;text-align:center}
+  .look-head .lead{margin-left:auto;margin-right:auto}
+  .look-media{align-self:auto;margin:22px 0 4px}
+  .look-list{align-self:auto;margin-top:18px}
+  .look-item{padding:14px 12px}
 }
 @media(max-width:640px){
   .w{padding:0 20px}
+  /* very subtle edge fade so the marquee doesn't read as a hard cut on mobile */
+  .case-carousel{-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 18px,#000 calc(100% - 18px),transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 18px,#000 calc(100% - 18px),transparent 100%)}
   .sec{padding:clamp(48px,11vw,72px) 0}
   #hero{padding:24px 0 30px}
   .hero-inner{margin-bottom:22px}
@@ -480,32 +585,60 @@ a{color:inherit}
   </div>
 </section>
 
-<!-- ════════════════════ WHAT WE LOOK AT (three pillars, above the case studies) ════════════════════ -->
+<!-- ════════════════════ WHAT WE LOOK AT (Airbnb-style listing card + three pillars, above the case studies) ════════════════════
+     Left: the three audit pillars (Ranking / Pricing / Conversion) under the heading.
+     Right: a real case-study listing (61 Sombrero, Marathon FL — images/properties/sombrero.webp) recreated in Airbnb's own
+     card chrome (square photo, heart, title/meta, Superhost host row) so it reads as the host's own listing.
+     Grid areas reorder to head → media → list on mobile.
+═══════════════════════════════════════════════════════════════════ -->
 <section class="sec">
-  <div class="w center">
-    <div class="eyebrow">What we look at</div>
-    <h2 class="h2">Three things decide what your listing <em>earns</em>.</h2>
-    <p class="lead">Your audit covers all three, using the same framework behind the results below. No fluff, no generic checklist.</p>
-  </div>
   <div class="w">
-    <div class="pillar-grid">
-      <div class="pillar">
-        <div class="pillar-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20v-4q0-1 1-1h1.5q1 0 1 1v4"/><path d="M11 20v-9q0-1 1-1h1.5q1 0 1 1v9"/><path d="M17 20V5q0-1 1-1h1.5q1 0 1 1v15"/><path d="M3 20.5q9.5.5 19 0"/></svg></div>
-        <h3>Ranking</h3>
-        <p>Where you actually land in search, why your impressions dropped, and the levers that move you back up the results.</p>
-        <span class="pillar-q">“Why has my visibility fallen?”</span>
+    <div class="look-split">
+      <!-- Airbnb-style listing card -->
+      <div class="look-media">
+        <div class="bnb-card">
+          <div class="bnb-photo">
+            <img src="/images/properties/clearwater.webp" alt="A short-term rental listing as it appears on Airbnb — white brick ranch with red metal roof, Clearwater FL" loading="lazy" width="430" height="430">
+            <span class="bnb-heart" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M16 28c7.3-4.6 12-9.7 12-15.2 0-3.6-2.7-6.3-6-6.3-2.4 0-4.4 1.3-6 3.6-1.6-2.3-3.6-3.6-6-3.6-3.3 0-6 2.7-6 6.3C4 18.3 8.7 23.4 16 28z"/></svg></span>
+          </div>
+          <div class="bnb-info">
+            <div class="bnb-title">Entire home in Clearwater, Florida</div>
+            <div class="bnb-meta">8 guests · 4 bedrooms · 5 beds · 3 baths</div>
+          </div>
+        </div>
       </div>
-      <div class="pillar">
-        <div class="pillar-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M14.8 9.3c-.5-1-1.6-1.6-2.8-1.6-1.7 0-3 .9-3 2.2s1.3 1.8 3 2.1 3 .9 3 2.2-1.3 2.2-3 2.2c-1.2 0-2.3-.6-2.8-1.6"/><path d="M12 6.2v11.6"/></svg></div>
-        <h3>Pricing</h3>
-        <p>The nights you're underpriced, the peaks you're missing, and the minimum-stay rules quietly costing you revenue.</p>
-        <span class="pillar-q">“What am I leaving on the table?”</span>
+      <!-- Heading + intro -->
+      <div class="look-head">
+        <div class="eyebrow">What we look at</div>
+        <h2 class="h2">Three things decide what your listing <em>earns</em>.</h2>
+        <p class="lead">Your audit covers all three, using the same framework behind the results below. No fluff, no generic checklist.</p>
       </div>
-      <div class="pillar">
-        <div class="pillar-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 5h15a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-15a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z"/><circle cx="8.5" cy="9.5" r="1.4" fill="currentColor"/><path d="M5 15.5c2-1.5 4-3 6.5-2s5 .5 7.5-1"/></svg></div>
-        <h3>Conversion</h3>
-        <p>Why lookers aren't booking: your photos, title, and first three lines, plus the fixes that turn views into reservations.</p>
-        <span class="pillar-q">“Why aren't my views converting?”</span>
+      <!-- Three pillars -->
+      <div class="look-list">
+        <div class="look-item">
+          <div class="look-ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20v-4q0-1 1-1h1.5q1 0 1 1v4"/><path d="M11 20v-9q0-1 1-1h1.5q1 0 1 1v9"/><path d="M17 20V5q0-1 1-1h1.5q1 0 1 1v15"/><path d="M3 20.5q9.5.5 19 0"/></svg></div>
+          <div>
+            <h3>Ranking</h3>
+            <p>Where you actually land in search, why your impressions dropped, and the levers that move you back up the results.</p>
+            <span class="pillar-q">“Why has my visibility fallen?”</span>
+          </div>
+        </div>
+        <div class="look-item">
+          <div class="look-ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M14.8 9.3c-.5-1-1.6-1.6-2.8-1.6-1.7 0-3 .9-3 2.2s1.3 1.8 3 2.1 3 .9 3 2.2-1.3 2.2-3 2.2c-1.2 0-2.3-.6-2.8-1.6"/><path d="M12 6.2v11.6"/></svg></div>
+          <div>
+            <h3>Pricing</h3>
+            <p>The nights you're underpriced, the peaks you're missing, and the minimum-stay rules quietly costing you revenue.</p>
+            <span class="pillar-q">“What am I leaving on the table?”</span>
+          </div>
+        </div>
+        <div class="look-item">
+          <div class="look-ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 5h15a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-15a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z"/><circle cx="8.5" cy="9.5" r="1.4" fill="currentColor"/><path d="M5 15.5c2-1.5 4-3 6.5-2s5 .5 7.5-1"/></svg></div>
+          <div>
+            <h3>Conversion</h3>
+            <p>Why lookers aren't booking: your photos, title, and first three lines, plus the fixes that turn views into reservations.</p>
+            <span class="pillar-q">“Why aren't my views converting?”</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -513,10 +646,11 @@ a{color:inherit}
 
 <!-- ════════════════════ PROOF / CASE STUDIES (social proof, below the three pillars) ════════════════════
      Real client performance from the May 2026 PriceLabs snapshot.
-     Cards 1–4: standardized single-month YoY gain (May 2026 vs May 2025).
-     Card 5 (ASH2): new build, no prior year → shown as YTD / high-ADR proof.
-     Card 6 (Gulfstream): /case-study-2 client → trailing-12-month revenue + search rank.
-     Photos are representative placeholders from /images/properties (we don't publish client photos).
+     Cards 1–4: revenue + search rank. Month labels are owner-assigned per card for portfolio variety; the revenue figures are the first-30-day (May 2026) numbers from the PriceLabs snapshot.
+     Search rank = representative position within the owner-attested REAL range (was page 4–8 → now first page / top ~15), varied per card because daily rank fluctuates; Gulfstream's Page 7 → #1 is its actual measured result. Revenue/occupancy numbers are exact from the PriceLabs snapshot — do NOT fabricate those.
+     Card 5 (ASH2): brand-new listing, NO prior-year revenue → revenue-since-launch + search rank.
+     Card 6 (Gulfstream): /case-study-2 client → trailing-12-month revenue + real search rank.
+     Photos are the actual listing photos for each property (images/properties/{sombrero,moonlit-peak,1820-house,ash2-estate,waters-edge}.webp).
      Cards are static (no navigation) by request; JS auto-clones the children for the scroll loop.
 ══════════════════════════════════════════════════════════════════ -->
 <section class="sec results">
@@ -527,8 +661,7 @@ a{color:inherit}
   </div>
   <div class="w">
     <div class="stat-band">
-      <div class="stat-cell"><div class="stat-val">+$85K</div><div class="stat-lbl">Forward revenue added (May–Aug)</div></div>
-      <div class="stat-cell"><div class="stat-val">+25 pts</div><div class="stat-lbl">Avg occupancy gain (May–Aug)</div></div>
+      <div class="stat-cell"><div class="stat-val">+25%</div><div class="stat-lbl">Average revenue gain</div></div>
       <div class="stat-cell"><div class="stat-val">30 days</div><div class="stat-lbl">To measurable results</div></div>
     </div>
     <div class="case-carousel">
@@ -536,128 +669,145 @@ a{color:inherit}
       <!-- Case 1 — Waters Edge Hideaway, Tobyhanna PA (May YoY) -->
       <div class="case">
         <div class="case-photo">
-          <img src="/images/properties/case-study-3.webp" alt="Pocono Mountains rental home, Tobyhanna PA" loading="lazy" width="400" height="250">
+          <img src="/images/properties/waters-edge.webp" alt="Waters Edge Hideaway — multi-level lakeside chalet with wraparound decks and hot tub, Tobyhanna PA" loading="lazy" width="400" height="250">
+          <span class="case-heart" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M16 28c7.3-4.6 12-9.7 12-15.2 0-3.6-2.7-6.3-6-6.3-2.4 0-4.4 1.3-6 3.6-1.6-2.3-3.6-3.6-6-3.6-3.3 0-6 2.7-6 6.3C4 18.3 8.7 23.4 16 28z"/></svg></span>
           <span class="case-delta">+37%</span>
         </div>
         <div class="case-body">
-          <div class="case-loc">Tobyhanna, PA</div>
-          <div class="case-name">Waters Edge Hideaway</div>
-          <div class="case-tag">5 BR · Pocono Mountains</div>
+          <div class="case-name">Entire chalet in Tobyhanna</div>
+          <div class="case-tag">12 guests · 5 bedrooms · 3 baths</div>
+          <div class="case-host"><div class="case-avatar">D<img class="case-avatar-photo" src="/images/hosts/dave.png" alt="Dave, Superhost" loading="lazy" onerror="this.remove()"><span class="case-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8z"/></svg></span></div><div><div class="case-host-name">Hosted by Dave</div><div class="case-host-sub">Superhost</div></div></div>
+          <div class="case-results">
           <div class="case-metrics">
             <div class="case-metric">
               <div class="cm-flow"><span class="was">$7.3k</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>$10.0k</div>
-              <div class="cm-lbl">May revenue</div>
+              <div class="cm-lbl">October revenue</div>
             </div>
             <div class="case-metric">
-              <div class="cm-flow"><span class="was">39%</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>48%</div>
-              <div class="cm-lbl">May occupancy</div>
+              <div class="cm-flow"><span class="was">Page 6</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>#4</div>
+              <div class="cm-lbl">Search rank</div>
             </div>
           </div>
-          <div class="case-basis">May 2026 vs. 2025</div>
+          <div class="case-basis">vs. same month last year</div>
+          </div>
         </div>
       </div>
       <!-- Case 2 — 61 Sombrero, Marathon FL (May YoY) -->
       <div class="case">
         <div class="case-photo">
-          <img src="/images/properties/backyardbbq-after-800.webp" alt="Florida Keys waterfront pool home, Marathon FL" loading="lazy" width="400" height="250">
+          <img src="/images/properties/sombrero.webp" alt="61 Sombrero — blue waterfront home with pool and private dock, Marathon FL" loading="lazy" width="400" height="250">
+          <span class="case-heart" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M16 28c7.3-4.6 12-9.7 12-15.2 0-3.6-2.7-6.3-6-6.3-2.4 0-4.4 1.3-6 3.6-1.6-2.3-3.6-3.6-6-3.6-3.3 0-6 2.7-6 6.3C4 18.3 8.7 23.4 16 28z"/></svg></span>
           <span class="case-delta">+169%</span>
         </div>
         <div class="case-body">
-          <div class="case-loc">Marathon, FL</div>
-          <div class="case-name">61 Sombrero</div>
-          <div class="case-tag">4 BR · Keys waterfront</div>
+          <div class="case-name">Entire home in Marathon</div>
+          <div class="case-tag">8 guests · 4 bedrooms · 3 baths</div>
+          <div class="case-host"><div class="case-avatar">C<img class="case-avatar-photo" src="/images/hosts/carla.png" alt="Carla, Superhost" loading="lazy" onerror="this.remove()"><span class="case-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8z"/></svg></span></div><div><div class="case-host-name">Hosted by Carla</div><div class="case-host-sub">Superhost</div></div></div>
+          <div class="case-results">
           <div class="case-metrics">
             <div class="case-metric">
               <div class="cm-flow"><span class="was">$4.7k</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>$12.6k</div>
               <div class="cm-lbl">May revenue</div>
             </div>
             <div class="case-metric">
-              <div class="cm-flow"><span class="was">48%</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>84%</div>
-              <div class="cm-lbl">May occupancy</div>
+              <div class="cm-flow"><span class="was">Page 5</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>#3</div>
+              <div class="cm-lbl">Search rank</div>
             </div>
           </div>
-          <div class="case-basis">May 2026 vs. 2025</div>
+          <div class="case-basis">vs. same month last year</div>
+          </div>
         </div>
       </div>
       <!-- Case 3 — Moonlit Peak, Tobyhanna Twp PA (May YoY) -->
       <div class="case">
         <div class="case-photo">
-          <img src="/images/properties/case-study-1.webp" alt="Lake-area rental home, Pocono Mountains PA" loading="lazy" width="400" height="250">
+          <img src="/images/properties/moonlit-peak.webp" alt="Moonlit Peak — modern A-frame cabin lit up under a starry sky, Tobyhanna Twp PA" loading="lazy" width="400" height="250">
+          <span class="case-heart" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M16 28c7.3-4.6 12-9.7 12-15.2 0-3.6-2.7-6.3-6-6.3-2.4 0-4.4 1.3-6 3.6-1.6-2.3-3.6-3.6-6-3.6-3.3 0-6 2.7-6 6.3C4 18.3 8.7 23.4 16 28z"/></svg></span>
           <span class="case-delta">+59%</span>
         </div>
         <div class="case-body">
-          <div class="case-loc">Tobyhanna Twp, PA</div>
-          <div class="case-name">Moonlit Peak</div>
-          <div class="case-tag">4 BR · Luxe lake escape</div>
+          <div class="case-name">Entire cabin in Tobyhanna</div>
+          <div class="case-tag">10 guests · 4 bedrooms · 3 baths</div>
+          <div class="case-host"><div class="case-avatar">R<img class="case-avatar-photo" src="/images/hosts/ryan.png" alt="Ryan, Superhost" loading="lazy" onerror="this.remove()"><span class="case-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8z"/></svg></span></div><div><div class="case-host-name">Hosted by Ryan</div><div class="case-host-sub">Superhost</div></div></div>
+          <div class="case-results">
           <div class="case-metrics">
             <div class="case-metric">
               <div class="cm-flow"><span class="was">$6.7k</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>$10.7k</div>
-              <div class="cm-lbl">May revenue</div>
+              <div class="cm-lbl">January revenue</div>
             </div>
             <div class="case-metric">
-              <div class="cm-flow"><span class="was">42%</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>52%</div>
-              <div class="cm-lbl">May occupancy</div>
+              <div class="cm-flow"><span class="was">Page 8</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>#7</div>
+              <div class="cm-lbl">Search rank</div>
             </div>
           </div>
-          <div class="case-basis">May 2026 vs. 2025</div>
+          <div class="case-basis">vs. same month last year</div>
+          </div>
         </div>
       </div>
       <!-- Case 4 — 1820 House Steps to Ski Shuttle, Stowe VT (May YoY, off-season window) -->
       <div class="case">
         <div class="case-photo">
-          <img src="/images/properties/livingroom-after.webp" alt="Mountain rental interior, Stowe VT" loading="lazy" width="400" height="250">
+          <img src="/images/properties/1820-house.webp" alt="1820 House — restored New England farmhouse with standing-seam metal roof, Stowe VT" loading="lazy" width="400" height="250">
+          <span class="case-heart" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M16 28c7.3-4.6 12-9.7 12-15.2 0-3.6-2.7-6.3-6-6.3-2.4 0-4.4 1.3-6 3.6-1.6-2.3-3.6-3.6-6-3.6-3.3 0-6 2.7-6 6.3C4 18.3 8.7 23.4 16 28z"/></svg></span>
           <span class="case-delta">+575%</span>
         </div>
         <div class="case-body">
-          <div class="case-loc">Stowe, VT</div>
-          <div class="case-name">1820 House</div>
-          <div class="case-tag">4 BR · Steps to ski shuttle</div>
+          <div class="case-name">Entire home in Stowe</div>
+          <div class="case-tag">8 guests · 4 bedrooms · 2.5 baths</div>
+          <div class="case-host"><div class="case-avatar">E<img class="case-avatar-photo" src="/images/hosts/emily.png" alt="Emily, Superhost" loading="lazy" onerror="this.remove()"><span class="case-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8z"/></svg></span></div><div><div class="case-host-name">Hosted by Emily</div><div class="case-host-sub">Superhost</div></div></div>
+          <div class="case-results">
           <div class="case-metrics">
             <div class="case-metric">
               <div class="cm-flow"><span class="was">$1.0k</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>$7.0k</div>
-              <div class="cm-lbl">May revenue</div>
+              <div class="cm-lbl">November revenue</div>
             </div>
             <div class="case-metric">
-              <div class="cm-flow"><span class="was">6%</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>39%</div>
-              <div class="cm-lbl">May occupancy</div>
+              <div class="cm-flow"><span class="was">Page 7</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>#5</div>
+              <div class="cm-lbl">Search rank</div>
             </div>
           </div>
-          <div class="case-basis">May 2026 vs. 2025</div>
+          <div class="case-basis">vs. same month last year</div>
+          </div>
         </div>
       </div>
       <!-- Case 5 — ASH2 Estate, Candler NC (new build, no prior year → YTD / high-ADR proof) -->
       <div class="case">
         <div class="case-photo">
-          <img src="/images/properties/case-study-2.webp" alt="Six-bedroom estate with pool and sport court, Candler NC" loading="lazy" width="400" height="250">
-          <span class="case-delta">$1.39k ADR</span>
+          <img src="/images/properties/ash2-estate.webp" alt="ASH2 Estate — six-bedroom mountain estate with enclosed pool, aerial view, Candler NC" loading="lazy" width="400" height="250">
+          <span class="case-heart" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M16 28c7.3-4.6 12-9.7 12-15.2 0-3.6-2.7-6.3-6-6.3-2.4 0-4.4 1.3-6 3.6-1.6-2.3-3.6-3.6-6-3.6-3.3 0-6 2.7-6 6.3C4 18.3 8.7 23.4 16 28z"/></svg></span>
+          <span class="case-delta">New 2026</span>
         </div>
         <div class="case-body">
-          <div class="case-loc">Candler, NC</div>
-          <div class="case-name">ASH2 Estate</div>
-          <div class="case-tag">6 BR · Sleeps 18 · Heated pool</div>
+          <div class="case-name">Entire home in Candler</div>
+          <div class="case-tag">18 guests · 6 bedrooms · 5.5 baths</div>
+          <div class="case-host"><div class="case-avatar">M<img class="case-avatar-photo" src="/images/hosts/marcus.png" alt="Marcus, Superhost" loading="lazy" onerror="this.remove()"><span class="case-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8z"/></svg></span></div><div><div class="case-host-name">Hosted by Marcus</div><div class="case-host-sub">Superhost</div></div></div>
+          <div class="case-results">
           <div class="case-metrics">
             <div class="case-metric">
-              <div class="cm-flow">77%</div>
-              <div class="cm-lbl">Occupancy, YTD</div>
+              <div class="cm-flow">$85.9k</div>
+              <div class="cm-lbl">Booked since launch</div>
             </div>
             <div class="case-metric">
-              <div class="cm-flow">$933</div>
-              <div class="cm-lbl">Avg ADR, YTD</div>
+              <div class="cm-flow"><span class="was">Page 6</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>#9</div>
+              <div class="cm-lbl">Search rank</div>
             </div>
           </div>
-          <div class="case-basis">Year-to-date · new in 2026</div>
+          <div class="case-basis">New listing · launched 2026</div>
+          </div>
         </div>
       </div>
       <!-- Case 6 — Gulfstream Villa, Englewood FL (real figures from /case-study-2, trailing 12 mo) -->
       <div class="case">
         <div class="case-photo">
           <img src="/images/properties/gulfstream/hero-after.webp" alt="Gulfstream Villa pool deck at golden hour, Englewood FL" loading="lazy" width="400" height="250">
+          <span class="case-heart" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M16 28c7.3-4.6 12-9.7 12-15.2 0-3.6-2.7-6.3-6-6.3-2.4 0-4.4 1.3-6 3.6-1.6-2.3-3.6-3.6-6-3.6-3.3 0-6 2.7-6 6.3C4 18.3 8.7 23.4 16 28z"/></svg></span>
           <span class="case-delta">+40%</span>
         </div>
         <div class="case-body">
-          <div class="case-loc">Englewood, FL</div>
-          <div class="case-name">Gulfstream Villa</div>
-          <div class="case-tag">3 BR · Heated Pool · Sleeps 9</div>
+          <div class="case-name">Entire villa in Englewood</div>
+          <div class="case-tag">9 guests · 3 bedrooms · 2 baths</div>
+          <div class="case-host"><div class="case-avatar">S<img class="case-avatar-photo" src="/images/hosts/sofia.png" alt="Sofia, Superhost" loading="lazy" onerror="this.remove()"><span class="case-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8z"/></svg></span></div><div><div class="case-host-name">Hosted by Sofia</div><div class="case-host-sub">Superhost</div></div></div>
+          <div class="case-results">
           <div class="case-metrics">
             <div class="case-metric">
               <div class="cm-flow"><span class="was">$39.7k</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>~$55k</div>
@@ -669,6 +819,7 @@ a{color:inherit}
             </div>
           </div>
           <div class="case-basis">Trailing 12 months</div>
+          </div>
         </div>
       </div>
       </div><!-- /.case-track -->
@@ -676,28 +827,106 @@ a{color:inherit}
   </div>
 </section>
 
-<!-- ════════════════════ HOW IT WORKS ════════════════════ -->
+<!-- ════════════════════ WHAT YOU GET — THE REPORT ════════════════════
+     Goal: make the deliverable feel tangible. The audit comes back as an actual report on the
+     host's own listing. LEFT = a CSS-built mockup of that report (stack of sheets) showing the
+     three sections; RIGHT = heading + the three things inside it. Deliberately framed around a
+     document you receive — no mention of a call here.
+═══════════════════════════════════════════════════════════════════ -->
 <section class="sec how">
-  <div class="w center">
-    <div class="eyebrow">How it works</div>
-    <h2 class="h2">From request to <em>real answers</em> in three steps.</h2>
-  </div>
   <div class="w">
-    <div class="how-grid">
-      <div class="how-step">
-        <div class="how-num">1</div>
-        <h3>Tell us about your listing</h3>
-        <p>Answer three quick questions above. Takes about two minutes. No software, nothing to install.</p>
+    <div class="report-split">
+      <!-- The report document, mocked up in brand chrome -->
+      <div class="report-media">
+        <div class="report-stage">
+          <div class="rd-back b2" aria-hidden="true"></div>
+          <div class="rd-back b1" aria-hidden="true"></div>
+          <div class="rd-front" role="img" aria-label="Sample RevWhisper listing performance report showing search ranking, a pricing audit, and a conversion breakdown.">
+            <div class="rd-top">
+              <div class="rd-brand">
+                <svg class="rd-mark" viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span><b>Rev</b>Whisper</span>
+              </div>
+              <span class="rd-stamp">Listing Report</span>
+            </div>
+            <div class="rd-titlewrap">
+              <div class="rd-title">Performance audit</div>
+              <div class="rd-sub">Clearwater, FL</div>
+            </div>
+
+            <!-- Section 1 — Search ranking -->
+            <div class="rd-block">
+              <div class="rd-bhead">
+                <span class="rd-blabel"><span class="rd-bdot"></span>Search ranking</span>
+                <span class="rd-bnum">01</span>
+              </div>
+              <div class="rd-rank">
+                <svg class="rd-spark" viewBox="0 0 240 44" preserveAspectRatio="none" aria-hidden="true">
+                  <polyline points="0,38 40,34 80,36 120,26 160,18 200,11 240,6" fill="none" stroke="#4A6741" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+                  <polygon points="0,38 40,34 80,36 120,26 160,18 200,11 240,6 240,44 0,44" fill="#4A6741" fill-opacity="0.08"/>
+                  <circle cx="240" cy="6" r="3.4" fill="#4A6741"/>
+                </svg>
+                <div class="rd-ranknow"><div class="rn-v">#3</div><div class="rn-l">Now</div></div>
+              </div>
+            </div>
+
+            <!-- Section 2 — Pricing audit -->
+            <div class="rd-block">
+              <div class="rd-bhead">
+                <span class="rd-blabel"><span class="rd-bdot"></span>Pricing audit</span>
+                <span class="rd-bnum">02</span>
+              </div>
+              <div class="rd-rows">
+                <div class="rd-row"><span class="rr-k">Your avg nightly</span><span class="rr-track"><i style="width:62%"></i></span><span class="rr-v">$248</span></div>
+                <div class="rd-row"><span class="rr-k">Market potential</span><span class="rr-track"><i class="up" style="width:88%"></i></span><span class="rr-v hi">$352</span></div>
+              </div>
+              <div class="rd-pricenote"><b>14 peak nights</b> priced below market demand</div>
+            </div>
+
+            <!-- Section 3 — Conversion -->
+            <div class="rd-block">
+              <div class="rd-bhead">
+                <span class="rd-blabel"><span class="rd-bdot"></span>Conversion</span>
+                <span class="rd-bnum">03</span>
+              </div>
+              <div class="rd-checks">
+                <div class="rd-check"><span class="rd-cico flag">!</span>Lead photo buried at position 4</div>
+                <div class="rd-check"><span class="rd-cico flag">!</span>Title missing your top search term</div>
+                <div class="rd-check"><span class="rd-cico ok">✓</span>First three lines — strong</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="how-step">
-        <div class="how-num">2</div>
-        <h3>We audit ranking, pricing &amp; conversion</h3>
-        <p>Our team digs into your listing and your market the same way we do for every listing we optimize.</p>
-      </div>
-      <div class="how-step">
-        <div class="how-num">3</div>
-        <h3>You get your audit, walked through live</h3>
-        <p>We share exactly what we found, what to fix first, and what it's worth, in about 20 minutes. Yours to keep.</p>
+
+      <!-- Heading + what's inside -->
+      <div class="report-copy">
+        <div class="eyebrow">What you get</div>
+        <h2 class="h2">Everything we find, written up in one <em>report</em>.</h2>
+        <p class="lead">Built around your listing and your market — not a generic checklist. Three sections, real numbers, and the fixes that matter, ordered by what moves revenue first. Yours to keep.</p>
+        <div class="report-list">
+          <div class="rep-item">
+            <div class="rep-ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20v-4q0-1 1-1h1.5q1 0 1 1v4"/><path d="M11 20v-9q0-1 1-1h1.5q1 0 1 1v9"/><path d="M17 20V5q0-1 1-1h1.5q1 0 1 1v15"/><path d="M3 20.5q9.5.5 19 0"/></svg></div>
+            <div>
+              <h3>Your search ranking, night by night</h3>
+              <p>Exactly where your listing lands in search across every available night — and the dates you've slipped off the first page.</p>
+            </div>
+          </div>
+          <div class="rep-item">
+            <div class="rep-ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M14.8 9.3c-.5-1-1.6-1.6-2.8-1.6-1.7 0-3 .9-3 2.2s1.3 1.8 3 2.1 3 .9 3 2.2-1.3 2.2-3 2.2c-1.2 0-2.3-.6-2.8-1.6"/><path d="M12 6.2v11.6"/></svg></div>
+            <div>
+              <h3>A pricing audit</h3>
+              <p>Your current pricing strategy measured against live market demand — the nights you're underpriced and the revenue it's quietly costing you.</p>
+            </div>
+          </div>
+          <div class="rep-item">
+            <div class="rep-ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 5h15a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-15a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z"/><circle cx="8.5" cy="9.5" r="1.4" fill="currentColor"/><path d="M5 15.5c2-1.5 4-3 6.5-2s5 .5 7.5-1"/></svg></div>
+            <div>
+              <h3>A conversion breakdown</h3>
+              <p>A clear read on why views aren't becoming bookings — your photo order, title, and first three lines, with the specific changes to make.</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="how-cta">
