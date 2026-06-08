@@ -70,7 +70,7 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 .confirm-pill{display:inline-flex;align-items:center;gap:8px;background:var(--accent-light);border:1px solid var(--accent-border);color:var(--accent);font-size:12.5px;font-weight:600;padding:7px 15px;border-radius:100px;margin-bottom:22px}
 .confirm-pill svg{flex-shrink:0}
 .reveal-h1{font-family:var(--heading);font-size:clamp(30px,5.2vw,44px);font-weight:400;letter-spacing:-.025em;line-height:1.1;color:var(--black);margin-bottom:18px}
-.reveal-h1 em{font-style:italic;color:var(--accent)}
+.reveal-h1 em{font-style:italic;color:var(--accent);margin-left:-.12em}
 .reveal-sub{font-size:clamp(15px,1.9vw,17px);color:var(--g500);line-height:1.7;font-weight:300;margin-bottom:34px}
 .reveal-sub strong{color:var(--black);font-weight:500}
 
@@ -100,6 +100,7 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 .confirm-summary strong{color:var(--black);font-weight:600}
 .book-field{margin-bottom:6px}
 .book-field-label{display:block;font-size:13px;font-weight:500;color:var(--black);margin-bottom:7px}
+.book-field-optional{font-weight:400;color:var(--g400)}
 .book-phone-wrap{display:flex;gap:8px}
 .book-phone-code{width:92px;padding:13px 12px;border:1.5px solid var(--g200);border-radius:var(--radius);font-size:16px;font-family:var(--body);color:var(--black);background:#fff;outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23a39e9b' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;transition:border-color .25s,box-shadow .25s}
 .book-phone-input{flex:1;width:100%;padding:13px 16px;border:1.5px solid var(--g200);border-radius:var(--radius);font-size:16px;font-family:var(--body);color:var(--black);background:#fff;outline:none;transition:border-color .25s,box-shadow .25s}
@@ -279,14 +280,14 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
         </div>
         <div id="confirm-error-slot"></div>
         <div class="book-field">
-          <label class="book-field-label" for="book-phone">Phone number</label>
+          <label class="book-field-label" for="book-phone">Phone number <span class="book-field-optional">(optional)</span></label>
           <div class="book-phone-wrap">
             <select class="book-phone-code" id="book-phone-code" aria-label="Country code">
               <option value="+1">🇺🇸 +1</option><option value="+44">🇬🇧 +44</option><option value="+61">🇦🇺 +61</option><option value="+33">🇫🇷 +33</option><option value="+49">🇩🇪 +49</option><option value="+52">🇲🇽 +52</option><option value="+34">🇪🇸 +34</option><option value="+39">🇮🇹 +39</option><option value="+55">🇧🇷 +55</option>
             </select>
             <input type="tel" class="book-phone-input" id="book-phone" placeholder="(555) 123-4567" autocomplete="tel" inputmode="tel">
           </div>
-          <div class="book-field-hint">We'll text your Google Meet link and a reminder before your audit — nothing else.</div>
+          <div class="book-field-hint">Add it and we'll text your Google Meet link and a reminder before your audit — otherwise we'll email it. Nothing else.</div>
         </div>
         <button class="btn-confirm" type="button" id="confirm-btn" onclick="confirmBooking()">Confirm my audit <span class="arrow">→</span></button>
         <div class="form-actions"><button class="btn-back" type="button" onclick="prevStep()"><span class="arrow">←</span> Back</button></div>
@@ -536,11 +537,11 @@ async function confirmBooking(){
   const phoneEl=document.getElementById('book-phone');
   const codeEl=document.getElementById('book-phone-code');
   const phoneNum=phoneEl?phoneEl.value.trim():'';
-  if(!phoneNum){ if(phoneEl){phoneEl.classList.add('error');phoneEl.focus();} showConfirmError('Please add a phone number so we can send your call details.'); return; }
+  // Phone is optional — no validation gate. If left blank we send call details by email.
   if(phoneEl) phoneEl.classList.remove('error');
   const ce=document.getElementById('confirm-error-slot'); if(ce) ce.innerHTML='';
   const phoneCode=codeEl?codeEl.value.trim():'';
-  const phoneFull=(phoneCode+' '+phoneNum).trim();
+  const phoneFull=phoneNum?(phoneCode+' '+phoneNum).trim():'';
   booking.bookingInFlight=true;
   const cbtn=document.getElementById('confirm-btn'); if(cbtn) cbtn.disabled=true;
   // persist the phone into the lead context (payload + any Cal.com fallback link)
