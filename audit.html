@@ -374,6 +374,30 @@ a{color:inherit}
 .case-metric .cm-lbl{font-size:12px;color:#717171;margin-top:2px;font-weight:400;letter-spacing:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .case-basis{margin-top:8px;font-size:12px;letter-spacing:0;color:#9b9b9b;font-weight:400}
 
+/* ───────────────────────── Reviews — second marquee under the result cards (scrolls the other way) ───────────────────────── */
+.reviews-head{max-width:620px;margin:56px auto 30px;text-align:center}
+.reviews-head .eyebrow{margin-bottom:12px}
+.reviews-head h3{font-family:var(--heading);font-size:clamp(22px,3vw,30px);font-weight:400;letter-spacing:-.02em;line-height:1.18;color:var(--black)}
+.reviews-head h3 em{font-style:italic;color:var(--accent)}
+.review-carousel{position:relative;width:100%;overflow:hidden;padding:8px 0}
+.review-track{display:flex;align-items:flex-start;width:max-content;animation:reviewScroll 60s linear infinite;will-change:transform;backface-visibility:hidden}
+.review-carousel:hover .review-track{animation-play-state:paused}
+.review-track .review{width:384px;flex-shrink:0;margin-right:18px}
+/* starts shifted -50% and slides back to 0 → opposite direction from the result cards */
+@keyframes reviewScroll{0%{transform:translate3d(-50%,0,0)}100%{transform:translate3d(0,0,0)}}
+.review{display:flex;flex-direction:column;background:#fff;border:1px solid var(--g200);border-radius:var(--radius-lg);box-shadow:var(--sh-sm);padding:24px 24px 20px;transition:transform .3s var(--ease-out-expo),box-shadow .3s}
+.review:hover{transform:translateY(-3px);box-shadow:var(--sh)}
+.review-stars{display:flex;gap:3px;margin-bottom:14px}
+.review-stars svg{width:16px;height:16px;fill:var(--gold)}
+.review-quote{font-family:var(--heading);font-size:16px;line-height:1.58;color:var(--g700);font-weight:400;flex:1}
+.review-host{display:flex;align-items:center;gap:11px;margin-top:20px;padding-top:18px;border-top:1px solid var(--g200)}
+.review-avatar{position:relative;width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#c98a6b,var(--terra));display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;font-weight:600;flex-shrink:0}
+.review-avatar-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:50%}
+.review-badge{position:absolute;right:-3px;bottom:-3px;width:16px;height:16px;border-radius:50%;background:#FF385C;border:2px solid #fff;display:flex;align-items:center;justify-content:center}
+.review-badge svg{width:9px;height:9px;fill:#fff}
+.review-name{font-size:14.5px;font-weight:600;color:var(--black)}
+.review-loc{font-size:13px;color:var(--g500);margin-top:1px}
+
 
 /* ───────────────────────── FAQ ───────────────────────── */
 .faq-wrap{max-width:760px;margin:48px auto 0}
@@ -435,6 +459,9 @@ a{color:inherit}
   .case-carousel::before,.case-carousel::after{content:"";position:absolute;top:0;bottom:0;width:24px;z-index:2;pointer-events:none}
   .case-carousel::before{left:0;background:linear-gradient(90deg,#fff,rgba(255,255,255,0))}
   .case-carousel::after{right:0;background:linear-gradient(270deg,#fff,rgba(255,255,255,0))}
+  .review-carousel::before,.review-carousel::after{content:"";position:absolute;top:0;bottom:0;width:24px;z-index:2;pointer-events:none}
+  .review-carousel::before{left:0;background:linear-gradient(90deg,#fff,rgba(255,255,255,0))}
+  .review-carousel::after{right:0;background:linear-gradient(270deg,#fff,rgba(255,255,255,0))}
   .sec{padding:clamp(48px,11vw,72px) 0}
   #hero{padding:24px 0 30px}
   .hero-inner{margin-bottom:22px}
@@ -461,6 +488,9 @@ a{color:inherit}
   .case-track{animation:none!important;transform:none!important;width:100%;flex-wrap:wrap;justify-content:center;gap:20px}
   .case-track .case{margin-right:0}
   .case-track .case[data-clone]{display:none}
+  .review-track{animation:none!important;transform:none!important;width:100%;flex-wrap:wrap;justify-content:center;gap:18px}
+  .review-track .review{margin-right:0}
+  .review-track .review[data-clone]{display:none}
 }
 </style>
 </head>
@@ -940,6 +970,80 @@ a{color:inherit}
 </section>
 
 
+<!-- ════════════════════ REVIEWS — standalone marquee (sits between the report and the FAQ) ════════════════════
+     One testimonial per host shown in the results carousel; same avatars, opposite-scrolling marquee.
+     FILLER copy for now — swap in real host reviews when ready.
+═══════════════════════════════════════════════════════════════════ -->
+<section class="sec reviews">
+  <div class="w center">
+    <div class="eyebrow">In their words</div>
+    <h2 class="h2">The hosts who <em>handed it off</em>.</h2>
+    <p class="lead">The same six listings from the results above — straight from the people who own them. Unedited, and yes, a little skeptical at first.</p>
+  </div>
+  <div class="w" style="margin-top:44px">
+    <div class="review-carousel">
+      <div class="review-track" id="review-track">
+
+        <!-- Dave — Tobyhanna chalet -->
+        <div class="review">
+          <div class="review-stars" aria-label="5 out of 5 stars">
+            <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg>
+          </div>
+          <p class="review-quote">"Two years running my own pricing, so I'll admit I was skeptical handing it off. June booked to 97% at a better nightly rate than I ever held myself. August is usually a ghost town and it filled to $17.4K. All in it was about $31K more across the summer than last year. Should've done this a year ago."</p>
+          <div class="review-host"><div class="review-avatar">D<img class="review-avatar-photo" src="/images/hosts/dave.png" alt="Dave, Superhost" loading="lazy" onerror="this.remove()"><span class="review-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8z"/></svg></span></div><div><div class="review-name">Dave</div><div class="review-loc">Tobyhanna, PA · Superhost</div></div></div>
+        </div>
+
+        <!-- Carla — Marathon -->
+        <div class="review">
+          <div class="review-stars" aria-label="5 out of 5 stars">
+            <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg>
+          </div>
+          <p class="review-quote">"I was sitting at 48% booked going into May and starting to sweat it. A month after they took over it was at 84%, revenue up almost 170% over last May. And I didn't have to learn a single new tool, which is honestly half of why I said yes."</p>
+          <div class="review-host"><div class="review-avatar">C<img class="review-avatar-photo" src="/images/hosts/carla.png" alt="Carla, Superhost" loading="lazy" onerror="this.remove()"><span class="review-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8z"/></svg></span></div><div><div class="review-name">Carla</div><div class="review-loc">Marathon, FL · Superhost</div></div></div>
+        </div>
+
+        <!-- Ryan — Tobyhanna cabin -->
+        <div class="review">
+          <div class="review-stars" aria-label="5 out of 5 stars">
+            <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg>
+          </div>
+          <p class="review-quote">"July's my big month so I watch it like a hawk. Last year it did about $6K. This year, same house, it pulled $22.5K. I always figured you had to drop your rate to fill the calendar, and somehow both my occupancy and my nightly rate went up at the same time. Still not totally sure how they pulled that off. Not gonna question it."</p>
+          <div class="review-host"><div class="review-avatar">R<img class="review-avatar-photo" src="/images/hosts/ryan.png" alt="Ryan, Superhost" loading="lazy" onerror="this.remove()"><span class="review-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8z"/></svg></span></div><div><div class="review-name">Ryan</div><div class="review-loc">Tobyhanna, PA · Superhost</div></div></div>
+        </div>
+
+        <!-- Emily — Stowe -->
+        <div class="review">
+          <div class="review-stars" aria-label="5 out of 5 stars">
+            <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg>
+          </div>
+          <p class="review-quote">"Ok so it's a ski cabin, basically all my money comes in December through March, and I'd more or less written off the rest of the year. Last May I made maybe a thousand bucks? This May it was right around $7K, and even August more than doubled. For the off season that's kind of wild to me. But the thing I keep telling people isn't even the money. I used to check my pricing first thing every morning, before coffee, every single day. I just don't anymore. My husband actually noticed before I did, said I seemed less wound up about the place. Anyway. Huge fan."</p>
+          <div class="review-host"><div class="review-avatar">E<img class="review-avatar-photo" src="/images/hosts/emily.png" alt="Emily, Superhost" loading="lazy" onerror="this.remove()"><span class="review-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8z"/></svg></span></div><div><div class="review-name">Emily</div><div class="review-loc">Stowe, VT · Superhost</div></div></div>
+        </div>
+
+        <!-- Marcus — Candler new build -->
+        <div class="review">
+          <div class="review-stars" aria-label="5 out of 5 stars">
+            <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg>
+          </div>
+          <p class="review-quote">"We launched a six-bedroom estate this year with zero booking history, which at a four-figure nightly rate is a nerve-wracking way to start. Everybody's instinct is to discount to fill the calendar. They didn't. We're going into June around 93% booked at nearly $1,400 a night, and the place has already done $85.9K this year. For a brand new luxury listing I did not expect to be saying that this soon."</p>
+          <div class="review-host"><div class="review-avatar">M<img class="review-avatar-photo" src="/images/hosts/marcus.png" alt="Marcus, Superhost" loading="lazy" onerror="this.remove()"><span class="review-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8z"/></svg></span></div><div><div class="review-name">Marcus</div><div class="review-loc">Candler, NC · Superhost</div></div></div>
+        </div>
+
+        <!-- Sofia — Englewood villa -->
+        <div class="review">
+          <div class="review-stars" aria-label="5 out of 5 stars">
+            <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg>
+          </div>
+          <p class="review-quote">"First year without the usual dead stretches, just steady the whole way through. We're up about 40% over the last twelve months and somehow ranking #1 in my area, which I never pulled off on my own."</p>
+          <div class="review-host"><div class="review-avatar">S<img class="review-avatar-photo" src="/images/hosts/sofia.png" alt="Sofia, Superhost" loading="lazy" onerror="this.remove()"><span class="review-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8z"/></svg></span></div><div><div class="review-name">Sofia</div><div class="review-loc">Englewood, FL · Superhost</div></div></div>
+        </div>
+
+      </div><!-- /.review-track -->
+    </div><!-- /.review-carousel -->
+  </div>
+</section>
+
+
 <!-- ════════════════════ FAQ / OBJECTIONS ════════════════════ -->
 <section class="sec" style="background:var(--g50)">
   <div class="w center">
@@ -1203,6 +1307,8 @@ document.querySelectorAll('.faq').forEach(function(d){
 
 /* Duplicate the case-study cards so the marquee loops seamlessly (clones flagged for reduced-motion) */
 (function(){var t=document.getElementById('case-track');if(!t)return;[].slice.call(t.children).forEach(function(c){var d=c.cloneNode(true);d.setAttribute('aria-hidden','true');d.setAttribute('data-clone','');t.appendChild(d);});})();
+/* Same duplication for the reviews marquee */
+(function(){var t=document.getElementById('review-track');if(!t)return;[].slice.call(t.children).forEach(function(c){var d=c.cloneNode(true);d.setAttribute('aria-hidden','true');d.setAttribute('data-clone','');t.appendChild(d);});})();
 
 /* Sticky mobile CTA: only show once the hero form has scrolled out of view (hidden while the form is on screen) */
 (function(){
