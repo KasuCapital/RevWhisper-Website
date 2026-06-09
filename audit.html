@@ -342,10 +342,10 @@ a{color:inherit}
 .stat-lbl{font-size:13.5px;color:var(--g500);font-weight:400;letter-spacing:.02em}
 /* case studies — auto-scrolling marquee (mirrors the home-page logo carousel) */
 .case-carousel{position:relative;width:100%;overflow:hidden}
-.case-track{display:flex;align-items:stretch;width:max-content;animation:caseScroll 60s linear infinite}
+.case-track{display:flex;align-items:stretch;width:max-content;animation:caseScroll 40s linear infinite;will-change:transform;backface-visibility:hidden}
 .case-carousel:hover .case-track{animation-play-state:paused}
 .case-track .case{width:268px;flex-shrink:0;margin-right:16px}
-@keyframes caseScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@keyframes caseScroll{0%{transform:translate3d(0,0,0)}100%{transform:translate3d(-50%,0,0)}}
 /* Result cards mirror the Marathon (.bnb-*) Airbnb card exactly: square photo, DM Sans title/meta, same host row — then a standout RevWhisper numbers panel below. */
 .case{font-family:var(--body);background:none;border:none;box-shadow:none;transition:transform .3s var(--ease-out-expo);text-decoration:none;color:inherit;display:flex;flex-direction:column}
 .case:hover{transform:translateY(-2px)}
@@ -429,8 +429,12 @@ a{color:inherit}
 }
 @media(max-width:640px){
   .w{padding:0 20px}
-  /* very subtle edge fade so the marquee doesn't read as a hard cut on mobile */
-  .case-carousel{-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 18px,#000 calc(100% - 18px),transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 18px,#000 calc(100% - 18px),transparent 100%)}
+  /* Subtle edge fade via static overlays (NOT a CSS mask — masks force the wide
+     animated track onto an oversized GPU layer and blank out / glitch in iOS &
+     in-app webviews like Instagram). Overlays are tiny static elements, no layer issue. */
+  .case-carousel::before,.case-carousel::after{content:"";position:absolute;top:0;bottom:0;width:24px;z-index:2;pointer-events:none}
+  .case-carousel::before{left:0;background:linear-gradient(90deg,#fff,rgba(255,255,255,0))}
+  .case-carousel::after{right:0;background:linear-gradient(270deg,#fff,rgba(255,255,255,0))}
   .sec{padding:clamp(48px,11vw,72px) 0}
   #hero{padding:24px 0 30px}
   .hero-inner{margin-bottom:22px}
