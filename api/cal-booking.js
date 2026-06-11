@@ -203,7 +203,7 @@ module.exports = async function handler(req, res) {
         req
       }),
       customData: { content_name: 'Audit Call Booked', content_category: 'Audit' },
-      timeoutMs: 4000
+      timeoutMs: 8000
     });
   }
 
