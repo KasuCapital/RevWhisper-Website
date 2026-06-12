@@ -51,7 +51,7 @@ module.exports = async function handler(req, res) {
   const plan = VALID_PLANS.has(submittedPlan) ? submittedPlan : 'monthly';
   const listingCount = parseListingCount(payload);
 
-  if (!email || !email.includes('@')) {
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return sendJson(res, 400, { error: 'A valid email is required.' });
   }
 

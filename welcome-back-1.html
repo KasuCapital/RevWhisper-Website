@@ -572,7 +572,7 @@ function validateForm() {
   const phone = document.getElementById('phone');
 
   if (!name.value.trim()) { name.classList.add('error'); valid = false; } else { name.classList.remove('error'); }
-  if (!email.value.trim() || !email.value.includes('@')) { email.classList.add('error'); valid = false; } else { email.classList.remove('error'); }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) { email.classList.add('error'); valid = false; } else { email.classList.remove('error'); }
   if (!phone.value.trim()) { phone.classList.add('error'); valid = false; } else { phone.classList.remove('error'); }
 
   return valid;

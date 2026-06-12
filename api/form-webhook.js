@@ -117,7 +117,7 @@ async function parseBody(req) {
 
 function payloadError(eventType, payload) {
   const email = String(payload.email || '').trim();
-  if (!email || !email.includes('@')) return 'A valid email is required.';
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return 'A valid email is required.';
 
   if (eventType === 'get_started') {
     if (!String(payload.name || '').trim()) return 'A name is required.';

@@ -1183,7 +1183,7 @@ function validateStep(step){
     const name=document.getElementById('full-name');
     const email=document.getElementById('email');
     if(!name.value.trim()){name.classList.add('error');valid=false;}else{name.classList.remove('error');}
-    if(!email.value.trim()||!email.value.includes('@')){email.classList.add('error');valid=false;}else{email.classList.remove('error');}
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())){email.classList.add('error');valid=false;}else{email.classList.remove('error');}
   }
   return valid;
 }
