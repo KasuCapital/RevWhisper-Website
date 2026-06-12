@@ -32,6 +32,10 @@ fbq('track', 'PageView');
 </script>
 <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=959022406709300&ev=PageView&noscript=1"/></noscript>
 <!-- End Meta Pixel -->
+<!-- X Pixel base code + audit conversion helper -->
+<script src="/assets/x-pixel-base.js"></script>
+<script src="/assets/x-tracking.js"></script>
+<!-- End X Pixel base code -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Claim your live audit | RevWhisper</title>
@@ -555,8 +559,9 @@ async function confirmBooking(){
   // can fire a server-side Schedule (CAPI) with the SAME id, deduped against the browser event
   // below. _fbp/_fbc raise match quality for that server event.
   var evId='sched_'+Date.now()+'_'+Math.random().toString(36).slice(2,10);
+  var xConversionId=typeof rwXConversionId==='function'?rwXConversionId('audit_call'):'audit_call_'+Date.now();
   var fbp=rwCookie('_fbp'), fbc=rwCookie('_fbc');
-  const payload={start:iso,name:l.name,email:l.email,phone:phoneFull,timeZone:booking.timeZone,listings:l.listings,airbnbUrl:l.airbnbUrl,source:l.source||'audit-booking',attribution:l.attribution||{},fbEventId:evId,fbp:fbp,fbc:fbc};
+  const payload={start:iso,name:l.name,email:l.email,phone:phoneFull,timeZone:booking.timeZone,listings:l.listings,airbnbUrl:l.airbnbUrl,source:l.source||'audit-booking',attribution:l.attribution||{},fbEventId:evId,fbp:fbp,fbc:fbc,xConversionId:xConversionId,twclid:l.twclid||(l.attribution&&l.attribution.twclid)||''};
   let bookingResult=null,bookingError=null,shouldFallback=false,slotUnavailable=false;
   try{
     const res=await fetch(CAL_BOOKING_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
@@ -586,6 +591,16 @@ async function confirmBooking(){
   // Success → fire Call Booked (Schedule). /api/cal-booking fires the same event server-side
   // (CAPI) with this same event_id, so Meta dedupes the browser + server pair into one.
   try{ fbq('track','Schedule',{content_name:'Audit Call Booked',content_category:'Audit'},{eventID:evId}); }catch(e){}
+  function fireXCallBooked(){
+    var xParams={conversion_id:xConversionId,email_address:l.email};
+    if(phoneFull&&typeof rwXNormalizePhone==='function') xParams.phone_number=rwXNormalizePhone(phoneFull);
+    try{ rwXTrack('auditCallBooked',xParams); }catch(e){}
+  }
+  if(window.rwXReady&&typeof window.rwXReady.then==='function'){
+    Promise.race([window.rwXReady,new Promise(function(resolve){setTimeout(resolve,120);})]).then(fireXCallBooked).catch(function(){});
+  }else{
+    fireXCallBooked();
+  }
   rwTrack('call_booked',{time:iso,page:'audit-booking',listings:l.listings});
   rwTrack('booking_confirmed',{time:iso,page:'audit-booking'});
   renderSuccess(bookingResult);

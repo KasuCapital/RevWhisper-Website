@@ -3,8 +3,10 @@ const CAL_API_VERSION = '2026-02-25';
 const TEAM_SLUG = 'revwhisper';
 const EVENT_TYPE_SLUG = 'discovery';
 const UPSTREAM_TIMEOUT_MS = 15000;
+const DEFAULT_X_AUDIT_CALL_BOOKED_EVENT_ID = 'tw-r8ftv-rd0hl';
 
 const { sendCapiEvent, buildUserData } = require('./_meta-capi');
+const { sendXConversionEvent, buildIdentifiers } = require('./_x-capi');
 
 // Cal.com metadata limits (per API docs): <=50 keys, key <=40 chars, string value <=500 chars.
 const META_MAX_KEYS = 50;
@@ -203,6 +205,22 @@ module.exports = async function handler(req, res) {
         req
       }),
       customData: { content_name: 'Audit Call Booked', content_category: 'Audit' },
+      timeoutMs: 8000
+    });
+  }
+
+  if (body.xConversionId) {
+    await sendXConversionEvent({
+      eventId: process.env.X_AUDIT_CALL_BOOKED_EVENT_ID || DEFAULT_X_AUDIT_CALL_BOOKED_EVENT_ID,
+      conversionId: String(body.xConversionId),
+      eventSourceUrl: req.headers.referer || req.headers.referrer || 'https://revwhisper.com/audit-booking',
+      identifiers: buildIdentifiers({
+        twclid: body.twclid || (body.attribution && body.attribution.twclid),
+        email: body.email,
+        phone: body.phone,
+        req
+      }),
+      description: 'Audit Call Booked',
       timeoutMs: 8000
     });
   }

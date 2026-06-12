@@ -15,8 +15,10 @@ const WEBHOOK_URLS = {
 
 const INTAKE_WEBHOOK_URL = 'https://hook.us2.make.com/9x8k27nrk3ll6rfrjtfrn469cnslxpuj';
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
+const DEFAULT_X_AUDIT_LEAD_EVENT_ID = 'tw-r8ftv-r8ftx';
 
 const { sendCapiEvent, buildUserData } = require('./_meta-capi');
+const { sendXConversionEvent, buildIdentifiers } = require('./_x-capi');
 
 async function sendConfirmationEmail(name, email) {
   if (!RESEND_API_KEY) {
@@ -205,8 +207,8 @@ module.exports = async function handler(req, res) {
       sendIntakeWebhook(name, email)
     ];
 
-    // Only the audit funnel sends an fbEventId. Scope the CAPI Lead to it so we never
-    // emit a server Lead for a page that didn't fire a browser Lead to dedupe against.
+    // Only the audit funnel sends browser event IDs. Scope server-side ad events to it so
+    // we never emit a server Lead for a page that didn't fire a browser Lead to dedupe against.
     if (payload.fbEventId) {
       const [firstName, ...rest] = name.split(' ');
       tasks.push(sendCapiEvent({
@@ -224,6 +226,21 @@ module.exports = async function handler(req, res) {
           content_name: payload.fbContentName || 'Free Audit',
           content_category: 'Audit Lead'
         }
+      }));
+    }
+
+    if (payload.xConversionId) {
+      tasks.push(sendXConversionEvent({
+        eventId: process.env.X_AUDIT_LEAD_EVENT_ID || DEFAULT_X_AUDIT_LEAD_EVENT_ID,
+        conversionId: String(payload.xConversionId),
+        eventSourceUrl: req.headers.referer || req.headers.referrer || 'https://revwhisper.com/audit',
+        identifiers: buildIdentifiers({
+          twclid: payload.twclid || (payload.attribution && payload.attribution.twclid),
+          email,
+          phone: payload.phone,
+          req
+        }),
+        description: payload.xContentName || 'Free Audit Lead'
       }));
     }
 

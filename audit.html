@@ -8,10 +8,12 @@
   var key='rw_attribution';
   var params=new URLSearchParams(window.location.search);
   var utmFields=['utm_source','utm_medium','utm_campaign','utm_term','utm_content'];
-  var hasUtm=utmFields.some(function(f){return params.has(f);});
-  if(hasUtm||!sessionStorage.getItem(key)){
+  var clickFields=['twclid'];
+  var trackedFields=utmFields.concat(clickFields);
+  var hasTracked=trackedFields.some(function(f){return params.has(f);});
+  if(hasTracked||!sessionStorage.getItem(key)){
     var data={};
-    utmFields.forEach(function(f){if(params.get(f))data[f]=params.get(f);});
+    trackedFields.forEach(function(f){if(params.get(f))data[f]=params.get(f);});
     try{data.referrer=document.referrer?new URL(document.referrer).hostname:'direct';}catch(e){data.referrer=document.referrer||'direct';}
     data.landing_page=window.location.pathname;
     data.arrived_at=new Date().toISOString();
@@ -50,6 +52,10 @@ fbq('track', 'PageView');
 </script>
 <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=959022406709300&ev=PageView&noscript=1"/></noscript>
 <!-- End Meta Pixel -->
+<!-- X Pixel base code + audit conversion helper -->
+<script src="/assets/x-pixel-base.js"></script>
+<script src="/assets/x-tracking.js"></script>
+<!-- End X Pixel base code -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Free Airbnb Performance Audit | RevWhisper</title>
 <meta name="description" content="Get a free audit of your Airbnb listing's ranking, pricing, and conversion. See exactly where you're leaving bookings on the table, plus what to fix first, walked through with you, live.">
@@ -1240,11 +1246,21 @@ function submitForm(){
   // Meta Lead — fired browser-side now, and again server-side from /api/form-webhook
   // (CAPI) using this same event_id, so Meta deduplicates the pair into one Lead.
   var eventId='lead_'+Date.now()+'_'+Math.random().toString(36).slice(2,10);
+  var xConversionId=typeof rwXConversionId==='function'?rwXConversionId('audit_lead'):'audit_lead_'+Date.now();
   try{ sessionStorage.setItem('rw_lead_event_id', eventId); }catch(e){}
   try{ fbq('track','Lead',{content_name:'Free Audit',content_category:'Audit Lead'},{eventID:eventId}); }catch(e){}
   rwTrack('generate_lead',{page:'audit',listings:data.listings,issue:data.issue});
   // Hand the event_id + content name to the server so its CAPI Lead dedupes with the above.
   data.fbEventId=eventId; data.fbContentName='Free Audit';
+  // X uses conversion_id for Pixel/CAPI dedupe; event IDs are loaded from /api/x-config.
+  data.xConversionId=xConversionId; data.xContentName='Free Audit Lead';
+  if(data.attribution&&data.attribution.twclid) data.twclid=data.attribution.twclid;
+
+  function fireXLead(){
+    var xParams={conversion_id:xConversionId,email_address:data.email};
+    if(data.phone&&typeof rwXNormalizePhone==='function') xParams.phone_number=rwXNormalizePhone(data.phone);
+    try{ rwXTrack('auditLead',xParams); }catch(e){}
+  }
 
   // CRM webhook (fire-and-forget — don't block the redirect on Make.com latency)
   fetch(FORM_WEBHOOK_ENDPOINT,{
@@ -1254,7 +1270,15 @@ function submitForm(){
   }).catch(function(){});
 
   // straight to the live-audit booking page
-  window.location.href='/audit-booking';
+  var redirect=function(){window.location.href='/audit-booking';};
+  if(window.rwXReady&&typeof window.rwXReady.then==='function'){
+    Promise.race([window.rwXReady,new Promise(function(resolve){setTimeout(resolve,120);})])
+      .then(function(){fireXLead();redirect();})
+      .catch(redirect);
+  }else{
+    fireXLead();
+    redirect();
+  }
 }
 
 /* Enter key advances / submits */
