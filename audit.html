@@ -166,7 +166,7 @@ a{color:inherit}
 .step-desc{font-size:14px;color:var(--g500);line-height:1.6;font-weight:300;margin-bottom:26px;max-width:440px}
 
 /* radio cards */
-.radio-group{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:10px;margin-bottom:8px}
+.radio-group{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:8px}
 .radio-card{position:relative;cursor:pointer}
 .radio-card input{position:absolute;opacity:0;width:0;height:0}
 .radio-card .rc-label{display:flex;align-items:center;justify-content:center;padding:16px 8px;border:1.5px solid var(--g200);border-radius:var(--radius);background:#fff;font-size:15px;font-weight:500;color:var(--g700);text-align:center;cursor:pointer;position:relative;overflow:hidden;transition:border-color .25s,color .25s,box-shadow .25s,transform .2s var(--ease-out-back)}
@@ -176,10 +176,8 @@ a{color:inherit}
 .radio-card input:checked + .rc-label::before{opacity:1;transform:scale(1)}
 .radio-card .rc-label span{position:relative;z-index:1}
 /* revenue band cards (rendered dynamically, wider money labels) */
-.revenue-group{grid-template-columns:repeat(auto-fill,minmax(102px,1fr))}
+.revenue-group{grid-template-columns:repeat(3,1fr)}
 .revenue-group .rc-label{font-size:14px;padding:14px 6px;line-height:1.25}
-.radio-card.rc-wide{grid-column:1/-1}
-.radio-card.rc-wide .rc-label{font-weight:400;color:var(--g500);font-size:13.5px;padding:13px 8px}
 
 /* option cards */
 .option-cards{display:flex;flex-direction:column;gap:10px;margin-bottom:8px}
@@ -481,6 +479,7 @@ a{color:inherit}
   .hero-h1{font-size:clamp(33px,8.4vw,42px)}
   .form-card{padding:20px 18px 18px;border-radius:14px}
   .radio-group{grid-template-columns:repeat(3,1fr)}
+  .revenue-group{grid-template-columns:repeat(2,1fr)}
   /* 16px inputs prevent iOS zoom-on-focus */
   .field-input{font-size:16px}.phone-input{font-size:16px}
   .stat-band{flex-direction:column;gap:24px}
@@ -574,12 +573,12 @@ a{color:inherit}
           <!-- Step 1: role (who they are) -->
           <div class="step" data-step="1">
             <div class="step-eyebrow">About you</div>
-            <h2 class="step-title">What's your role with these <em>listings?</em></h2>
+            <h2 class="step-title" id="role-title">What's your role with these <em>listings?</em></h2>
             <p class="step-desc">It helps us tailor what we look at for you.</p>
             <div class="option-cards">
-              <label class="option-card"><input type="radio" name="role" value="owner"><div class="oc-label"><span class="oc-radio"></span><span>I own them</span></div></label>
-              <label class="option-card"><input type="radio" name="role" value="co-host"><div class="oc-label"><span class="oc-radio"></span><span>I co-host or partner on them</span></div></label>
-              <label class="option-card"><input type="radio" name="role" value="manager"><div class="oc-label"><span class="oc-radio"></span><span>I manage them for other owners</span></div></label>
+              <label class="option-card"><input type="radio" name="role" value="owner"><div class="oc-label"><span class="oc-radio"></span><span>I'm the owner</span></div></label>
+              <label class="option-card"><input type="radio" name="role" value="co-host"><div class="oc-label"><span class="oc-radio"></span><span>I'm a co-host or partner</span></div></label>
+              <label class="option-card"><input type="radio" name="role" value="manager"><div class="oc-label"><span class="oc-radio"></span><span>I manage for other owners</span></div></label>
             </div>
             <div class="form-actions">
               <button class="btn-back" type="button" onclick="prevStep()"><span class="arrow">←</span> Back</button>
@@ -1271,16 +1270,22 @@ var REVENUE_BANDS={
   '100+':['Under $3M','$3M–$6M','$6M–$10M','$10M–$15M','$15M–$25M','$25M+']
 };
 function renderRevenueOptions(listingVal){
-  var wrap=document.getElementById('revenue-options'); if(!wrap) return;
-  var bands=REVENUE_BANDS[listingVal]||REVENUE_BANDS['1'];
-  var html='';
-  bands.forEach(function(b){
-    html+='<label class="radio-card"><input type="radio" name="revenue" value="'+b+'"><div class="rc-label"><span>'+b+'</span></div></label>';
-  });
-  html+='<label class="radio-card rc-wide"><input type="radio" name="revenue" value="Prefer not to say"><div class="rc-label"><span>Prefer not to say</span></div></label>';
-  wrap.innerHTML=html;
+  var single=(listingVal==='1');
+  // role-step question adapts to singular / plural
+  var roleTitle=document.getElementById('role-title');
+  if(roleTitle) roleTitle.innerHTML="What's your role with "+(single?'this <em>listing?</em>':'these <em>listings?</em>');
+  // revenue bands sized to the chosen portfolio
+  var wrap=document.getElementById('revenue-options');
+  if(wrap){
+    var bands=REVENUE_BANDS[listingVal]||REVENUE_BANDS['1'];
+    var html='';
+    bands.forEach(function(b){
+      html+='<label class="radio-card"><input type="radio" name="revenue" value="'+b+'"><div class="rc-label"><span>'+b+'</span></div></label>';
+    });
+    wrap.innerHTML=html;
+  }
   var title=document.getElementById('revenue-title');
-  if(title) title.innerHTML=(listingVal==='1'?'What has your listing earned in the ':'What have your listings earned in the ')+'<em>last 12 months?</em>';
+  if(title) title.innerHTML=(single?'What has your listing earned in the ':'What have your listings earned in the ')+'<em>last 12 months?</em>';
   var dc=document.getElementById('doorcount-field');
   if(dc) dc.style.display=(listingVal==='26-100'||listingVal==='100+')?'':'none';
 }
