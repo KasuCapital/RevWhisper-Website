@@ -65,9 +65,9 @@ function buildMetadata(body) {
   add('source', body.source || 'website');
   add('listings', body.listings);
   add('airbnbUrl', body.airbnbUrl);
-  // Phone lives in metadata as a free-form string (no format validation risk), and is
-  // also delivered to the CRM via the form webhook. We deliberately do NOT put it in
-  // attendee.phoneNumber, which Cal.com validates as an international number.
+  // Phone also lives in metadata as a free-form fallback string. The primary CRM path is
+  // attendee.phoneNumber (set on the booking above, E.164) → Cal.com booking webhook →
+  // Disco Call automation → Attio. metadata.phone is the belt-and-suspenders source.
   add('phone', body.phone);
   if (body.attribution && typeof body.attribution === 'object' && !Array.isArray(body.attribution)) {
     for (const [k, v] of Object.entries(body.attribution)) add(k, v);
@@ -132,13 +132,22 @@ module.exports = async function handler(req, res) {
   const apiKey = (process.env.CAL_API_KEY || '').trim();
   const eventTypeId = parseEventTypeId(process.env.CAL_EVENT_TYPE_ID);
 
+  // Build a clean E.164 from the (client-validated) phone. Cal.com surfaces
+  // attendee.phoneNumber on the booking AND in the booking webhook, which is how it
+  // reaches the CRM (via the Disco Call automation). Guard the format so a malformed
+  // value can never fail the booking — if it isn't a plausible E.164 we omit it and
+  // fall back to metadata.phone.
+  const phoneDigits = String(body.phone || '').replace(/\D/g, '');
+  const phoneE164 = (phoneDigits.length >= 8 && phoneDigits.length <= 15) ? '+' + phoneDigits : '';
+
   const upstreamPayload = {
     start: new Date(body.start).toISOString(),
     attendee: {
       name: String(body.name).trim(),
       email: String(body.email).trim(),
       timeZone: String(body.timeZone).trim(),
-      language: 'en'
+      language: 'en',
+      ...(phoneE164 ? { phoneNumber: phoneE164 } : {})
     },
     metadata: buildMetadata(body)
   };
