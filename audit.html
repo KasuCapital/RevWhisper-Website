@@ -549,9 +549,8 @@ a{color:inherit}
             <span class="fc-seg" data-seg="2"></span>
             <span class="fc-seg" data-seg="3"></span>
             <span class="fc-seg" data-seg="4"></span>
-            <span class="fc-seg" data-seg="5"></span>
           </div>
-          <div class="fc-count">Step <span id="fc-cur">1</span> of 6</div>
+          <div class="fc-count">Step <span id="fc-cur">1</span> of 5</div>
         </div>
 
         <div class="steps-viewport">
@@ -570,23 +569,8 @@ a{color:inherit}
             </div>
           </div>
 
-          <!-- Step 1: role (who they are) -->
+          <!-- Step 1: biggest issue (light qualifier, maps to pillars) -->
           <div class="step" data-step="1">
-            <div class="step-eyebrow">About you</div>
-            <h2 class="step-title" id="role-title">What's your role with these <em>listings?</em></h2>
-            <p class="step-desc">It helps us tailor what we look at for you.</p>
-            <div class="option-cards">
-              <label class="option-card"><input type="radio" name="role" value="owner"><div class="oc-label"><span class="oc-radio"></span><span>I'm the owner</span></div></label>
-              <label class="option-card"><input type="radio" name="role" value="co-host"><div class="oc-label"><span class="oc-radio"></span><span>I'm a co-host or partner</span></div></label>
-              <label class="option-card"><input type="radio" name="role" value="manager"><div class="oc-label"><span class="oc-radio"></span><span>I manage for other owners</span></div></label>
-            </div>
-            <div class="form-actions">
-              <button class="btn-back" type="button" onclick="prevStep()"><span class="arrow">←</span> Back</button>
-            </div>
-          </div>
-
-          <!-- Step 2: biggest issue (light qualifier, maps to pillars) -->
-          <div class="step" data-step="2">
             <div class="step-eyebrow">What's going on</div>
             <h2 class="step-title">What's the biggest issue <em>right now?</em></h2>
             <p class="step-desc">No wrong answer. It just tells us where to look first.</p>
@@ -601,8 +585,8 @@ a{color:inherit}
             </div>
           </div>
 
-          <!-- Step 3: pricing & revenue approach -->
-          <div class="step" data-step="3">
+          <!-- Step 2: pricing & revenue approach -->
+          <div class="step" data-step="2">
             <div class="step-eyebrow">How you run it</div>
             <h2 class="step-title">How do you handle pricing <em>right now?</em></h2>
             <p class="step-desc">No judgement. It tells us where the quick wins are.</p>
@@ -618,11 +602,11 @@ a{color:inherit}
             </div>
           </div>
 
-          <!-- Step 4: revenue (bands rendered dynamically from the listing count) -->
-          <div class="step" data-step="4">
+          <!-- Step 3: revenue (bands rendered dynamically from the listing count) -->
+          <div class="step" data-step="3">
             <div class="step-eyebrow">Your revenue</div>
-            <h2 class="step-title" id="revenue-title">What have your listings earned in the <em>last 12 months?</em></h2>
-            <p class="step-desc">Total booking revenue before fees, the figure on your Airbnb earnings dashboard. Newer to it? Estimate what you expect to bring in this year.</p>
+            <h2 class="step-title" id="revenue-title">Roughly what did your listings earn <em>last year?</em></h2>
+            <p class="step-desc">Newer to Airbnb? Estimate what you expect to bring in this year.</p>
             <div class="field" id="doorcount-field" style="display:none">
               <label class="field-label" for="door-count">Roughly how many listings? <span class="opt">(optional)</span></label>
               <input type="number" class="field-input" id="door-count" placeholder="e.g. 60" min="1" inputmode="numeric">
@@ -633,8 +617,8 @@ a{color:inherit}
             </div>
           </div>
 
-          <!-- Step 5: the ask (listing + contact) -->
-          <div class="step" data-step="5">
+          <!-- Step 4: the ask (listing + contact) -->
+          <div class="step" data-step="4">
             <div class="step-eyebrow">Where to send it</div>
             <h2 class="step-title">Last step: <em>your details.</em></h2>
             <p class="step-desc">We'll start preparing your audit and show you how to get your findings, walked through with you.</p>
@@ -1173,7 +1157,7 @@ a{color:inherit}
 <script>
 /* ───────────────────────── Multi-step lead form ───────────────────────── */
 let current = 0;
-const totalSteps = 6;
+const totalSteps = 5;
 let isTransitioning = false;
 const FORM_WEBHOOK_ENDPOINT = '/api/form-webhook';
 
@@ -1236,7 +1220,7 @@ function transitionStep(from,to,direction){
 
 function validateStep(step){
   let valid=true;
-  if(step===5){
+  if(step===4){
     const url=document.getElementById('airbnb-url');
     const val=url.value.trim();
     // Airbnb URL (listing or host profile) is required
@@ -1271,9 +1255,6 @@ var REVENUE_BANDS={
 };
 function renderRevenueOptions(listingVal){
   var single=(listingVal==='1');
-  // role-step question adapts to singular / plural
-  var roleTitle=document.getElementById('role-title');
-  if(roleTitle) roleTitle.innerHTML="What's your role with "+(single?'this <em>listing?</em>':'these <em>listings?</em>');
   // revenue bands sized to the chosen portfolio
   var wrap=document.getElementById('revenue-options');
   if(wrap){
@@ -1285,17 +1266,14 @@ function renderRevenueOptions(listingVal){
     wrap.innerHTML=html;
   }
   var title=document.getElementById('revenue-title');
-  if(title) title.innerHTML=(single?'What has your listing earned in the ':'What have your listings earned in the ')+'<em>last 12 months?</em>';
+  if(title) title.innerHTML='Roughly what did your '+(single?'listing':'portfolio')+' earn <em>last year?</em>';
   var dc=document.getElementById('doorcount-field');
   if(dc) dc.style.display=(listingVal==='26-100'||listingVal==='100+')?'':'none';
 }
 
-/* Auto-advance taps: listings, role, issue, pricing, and the dynamic revenue bands */
+/* Auto-advance taps: listings, issue, pricing, and the dynamic revenue bands */
 document.querySelectorAll('input[name="listings"]').forEach(function(r){
   r.addEventListener('change',function(){ rwTrack('select_portfolio_size',{size:r.value,page:'audit'}); renderRevenueOptions(r.value); setTimeout(nextStep,180); });
-});
-document.querySelectorAll('input[name="role"]').forEach(function(r){
-  r.addEventListener('change',function(){ rwTrack('select_role',{role:r.value,page:'audit'}); setTimeout(nextStep,180); });
 });
 document.querySelectorAll('input[name="issue"]').forEach(function(r){
   r.addEventListener('change',function(){ rwTrack('select_issue',{issue:r.value,page:'audit'}); setTimeout(nextStep,180); });
@@ -1316,14 +1294,13 @@ document.querySelectorAll('.field-input').forEach(function(input){
 /* Submit — fire Lead, post webhook, stash context, go to booking page */
 var submitted=false;
 function submitForm(){
-  if(!validateStep(5)) return;
+  if(!validateStep(4)) return;
   if(submitted) return;
   const btn=document.getElementById('btn-submit');
   btn.disabled=true;
 
   const data={
     listings:(document.querySelector('input[name="listings"]:checked')||{}).value||'',
-    role:(document.querySelector('input[name="role"]:checked')||{}).value||'',
     issue:(document.querySelector('input[name="issue"]:checked')||{}).value||'',
     pricing:(document.querySelector('input[name="pricing"]:checked')||{}).value||'',
     revenue:(document.querySelector('input[name="revenue"]:checked')||{}).value||'',
@@ -1384,7 +1361,7 @@ function submitForm(){
 document.addEventListener('keydown',function(e){
   if(e.key!=='Enter') return;
   if(e.target.tagName==='TEXTAREA') return;
-  if(current===5){e.preventDefault();submitForm();}
+  if(current===4){e.preventDefault();submitForm();}
 });
 
 /* Smooth-scroll CTAs to the form + focus first option */
