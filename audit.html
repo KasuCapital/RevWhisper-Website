@@ -166,7 +166,7 @@ a{color:inherit}
 .step-desc{font-size:14px;color:var(--g500);line-height:1.6;font-weight:300;margin-bottom:26px;max-width:440px}
 
 /* radio cards */
-.radio-group{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:10px;margin-bottom:8px}
+.radio-group{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:8px}
 .radio-card{position:relative;cursor:pointer}
 .radio-card input{position:absolute;opacity:0;width:0;height:0}
 .radio-card .rc-label{display:flex;align-items:center;justify-content:center;padding:16px 8px;border:1.5px solid var(--g200);border-radius:var(--radius);background:#fff;font-size:15px;font-weight:500;color:var(--g700);text-align:center;cursor:pointer;position:relative;overflow:hidden;transition:border-color .25s,color .25s,box-shadow .25s,transform .2s var(--ease-out-back)}
@@ -175,6 +175,9 @@ a{color:inherit}
 .radio-card input:checked + .rc-label{border-color:var(--accent);color:var(--accent);font-weight:600;box-shadow:0 0 0 1.5px var(--accent)}
 .radio-card input:checked + .rc-label::before{opacity:1;transform:scale(1)}
 .radio-card .rc-label span{position:relative;z-index:1}
+/* revenue band cards (rendered dynamically, wider money labels) */
+.revenue-group{grid-template-columns:repeat(3,1fr)}
+.revenue-group .rc-label{font-size:14px;padding:14px 6px;line-height:1.25}
 
 /* option cards */
 .option-cards{display:flex;flex-direction:column;gap:10px;margin-bottom:8px}
@@ -476,6 +479,7 @@ a{color:inherit}
   .hero-h1{font-size:clamp(33px,8.4vw,42px)}
   .form-card{padding:20px 18px 18px;border-radius:14px}
   .radio-group{grid-template-columns:repeat(3,1fr)}
+  .revenue-group{grid-template-columns:repeat(2,1fr)}
   /* 16px inputs prevent iOS zoom-on-focus */
   .field-input{font-size:16px}.phone-input{font-size:16px}
   .stat-band{flex-direction:column;gap:24px}
@@ -543,8 +547,10 @@ a{color:inherit}
             <span class="fc-seg on" data-seg="0"></span>
             <span class="fc-seg" data-seg="1"></span>
             <span class="fc-seg" data-seg="2"></span>
+            <span class="fc-seg" data-seg="3"></span>
+            <span class="fc-seg" data-seg="4"></span>
           </div>
-          <div class="fc-count">Step <span id="fc-cur">1</span> of 3</div>
+          <div class="fc-count">Step <span id="fc-cur">1</span> of 5</div>
         </div>
 
         <div class="steps-viewport">
@@ -558,7 +564,8 @@ a{color:inherit}
               <label class="radio-card"><input type="radio" name="listings" value="2-5"><div class="rc-label"><span>2–5</span></div></label>
               <label class="radio-card"><input type="radio" name="listings" value="6-10"><div class="rc-label"><span>6–10</span></div></label>
               <label class="radio-card"><input type="radio" name="listings" value="11-25"><div class="rc-label"><span>11–25</span></div></label>
-              <label class="radio-card"><input type="radio" name="listings" value="25+"><div class="rc-label"><span>25+</span></div></label>
+              <label class="radio-card"><input type="radio" name="listings" value="26-100"><div class="rc-label"><span>26–100</span></div></label>
+              <label class="radio-card"><input type="radio" name="listings" value="100+"><div class="rc-label"><span>100+</span></div></label>
             </div>
           </div>
 
@@ -578,8 +585,40 @@ a{color:inherit}
             </div>
           </div>
 
-          <!-- Step 2: the ask (listing + contact) -->
+          <!-- Step 2: pricing & revenue approach -->
           <div class="step" data-step="2">
+            <div class="step-eyebrow">How you run it</div>
+            <h2 class="step-title">How do you handle pricing <em>right now?</em></h2>
+            <p class="step-desc">No judgement. It tells us where the quick wins are.</p>
+            <div class="option-cards">
+              <label class="option-card"><input type="radio" name="pricing" value="manual"><div class="oc-label"><span class="oc-radio"></span><span>Manually, or Airbnb Smart Pricing</span></div></label>
+              <label class="option-card"><input type="radio" name="pricing" value="tool"><div class="oc-label"><span class="oc-radio"></span><span>A pricing tool (PriceLabs, Wheelhouse, Beyond)</span></div></label>
+              <label class="option-card"><input type="radio" name="pricing" value="revenue-manager"><div class="oc-label"><span class="oc-radio"></span><span>A revenue manager or agency handles it</span></div></label>
+              <label class="option-card"><input type="radio" name="pricing" value="property-manager"><div class="oc-label"><span class="oc-radio"></span><span>My property manager handles it</span></div></label>
+              <label class="option-card"><input type="radio" name="pricing" value="none"><div class="oc-label"><span class="oc-radio"></span><span>Not really managing it yet</span></div></label>
+            </div>
+            <div class="form-actions">
+              <button class="btn-back" type="button" onclick="prevStep()"><span class="arrow">←</span> Back</button>
+            </div>
+          </div>
+
+          <!-- Step 3: revenue (bands rendered dynamically from the listing count) -->
+          <div class="step" data-step="3">
+            <div class="step-eyebrow">Your revenue</div>
+            <h2 class="step-title" id="revenue-title">Roughly what did your listings earn <em>last year?</em></h2>
+            <p class="step-desc">Newer to Airbnb? Estimate what you expect to bring in this year.</p>
+            <div class="field" id="doorcount-field" style="display:none">
+              <label class="field-label" for="door-count">Roughly how many listings? <span class="opt">(optional)</span></label>
+              <input type="number" class="field-input" id="door-count" placeholder="e.g. 60" min="1" inputmode="numeric">
+            </div>
+            <div class="radio-group revenue-group" id="revenue-options"></div>
+            <div class="form-actions">
+              <button class="btn-back" type="button" onclick="prevStep()"><span class="arrow">←</span> Back</button>
+            </div>
+          </div>
+
+          <!-- Step 4: the ask (listing + contact) -->
+          <div class="step" data-step="4">
             <div class="step-eyebrow">Where to send it</div>
             <h2 class="step-title">Last step: <em>your details.</em></h2>
             <p class="step-desc">We'll start preparing your audit and show you how to get your findings, walked through with you.</p>
@@ -1118,7 +1157,7 @@ a{color:inherit}
 <script>
 /* ───────────────────────── Multi-step lead form ───────────────────────── */
 let current = 0;
-const totalSteps = 3;
+const totalSteps = 5;
 let isTransitioning = false;
 const FORM_WEBHOOK_ENDPOINT = '/api/form-webhook';
 
@@ -1181,7 +1220,7 @@ function transitionStep(from,to,direction){
 
 function validateStep(step){
   let valid=true;
-  if(step===2){
+  if(step===4){
     const url=document.getElementById('airbnb-url');
     const val=url.value.trim();
     // Airbnb URL (listing or host profile) is required
@@ -1205,12 +1244,46 @@ function prevStep(){
   if(current>0){const from=current;current--;transitionStep(from,current,'backward');}
 }
 
-/* Auto-advance taps (step 0 listings, step 1 issue) */
+/* Revenue bands per listing count — annual gross, projected from per-door performance tiers */
+var REVENUE_BANDS={
+  '1':['Under $20k','$20k–$35k','$35k–$55k','$55k–$80k','$80k–$120k','$120k+'],
+  '2-5':['Under $60k','$60k–$110k','$110k–$175k','$175k–$250k','$250k–$400k','$400k+'],
+  '6-10':['Under $150k','$150k–$300k','$300k–$450k','$450k–$650k','$650k–$1M','$1M+'],
+  '11-25':['Under $350k','$350k–$650k','$650k–$1M','$1M–$1.5M','$1.5M–$2.5M','$2.5M+'],
+  '26-100':['Under $1M','$1M–$2M','$2M–$3M','$3M–$4M','$4M–$6M','$6M+'],
+  '100+':['Under $3M','$3M–$6M','$6M–$10M','$10M–$15M','$15M–$25M','$25M+']
+};
+function renderRevenueOptions(listingVal){
+  var single=(listingVal==='1');
+  // revenue bands sized to the chosen portfolio
+  var wrap=document.getElementById('revenue-options');
+  if(wrap){
+    var bands=REVENUE_BANDS[listingVal]||REVENUE_BANDS['1'];
+    var html='';
+    bands.forEach(function(b){
+      html+='<label class="radio-card"><input type="radio" name="revenue" value="'+b+'"><div class="rc-label"><span>'+b+'</span></div></label>';
+    });
+    wrap.innerHTML=html;
+  }
+  var title=document.getElementById('revenue-title');
+  if(title) title.innerHTML='Roughly what did your '+(single?'listing':'portfolio')+' earn <em>last year?</em>';
+  var dc=document.getElementById('doorcount-field');
+  if(dc) dc.style.display=(listingVal==='26-100'||listingVal==='100+')?'':'none';
+}
+
+/* Auto-advance taps: listings, issue, pricing, and the dynamic revenue bands */
 document.querySelectorAll('input[name="listings"]').forEach(function(r){
-  r.addEventListener('change',function(){ rwTrack('select_portfolio_size',{size:r.value,page:'audit'}); setTimeout(nextStep,180); });
+  r.addEventListener('change',function(){ rwTrack('select_portfolio_size',{size:r.value,page:'audit'}); renderRevenueOptions(r.value); setTimeout(nextStep,180); });
 });
 document.querySelectorAll('input[name="issue"]').forEach(function(r){
   r.addEventListener('change',function(){ rwTrack('select_issue',{issue:r.value,page:'audit'}); setTimeout(nextStep,180); });
+});
+document.querySelectorAll('input[name="pricing"]').forEach(function(r){
+  r.addEventListener('change',function(){ rwTrack('select_pricing',{pricing:r.value,page:'audit'}); setTimeout(nextStep,180); });
+});
+/* revenue radios are rendered dynamically — delegate the change to auto-advance */
+document.addEventListener('change',function(e){
+  if(e.target&&e.target.name==='revenue'){ rwTrack('select_revenue',{revenue:e.target.value,page:'audit'}); setTimeout(nextStep,180); }
 });
 
 /* Clear field error as the user types */
@@ -1221,7 +1294,7 @@ document.querySelectorAll('.field-input').forEach(function(input){
 /* Submit — fire Lead, post webhook, stash context, go to booking page */
 var submitted=false;
 function submitForm(){
-  if(!validateStep(2)) return;
+  if(!validateStep(4)) return;
   if(submitted) return;
   const btn=document.getElementById('btn-submit');
   btn.disabled=true;
@@ -1229,6 +1302,9 @@ function submitForm(){
   const data={
     listings:(document.querySelector('input[name="listings"]:checked')||{}).value||'',
     issue:(document.querySelector('input[name="issue"]:checked')||{}).value||'',
+    pricing:(document.querySelector('input[name="pricing"]:checked')||{}).value||'',
+    revenue:(document.querySelector('input[name="revenue"]:checked')||{}).value||'',
+    doorCount:((document.getElementById('door-count')||{}).value||'').trim(),
     airbnbUrl:document.getElementById('airbnb-url').value.trim(),
     name:document.getElementById('full-name').value.trim(),
     email:document.getElementById('email').value.trim(),
@@ -1285,7 +1361,7 @@ function submitForm(){
 document.addEventListener('keydown',function(e){
   if(e.key!=='Enter') return;
   if(e.target.tagName==='TEXTAREA') return;
-  if(current===2){e.preventDefault();submitForm();}
+  if(current===4){e.preventDefault();submitForm();}
 });
 
 /* Smooth-scroll CTAs to the form + focus first option */
