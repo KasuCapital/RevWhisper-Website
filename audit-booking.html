@@ -284,14 +284,14 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
         </div>
         <div id="confirm-error-slot"></div>
         <div class="book-field">
-          <label class="book-field-label" for="book-phone">Phone number <span class="book-field-optional">(optional)</span></label>
+          <label class="book-field-label" for="book-phone">Phone number</label>
           <div class="book-phone-wrap">
             <select class="book-phone-code" id="book-phone-code" aria-label="Country code">
               <option value="+1">🇺🇸 +1</option><option value="+44">🇬🇧 +44</option><option value="+61">🇦🇺 +61</option><option value="+33">🇫🇷 +33</option><option value="+49">🇩🇪 +49</option><option value="+52">🇲🇽 +52</option><option value="+34">🇪🇸 +34</option><option value="+39">🇮🇹 +39</option><option value="+55">🇧🇷 +55</option>
             </select>
-            <input type="tel" class="book-phone-input" id="book-phone" placeholder="(555) 123-4567" autocomplete="tel" inputmode="tel">
+            <input type="tel" class="book-phone-input" id="book-phone" placeholder="(555) 123-4567" autocomplete="tel" inputmode="tel" required aria-required="true">
           </div>
-          <div class="book-field-hint">Add it and we'll text your Google Meet link and a reminder before your audit — otherwise we'll email it. Nothing else.</div>
+          <div class="book-field-hint">We'll text your Google Meet link and a reminder before your audit. Nothing else.</div>
         </div>
         <button class="btn-confirm" type="button" id="confirm-btn" onclick="confirmBooking()">Confirm my audit <span class="arrow">→</span></button>
         <div class="form-actions"><button class="btn-back" type="button" onclick="prevStep()"><span class="arrow">←</span> Back</button></div>
@@ -541,11 +541,17 @@ async function confirmBooking(){
   const phoneEl=document.getElementById('book-phone');
   const codeEl=document.getElementById('book-phone-code');
   const phoneNum=phoneEl?phoneEl.value.trim():'';
-  // Phone is optional — no validation gate. If left blank we send call details by email.
+  // Phone is required — gate the booking until a valid number is entered.
   if(phoneEl) phoneEl.classList.remove('error');
   const ce=document.getElementById('confirm-error-slot'); if(ce) ce.innerHTML='';
+  const digitCount=(phoneNum.match(/\d/g)||[]).length;
+  if(!phoneNum||digitCount<7){
+    if(phoneEl){ phoneEl.classList.add('error'); phoneEl.focus(); }
+    showConfirmError(phoneNum?'Please enter a valid phone number so we can send your call details.':'Please add your phone number so we can send your call details.');
+    return;
+  }
   const phoneCode=codeEl?codeEl.value.trim():'';
-  const phoneFull=phoneNum?(phoneCode+' '+phoneNum).trim():'';
+  const phoneFull=(phoneCode+' '+phoneNum).trim();
   booking.bookingInFlight=true;
   const cbtn=document.getElementById('confirm-btn'); if(cbtn) cbtn.disabled=true;
   // persist the phone into the lead context (payload + any Cal.com fallback link)
