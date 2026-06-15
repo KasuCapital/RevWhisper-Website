@@ -5,19 +5,26 @@
 <script>
 (function(){
   var key='rw_attribution';
+  var TTL=7776000000; // 90 days — keep the last paid touch across tabs/sessions
   var params=new URLSearchParams(window.location.search);
   var utmFields=['utm_source','utm_medium','utm_campaign','utm_term','utm_content'];
-  var hasUtm=utmFields.some(function(f){return params.has(f);});
-  if(hasUtm||!sessionStorage.getItem(key)){
+  var clickFields=['fbclid','gclid','ttclid','twclid','msclkid','li_fat_id'];
+  var trackedFields=utmFields.concat(clickFields);
+  var hasTracked=trackedFields.some(function(f){return params.has(f);});
+  function rwGet(k){try{return localStorage.getItem(k)||sessionStorage.getItem(k);}catch(e){try{return sessionStorage.getItem(k);}catch(e2){return null;}}}
+  function rwSet(k,v){try{localStorage.setItem(k,v);}catch(e){try{sessionStorage.setItem(k,v);}catch(e2){}}}
+  var prev=null;try{prev=JSON.parse(rwGet(key));}catch(e){prev=null;}
+  var fresh=prev&&prev.arrived_at&&((Date.now()-new Date(prev.arrived_at).getTime())<TTL);
+  if(hasTracked||!fresh){
     var data={};
-    utmFields.forEach(function(f){if(params.get(f))data[f]=params.get(f);});
+    trackedFields.forEach(function(f){if(params.get(f))data[f]=params.get(f);});
     try{data.referrer=document.referrer?new URL(document.referrer).hostname:'direct';}catch(e){data.referrer=document.referrer||'direct';}
     data.landing_page=window.location.pathname;
     data.arrived_at=new Date().toISOString();
-    sessionStorage.setItem(key,JSON.stringify(data));
+    rwSet(key,JSON.stringify(data));
   }
 })();
-function rwAttribution(){try{return JSON.parse(sessionStorage.getItem('rw_attribution'))||{};}catch(e){return {};}}
+function rwAttribution(){try{return JSON.parse(localStorage.getItem('rw_attribution')||sessionStorage.getItem('rw_attribution'))||{};}catch(e){return {};}}
 </script>
 <!-- Cookie Consent + GA4 (consent-mode) -->
 <script>
