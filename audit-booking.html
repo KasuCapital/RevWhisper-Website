@@ -289,7 +289,7 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
             <select class="book-phone-code" id="book-phone-code" aria-label="Country code">
               <option value="+1">🇺🇸 +1</option><option value="+44">🇬🇧 +44</option><option value="+61">🇦🇺 +61</option><option value="+33">🇫🇷 +33</option><option value="+49">🇩🇪 +49</option><option value="+52">🇲🇽 +52</option><option value="+34">🇪🇸 +34</option><option value="+39">🇮🇹 +39</option><option value="+55">🇧🇷 +55</option>
             </select>
-            <input type="tel" class="book-phone-input" id="book-phone" placeholder="(555) 123-4567" autocomplete="tel" inputmode="tel" required aria-required="true">
+            <input type="tel" class="book-phone-input" id="book-phone" placeholder="(555) 123-4567" autocomplete="tel" inputmode="tel" maxlength="16" required aria-required="true">
           </div>
           <div class="book-field-hint">We'll text your Google Meet link and a reminder before your audit. Nothing else.</div>
         </div>
@@ -535,22 +535,47 @@ function showConfirmError(message){
   errEl.innerHTML='<div class="cal-error">'+esc(message)+'</div>';
 }
 
+/* Phone input: country-code-aware live mask + validation (US/Canada = 10 digits; intl = 7-15) */
+function rwPhoneDigits(v){ return (String(v||'').match(/\d/g)||[]).join(''); }
+function rwFormatPhone(code,raw){
+  var d=rwPhoneDigits(raw);
+  if(code==='+1'){
+    d=d.slice(0,10);
+    if(!d) return '';
+    if(d.length<4) return '('+d;
+    if(d.length<7) return '('+d.slice(0,3)+') '+d.slice(3);
+    return '('+d.slice(0,3)+') '+d.slice(3,6)+'-'+d.slice(6);
+  }
+  return d.slice(0,15);
+}
+function rwPhoneValid(code,raw){
+  var n=rwPhoneDigits(raw).length;
+  return code==='+1' ? n===10 : (n>=7&&n<=15);
+}
+function rwApplyPhoneMask(){
+  var p=document.getElementById('book-phone'),c=document.getElementById('book-phone-code');
+  if(!p||!c) return;
+  p.value=rwFormatPhone(c.value,p.value);
+  p.placeholder=c.value==='+1'?'(555) 123-4567':'Phone number';
+  p.classList.remove('error');
+  var ce=document.getElementById('confirm-error-slot'); if(ce) ce.innerHTML='';
+}
+
 /* Confirm step → validate phone, then actually book */
 async function confirmBooking(){
   if(booking.bookingInFlight) return;
   const phoneEl=document.getElementById('book-phone');
   const codeEl=document.getElementById('book-phone-code');
   const phoneNum=phoneEl?phoneEl.value.trim():'';
-  // Phone is required — gate the booking until a valid number is entered.
+  const phoneCode=codeEl?codeEl.value.trim():'';
+  // Phone is required — gate until a valid, properly-formatted number is entered.
   if(phoneEl) phoneEl.classList.remove('error');
   const ce=document.getElementById('confirm-error-slot'); if(ce) ce.innerHTML='';
-  const digitCount=(phoneNum.match(/\d/g)||[]).length;
-  if(!phoneNum||digitCount<7){
+  if(!phoneNum||!rwPhoneValid(phoneCode,phoneNum)){
     if(phoneEl){ phoneEl.classList.add('error'); phoneEl.focus(); }
-    showConfirmError(phoneNum?'Please enter a valid phone number so we can send your call details.':'Please add your phone number so we can send your call details.');
+    showConfirmError(!phoneNum?'Please add your phone number so we can send your call details.':(phoneCode==='+1'?'Please enter a valid 10-digit US/Canada phone number.':'Please enter a valid phone number so we can send your call details.'));
     return;
   }
-  const phoneCode=codeEl?codeEl.value.trim():'';
   const phoneFull=(phoneCode+' '+phoneNum).trim();
   booking.bookingInFlight=true;
   const cbtn=document.getElementById('confirm-btn'); if(cbtn) cbtn.disabled=true;
@@ -652,6 +677,9 @@ document.addEventListener('DOMContentLoaded',function(){
   const next=document.getElementById('cal-next');
   if(prev) prev.addEventListener('click',function(){const m=booking.visibleMonth;booking.visibleMonth=new Date(m.getFullYear(),m.getMonth()-1,1);renderCalendar();});
   if(next) next.addEventListener('click',function(){const m=booking.visibleMonth;booking.visibleMonth=new Date(m.getFullYear(),m.getMonth()+1,1);renderCalendar();});
+  const bp=document.getElementById('book-phone'),bc=document.getElementById('book-phone-code');
+  if(bp) bp.addEventListener('input',rwApplyPhoneMask);
+  if(bc) bc.addEventListener('change',rwApplyPhoneMask);
 });
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
