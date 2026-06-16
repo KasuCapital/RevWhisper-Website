@@ -1244,14 +1244,18 @@ function prevStep(){
   if(current>0){const from=current;current--;transitionStep(from,current,'backward');}
 }
 
-/* Revenue bands per listing count — annual gross, projected from per-door performance tiers */
+/* Revenue bands per listing count — annual gross portfolio revenue.
+   The FIRST band in each ladder is the qualification floor: selecting it = below
+   threshold = disqualified (routed to the report page, not the booking calendar).
+   Per-listing floor decays as the portfolio grows (portfolio discounts + higher LTV):
+   $40k → $30k → $25k → ~$18k → ~$15k → ~$10k per door at the low end of each band. */
 var REVENUE_BANDS={
-  '1':['Under $20k','$20k–$35k','$35k–$55k','$55k–$80k','$80k–$120k','$120k+'],
-  '2-5':['Under $60k','$60k–$110k','$110k–$175k','$175k–$250k','$250k–$400k','$400k+'],
-  '6-10':['Under $150k','$150k–$300k','$300k–$450k','$450k–$650k','$650k–$1M','$1M+'],
-  '11-25':['Under $350k','$350k–$650k','$650k–$1M','$1M–$1.5M','$1.5M–$2.5M','$2.5M+'],
-  '26-100':['Under $1M','$1M–$2M','$2M–$3M','$3M–$4M','$4M–$6M','$6M+'],
-  '100+':['Under $3M','$3M–$6M','$6M–$10M','$10M–$15M','$15M–$25M','$25M+']
+  '1':['Under $40k','$40k–$60k','$60k–$85k','$85k–$120k','$120k–$175k','$175k+'],
+  '2-5':['Under $60k','$60k–$110k','$110k–$175k','$175k–$275k','$275k–$450k','$450k+'],
+  '6-10':['Under $150k','$150k–$300k','$300k–$475k','$475k–$700k','$700k–$1M','$1M+'],
+  '11-25':['Under $200k','$200k–$450k','$450k–$750k','$750k–$1.25M','$1.25M–$2.5M','$2.5M+'],
+  '26-100':['Under $400k','$400k–$900k','$900k–$1.5M','$1.5M–$3M','$3M–$6M','$6M+'],
+  '100+':['Under $1M','$1M–$3M','$3M–$6M','$6M–$12M','$12M–$25M','$25M+']
 };
 function renderRevenueOptions(listingVal){
   var single=(listingVal==='1');
@@ -1299,16 +1303,25 @@ function submitForm(){
   const btn=document.getElementById('btn-submit');
   btn.disabled=true;
 
+  const listingsVal=(document.querySelector('input[name="listings"]:checked')||{}).value||'';
+  const revenueVal=(document.querySelector('input[name="revenue"]:checked')||{}).value||'';
+  // Qualification gate: the first band in each ladder is the disqualifying floor.
+  // Selecting it (and only it) means the portfolio is below threshold for the service.
+  const bandsForListings=REVENUE_BANDS[listingsVal]||REVENUE_BANDS['1'];
+  const qualified=!(revenueVal && revenueVal===bandsForListings[0]);
+
   const data={
-    listings:(document.querySelector('input[name="listings"]:checked')||{}).value||'',
+    listings:listingsVal,
     issue:(document.querySelector('input[name="issue"]:checked')||{}).value||'',
     pricing:(document.querySelector('input[name="pricing"]:checked')||{}).value||'',
-    revenue:(document.querySelector('input[name="revenue"]:checked')||{}).value||'',
+    revenue:revenueVal,
     doorCount:((document.getElementById('door-count')||{}).value||'').trim(),
     airbnbUrl:document.getElementById('airbnb-url').value.trim(),
     name:document.getElementById('full-name').value.trim(),
     email:document.getElementById('email').value.trim(),
     phone:'',
+    qualified:qualified,
+    disqualifyReason:qualified?'':'below_revenue_floor',
     source:'facebook-ads',
     submittedAt:new Date().toISOString(),
     attribution:rwAttribution()
@@ -1316,9 +1329,28 @@ function submitForm(){
 
   submitted=true;
 
-  // hand the lead context to the booking page
+  // hand the lead context to the next page (booking or report)
   try{ sessionStorage.setItem('rw_audit_lead', JSON.stringify(data)); }catch(e){}
 
+  if(!qualified){
+    // ── Below threshold ──────────────────────────────────────────────────────
+    // Do NOT fire the standard Lead (and we omit fbEventId/xConversionId below,
+    // so the server's CAPI Lead is skipped too) — this keeps Meta's optimizer
+    // from learning to find more sub-threshold submitters. We fire a custom
+    // measurement-only event, still capture the lead to the CRM (flagged
+    // qualified:false), then route to the report page instead of the calendar.
+    try{ fbq('trackCustom','UnqualifiedLead',{content_name:'Free Audit',content_category:'Audit Lead — Unqualified'}); }catch(e){}
+    rwTrack('generate_lead_unqualified',{page:'audit',listings:data.listings,revenue:data.revenue});
+    fetch(FORM_WEBHOOK_ENDPOINT,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({event_type:'get_started',payload:data}),
+      keepalive:true
+    }).catch(function(){});
+    window.location.href='/audit-report-coming';
+    return;
+  }
+
+  // ── Qualified ──────────────────────────────────────────────────────────────
   // Meta Lead — fired browser-side now, and again server-side from /api/form-webhook
   // (CAPI) using this same event_id, so Meta deduplicates the pair into one Lead.
   var eventId='lead_'+Date.now()+'_'+Math.random().toString(36).slice(2,10);
