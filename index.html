@@ -138,12 +138,14 @@ document.addEventListener('DOMContentLoaded',function(){
 <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
 <link rel="preload" href="/assets/header.css" as="style">
 <link rel="stylesheet" href="/assets/header.css">
-<link rel="preload" href="assets/home.css?v=3" as="style">
+<link rel="preload" href="assets/home.css?v=4" as="style">
 <link rel="stylesheet" href="assets/home.css?v=4">
 <script defer src="/assets/header.js"></script>
-<link rel="stylesheet" href="/assets/footer.css">
+<link rel="preload" href="/assets/footer.css" as="style">
+<link rel="stylesheet" href="/assets/footer.css" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="/assets/footer.css"></noscript>
 <!-- X Pixel base code -->
-<script src="/assets/x-pixel-base.js"></script>
+<script defer src="/assets/x-pixel-base.js"></script>
 <!-- End X Pixel base code -->
 </head>
 <body>
@@ -296,6 +298,8 @@ document.addEventListener('DOMContentLoaded',function(){
 </nav>
 <!-- HEADER:END -->
 
+<main id="main">
+
 <!-- ════════════════════════════════════════════════
      HERO
      ════════════════════════════════════════════════ -->
@@ -347,6 +351,8 @@ document.addEventListener('DOMContentLoaded',function(){
      ════════════════════════════════════════════════ -->
 <section class="problem">
   <div class="w">
+
+    <h2 class="sr-only">The revenue gap most Airbnb hosts can't see</h2>
 
     <!-- Counter -->
     <div class="rg-counter-wrap r" id="rg-section">
@@ -470,7 +476,7 @@ document.addEventListener('DOMContentLoaded',function(){
               <!-- Row 1: Competitor A (starts #1, ends #2) -->
               <div class="bt-rank-row" data-start="1" data-end="2">
                 <div class="bt-rank-badge"><span class="bt-rank-num-old">1</span><span class="bt-rank-num-new">2</span></div>
-                <img class="bt-rank-thumb" src="/images/properties/kitchen-after.webp" alt="Mountain View Lodge">
+                <img class="bt-rank-thumb" src="/images/properties/kitchen-after.webp" alt="Mountain View Lodge" width="32" height="32" loading="lazy" decoding="async">
                 <div class="bt-rank-info">
                   <div class="bt-rank-name">Mountain View Lodge</div>
                   <div class="bt-rank-score-line">
@@ -482,7 +488,7 @@ document.addEventListener('DOMContentLoaded',function(){
               <!-- Row 2: Competitor B (starts #2, ends #3) -->
               <div class="bt-rank-row" data-start="2" data-end="3">
                 <div class="bt-rank-badge"><span class="bt-rank-num-old">2</span><span class="bt-rank-num-new">3</span></div>
-                <img class="bt-rank-thumb" src="/images/properties/backyardbbq-after.webp" alt="Lakeside Retreat">
+                <img class="bt-rank-thumb" src="/images/properties/backyardbbq-after-thumb.webp" alt="Lakeside Retreat" width="32" height="32" loading="lazy" decoding="async">
                 <div class="bt-rank-info">
                   <div class="bt-rank-name">Lakeside Retreat</div>
                   <div class="bt-rank-score-line">
@@ -494,7 +500,7 @@ document.addEventListener('DOMContentLoaded',function(){
               <!-- Row 3: Competitor C (starts #3, ends #4) -->
               <div class="bt-rank-row" data-start="3" data-end="4">
                 <div class="bt-rank-badge"><span class="bt-rank-num-old">3</span><span class="bt-rank-num-new">4</span></div>
-                <img class="bt-rank-thumb" src="/images/properties/bunkroom-after.webp" alt="Sunset Ridge Cabin">
+                <img class="bt-rank-thumb" src="/images/properties/bunkroom-after.webp" alt="Sunset Ridge Cabin" width="32" height="32" loading="lazy" decoding="async">
                 <div class="bt-rank-info">
                   <div class="bt-rank-name">Sunset Ridge Cabin</div>
                   <div class="bt-rank-score-line">
@@ -506,7 +512,7 @@ document.addEventListener('DOMContentLoaded',function(){
               <!-- Row 4: Your Property (starts #4, ends #1) -->
               <div class="bt-rank-row yours" data-start="4" data-end="1">
                 <div class="bt-rank-badge"><span class="bt-rank-num-old">4</span><span class="bt-rank-num-new">1</span></div>
-                <img class="bt-rank-thumb" src="/images/properties/livingroom-after.webp" alt="Your Property">
+                <img class="bt-rank-thumb" src="/images/properties/livingroom-after-thumb.webp" alt="Your Property" width="32" height="32" loading="lazy" decoding="async">
                 <div class="bt-rank-info">
                   <div class="bt-rank-name">
                     Your Property
@@ -660,7 +666,7 @@ document.addEventListener('DOMContentLoaded',function(){
       <!-- Left: Photo + Calendar overlay -->
       <div class="hiw-visual r">
         <div class="hiw-img-wrap">
-          <img src="/images/properties/livingroom-after.webp" alt="Beautiful vacation rental living room managed by RevWhisper" loading="lazy">
+          <img src="/images/properties/livingroom-after-900.webp" srcset="/images/properties/livingroom-after-900.webp 900w, /images/properties/livingroom-after.webp 1200w" sizes="(max-width:768px) 90vw, 520px" alt="Beautiful vacation rental living room managed by RevWhisper" width="800" height="600" loading="lazy" decoding="async">
         </div>
         <!-- Before / After floating calendar cards -->
         <div class="hiw-ba-wrap">
@@ -775,73 +781,73 @@ document.addEventListener('DOMContentLoaded',function(){
       <div class="cred-carousel-wrap">
         <div class="cred-carousel-track">
           <div class="cred-team-card">
-            <div class="cred-team-photo"><img src="/images/team/marisa.webp" alt="Marisa - Graphic Design" loading="lazy"></div>
+            <div class="cred-team-photo"><img src="/images/team/marisa.webp" alt="Marisa - Graphic Design" width="322" height="400" loading="lazy" decoding="async"></div>
             <div class="cred-team-name">Marisa</div>
             <div class="cred-team-division">Graphic Design</div>
           </div>
           <div class="cred-team-card">
-            <div class="cred-team-photo"><img src="/images/team/david.webp" alt="David - Revenue Optimization" loading="lazy"></div>
+            <div class="cred-team-photo"><img src="/images/team/david.webp" alt="David - Revenue Optimization" width="322" height="400" loading="lazy" decoding="async"></div>
             <div class="cred-team-name">David</div>
             <div class="cred-team-division">Revenue Optimization</div>
           </div>
           <div class="cred-team-card">
-            <div class="cred-team-photo"><img src="/images/team/bryan.webp" alt="Bryan - AI Integrations" loading="lazy"></div>
+            <div class="cred-team-photo"><img src="/images/team/bryan.webp" alt="Bryan - AI Integrations" width="322" height="400" loading="lazy" decoding="async"></div>
             <div class="cred-team-name">Bryan</div>
             <div class="cred-team-division">AI Integrations</div>
           </div>
           <div class="cred-team-card">
-            <div class="cred-team-photo"><img src="/images/team/spencer.webp" alt="Spencer - Vision" loading="lazy"></div>
+            <div class="cred-team-photo"><img src="/images/team/spencer.webp" alt="Spencer - Vision" width="322" height="400" loading="lazy" decoding="async"></div>
             <div class="cred-team-name">Spencer</div>
             <div class="cred-team-division">Vision</div>
           </div>
           <div class="cred-team-card">
-            <div class="cred-team-photo"><img src="/images/team/alex.webp" alt="Alex - Strategist" loading="lazy"></div>
+            <div class="cred-team-photo"><img src="/images/team/alex.webp" alt="Alex - Strategist" width="322" height="400" loading="lazy" decoding="async"></div>
             <div class="cred-team-name">Alex</div>
             <div class="cred-team-division">Strategist</div>
           </div>
           <div class="cred-team-card">
-            <div class="cred-team-photo"><img src="/images/team/nic.webp" alt="Nicolas - Customer Relations" loading="lazy"></div>
+            <div class="cred-team-photo"><img src="/images/team/nic.webp" alt="Nicolas - Customer Relations" width="322" height="400" loading="lazy" decoding="async"></div>
             <div class="cred-team-name">Nicolas</div>
             <div class="cred-team-division">Customer Relations</div>
           </div>
           <div class="cred-team-card">
-            <div class="cred-team-photo"><img src="/images/team/cady.webp" alt="Cady - Property Improvements" loading="lazy"></div>
+            <div class="cred-team-photo"><img src="/images/team/cady.webp" alt="Cady - Property Improvements" width="322" height="400" loading="lazy" decoding="async"></div>
             <div class="cred-team-name">Cady</div>
             <div class="cred-team-division">Property Improvements</div>
           </div>
 
           <div class="cred-team-card" aria-hidden="true">
-            <div class="cred-team-photo"><img src="/images/team/marisa.webp" alt="Marisa - Graphic Design" loading="lazy"></div>
+            <div class="cred-team-photo"><img src="/images/team/marisa.webp" alt="Marisa - Graphic Design" width="322" height="400" loading="lazy" decoding="async"></div>
             <div class="cred-team-name">Marisa</div>
             <div class="cred-team-division">Graphic Design</div>
           </div>
           <div class="cred-team-card" aria-hidden="true">
-            <div class="cred-team-photo"><img src="/images/team/david.webp" alt="David - Revenue Optimization" loading="lazy"></div>
+            <div class="cred-team-photo"><img src="/images/team/david.webp" alt="David - Revenue Optimization" width="322" height="400" loading="lazy" decoding="async"></div>
             <div class="cred-team-name">David</div>
             <div class="cred-team-division">Revenue Optimization</div>
           </div>
           <div class="cred-team-card" aria-hidden="true">
-            <div class="cred-team-photo"><img src="/images/team/bryan.webp" alt="Bryan - AI Integrations" loading="lazy"></div>
+            <div class="cred-team-photo"><img src="/images/team/bryan.webp" alt="Bryan - AI Integrations" width="322" height="400" loading="lazy" decoding="async"></div>
             <div class="cred-team-name">Bryan</div>
             <div class="cred-team-division">AI Integrations</div>
           </div>
           <div class="cred-team-card" aria-hidden="true">
-            <div class="cred-team-photo"><img src="/images/team/spencer.webp" alt="Spencer - Vision" loading="lazy"></div>
+            <div class="cred-team-photo"><img src="/images/team/spencer.webp" alt="Spencer - Vision" width="322" height="400" loading="lazy" decoding="async"></div>
             <div class="cred-team-name">Spencer</div>
             <div class="cred-team-division">Vision</div>
           </div>
           <div class="cred-team-card" aria-hidden="true">
-            <div class="cred-team-photo"><img src="/images/team/alex.webp" alt="Alex - Strategist" loading="lazy"></div>
+            <div class="cred-team-photo"><img src="/images/team/alex.webp" alt="Alex - Strategist" width="322" height="400" loading="lazy" decoding="async"></div>
             <div class="cred-team-name">Alex</div>
             <div class="cred-team-division">Strategist</div>
           </div>
           <div class="cred-team-card" aria-hidden="true">
-            <div class="cred-team-photo"><img src="/images/team/nic.webp" alt="Nicolas - Customer Relations" loading="lazy"></div>
+            <div class="cred-team-photo"><img src="/images/team/nic.webp" alt="Nicolas - Customer Relations" width="322" height="400" loading="lazy" decoding="async"></div>
             <div class="cred-team-name">Nicolas</div>
             <div class="cred-team-division">Customer Relations</div>
           </div>
           <div class="cred-team-card" aria-hidden="true">
-            <div class="cred-team-photo"><img src="/images/team/cady.webp" alt="Cady - Property Improvements" loading="lazy"></div>
+            <div class="cred-team-photo"><img src="/images/team/cady.webp" alt="Cady - Property Improvements" width="322" height="400" loading="lazy" decoding="async"></div>
             <div class="cred-team-name">Cady</div>
             <div class="cred-team-division">Property Improvements</div>
           </div>
@@ -960,15 +966,15 @@ document.addEventListener('DOMContentLoaded',function(){
         <h2 class="stakes-h2 r d1">Airbnb supply is increasing.<br><span class="stakes-red">Your rank isn't.</span></h2>
         <div class="stakes-body r d2">
           <div class="stakes-block stakes-block--red">
-            <h4 class="stakes-block-label">The old game is over</h4>
+            <h3 class="stakes-block-label">The old game is over</h3>
             <p>Two years ago, your listing competed against other individual hosts. People adjusting prices by feel, refreshing photos when they remembered, writing descriptions once and hoping for the best. <span class="stakes-highlight">That market is gone.</span></p>
           </div>
           <div class="stakes-block">
-            <h4 class="stakes-block-label">The new competition</h4>
+            <h3 class="stakes-block-label">The new competition</h3>
             <p>Institutional operators now manage <span class="stakes-highlight">over 30% of top-performing short-term rentals</span> in most major markets. They deploy revenue management teams, professional photographers on retainer, algorithmic pricing that updates <span class="stakes-highlight">340+ times per day</span>, and A/B-tested listing copy refined across thousands of properties.</p>
           </div>
           <div class="stakes-block">
-            <h4 class="stakes-block-label">The algorithm shifted</h4>
+            <h3 class="stakes-block-label">The algorithm shifted</h3>
             <p>Airbnb restructured its algorithm. Static listings that don't demonstrate consistent conversion momentum, fresh content signals, and competitive pricing responsiveness are being <span class="stakes-highlight">deprioritized</span>. A fraction of a position per week. Invisible until you check your bookings three months later and realize what happened.</p>
           </div>
         </div>
@@ -1202,6 +1208,7 @@ document.addEventListener('DOMContentLoaded',function(){
   </div>
 </section>
 
+</main>
 
 <!-- FOOTER:START -->
 <footer class="site-footer">
@@ -1279,6 +1286,6 @@ document.addEventListener('click',function(e){
 });
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
-<img src="https://tracker.metricool.com/c3po.jpg?hash=75df2c2b89fa3a69e39a2fae0e13bd91" style="position:absolute;left:-9999px" alt="" />
+<img src="https://tracker.metricool.com/c3po.jpg?hash=75df2c2b89fa3a69e39a2fae0e13bd91" width="1" height="1" style="position:absolute;left:-9999px" alt="" loading="lazy" />
 </body>
 </html>
