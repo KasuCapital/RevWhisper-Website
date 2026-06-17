@@ -6,21 +6,26 @@
 <script>
 (function(){
   var key='rw_attribution';
+  var TTL=7776000000; // 90 days — keep the last paid touch across tabs/sessions
   var params=new URLSearchParams(window.location.search);
   var utmFields=['utm_source','utm_medium','utm_campaign','utm_term','utm_content'];
-  var clickFields=['twclid'];
+  var clickFields=['fbclid','gclid','ttclid','twclid','msclkid','li_fat_id'];
   var trackedFields=utmFields.concat(clickFields);
   var hasTracked=trackedFields.some(function(f){return params.has(f);});
-  if(hasTracked||!sessionStorage.getItem(key)){
+  function rwGet(k){try{return localStorage.getItem(k)||sessionStorage.getItem(k);}catch(e){try{return sessionStorage.getItem(k);}catch(e2){return null;}}}
+  function rwSet(k,v){try{localStorage.setItem(k,v);}catch(e){try{sessionStorage.setItem(k,v);}catch(e2){}}}
+  var prev=null;try{prev=JSON.parse(rwGet(key));}catch(e){prev=null;}
+  var fresh=prev&&prev.arrived_at&&((Date.now()-new Date(prev.arrived_at).getTime())<TTL);
+  if(hasTracked||!fresh){
     var data={};
     trackedFields.forEach(function(f){if(params.get(f))data[f]=params.get(f);});
     try{data.referrer=document.referrer?new URL(document.referrer).hostname:'direct';}catch(e){data.referrer=document.referrer||'direct';}
     data.landing_page=window.location.pathname;
     data.arrived_at=new Date().toISOString();
-    sessionStorage.setItem(key,JSON.stringify(data));
+    rwSet(key,JSON.stringify(data));
   }
 })();
-function rwAttribution(){try{return JSON.parse(sessionStorage.getItem('rw_attribution'))||{};}catch(e){return {};}}
+function rwAttribution(){try{return JSON.parse(localStorage.getItem('rw_attribution')||sessionStorage.getItem('rw_attribution'))||{};}catch(e){return {};}}
 </script>
 <!-- GA4 (consent-mode) — honors prior consent from other pages; banner suppressed on this paid LP -->
 <script>
@@ -650,6 +655,17 @@ a{color:inherit}
               </div>
               <div class="field-error">Please enter a valid email</div>
             </div>
+            <div class="field">
+              <label class="field-label" for="phone">Phone number</label>
+              <div class="phone-wrap">
+                <select class="phone-code" id="phone-code" aria-label="Country code">
+                  <option value="+1">🇺🇸 +1</option><option value="+44">🇬🇧 +44</option><option value="+61">🇦🇺 +61</option><option value="+33">🇫🇷 +33</option><option value="+49">🇩🇪 +49</option><option value="+52">🇲🇽 +52</option><option value="+34">🇪🇸 +34</option><option value="+39">🇮🇹 +39</option><option value="+55">🇧🇷 +55</option>
+                </select>
+                <input type="tel" class="field-input phone-input" id="phone" placeholder="(555) 123-4567" autocomplete="tel" inputmode="tel" maxlength="16">
+              </div>
+              <div class="field-error">Please enter a valid phone number</div>
+              <div class="field-hint">We'll text your Google Meet link and a reminder before your audit. Nothing else.</div>
+            </div>
             <div class="form-actions">
               <button class="btn-back" type="button" onclick="prevStep()"><span class="arrow">←</span></button>
               <button class="btn-next" type="button" id="btn-submit" onclick="submitForm()">Get my free audit <span class="arrow">→</span></button>
@@ -1229,6 +1245,9 @@ function validateStep(step){
     const email=document.getElementById('email');
     if(!name.value.trim()){name.classList.add('error');valid=false;}else{name.classList.remove('error');}
     if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())){email.classList.add('error');valid=false;}else{email.classList.remove('error');}
+    const phone=document.getElementById('phone');
+    const pcode=(document.getElementById('phone-code')||{}).value||'+1';
+    if(!rwPhoneValid(pcode,phone.value)){phone.classList.add('error');valid=false;}else{phone.classList.remove('error');}
   }
   return valid;
 }
@@ -1290,6 +1309,36 @@ document.addEventListener('change',function(e){
   if(e.target&&e.target.name==='revenue'){ rwTrack('select_revenue',{revenue:e.target.value,page:'audit'}); setTimeout(nextStep,180); }
 });
 
+/* Phone input: country-code-aware live mask + validation (US/Canada = 10 digits; intl = 7-15) */
+function rwPhoneDigits(v){ return (String(v||'').match(/\d/g)||[]).join(''); }
+function rwFormatPhone(code,raw){
+  var d=rwPhoneDigits(raw);
+  if(code==='+1'){
+    d=d.slice(0,10);
+    if(!d) return '';
+    if(d.length<4) return '('+d;
+    if(d.length<7) return '('+d.slice(0,3)+') '+d.slice(3);
+    return '('+d.slice(0,3)+') '+d.slice(3,6)+'-'+d.slice(6);
+  }
+  return d.slice(0,15);
+}
+function rwPhoneValid(code,raw){
+  var n=rwPhoneDigits(raw).length;
+  return code==='+1' ? n===10 : (n>=7&&n<=15);
+}
+function rwApplyPhoneMask(){
+  var p=document.getElementById('phone'),c=document.getElementById('phone-code');
+  if(!p||!c) return;
+  p.value=rwFormatPhone(c.value,p.value);
+  p.placeholder=c.value==='+1'?'(555) 123-4567':'Phone number';
+  p.classList.remove('error');
+}
+(function(){
+  var p=document.getElementById('phone'),c=document.getElementById('phone-code');
+  if(p) p.addEventListener('input',rwApplyPhoneMask);
+  if(c) c.addEventListener('change',rwApplyPhoneMask);
+})();
+
 /* Clear field error as the user types */
 document.querySelectorAll('.field-input').forEach(function(input){
   input.addEventListener('input',function(){input.classList.remove('error');});
@@ -1319,7 +1368,9 @@ function submitForm(){
     airbnbUrl:document.getElementById('airbnb-url').value.trim(),
     name:document.getElementById('full-name').value.trim(),
     email:document.getElementById('email').value.trim(),
-    phone:'',
+    phone:(document.getElementById('phone-code').value.trim()+' '+document.getElementById('phone').value.trim()).trim(),
+    phone_code:document.getElementById('phone-code').value.trim(),
+    phone_number:document.getElementById('phone').value.trim(),
     qualified:qualified,
     disqualifyReason:qualified?'':'below_revenue_floor',
     source:'facebook-ads',

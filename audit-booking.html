@@ -3,7 +3,7 @@
 <head>
 <!-- Attribution tracking (cookie-free) -->
 <script>
-function rwAttribution(){try{return JSON.parse(sessionStorage.getItem('rw_attribution'))||{};}catch(e){return {};}}
+function rwAttribution(){try{return JSON.parse(localStorage.getItem('rw_attribution')||sessionStorage.getItem('rw_attribution'))||{};}catch(e){return {};}}
 function rwCookie(n){try{var m=document.cookie.match(new RegExp('(?:^|; )'+n.replace(/([.$?*|{}()\[\]\\\/+^])/g,'\\$1')+'=([^;]*)'));return m?decodeURIComponent(m[1]):'';}catch(e){return '';}}
 </script>
 <!-- GA4 (consent-mode) — honors prior consent -->
@@ -277,22 +277,13 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
       <!-- Step 2: Confirm + phone -->
       <div class="step" data-step="2">
         <div class="step-eyebrow">Last step</div>
-        <h2 class="step-title">Where should we <em>reach you?</em></h2>
+        <h2 class="step-title">Confirm your <em>audit.</em></h2>
         <div class="confirm-summary">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></svg>
           <span>Your audit — <strong id="confirm-when">your selected time</strong></span>
         </div>
         <div id="confirm-error-slot"></div>
-        <div class="book-field">
-          <label class="book-field-label" for="book-phone">Phone number</label>
-          <div class="book-phone-wrap">
-            <select class="book-phone-code" id="book-phone-code" aria-label="Country code">
-              <option value="+1">🇺🇸 +1</option><option value="+44">🇬🇧 +44</option><option value="+61">🇦🇺 +61</option><option value="+33">🇫🇷 +33</option><option value="+49">🇩🇪 +49</option><option value="+52">🇲🇽 +52</option><option value="+34">🇪🇸 +34</option><option value="+39">🇮🇹 +39</option><option value="+55">🇧🇷 +55</option>
-            </select>
-            <input type="tel" class="book-phone-input" id="book-phone" placeholder="(555) 123-4567" autocomplete="tel" inputmode="tel" maxlength="16" required aria-required="true">
-          </div>
-          <div class="book-field-hint">We'll text your Google Meet link and a reminder before your audit. Nothing else.</div>
-        </div>
+        <div class="book-field-hint">We'll text your Google Meet link and a reminder before your audit. Nothing else.</div>
         <button class="btn-confirm" type="button" id="confirm-btn" onclick="confirmBooking()">Confirm my audit <span class="arrow">→</span></button>
         <div class="form-actions"><button class="btn-back" type="button" onclick="prevStep()"><span class="arrow">←</span> Back</button></div>
       </div>
@@ -527,7 +518,6 @@ function selectSlot(iso,btn){
   const errEl=document.getElementById('confirm-error-slot'); if(errEl) errEl.innerHTML='';
   const cb=document.getElementById('confirm-btn'); if(cb) cb.disabled=false; // re-enable on (re)entry
   const from=current;current++;transitionStep(from,current,'forward'); // time → confirm
-  setTimeout(function(){const p=document.getElementById('book-phone'); if(p) p.focus();},540);
 }
 
 function showConfirmError(message){
@@ -535,57 +525,18 @@ function showConfirmError(message){
   errEl.innerHTML='<div class="cal-error">'+esc(message)+'</div>';
 }
 
-/* Phone input: country-code-aware live mask + validation (US/Canada = 10 digits; intl = 7-15) */
-function rwPhoneDigits(v){ return (String(v||'').match(/\d/g)||[]).join(''); }
-function rwFormatPhone(code,raw){
-  var d=rwPhoneDigits(raw);
-  if(code==='+1'){
-    d=d.slice(0,10);
-    if(!d) return '';
-    if(d.length<4) return '('+d;
-    if(d.length<7) return '('+d.slice(0,3)+') '+d.slice(3);
-    return '('+d.slice(0,3)+') '+d.slice(3,6)+'-'+d.slice(6);
-  }
-  return d.slice(0,15);
-}
-function rwPhoneValid(code,raw){
-  var n=rwPhoneDigits(raw).length;
-  return code==='+1' ? n===10 : (n>=7&&n<=15);
-}
-function rwApplyPhoneMask(){
-  var p=document.getElementById('book-phone'),c=document.getElementById('book-phone-code');
-  if(!p||!c) return;
-  p.value=rwFormatPhone(c.value,p.value);
-  p.placeholder=c.value==='+1'?'(555) 123-4567':'Phone number';
-  p.classList.remove('error');
-  var ce=document.getElementById('confirm-error-slot'); if(ce) ce.innerHTML='';
-}
-
-/* Confirm step → validate phone, then actually book */
+/* Confirm step → book the selected slot. Phone was captured on the /audit form and
+   travels here via the rw_audit_lead context — it is no longer collected on this page. */
 async function confirmBooking(){
   if(booking.bookingInFlight) return;
-  const phoneEl=document.getElementById('book-phone');
-  const codeEl=document.getElementById('book-phone-code');
-  const phoneNum=phoneEl?phoneEl.value.trim():'';
-  const phoneCode=codeEl?codeEl.value.trim():'';
-  // Phone is required — gate until a valid, properly-formatted number is entered.
-  if(phoneEl) phoneEl.classList.remove('error');
   const ce=document.getElementById('confirm-error-slot'); if(ce) ce.innerHTML='';
-  if(!phoneNum||!rwPhoneValid(phoneCode,phoneNum)){
-    if(phoneEl){ phoneEl.classList.add('error'); phoneEl.focus(); }
-    showConfirmError(!phoneNum?'Please add your phone number so we can send your call details.':(phoneCode==='+1'?'Please enter a valid 10-digit US/Canada phone number.':'Please enter a valid phone number so we can send your call details.'));
-    return;
-  }
-  const phoneFull=(phoneCode+' '+phoneNum).trim();
   booking.bookingInFlight=true;
   const cbtn=document.getElementById('confirm-btn'); if(cbtn) cbtn.disabled=true;
-  // persist the phone into the lead context (payload + any Cal.com fallback link)
-  booking.lead.phone=phoneFull;booking.lead.phone_code=phoneCode;booking.lead.phone_number=phoneNum;
-  try{const s=JSON.parse(sessionStorage.getItem('rw_audit_lead'))||{};s.phone=phoneFull;s.phone_code=phoneCode;s.phone_number=phoneNum;sessionStorage.setItem('rw_audit_lead',JSON.stringify(s));}catch(e){}
+  const l=booking.lead||{};
+  const phoneFull=l.phone||''; // from /audit; /api/cal-booking still maps it to attendee.phoneNumber (E.164)
   const iso=booking.selectedSlot;
   const from=current;current++;transitionStep(from,current,'forward'); // confirm → loader
   const startedAt=Date.now();const MIN_LOADER_MS=1100;
-  const l=booking.lead||{};
   // Meta Schedule event_id — generated up front and sent with the booking so /api/cal-booking
   // can fire a server-side Schedule (CAPI) with the SAME id, deduped against the browser event
   // below. _fbp/_fbc raise match quality for that server event.
@@ -677,9 +628,6 @@ document.addEventListener('DOMContentLoaded',function(){
   const next=document.getElementById('cal-next');
   if(prev) prev.addEventListener('click',function(){const m=booking.visibleMonth;booking.visibleMonth=new Date(m.getFullYear(),m.getMonth()-1,1);renderCalendar();});
   if(next) next.addEventListener('click',function(){const m=booking.visibleMonth;booking.visibleMonth=new Date(m.getFullYear(),m.getMonth()+1,1);renderCalendar();});
-  const bp=document.getElementById('book-phone'),bc=document.getElementById('book-phone-code');
-  if(bp) bp.addEventListener('input',rwApplyPhoneMask);
-  if(bc) bc.addEventListener('change',rwApplyPhoneMask);
 });
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
