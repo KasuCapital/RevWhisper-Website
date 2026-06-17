@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Attribution tracking (cookie-free) -->
+<script>
+function rwAttribution(){try{return JSON.parse(localStorage.getItem('rw_attribution')||sessionStorage.getItem('rw_attribution'))||{};}catch(e){return {};}}
+</script>
+<!-- GA4 (consent-mode) — honors prior consent -->
+<script>
+window.dataLayer=window.dataLayer||[];
+function gtag(){dataLayer.push(arguments);}
+gtag('consent','default',{'analytics_storage':'denied','ad_storage':'denied'});
+gtag('js',new Date());
+gtag('config','G-Y1FYZ5849B');
+(function(){var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-Y1FYZ5849B';document.head.appendChild(s);})();
+function rwTrack(e,p){gtag('event',e,p||{});}
+(function(){if(localStorage.getItem('rw_cookie_consent')==='accepted'){gtag('consent','update',{'analytics_storage':'granted','ad_storage':'granted'});}})();
+</script>
+<!-- Meta Pixel — PageView only. No Lead/Schedule here: this page is the below-threshold path. -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '959022406709300');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=959022406709300&ev=PageView&noscript=1"/></noscript>
+<!-- End Meta Pixel -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your free report is on its way | RevWhisper</title>
+<meta name="description" content="Your audit request is in. We're preparing your free listing report and will email it to you.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="icons/favicon-light.svg" type="image/svg+xml" media="(prefers-color-scheme: light)">
+<link rel="icon" href="icons/favicon-dark.svg" type="image/svg+xml" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="icons/favicon-light.svg" type="image/svg+xml">
+<!-- Self-hosted variable fonts (latin subset) -->
+<link rel="preload" href="/fonts/lora-normal-400-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/dm-sans-normal-300-700.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+/* ── Self-hosted fonts (latin, variable) ── */
+@font-face{font-family:'Lora';font-style:normal;font-weight:400 700;font-display:swap;src:url(/fonts/lora-normal-400-700.woff2) format('woff2')}
+@font-face{font-family:'Lora';font-style:italic;font-weight:400 700;font-display:swap;src:url(/fonts/lora-italic-400-700.woff2) format('woff2')}
+@font-face{font-family:'DM Sans';font-style:normal;font-weight:300 700;font-display:swap;src:url(/fonts/dm-sans-normal-300-700.woff2) format('woff2')}
+/* ── Reset & Tokens ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{overflow-x:hidden}
+body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#fff;color:#32302F;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh}
+:root{
+  --black:#32302F;--white:#fff;--accent:#4A6741;--accent-light:#dce6d8;--accent-border:#b3c5ab;
+  --stone:#f3f1ef;--g50:#faf9f8;--g100:#f3f1ef;--g200:#E0DCDA;--g300:#ccc8c5;--g400:#a39e9b;--g500:#706b68;--g600:#58534f;--g700:#48433f;
+  --radius:8px;--radius-sm:6px;--radius-lg:16px;
+  --sh-sm:0 1px 3px rgba(50,48,47,.06),0 1px 2px rgba(50,48,47,.04);
+  --sh:0 4px 16px rgba(50,48,47,.07),0 2px 6px rgba(50,48,47,.04);
+  --sh-lg:0 16px 48px rgba(50,48,47,.1),0 4px 12px rgba(50,48,47,.05);
+  --heading:'Lora','Georgia',serif;--body:'DM Sans','system-ui','Helvetica Neue',sans-serif;
+  --ease-out-expo:cubic-bezier(.16,1,.3,1);--ease-out-back:cubic-bezier(.34,1.56,.64,1);
+}
+.wrap{max-width:600px;margin:0 auto;padding:clamp(40px,7vw,84px) 22px 64px;position:relative;z-index:1}
+/* ambient bg */
+body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(ellipse at 30% 18%,rgba(74,103,65,.05) 0%,transparent 50%),radial-gradient(ellipse at 70% 82%,rgba(74,103,65,.03) 0%,transparent 50%);pointer-events:none;z-index:0}
+
+.card{background:#fff;border:1px solid var(--g200);border-radius:var(--radius-lg);box-shadow:var(--sh-lg);padding:clamp(28px,5vw,44px);text-align:center;animation:rise .6s var(--ease-out-expo) both}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
+.success-icon{width:74px;height:74px;border-radius:50%;background:var(--accent-light);border:2px solid var(--accent-border);display:flex;align-items:center;justify-content:center;margin:0 auto 24px}
+.success-icon svg{width:34px;height:34px;color:var(--accent)}
+
+.eyebrow{font-size:11px;font-weight:600;color:var(--accent);letter-spacing:.12em;text-transform:uppercase;margin-bottom:14px}
+h1{font-family:var(--heading);font-size:clamp(27px,4.6vw,38px);font-weight:400;letter-spacing:-.025em;line-height:1.12;color:var(--black);margin-bottom:16px}
+h1 em{font-style:italic;color:var(--accent)}
+.lead{font-size:15.5px;color:var(--g600);line-height:1.65;font-weight:300;max-width:440px;margin:0 auto 8px}
+.lead strong{color:var(--black);font-weight:500}
+
+.report-list{text-align:left;background:var(--g50);border:1px solid var(--g200);border-radius:var(--radius);padding:20px 22px;margin:28px 0 24px}
+.report-list .rl-title{font-size:12px;font-weight:600;color:var(--g500);letter-spacing:.06em;text-transform:uppercase;margin-bottom:14px}
+.report-row{display:flex;gap:13px;align-items:flex-start;padding:11px 0;border-top:1px solid var(--g200)}
+.report-row:first-of-type{border-top:none;padding-top:0}
+.report-row svg{flex-shrink:0;width:19px;height:19px;color:var(--accent);margin-top:2px}
+.report-row .rr-head{font-size:14.5px;font-weight:600;color:var(--black);margin-bottom:2px}
+.report-row .rr-sub{font-size:13.5px;color:var(--g500);line-height:1.5;font-weight:300}
+
+.note{font-size:13.5px;color:var(--g500);line-height:1.6;font-weight:300;margin-top:4px}
+.note strong{color:var(--g700);font-weight:500}
+
+.home-link{display:inline-flex;align-items:center;gap:7px;margin-top:30px;font-size:14px;font-weight:500;color:var(--accent);text-decoration:none;transition:gap .25s var(--ease-out-back)}
+.home-link:hover{gap:11px}
+
+.mini-footer{margin-top:36px;text-align:center;font-size:12px;color:var(--g400);line-height:1.6}
+.mini-footer a{color:var(--g500);text-decoration:none}
+.mini-footer a:hover{color:var(--g700)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <div class="success-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="m22 2-7 20-4-9-9-4 20-7z"/></svg>
+    </div>
+    <div class="eyebrow">Request received</div>
+    <h1 id="headline">Your free report is <em>on its way.</em></h1>
+    <p class="lead" id="lead">Thanks for the details. We're putting together your listing report and will email it to <strong id="email-target">the address you provided</strong>.</p>
+
+    <div class="report-list">
+      <div class="rl-title">What your report covers</div>
+      <div class="report-row">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <div>
+          <div class="rr-head">Search ranking</div>
+          <div class="rr-sub">Where your listing lands across your nights — and where you've slipped off the first page.</div>
+        </div>
+      </div>
+      <div class="report-row">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 14 4-4 3 3 5-6"/></svg>
+        <div>
+          <div class="rr-head">Pricing vs. demand</div>
+          <div class="rr-sub">The nights you're underpriced against live market demand, and the revenue it's quietly costing.</div>
+        </div>
+      </div>
+      <div class="report-row">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+        <div>
+          <div class="rr-head">Views to bookings</div>
+          <div class="rr-sub">Why lookers aren't booking — your photo order, title, and first three lines, with what to change.</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="note">Keep an eye on your inbox over the next few days. If you don't see it, check your spam folder — and feel free to reply to that email with any questions.</p>
+
+    <a class="home-link" href="/">Back to RevWhisper <span aria-hidden="true">&rarr;</span></a>
+  </div>
+
+  <div class="mini-footer">
+    RevWhisper &middot; <a href="/privacy">Privacy</a> &middot; <a href="/terms">Terms</a><br>
+    &copy; 2026 MCO CORP d/b/a RevWhisper. All rights reserved.
+  </div>
+</div>
+
+<script>
+/* Personalize from the lead context stashed by the audit form (best-effort). */
+(function(){
+  var lead={};
+  try{ lead=JSON.parse(sessionStorage.getItem('rw_audit_lead')||'{}')||{}; }catch(e){}
+  var first=(lead.name||'').trim().split(/\s+/)[0];
+  if(first){
+    var h=document.getElementById('headline');
+    if(h) h.innerHTML=first.replace(/[<>]/g,'')+', your free report is <em>on its way.</em>';
+  }
+  if(lead.email){
+    var et=document.getElementById('email-target');
+    if(et) et.textContent=lead.email;
+  }
+  rwTrack('view_report_pending',{page:'audit-report-coming',listings:lead.listings||'',revenue:lead.revenue||''});
+})();
+</script>
+</body>
+</html>
