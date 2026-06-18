@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conference Intake | RevWhisper Internal</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="icons/favicon-light.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{height:100%}
+body{
+  font-family:'DM Sans','system-ui',sans-serif;
+  background:#faf9f8;color:#32302F;line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  min-height:100%;display:flex;align-items:flex-start;justify-content:center;
+  padding:48px 24px;
+}
+:root{
+  --black:#32302F;--accent:#4A6741;--accent-light:#dce6d8;--accent-border:#b3c5ab;
+  --g50:#faf9f8;--g100:#f3f1ef;--g200:#E0DCDA;--g300:#ccc8c5;--g400:#a39e9b;--g500:#706b68;--g700:#48433f;
+  --radius:8px;--radius-sm:6px;
+  --heading:'Lora','Georgia',serif;
+  --body:'DM Sans','system-ui',sans-serif;
+}
+.shell{width:100%;max-width:520px}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.title{font-family:var(--heading);font-size:28px;font-weight:400;letter-spacing:-.02em;margin-bottom:6px}
+.title em{font-style:italic;color:var(--accent)}
+.subtitle{font-size:14px;color:var(--g500);margin-bottom:32px;font-weight:300}
+.field{margin-bottom:20px}
+.field-label{display:block;font-size:13px;font-weight:500;color:var(--black);margin-bottom:6px}
+.field-hint{font-size:12px;color:var(--g400);font-weight:300;margin-left:4px}
+input[type="text"],input[type="email"],input[type="tel"],input[type="url"],input[type="number"],select{
+  width:100%;padding:12px 14px;border:1.5px solid var(--g200);border-radius:var(--radius-sm);
+  font-size:14px;font-family:var(--body);color:var(--black);background:#fff;
+  transition:border-color .2s,box-shadow .2s;outline:none;
+}
+input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(74,103,65,.08)}
+input.invalid{border-color:#c0392b;box-shadow:0 0 0 3px rgba(192,57,43,.08)}
+.phone-wrap{display:flex;gap:8px}
+.phone-code{flex:0 0 110px;width:110px}
+.phone-input{flex:1}
+.divider{height:1px;background:var(--g200);margin:24px 0}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;width:100%;
+  padding:14px 22px;border-radius:var(--radius-sm);
+  font-size:15px;font-weight:600;font-family:var(--body);cursor:pointer;
+  transition:transform .2s,box-shadow .2s,opacity .2s;border:none;
+  background:var(--accent);color:#fff;
+}
+.btn:hover{opacity:.9;transform:translateY(-1px);box-shadow:0 4px 12px rgba(74,103,65,.2)}
+.btn:active{transform:scale(.99)}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+.form-error{font-size:13px;color:#c0392b;margin-top:12px;min-height:18px;text-align:center}
+.note{font-size:12px;color:var(--g400);margin-top:18px;text-align:center;line-height:1.6}
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <div class="eyebrow">Internal · Conference</div>
+  <h1 class="title">Contact <em>intake.</em></h1>
+  <p class="subtitle">Enter the details below to get started.</p>
+
+  <form id="intake-form" novalidate>
+    <div class="field">
+      <label class="field-label" for="listings">Portfolio size <span class="field-hint">(number of listings)</span></label>
+      <input type="number" id="listings" placeholder="e.g. 3" min="1" step="1">
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="airbnb-url">Airbnb profile URL <span class="field-hint">(optional)</span></label>
+      <input type="url" id="airbnb-url" placeholder="https://www.airbnb.com/users/show/..." autocomplete="off">
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="field">
+      <label class="field-label" for="full-name">Full name</label>
+      <input type="text" id="full-name" placeholder="Jane Doe" autocomplete="name">
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="email">Email</label>
+      <input type="email" id="email" placeholder="jane@example.com" autocomplete="email">
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="phone">Phone number</label>
+      <div class="phone-wrap">
+        <select class="phone-code" id="phone-code">
+          <option value="+1">🇺🇸 +1</option>
+          <option value="+44">🇬🇧 +44</option>
+          <option value="+61">🇦🇺 +61</option>
+          <option value="+33">🇫🇷 +33</option>
+          <option value="+49">🇩🇪 +49</option>
+          <option value="+81">🇯🇵 +81</option>
+          <option value="+52">🇲🇽 +52</option>
+          <option value="+34">🇪🇸 +34</option>
+          <option value="+39">🇮🇹 +39</option>
+          <option value="+55">🇧🇷 +55</option>
+        </select>
+        <input type="tel" class="phone-input" id="phone" placeholder="(555) 123-4567" autocomplete="tel">
+      </div>
+    </div>
+
+    <button type="submit" class="btn" id="btn-submit">Continue <span aria-hidden="true">→</span></button>
+    <div class="form-error" id="form-error"></div>
+    <p class="note">No email is sent from this step.</p>
+  </form>
+</div>
+
+<script>
+const FORM_WEBHOOK_ENDPOINT = '/api/form-webhook';
+const form = document.getElementById('intake-form');
+const errorEl = document.getElementById('form-error');
+const submitBtn = document.getElementById('btn-submit');
+
+function emailValid(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+
+function clearInvalid() {
+  errorEl.textContent = '';
+  document.querySelectorAll('.invalid').forEach(el => el.classList.remove('invalid'));
+}
+
+form.addEventListener('submit', function(e) {
+  e.preventDefault();
+  clearInvalid();
+
+  const listingsRaw = document.getElementById('listings').value.trim();
+  const listingsNum = parseInt(listingsRaw, 10);
+  const airbnbUrl = document.getElementById('airbnb-url').value.trim();
+  const name = document.getElementById('full-name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const phoneCode = document.getElementById('phone-code').value.trim();
+  const phoneNumber = document.getElementById('phone').value.trim();
+
+  // Validate
+  if (!listingsRaw || !Number.isInteger(listingsNum) || listingsNum < 1) {
+    document.getElementById('listings').classList.add('invalid');
+    errorEl.textContent = 'Please enter the number of listings.';
+    return;
+  }
+  const listings = String(listingsNum);
+  if (!name) {
+    document.getElementById('full-name').classList.add('invalid');
+    errorEl.textContent = 'Please enter the prospect\'s name.';
+    return;
+  }
+  if (!emailValid(email)) {
+    document.getElementById('email').classList.add('invalid');
+    errorEl.textContent = 'Please enter a valid email.';
+    return;
+  }
+  if (!phoneNumber) {
+    document.getElementById('phone').classList.add('invalid');
+    errorEl.textContent = 'Please enter a phone number.';
+    return;
+  }
+
+  const phoneFull = `${phoneCode} ${phoneNumber}`.trim();
+
+  // Fire-and-forget to the CRM webhook; don't block the redirect on it.
+  fetch(FORM_WEBHOOK_ENDPOINT, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      event_type: 'conference_intake',
+      payload: {
+        name: name,
+        email: email,
+        phone_code: phoneCode,
+        phone_number: phoneNumber,
+        phone_full: phoneFull,
+        phone: phoneFull,
+        listings: listings,
+        airbnbUrl: airbnbUrl,
+        source: 'conference',
+        submittedAt: new Date().toISOString()
+      }
+    })
+  }).catch(function(err) { console.error('Intake webhook failed:', err); });
+
+  // Redirect to the builder with the prospect prefilled.
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = 'Loading…';
+
+  const params = new URLSearchParams();
+  params.set('name', name);
+  params.set('email', email);
+  params.set('phone', phoneNumber);
+  params.set('phone_code', phoneCode);
+  params.set('listings', listings);
+  if (airbnbUrl) params.set('airbnb_url', airbnbUrl);
+
+  window.location.href = '/event-builder?' + params.toString();
+});
+</script>
+</body>
+</html>
