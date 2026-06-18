@@ -85,6 +85,14 @@ select:focus,input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(74
 .btn-send:hover{opacity:.9;transform:translateY(-1px);box-shadow:0 4px 12px rgba(74,103,65,.2)}
 .btn-send:active{transform:scale(.99)}
 .btn-send:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-new{
+  display:flex;align-items:center;justify-content:center;gap:6px;width:100%;
+  margin-top:16px;padding:13px 22px;border-radius:var(--radius-sm);
+  background:#fff;color:var(--g500);border:1.5px solid var(--g200);
+  font-size:14px;font-weight:500;font-family:var(--body);text-decoration:none;cursor:pointer;
+  transition:border-color .2s,color .2s,box-shadow .2s;
+}
+.btn-new:hover{border-color:var(--g300);color:var(--black);box-shadow:0 2px 8px rgba(50,48,47,.06)}
 .send-status{font-size:13px;margin-top:12px;min-height:18px;text-align:center}
 .send-status.ok{color:var(--accent);font-weight:500}
 .send-status.err{color:#c0392b}
@@ -141,6 +149,7 @@ select:focus,input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(74
     </div>
     <button type="button" class="btn-send" id="btn-send">Send to client <span aria-hidden="true">→</span></button>
     <div class="send-status" id="send-status"></div>
+    <a href="/event-intake" class="btn-new" id="btn-new"><span aria-hidden="true">+</span> Start a new contact</a>
   </div>
 </div>
 
