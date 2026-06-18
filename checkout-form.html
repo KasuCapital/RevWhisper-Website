@@ -829,6 +829,22 @@ const DEFAULT_ENTERPRISE_URL = '/get-started?plan=enterprise';
 let submitInProgress = false;
 rwTrack('begin_checkout',{plan:selectedPlan,page:'checkout-form'});
 
+// Prefill contact fields when arriving from the conference link builder (additive — if
+// these params are absent the form behaves exactly as before).
+(function prefillContact() {
+  function setVal(id, val) { var el = document.getElementById(id); if (el && val) el.value = val; }
+  setVal('full-name', (params.get('name') || '').trim());
+  setVal('email', (params.get('email') || '').trim());
+  setVal('phone', (params.get('phone') || '').trim());
+  var code = (params.get('phone_code') || '').trim();
+  if (code) {
+    var sel = document.getElementById('phone-code');
+    if (sel && Array.prototype.some.call(sel.options, function(o) { return o.value === code; })) {
+      sel.value = code;
+    }
+  }
+})();
+
 function showCheckoutTransition(email, destinationUrl, descriptionText, ctaText) {
   const paymentLink = document.getElementById('payment-link');
   paymentLink.href = destinationUrl;

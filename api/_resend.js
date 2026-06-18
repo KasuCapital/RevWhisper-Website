@@ -1,0 +1,48 @@
+// Shared Resend integration point. Both the form-webhook confirmation email and the
+// conference "send to client" email go through here so there is a single place that
+// owns the API shape, auth header, and the "key not set" degradation behavior.
+
+const RESEND_API_KEY = process.env.RESEND_API_KEY;
+const DEFAULT_FROM = 'RevWhisper <hello@revwhisper.com>';
+
+function isEmailEnabled() {
+  return Boolean(RESEND_API_KEY);
+}
+
+// Sends a single email via Resend. Never throws — returns a result object so callers
+// can decide whether the failure matters (fire-and-forget vs. surface to the user).
+async function sendEmail({ to, subject, html, from = DEFAULT_FROM }) {
+  if (!RESEND_API_KEY) {
+    console.warn('RESEND_API_KEY not set — skipping email.');
+    return { ok: false, skipped: true, error: 'RESEND_API_KEY not configured.' };
+  }
+
+  try {
+    const res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${RESEND_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        from,
+        to: Array.isArray(to) ? to : [to],
+        subject,
+        html
+      })
+    });
+
+    if (!res.ok) {
+      const text = await res.text();
+      console.error('Resend email failed:', res.status, text);
+      return { ok: false, status: res.status, error: text || `Resend returned ${res.status}` };
+    }
+
+    return { ok: true, status: res.status };
+  } catch (err) {
+    console.error('Resend email error:', err);
+    return { ok: false, error: err && err.message ? err.message : 'Unknown Resend error.' };
+  }
+}
+
+module.exports = { sendEmail, isEmailEnabled, DEFAULT_FROM };

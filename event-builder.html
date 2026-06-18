@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conference Link Builder | RevWhisper Internal</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="icons/favicon-light.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{height:100%}
+body{
+  font-family:'DM Sans','system-ui',sans-serif;
+  background:#faf9f8;color:#32302F;line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  min-height:100%;display:flex;align-items:flex-start;justify-content:center;
+  padding:48px 24px;
+}
+:root{
+  --black:#32302F;--accent:#4A6741;--accent-light:#dce6d8;--accent-border:#b3c5ab;
+  --g50:#faf9f8;--g100:#f3f1ef;--g200:#E0DCDA;--g300:#ccc8c5;--g400:#a39e9b;--g500:#706b68;--g700:#48433f;
+  --radius:8px;--radius-sm:6px;
+  --heading:'Lora','Georgia',serif;
+  --body:'DM Sans','system-ui',sans-serif;
+}
+.shell{width:100%;max-width:520px}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.title{font-family:var(--heading);font-size:28px;font-weight:400;letter-spacing:-.02em;margin-bottom:6px}
+.title em{font-style:italic;color:var(--accent)}
+.subtitle{font-size:14px;color:var(--g500);margin-bottom:28px;font-weight:300}
+/* Client summary card */
+.client-card{
+  background:#fff;border:1px solid var(--g200);border-radius:var(--radius);
+  padding:18px 20px;margin-bottom:28px;
+}
+.client-card.missing{background:#fdf3f1;border-color:#e8c4bd}
+.client-card h2{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--g400);margin-bottom:12px}
+.client-row{display:flex;justify-content:space-between;gap:16px;font-size:14px;padding:5px 0}
+.client-row .k{color:var(--g500);font-weight:300;flex:0 0 auto}
+.client-row .v{color:var(--black);font-weight:500;text-align:right;word-break:break-word}
+.client-card .back-link{display:inline-block;margin-top:8px;font-size:13px;color:var(--accent);font-weight:500;text-decoration:none}
+.client-card .back-link:hover{text-decoration:underline}
+.field{margin-bottom:20px}
+.field-label{display:block;font-size:13px;font-weight:500;color:var(--black);margin-bottom:6px}
+.field-hint{font-size:12px;color:var(--g400);font-weight:300;margin-left:4px}
+select,input[type="number"],input[type="text"]{
+  width:100%;padding:12px 14px;border:1.5px solid var(--g200);border-radius:var(--radius-sm);
+  font-size:14px;font-family:var(--body);color:var(--black);background:#fff;
+  transition:border-color .2s,box-shadow .2s;outline:none;
+}
+select:focus,input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(74,103,65,.08)}
+.enterprise-fields{display:none;padding:16px;background:var(--accent-light);border:1px solid var(--accent-border);border-radius:var(--radius-sm);margin-bottom:20px}
+.enterprise-fields.visible{display:block}
+.enterprise-fields .field{margin-bottom:14px}
+.enterprise-fields .field:last-child{margin-bottom:0}
+.divider{height:1px;background:var(--g200);margin:24px 0}
+.output-wrap{margin-top:28px}
+.output-label{font-size:13px;font-weight:500;color:var(--black);margin-bottom:6px;display:block}
+.output-url{
+  width:100%;padding:14px;border:1.5px solid var(--accent-border);border-radius:var(--radius-sm);
+  font-size:13px;font-family:'SF Mono','Fira Code',monospace;color:var(--accent);background:var(--accent-light);
+  word-break:break-all;line-height:1.6;min-height:60px;resize:none;outline:none;
+}
+.btn-row{display:flex;gap:10px;margin-top:12px}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:12px 22px;border-radius:var(--radius-sm);
+  font-size:13px;font-weight:500;font-family:var(--body);cursor:pointer;
+  transition:transform .2s,box-shadow .2s,opacity .2s;border:none;
+}
+.btn:active{transform:scale(.97)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-copy{background:#fff;color:var(--black);border:1.5px solid var(--g200);flex:1}
+.btn-copy:hover{border-color:var(--g300);box-shadow:0 2px 8px rgba(50,48,47,.06)}
+.btn-open{background:#fff;color:var(--black);border:1.5px solid var(--g200);flex:1}
+.btn-open:hover{border-color:var(--g300);box-shadow:0 2px 8px rgba(50,48,47,.06)}
+.btn-send{
+  display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
+  background:var(--accent);color:#fff;font-size:15px;font-weight:600;padding:15px 22px;
+  border-radius:var(--radius-sm);border:none;cursor:pointer;margin-top:20px;
+  transition:transform .2s,box-shadow .2s,opacity .2s;
+}
+.btn-send:hover{opacity:.9;transform:translateY(-1px);box-shadow:0 4px 12px rgba(74,103,65,.2)}
+.btn-send:active{transform:scale(.99)}
+.btn-send:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+.send-status{font-size:13px;margin-top:12px;min-height:18px;text-align:center}
+.send-status.ok{color:var(--accent);font-weight:500}
+.send-status.err{color:#c0392b}
+.copied{position:fixed;top:24px;left:50%;transform:translateX(-50%) translateY(-10px);
+  background:var(--accent);color:#fff;padding:10px 20px;border-radius:var(--radius-sm);
+  font-size:13px;font-weight:500;opacity:0;transition:opacity .25s,transform .25s;pointer-events:none;z-index:99}
+.copied.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <div class="eyebrow">Internal · Conference</div>
+  <h1 class="title">Build &amp; <em>send.</em></h1>
+  <p class="subtitle">Set this client's pricing, then send them their enrollment link and a time to book a call.</p>
+
+  <div class="client-card" id="client-card">
+    <h2>Client</h2>
+    <div id="client-rows"></div>
+  </div>
+
+  <div class="field">
+    <label class="field-label" for="plan">Plan</label>
+    <select id="plan">
+      <option value="monthly">Monthly &mdash; $750/mo (3-month minimum)</option>
+      <option value="annual">Annual &mdash; $500/mo (billed upfront)</option>
+      <option value="enterprise">Enterprise &mdash; Custom pricing</option>
+    </select>
+  </div>
+
+  <div class="enterprise-fields" id="enterprise-fields">
+    <div class="field">
+      <label class="field-label" for="monthly_cost">Monthly Cost <span class="field-hint">(per listing)</span></label>
+      <input type="number" id="monthly_cost" placeholder="e.g. 400" min="0" step="1">
+    </div>
+    <div class="field">
+      <label class="field-label" for="onboarding_fee">Onboarding Fee <span class="field-hint">(per listing &mdash; set to 0 to start the monthly subscription without an onboarding charge)</span></label>
+      <input type="number" id="onboarding_fee" placeholder="998" min="0" step="1">
+    </div>
+    <div class="field">
+      <label class="field-label" for="term_months">Term Length <span class="field-hint">(months)</span></label>
+      <input type="number" id="term_months" placeholder="e.g. 12" min="1" step="1">
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="output-wrap">
+    <label class="output-label">Generated checkout link</label>
+    <textarea class="output-url" id="output" readonly rows="3"></textarea>
+    <div class="btn-row">
+      <button type="button" class="btn btn-copy" id="btn-copy">Copy link</button>
+      <button type="button" class="btn btn-open" id="btn-open">Open in new tab</button>
+    </div>
+    <button type="button" class="btn-send" id="btn-send">Send to client <span aria-hidden="true">→</span></button>
+    <div class="send-status" id="send-status"></div>
+  </div>
+</div>
+
+<div class="copied" id="toast">Copied to clipboard</div>
+
+<script>
+const BASE = 'https://revwhisper.com/checkout-form';
+const SEND_ENDPOINT = '/api/send-client-email';
+
+// ---- Prospect from the intake redirect ----
+const qp = new URLSearchParams(window.location.search);
+const prospect = {
+  name: (qp.get('name') || '').trim(),
+  email: (qp.get('email') || '').trim(),
+  phone: (qp.get('phone') || '').trim(),
+  phone_code: (qp.get('phone_code') || '').trim(),
+  listings: (qp.get('listings') || '').trim(),
+  airbnb_url: (qp.get('airbnb_url') || '').trim()
+};
+
+const planEl = document.getElementById('plan');
+const enterpriseWrap = document.getElementById('enterprise-fields');
+const monthlyCostEl = document.getElementById('monthly_cost');
+const onboardingFeeEl = document.getElementById('onboarding_fee');
+const termMonthsEl = document.getElementById('term_months');
+const output = document.getElementById('output');
+const sendBtn = document.getElementById('btn-send');
+const sendStatus = document.getElementById('send-status');
+
+// ---- Render the client summary (or a notice if we arrived without a prospect) ----
+function renderClient() {
+  const card = document.getElementById('client-card');
+  const rows = document.getElementById('client-rows');
+
+  if (!prospect.email) {
+    card.classList.add('missing');
+    rows.innerHTML =
+      '<div class="client-row"><span class="v">No client details were passed in.</span></div>' +
+      '<a class="back-link" href="/event-intake">← Start from the intake form</a>';
+    sendBtn.disabled = true;
+    return;
+  }
+
+  const phoneDisplay = [prospect.phone_code, prospect.phone].filter(Boolean).join(' ');
+  const listingLabel = prospect.listings ? prospect.listings + ' listing' + (prospect.listings === '1' ? '' : 's') : '';
+  const items = [
+    ['Name', prospect.name],
+    ['Email', prospect.email],
+    ['Phone', phoneDisplay],
+    ['Portfolio', listingLabel],
+    ['Airbnb', prospect.airbnb_url]
+  ].filter(function(pair) { return pair[1]; });
+
+  rows.innerHTML = items.map(function(pair) {
+    return '<div class="client-row"><span class="k">' + pair[0] + '</span><span class="v">' + escapeHtml(pair[1]) + '</span></div>';
+  }).join('');
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+// ---- Build the checkout link: pricing params + prospect prefill ----
+function buildUrl() {
+  const params = new URLSearchParams();
+  params.set('plan', planEl.value);
+
+  if (planEl.value === 'enterprise') {
+    if (monthlyCostEl.value) params.set('monthly_cost', monthlyCostEl.value);
+    if (onboardingFeeEl.value) params.set('onboarding_fee', onboardingFeeEl.value);
+    if (termMonthsEl.value) params.set('term_months', termMonthsEl.value);
+  }
+
+  // Prospect prefill (checkout-form reads these into its contact fields)
+  if (prospect.name) params.set('name', prospect.name);
+  if (prospect.email) params.set('email', prospect.email);
+  if (prospect.phone) params.set('phone', prospect.phone);
+  if (prospect.phone_code) params.set('phone_code', prospect.phone_code);
+
+  output.value = BASE + '?' + params.toString();
+}
+
+planEl.addEventListener('change', function() {
+  enterpriseWrap.classList.toggle('visible', this.value === 'enterprise');
+  buildUrl();
+});
+
+document.querySelectorAll('input, select').forEach(function(el) {
+  el.addEventListener('input', buildUrl);
+});
+
+// ---- Copy ----
+document.getElementById('btn-copy').addEventListener('click', function() {
+  navigator.clipboard.writeText(output.value).then(function() {
+    var toast = document.getElementById('toast');
+    toast.classList.add('show');
+    setTimeout(function() { toast.classList.remove('show'); }, 1800);
+  });
+});
+
+// ---- Open ----
+document.getElementById('btn-open').addEventListener('click', function() {
+  window.open(output.value, '_blank');
+});
+
+// ---- Send to client ----
+sendBtn.addEventListener('click', function() {
+  if (!prospect.email) return;
+  sendStatus.textContent = '';
+  sendStatus.className = 'send-status';
+  sendBtn.disabled = true;
+  sendBtn.innerHTML = 'Sending…';
+
+  fetch(SEND_ENDPOINT, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      name: prospect.name,
+      email: prospect.email,
+      checkout_url: output.value,
+      plan: planEl.value
+    })
+  }).then(function(res) {
+    return res.json().then(function(body) { return { ok: res.ok, body: body }; });
+  }).then(function(result) {
+    if (result.ok && result.body && result.body.sent) {
+      sendStatus.textContent = '✓ Sent to ' + prospect.email;
+      sendStatus.className = 'send-status ok';
+      sendBtn.innerHTML = 'Sent ✓';
+      // Allow re-sending after a moment in case it's needed.
+      setTimeout(function() {
+        sendBtn.disabled = false;
+        sendBtn.innerHTML = 'Resend to client <span aria-hidden="true">→</span>';
+      }, 2500);
+    } else {
+      var msg = (result.body && result.body.error) || 'Could not send. Copy the link and send it manually.';
+      sendStatus.textContent = msg;
+      sendStatus.className = 'send-status err';
+      sendBtn.disabled = false;
+      sendBtn.innerHTML = 'Try again <span aria-hidden="true">→</span>';
+    }
+  }).catch(function() {
+    sendStatus.textContent = 'Network error. Copy the link and send it manually.';
+    sendStatus.className = 'send-status err';
+    sendBtn.disabled = false;
+    sendBtn.innerHTML = 'Try again <span aria-hidden="true">→</span>';
+  });
+});
+
+// ---- Init ----
+renderClient();
+buildUrl();
+</script>
+</body>
+</html>
