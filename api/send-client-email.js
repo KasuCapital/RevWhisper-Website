@@ -74,15 +74,26 @@ function buildEmailHtml({ firstName, checkoutUrl, bookingUrl }) {
         <h1 style="font-family:Georgia,serif;font-size:24px;font-weight:400;margin:0 0 16px;color:#32302F;">
           Great connecting, ${safeName}.
         </h1>
-        <p style="font-size:15px;line-height:1.7;color:#706b68;margin:0 0 20px;">
-          RevWhisper is a revenue optimization service for short-term rental hosts, built by hosts.
-          We take over the pricing, listing, and search-ranking work that quietly leaves money on the
-          table &mdash; so your calendar fills at the right rate without you babysitting it.
+        <p style="font-size:15px;line-height:1.7;color:#706b68;margin:0 0 24px;">
+          Thanks for the conversation &mdash; here's a quick recap and everything you need to get
+          started with RevWhisper.
         </p>
-        <p style="font-size:15px;line-height:1.7;color:#706b68;margin:0 0 28px;">
-          Here are your two next steps. When you're ready to get started, the enrollment link below
-          has your details and pricing already set up. If you'd rather talk it through first, grab a
-          time with our team.
+
+        <div style="background:#dce6d8;border:1px solid #b3c5ab;border-radius:8px;padding:18px 20px;margin:0 0 28px;">
+          <p style="font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#4A6741;margin:0 0 8px;">
+            How we're different
+          </p>
+          <p style="font-size:15px;line-height:1.7;color:#48433f;margin:0;">
+            Most revenue managers price on market demand alone. We take a <strong>rank-based</strong> approach &mdash;
+            factoring your Airbnb search ranking into every pricing move, so your listing gains visibility
+            and lands in front of the right guests. The goal is optimal visibility, not just a rate that
+            matches the market.
+          </p>
+        </div>
+
+        <p style="font-size:15px;line-height:1.7;color:#706b68;margin:0 0 24px;">
+          Your enrollment link below already has your details and pricing set up. Prefer to talk it
+          through first? Grab a time with our team.
         </p>
 
         <a href="${safeCheckout}" style="display:block;text-align:center;background:#4A6741;color:#fff;text-decoration:none;padding:14px 24px;border-radius:6px;font-size:15px;font-weight:600;margin:0 0 12px;">
@@ -93,7 +104,7 @@ function buildEmailHtml({ firstName, checkoutUrl, bookingUrl }) {
         </a>
 
         <p style="font-size:13px;line-height:1.7;color:#a39e9b;margin:0 0 24px;">
-          Questions before you commit? Just reply to this email &mdash; it goes straight to our team.
+          Questions before you get started? Just reply to this email &mdash; it comes straight to us.
         </p>
 
         <hr style="border:none;border-top:1px solid #E0DCDA;margin:8px 0 16px;">
@@ -132,7 +143,7 @@ module.exports = async function handler(req, res) {
 
   const result = await sendEmail({
     to: email,
-    subject: 'Your RevWhisper next steps',
+    subject: 'Your Next Steps',
     html: buildEmailHtml({ firstName, checkoutUrl, bookingUrl })
   });
 
