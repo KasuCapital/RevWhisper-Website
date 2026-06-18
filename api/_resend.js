@@ -3,7 +3,10 @@
 // owns the API shape, auth header, and the "key not set" degradation behavior.
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
-const DEFAULT_FROM = 'RevWhisper <hello@revwhisper.com>';
+// Must send from the verified Resend domain (hello.revwhisper.com). The bare
+// revwhisper.com domain is NOT verified, so sending from it is rejected (403).
+const DEFAULT_FROM = 'RevWhisper <team@hello.revwhisper.com>';
+const DEFAULT_REPLY_TO = 'nluna@revwhisper.com';
 
 function isEmailEnabled() {
   return Boolean(RESEND_API_KEY);
@@ -11,7 +14,7 @@ function isEmailEnabled() {
 
 // Sends a single email via Resend. Never throws — returns a result object so callers
 // can decide whether the failure matters (fire-and-forget vs. surface to the user).
-async function sendEmail({ to, subject, html, from = DEFAULT_FROM }) {
+async function sendEmail({ to, subject, html, from = DEFAULT_FROM, replyTo = DEFAULT_REPLY_TO }) {
   if (!RESEND_API_KEY) {
     console.warn('RESEND_API_KEY not set — skipping email.');
     return { ok: false, skipped: true, error: 'RESEND_API_KEY not configured.' };
@@ -28,7 +31,8 @@ async function sendEmail({ to, subject, html, from = DEFAULT_FROM }) {
         from,
         to: Array.isArray(to) ? to : [to],
         subject,
-        html
+        html,
+        ...(replyTo ? { reply_to: replyTo } : {})
       })
     });
 
