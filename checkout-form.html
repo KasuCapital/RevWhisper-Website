@@ -243,6 +243,27 @@ body::before{
   max-width:420px;
 }
 .plan-fee-note strong{color:var(--g700);font-weight:500}
+.plan-fee-note del{color:var(--g400);font-weight:400;text-decoration-thickness:1px}
+
+/* ── Promo Code ── */
+.promo-field{margin-bottom:20px}
+.promo-optional{font-weight:400;color:var(--g400)}
+.promo-row{display:flex;gap:8px}
+.promo-input{flex:1;text-transform:uppercase}
+.promo-input::placeholder{text-transform:none}
+.promo-apply{
+  flex-shrink:0;padding:0 20px;border-radius:var(--radius);
+  border:1.5px solid var(--g200);background:var(--g50);
+  font-size:13px;font-weight:500;color:var(--g700);font-family:var(--body);
+  cursor:pointer;transition:border-color .2s,color .2s,background .2s,transform .2s var(--ease-out-back),box-shadow .2s;
+}
+.promo-apply:hover{border-color:var(--g300);color:var(--black);background:#fff;transform:translateY(-1px);box-shadow:var(--sh-sm)}
+.promo-apply:active{transform:scale(.97)}
+.promo-msg{font-size:12px;margin-top:6px;font-weight:400;line-height:1.5;display:none}
+.promo-msg.ok{display:block;color:var(--accent)}
+.promo-msg.err{display:block;color:#B85252}
+.promo-field.applied .promo-input{border-color:var(--accent-border);background:var(--accent-light);color:var(--accent);font-weight:600}
+.promo-field.applied .promo-apply{pointer-events:none;opacity:.5}
 
 /* ── Text Inputs ── */
 .field{margin-bottom:20px}
@@ -573,7 +594,15 @@ body.terms-expanded .step[data-step="2"] .form-actions{
       <h1 class="step-title">Let's get you <em>started.</em></h1>
       <p class="step-desc">Tell us who you are so we can set up your account and begin listing optimization.</p>
       <div id="plan-badge" class="plan-badge" style="display:none"></div>
-      <p class="plan-fee-note">One-time listing optimization fee: <strong>$998.00 per listing</strong> (charged upfront at enrollment). Your subscription begins once optimization is complete.</p>
+      <p class="plan-fee-note">One-time listing optimization fee: <strong>$996.00 per listing</strong> (charged upfront at enrollment). Your subscription begins once optimization is complete.</p>
+      <div class="field promo-field" id="promo-field">
+        <label class="field-label" for="promo-code">Promo code <span class="promo-optional">(optional)</span></label>
+        <div class="promo-row">
+          <input type="text" class="field-input promo-input" id="promo-code" placeholder="Enter code" autocomplete="off" autocapitalize="characters" spellcheck="false">
+          <button type="button" class="promo-apply" id="promo-apply" onclick="applyPromo()">Apply</button>
+        </div>
+        <div class="promo-msg" id="promo-msg" role="status" aria-live="polite"></div>
+      </div>
       <div class="field">
         <label class="field-label" for="full-name">Full Name</label>
         <input type="text" class="field-input" id="full-name" placeholder="Jane Doe" autocomplete="name">
@@ -822,7 +851,10 @@ const selectedPlan = isEnterprise ? 'enterprise' : (requestedPlan === 'annual' ?
 const enterpriseMonthly = isEnterprise ? Number(params.get('monthly_cost')) || 0 : 0;
 const enterpriseOnboarding = isEnterprise && params.get('onboarding_fee') ? Number(params.get('onboarding_fee')) : 998;
 const enterpriseTermMonths = isEnterprise ? Number(params.get('term_months')) || 0 : 0;
-const onboardingFee = isEnterprise ? enterpriseOnboarding : 998;
+const onboardingFee = isEnterprise ? enterpriseOnboarding : 996;
+// Hardcoded promo codes → discount fraction off the onboarding fee. Server enforces this too.
+const PROMO_CODES = { 'welcome50': 0.5 };
+let appliedPromo = null; // { code, discount } once a valid code is applied
 const FORM_WEBHOOK_ENDPOINT = '/api/form-webhook';
 const CREATE_CHECKOUT_ENDPOINT = '/api/create-checkout-session';
 const DEFAULT_ENTERPRISE_URL = '/get-started?plan=enterprise';
@@ -883,11 +915,79 @@ if (requestedPlan) {
 
 // Update fee note with dynamic onboarding fee (or waived-fee copy when onboarding is $0)
 const isSubscriptionOnly = isEnterprise && onboardingFee === 0;
-if (isSubscriptionOnly && enterpriseMonthly) {
-  document.querySelector('.plan-fee-note').innerHTML = 'Your RevWhisper monthly subscription begins at checkout &mdash; <strong>$' + enterpriseMonthly.toLocaleString() + '.00 per listing, per month</strong>. The one-time listing optimization fee has been waived.';
-} else {
-  document.querySelector('.plan-fee-note').innerHTML = 'One-time listing optimization fee: <strong>$' + onboardingFee.toLocaleString() + '.00 per listing</strong> (charged upfront at enrollment). Your subscription begins once optimization is complete.';
+
+function formatUsd(n) {
+  return '$' + Number(n).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
+
+function updateFeeNote() {
+  const note = document.querySelector('.plan-fee-note');
+  if (isSubscriptionOnly && enterpriseMonthly) {
+    note.innerHTML = 'Your RevWhisper monthly subscription begins at checkout &mdash; <strong>' + formatUsd(enterpriseMonthly) + ' per listing, per month</strong>. The one-time listing optimization fee has been waived.';
+    return;
+  }
+  if (appliedPromo) {
+    const discounted = onboardingFee * (1 - appliedPromo.discount);
+    note.innerHTML = 'One-time listing optimization fee: <strong><del>' + formatUsd(onboardingFee) + '</del> ' + formatUsd(discounted) + ' per listing</strong> (' + appliedPromo.code.toUpperCase() + ' &mdash; ' + Math.round(appliedPromo.discount * 100) + '% off, charged upfront). Your subscription begins once optimization is complete.';
+  } else {
+    note.innerHTML = 'One-time listing optimization fee: <strong>' + formatUsd(onboardingFee) + ' per listing</strong> (charged upfront at enrollment). Your subscription begins once optimization is complete.';
+  }
+}
+
+// Onboarding fee is waived in subscription-only mode — no promo code applies there.
+if (isSubscriptionOnly) {
+  const pf = document.getElementById('promo-field');
+  if (pf) pf.style.display = 'none';
+}
+
+function applyPromo() {
+  const input = document.getElementById('promo-code');
+  const msg = document.getElementById('promo-msg');
+  const field = document.getElementById('promo-field');
+  const code = (input.value || '').trim().toLowerCase();
+  if (!code) {
+    appliedPromo = null;
+    field.classList.remove('applied');
+    msg.className = 'promo-msg err';
+    msg.textContent = 'Enter a promo code first.';
+    updateFeeNote();
+    return;
+  }
+  if (Object.prototype.hasOwnProperty.call(PROMO_CODES, code)) {
+    appliedPromo = { code: code, discount: PROMO_CODES[code] };
+    field.classList.add('applied');
+    msg.className = 'promo-msg ok';
+    msg.textContent = code.toUpperCase() + ' applied — ' + Math.round(appliedPromo.discount * 100) + '% off your onboarding fee.';
+    rwTrack('promo_applied', { code: code, page: 'checkout-form' });
+  } else {
+    appliedPromo = null;
+    field.classList.remove('applied');
+    msg.className = 'promo-msg err';
+    msg.textContent = 'That code isn’t valid.';
+  }
+  updateFeeNote();
+}
+
+// If the user edits the code after applying, clear the applied state so they can re-apply.
+document.getElementById('promo-code').addEventListener('input', function() {
+  if (appliedPromo && this.value.trim().toLowerCase() !== appliedPromo.code) {
+    appliedPromo = null;
+    document.getElementById('promo-field').classList.remove('applied');
+    document.getElementById('promo-msg').className = 'promo-msg';
+    document.getElementById('promo-msg').textContent = '';
+    updateFeeNote();
+  }
+});
+
+// Allow ?promo=welcome50 to prefill + auto-apply from marketing links.
+(function autoApplyPromo() {
+  const fromUrl = (params.get('promo') || '').trim();
+  if (!fromUrl) return;
+  const input = document.getElementById('promo-code');
+  if (input) { input.value = fromUrl; applyPromo(); }
+})();
+
+updateFeeNote();
 
 // Populate dynamic service agreement sections
 (function() {
@@ -1257,6 +1357,11 @@ async function submitForm() {
     data.onboarding_fee = onboardingFee;
     if (enterpriseMonthly) data.monthly_cost = enterpriseMonthly;
     if (enterpriseTermMonths) data.term_months = enterpriseTermMonths;
+  }
+
+  if (appliedPromo) {
+    data.promo_code = appliedPromo.code;
+    data.promo_discount_pct = Math.round(appliedPromo.discount * 100);
   }
 
   console.log('Enrollment submitted:', data);
