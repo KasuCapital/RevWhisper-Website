@@ -1,5 +1,10 @@
 const MAX_LISTINGS = 10;
 const VALID_PLANS = new Set(['monthly', 'annual', 'enterprise']);
+// Standard (non-enterprise) one-time onboarding fee, charged upfront per listing.
+// This path creates no monthly/recurring charge.
+const ONBOARDING_FEE_PER_LISTING = 996;
+// Hardcoded promo codes → fraction off the onboarding fee. Mirrored in checkout-form.html.
+const PROMO_CODES = { welcome50: 0.5 };
 
 function sendJson(res, statusCode, payload) {
   res.statusCode = statusCode;
@@ -61,6 +66,12 @@ module.exports = async function handler(req, res) {
 
   const baseUrl = resolveBaseUrl(req);
   const isEnterprise = plan === 'enterprise';
+  // Promo discount is honored only on the standard onboarding path (enterprise quotes are bespoke).
+  const promoCode = String(payload.promo_code || '').trim().toLowerCase();
+  const promoDiscount =
+    !isEnterprise && Object.prototype.hasOwnProperty.call(PROMO_CODES, promoCode)
+      ? PROMO_CODES[promoCode]
+      : 0;
   const parseNumeric = (value) => {
     if (value == null || value === '') return 0;
     const parsed = Number(value);
@@ -81,12 +92,10 @@ module.exports = async function handler(req, res) {
   }
 
   const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
-  const stripePriceOnboarding = process.env.STRIPE_PRICE_ONBOARDING;
 
-  if (!stripeSecretKey || (!isEnterprise && !stripePriceOnboarding)) {
+  if (!stripeSecretKey) {
     return sendJson(res, 500, {
-      error:
-        'Stripe is not fully configured. Required env vars: STRIPE_SECRET_KEY, STRIPE_PRICE_ONBOARDING.'
+      error: 'Stripe is not configured. Required env var: STRIPE_SECRET_KEY.'
     });
   }
 
@@ -129,7 +138,11 @@ module.exports = async function handler(req, res) {
     params.set('line_items[0][price_data][product_data][name]', 'Listing Optimization Fee (Enterprise)');
     params.set('line_items[0][quantity]', String(listingCount));
   } else {
-    params.set('line_items[0][price]', stripePriceOnboarding);
+    // Standard onboarding: one-time fee per listing, with optional promo discount applied server-side.
+    const unitAmount = Math.round(ONBOARDING_FEE_PER_LISTING * (1 - promoDiscount) * 100);
+    params.set('line_items[0][price_data][currency]', 'usd');
+    params.set('line_items[0][price_data][unit_amount]', String(unitAmount));
+    params.set('line_items[0][price_data][product_data][name]', 'RevWhisper Listing Optimization (one-time)');
     params.set('line_items[0][quantity]', String(listingCount));
   }
 
@@ -143,6 +156,16 @@ module.exports = async function handler(req, res) {
     params.set('metadata[onboarding_fee]', String(onboardingFee));
     params.set('metadata[monthly_cost]', String(monthlyCost));
     if (payload.term_months) params.set('metadata[term_months]', String(payload.term_months));
+  } else {
+    params.set(
+      'metadata[onboarding_fee_per_listing]',
+      String(Math.round(ONBOARDING_FEE_PER_LISTING * (1 - promoDiscount)))
+    );
+  }
+
+  if (promoDiscount > 0) {
+    params.set('metadata[promo_code]', promoCode);
+    params.set('metadata[promo_discount_pct]', String(Math.round(promoDiscount * 100)));
   }
 
   if (Array.isArray(payload.listings) && payload.listings.length) {
