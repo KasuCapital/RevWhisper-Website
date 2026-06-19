@@ -69,43 +69,111 @@ function buildEmailHtml({ firstName, checkoutUrl, bookingUrl }) {
   const safeBooking = escapeHtml(bookingUrl);
 
   return `
-    <div style="font-family:'DM Sans',Helvetica,Arial,sans-serif;max-width:560px;margin:0 auto;color:#32302F;">
+    <div style="font-family:'DM Sans',Helvetica,Arial,sans-serif;max-width:600px;margin:0 auto;color:#32302F;">
       <div style="padding:32px 24px;">
         <h1 style="font-family:Georgia,serif;font-size:24px;font-weight:400;margin:0 0 16px;color:#32302F;">
           Great connecting, ${safeName}.
         </h1>
         <p style="font-size:15px;line-height:1.7;color:#706b68;margin:0 0 24px;">
-          Thanks for the conversation &mdash; here's a quick recap and everything you need to get
-          started with RevWhisper.
+          Thanks for hearing us out at the conference! Here's a quick recap and everything you need
+          to get started with onboarding your RevWhisper service.
         </p>
 
-        <div style="background:#dce6d8;border:1px solid #b3c5ab;border-radius:8px;padding:18px 20px;margin:0 0 28px;">
-          <p style="font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#4A6741;margin:0 0 8px;">
-            How we're different
-          </p>
-          <p style="font-size:15px;line-height:1.7;color:#48433f;margin:0;">
-            Most revenue managers price on market demand alone. We take a <strong>rank-based</strong> approach &mdash;
-            factoring your Airbnb search ranking into every pricing move, so your listing gains visibility
-            and lands in front of the right guests. The goal is optimal visibility, not just a rate that
-            matches the market.
-          </p>
-        </div>
-
-        <p style="font-size:15px;line-height:1.7;color:#706b68;margin:0 0 24px;">
-          Your enrollment link below already has your details and pricing set up. Prefer to talk it
-          through first? Grab a time with our team.
+        <p style="font-size:15px;line-height:1.7;color:#706b68;margin:0 0 16px;">
+          Our approach is built on excelling at three core principles:
         </p>
 
-        <a href="${safeCheckout}" style="display:block;text-align:center;background:#4A6741;color:#fff;text-decoration:none;padding:14px 24px;border-radius:6px;font-size:15px;font-weight:600;margin:0 0 12px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 28px;border-collapse:separate;">
+          <tr>
+            <td width="33%" valign="top" style="padding:0 4px;">
+              <div style="background:#dce6d8;border:1px solid #b3c5ab;border-radius:8px;padding:14px 12px;">
+                <p style="font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#4A6741;margin:0 0 6px;">Visibility</p>
+                <p style="font-size:13px;line-height:1.5;color:#48433f;margin:0;">Getting your listing onto page one for the open nights on your calendar.</p>
+              </div>
+            </td>
+            <td width="33%" valign="top" style="padding:0 4px;">
+              <div style="background:#dce6d8;border:1px solid #b3c5ab;border-radius:8px;padding:14px 12px;">
+                <p style="font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#4A6741;margin:0 0 6px;">Conversion</p>
+                <p style="font-size:13px;line-height:1.5;color:#48433f;margin:0;">Crafting your listing page so viewers stay engaged and book.</p>
+              </div>
+            </td>
+            <td width="33%" valign="top" style="padding:0 4px;">
+              <div style="background:#dce6d8;border:1px solid #b3c5ab;border-radius:8px;padding:14px 12px;">
+                <p style="font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#4A6741;margin:0 0 6px;">Revenue Management</p>
+                <p style="font-size:13px;line-height:1.5;color:#48433f;margin:0;">Rank-adjusted pricing, not just market pricing &mdash; capturing the highest ADR for every open night.</p>
+              </div>
+            </td>
+          </tr>
+        </table>
+
+        <p style="font-size:15px;line-height:1.7;color:#706b68;margin:0 0 20px;">
+          Below is the roll-out timeline for onboarding. Your enrollment check-out triggers your
+          Research &amp; Initial Set-Up &mdash; once you check out, I'll send your Listing Intake Form
+          and kick things off with a member of our Onboarding Team.
+        </p>
+
+        <a href="${safeCheckout}" style="display:block;text-align:center;background:#4A6741;color:#fff;text-decoration:none;padding:14px 24px;border-radius:6px;font-size:15px;font-weight:600;margin:0 0 28px;">
           Complete your enrollment
         </a>
+
+        <div style="border-top:1px solid #E0DCDA;padding-top:24px;">
+          <div style="margin:0 0 26px;">
+            <p style="font-family:Georgia,serif;font-size:17px;font-weight:400;color:#32302F;margin:0 0 8px;">
+              <span style="color:#4A6741;font-weight:600;">1</span> &nbsp; Research, Ranking Audit &amp; Performance Meeting
+            </p>
+            <p style="font-size:14px;line-height:1.7;color:#706b68;margin:0 0 12px;">
+              We connect to your Airbnb account and run a complete analysis of where you stand today &mdash;
+              your search rank across the next 60 days of availability, listing quality gaps, pricing
+              structure, and competitive positioning. This becomes your performance baseline.
+            </p>
+            <p style="font-size:14px;line-height:1.7;color:#706b68;margin:0 0 12px;">
+              You'll meet with your RevWhisper Representative within 5 business days to review findings
+              and move forward with changes across five areas:
+            </p>
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-size:13px;line-height:1.6;color:#706b68;margin:0 0 4px;">
+              <tr><td style="padding:4px 0;"><strong style="color:#48433f;">Search Rank Baseline</strong> &mdash; your current position across 60&ndash;90 days of open dates, tracked by guest configuration.</td></tr>
+              <tr><td style="padding:4px 0;"><strong style="color:#48433f;">Rules &amp; Settings Optimization</strong> &mdash; account-level adjustments that directly affect visibility.</td></tr>
+              <tr><td style="padding:4px 0;"><strong style="color:#48433f;">Listing Enhancements</strong> &mdash; copy, title, meta-tags, amenities, photos, and completeness scoring.</td></tr>
+              <tr><td style="padding:4px 0;"><strong style="color:#48433f;">Image Improvements</strong> &mdash; upgrades to photo quality, selection, and sequencing.</td></tr>
+              <tr><td style="padding:4px 0;"><strong style="color:#48433f;">Pricing Strategy &amp; Rules</strong> &mdash; a dynamic pricing structure built around a true competitive set.</td></tr>
+            </table>
+          </div>
+
+          <div style="margin:0 0 26px;">
+            <p style="font-family:Georgia,serif;font-size:17px;font-weight:400;color:#32302F;margin:0 0 8px;">
+              <span style="color:#4A6741;font-weight:600;">2</span> &nbsp; Implementation
+            </p>
+            <p style="font-size:14px;line-height:1.7;color:#706b68;margin:0;">
+              Our team executes all approved changes to your account, listing, and pricing setup &mdash;
+              typically within 2 days, depending on the volume of changes.
+            </p>
+          </div>
+
+          <div style="margin:0;">
+            <p style="font-family:Georgia,serif;font-size:17px;font-weight:400;color:#32302F;margin:0 0 8px;">
+              <span style="color:#4A6741;font-weight:600;">3</span> &nbsp; Your monthly service begins
+            </p>
+            <p style="font-size:14px;line-height:1.7;color:#706b68;margin:0;">
+              Continuous rank monitoring, pricing promotion strategy, competitor pacing, and ongoing
+              listing improvements &mdash; keeping you on page one and growing your booking conversion.
+            </p>
+          </div>
+        </div>
+
+        <p style="font-size:15px;line-height:1.7;color:#706b68;margin:28px 0 24px;">
+          I hope you found our chat informative, and I'm confident our team can unlock your property's
+          true performance. If you'd prefer to talk it through on a call first, grab a time with our team.
+        </p>
+
         <a href="${safeBooking}" style="display:block;text-align:center;background:#fff;color:#32302F;text-decoration:none;padding:13px 24px;border:1.5px solid #E0DCDA;border-radius:6px;font-size:15px;font-weight:500;margin:0 0 28px;">
-          Book a call with our team
+          Book a meeting
         </a>
 
-        <p style="font-size:13px;line-height:1.7;color:#a39e9b;margin:0 0 24px;">
-          Questions before you get started? Just reply to this email &mdash; it comes straight to us.
+        <p style="font-size:15px;line-height:1.7;color:#32302F;margin:0 0 12px;">
+          Looking forward to working for you,
         </p>
+        <p style="font-size:15px;line-height:1.5;color:#32302F;margin:0;font-weight:600;">Nick</p>
+        <p style="font-size:14px;line-height:1.5;color:#4A6741;margin:0 0 24px;">nluna@revwhisper.com</p>
 
         <hr style="border:none;border-top:1px solid #E0DCDA;margin:8px 0 16px;">
         <p style="font-size:12px;color:#a39e9b;margin:0;">
