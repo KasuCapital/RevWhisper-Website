@@ -144,16 +144,40 @@ function buildEmailHtml({ firstName, checkoutUrl, bookingUrl }) {
           Book a meeting
         </a>
 
-        <p style="font-size:15px;line-height:1.7;color:#32302F;margin:0 0 12px;">
+        <p style="font-size:15px;line-height:1.7;color:#32302F;margin:0 0 22px;">
           Looking forward to working for you,
         </p>
-        <p style="font-size:15px;line-height:1.5;color:#32302F;margin:0;font-weight:600;">Nick</p>
-        <p style="font-size:14px;line-height:1.5;color:#4A6741;margin:0 0 24px;">nluna@revwhisper.com</p>
 
-        <hr style="border:none;border-top:1px solid #E0DCDA;margin:8px 0 16px;">
-        <p style="font-size:12px;color:#a39e9b;margin:0;">
-          RevWhisper — Revenue optimization for short-term rental hosts.
-        </p>
+        <hr style="border:none;border-top:1px solid #E0DCDA;margin:0 0 22px;">
+
+        <table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+          <tr>
+            <td valign="middle" style="padding:0 22px 0 0;">
+              <table role="presentation" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td valign="middle" style="padding:0 9px 0 0;">
+                    <img src="https://revwhisper.com/images/email/rw-mark.png" width="34" height="34" alt="RevWhisper" style="display:block;border:0;">
+                  </td>
+                  <td valign="middle">
+                    <span style="font-family:Georgia,serif;font-size:21px;color:#32302F;">RevWhisper</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2" style="padding:14px 0 0;">
+                    <img src="https://revwhisper.com/images/email/rw-social.png" width="112" height="28" alt="Facebook, Instagram, X" style="display:block;border:0;">
+                  </td>
+                </tr>
+              </table>
+            </td>
+            <td valign="middle" style="border-left:1px solid #d8d4d1;padding:0 0 0 22px;">
+              <p style="font-size:15px;font-weight:700;color:#32302F;margin:0 0 2px;">Nicolas Luna</p>
+              <p style="font-size:14px;color:#32302F;margin:0 0 2px;">Chief Operating Officer</p>
+              <p style="font-size:13px;font-style:italic;color:#a39e9b;margin:0 0 12px;">TBros Group</p>
+              <p style="font-size:13px;color:#48433f;margin:0 0 4px;"><strong style="color:#32302F;">E</strong>&nbsp;&nbsp;<a href="mailto:nluna@revwhisper.com" style="color:#48433f;text-decoration:none;">nluna@revwhisper.com</a></p>
+              <p style="font-size:13px;color:#48433f;margin:0;"><strong style="color:#32302F;">W</strong>&nbsp;&nbsp;<a href="https://www.revwhisper.com" style="color:#2f6fb0;text-decoration:underline;">www.revwhisper.com</a></p>
+            </td>
+          </tr>
+        </table>
       </div>
     </div>
   `;
