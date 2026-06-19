@@ -186,6 +186,9 @@ module.exports = async function handler(req, res) {
 
   const result = await sendEmail({
     to: email,
+    // Sent personally from Nick. Must use the verified hello.revwhisper.com domain;
+    // replies still route to nluna@revwhisper.com via the helper's default reply-to.
+    from: 'Nick Luna <nluna@hello.revwhisper.com>',
     subject: 'Your Next Steps',
     html: buildEmailHtml({ firstName, checkoutUrl, bookingUrl })
   });
