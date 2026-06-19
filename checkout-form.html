@@ -979,6 +979,11 @@ document.getElementById('promo-code').addEventListener('input', function() {
   }
 });
 
+// Auto-apply when the field loses focus, so a typed code reflects without needing the Apply button.
+document.getElementById('promo-code').addEventListener('blur', function() {
+  if (this.value.trim() && !appliedPromo) applyPromo();
+});
+
 // Allow ?promo=welcome50 to prefill + auto-apply from marketing links.
 (function autoApplyPromo() {
   const fromUrl = (params.get('promo') || '').trim();
@@ -1359,9 +1364,11 @@ async function submitForm() {
     if (enterpriseTermMonths) data.term_months = enterpriseTermMonths;
   }
 
-  if (appliedPromo) {
-    data.promo_code = appliedPromo.code;
-    data.promo_discount_pct = Math.round(appliedPromo.discount * 100);
+  // Honor a valid promo code typed into the field even if the user never clicked "Apply".
+  const typedPromo = (document.getElementById('promo-code').value || '').trim().toLowerCase();
+  if (typedPromo && Object.prototype.hasOwnProperty.call(PROMO_CODES, typedPromo)) {
+    data.promo_code = typedPromo;
+    data.promo_discount_pct = Math.round(PROMO_CODES[typedPromo] * 100);
   }
 
   console.log('Enrollment submitted:', data);
