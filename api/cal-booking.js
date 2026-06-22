@@ -1,7 +1,17 @@
 const CAL_API = 'https://api.cal.com/v2/bookings';
-const CAL_API_VERSION = '2026-02-25';
+// We deliberately use Cal.com's LEGACY v2 booking format (cal-api-version 2024-06-14: eventTypeId +
+// a flat `responses` object). The newer format (2026-02-25 + bookingFieldsResponses) strict-parses the
+// event type's STORED bookingFields before it reads the request and 400s with "N.required" if any stored
+// field is malformed. The Discovery event type has a corrupted workflow-injected `smsReminderNumber`
+// field (saved as type:"unknown" with no `required` flag) that fails that parse, so the modern format
+// blocks EVERY booking. The legacy path skips that parse — the same path Cal's own hosted booking page
+// uses — so bookings succeed. Verified live: legacy format returns 201 where the modern format 400s.
+const CAL_API_VERSION = '2024-06-14';
 const TEAM_SLUG = 'revwhisper';
 const EVENT_TYPE_SLUG = 'discovery';
+// Legacy bookings require a numeric eventTypeId (slug routing is a modern-format feature). Falls back to
+// the known Discovery event type id when CAL_EVENT_TYPE_ID isn't set in the environment.
+const DEFAULT_EVENT_TYPE_ID = 5076967;
 const UPSTREAM_TIMEOUT_MS = 15000;
 const DEFAULT_X_AUDIT_CALL_BOOKED_EVENT_ID = 'tw-r8ftv-rd0hl';
 
@@ -130,34 +140,41 @@ module.exports = async function handler(req, res) {
   // Trim the key defensively — a stray newline/space in a Vercel env var is a classic
   // cause of "Invalid API Key" 401s that silently break every booking.
   const apiKey = (process.env.CAL_API_KEY || '').trim();
-  const eventTypeId = parseEventTypeId(process.env.CAL_EVENT_TYPE_ID);
+  const eventTypeId = parseEventTypeId(process.env.CAL_EVENT_TYPE_ID) || DEFAULT_EVENT_TYPE_ID;
 
-  // Build a clean E.164 from the (client-validated) phone. Cal.com surfaces
-  // attendee.phoneNumber on the booking AND in the booking webhook, which is how it
-  // reaches the CRM (via the Disco Call automation). Guard the format so a malformed
-  // value can never fail the booking — if it isn't a plausible E.164 we omit it and
+  // Build a clean E.164 from the (client-validated) phone. The phone feeds the SMS-reminder field
+  // AND the CRM path (Cal.com booking webhook → Disco Call automation → Attio/Quo). Guard the format
+  // so a malformed value can never fail the booking — if it isn't a plausible E.164 we omit it and
   // fall back to metadata.phone.
   const phoneDigits = String(body.phone || '').replace(/\D/g, '');
   const phoneE164 = (phoneDigits.length >= 8 && phoneDigits.length <= 15) ? '+' + phoneDigits : '';
 
-  const upstreamPayload = {
-    start: new Date(body.start).toISOString(),
-    attendee: {
+  // Legacy-format payload: eventTypeId + a flat `responses` object (booking-field slug → value) plus
+  // top-level timeZone/language/metadata. `responses.attendeePhoneNumber` maps to the attendee phone and
+  // `responses.smsReminderNumber` feeds the SMS reminder; both are optional, so a missing/odd phone can
+  // never block a booking. `includePhone=false` produces a phone-free payload for the retry below.
+  const buildPayload = (includePhone) => {
+    const responses = {
       name: String(body.name).trim(),
       email: String(body.email).trim(),
+      guests: [],
+      location: { value: 'conferencing', optionValue: '' }
+    };
+    if (includePhone && phoneE164) {
+      responses.attendeePhoneNumber = phoneE164;
+      responses.smsReminderNumber = phoneE164;
+    }
+    return {
+      eventTypeId,
+      start: new Date(body.start).toISOString(),
       timeZone: String(body.timeZone).trim(),
       language: 'en',
-      ...(phoneE164 ? { phoneNumber: phoneE164 } : {})
-    },
-    metadata: buildMetadata(body)
+      metadata: buildMetadata(body),
+      responses
+    };
   };
 
-  if (eventTypeId) {
-    upstreamPayload.eventTypeId = eventTypeId;
-  } else {
-    upstreamPayload.eventTypeSlug = EVENT_TYPE_SLUG;
-    upstreamPayload.teamSlug = TEAM_SLUG;
-  }
+  let upstreamPayload = buildPayload(true);
 
   // Attempt with auth (if a key is configured). Public team bookings also succeed WITHOUT
   // auth, so if the key is rejected (401/403) we retry once unauthenticated rather than
@@ -166,6 +183,18 @@ module.exports = async function handler(req, res) {
   if (attempt.kind === 'response' && apiKey && (attempt.status === 401 || attempt.status === 403)) {
     console.error(`cal-booking: Cal.com rejected CAL_API_KEY (HTTP ${attempt.status}). Falling back to an unauthenticated booking — FIX THE KEY in your environment.`);
     attempt = await postBooking(upstreamPayload, '');
+  }
+
+  // If Cal.com rejects the phone number itself (e.g. "{smsReminderNumber}invalid_number"), retry once
+  // WITHOUT the phone fields. They're optional, so a customer with an odd phone still gets booked — we
+  // just lose the SMS-reminder number for that one booking (metadata.phone still carries it to the CRM).
+  if (attempt.kind === 'response' && phoneE164 && (attempt.status === 400 || attempt.status === 500)) {
+    const raw = JSON.stringify(attempt.body || '').toLowerCase();
+    if (raw.includes('invalid_number') || raw.includes('smsremindernumber') || raw.includes('attendeephonenumber')) {
+      console.error('cal-booking: Cal.com rejected the phone number. Retrying the booking without the phone fields.');
+      upstreamPayload = buildPayload(false);
+      attempt = await postBooking(upstreamPayload, apiKey || '');
+    }
   }
 
   if (attempt.kind === 'network') {
@@ -239,8 +268,9 @@ module.exports = async function handler(req, res) {
     booking: data
       ? {
           uid: data.uid,
-          start: data.start,
-          end: data.end,
+          // Legacy format returns startTime/endTime; keep start/end fallbacks for forward-compat.
+          start: data.start || data.startTime,
+          end: data.end || data.endTime,
           location: data.location,
           duration: data.duration,
           title: data.title

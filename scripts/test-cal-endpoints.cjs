@@ -84,12 +84,19 @@ async function run() {
   check('booking/happy: 201', r.statusCode === 201 && r.json().ok === true, `got ${r.statusCode}`);
   check('booking/happy: single upstream call', fetchCalls.length === 1, `calls=${fetchCalls.length}`);
   check('booking/happy: sent auth header', authHeaderOf(0) === 'Bearer cal_live_validkey');
-  check('booking/happy: used eventTypeSlug+teamSlug', bodyOf(0).eventTypeSlug === 'discovery' && bodyOf(0).teamSlug === 'revwhisper');
+  check('booking/happy: legacy eventTypeId (default 5076967)', bodyOf(0).eventTypeId === 5076967 && !bodyOf(0).eventTypeSlug, JSON.stringify({ id: bodyOf(0).eventTypeId, slug: bodyOf(0).eventTypeSlug }));
+  check('booking/happy: cal-api-version 2024-06-14', (fetchCalls[0].options.headers || {})['cal-api-version'] === '2024-06-14', JSON.stringify((fetchCalls[0].options.headers || {})['cal-api-version']));
   check('booking/happy: no-store cache header', r.headers['cache-control'] === 'no-store');
 
-  // 2b. Phone NOT in attendee, but IS in metadata; source passed through
+  // 2b. Legacy `responses` shape (NOT the modern attendee/bookingFieldsResponses), phone in
+  //     responses.smsReminderNumber + attendeePhoneNumber (E.164), metadata carries phone + attribution
   const sent = bodyOf(0);
-  check('booking/phone: not in attendee.phoneNumber', !sent.attendee.phoneNumber, JSON.stringify(sent.attendee));
+  check('booking/responses: name+email present', sent.responses && sent.responses.name === 'Jane Doe' && sent.responses.email === 'jane@example.com', JSON.stringify(sent.responses));
+  check('booking/responses: location object', !!(sent.responses && sent.responses.location && sent.responses.location.value === 'conferencing'));
+  check('booking/responses: top-level timeZone+language', sent.timeZone === 'America/New_York' && sent.language === 'en');
+  check('booking/phone: in responses.smsReminderNumber (E.164)', sent.responses.smsReminderNumber === '+15551234567', JSON.stringify(sent.responses.smsReminderNumber));
+  check('booking/phone: in responses.attendeePhoneNumber (E.164)', sent.responses.attendeePhoneNumber === '+15551234567');
+  check('booking/phone: NO modern attendee object', sent.attendee === undefined);
   check('booking/phone: present in metadata', sent.metadata.phone === '+1 (555) 123-4567');
   check('booking/meta: source from client', sent.metadata.source === 'audit', sent.metadata.source);
   check('booking/meta: attribution merged', sent.metadata.utm_source === 'fb' && sent.metadata.utm_campaign === 'spring');
@@ -174,6 +181,21 @@ async function run() {
   await booking({ method: 'POST', body: validBody }, r);
   check('booking/eventTypeId: used numeric id', bodyOf(0).eventTypeId === 5076967 && !bodyOf(0).eventTypeSlug);
   delete process.env.CAL_EVENT_TYPE_ID;
+
+  // 12b. CRITICAL: Cal rejects the phone (invalid_number, 500) → retry WITHOUT phone fields → 201.
+  //      Guarantees a customer with an odd phone still gets booked instead of hard-failing.
+  process.env.CAL_API_KEY = 'cal_live_validkey';
+  installFetch([
+    fakeResponse(500, { error: { message: '[{"code":"custom","message":"{smsReminderNumber}invalid_number","path":["responses"]}]' } }),
+    ok201()
+  ]);
+  r = mockRes();
+  await booking({ method: 'POST', body: validBody }, r);
+  check('booking/phone-retry: final 201', r.statusCode === 201 && r.json().ok === true, `got ${r.statusCode}`);
+  check('booking/phone-retry: two calls', fetchCalls.length === 2, `calls=${fetchCalls.length}`);
+  check('booking/phone-retry: 1st call included phone', bodyOf(0).responses.smsReminderNumber === '+15551234567');
+  check('booking/phone-retry: 2nd call dropped phone', bodyOf(1).responses.smsReminderNumber === undefined && bodyOf(1).responses.attendeePhoneNumber === undefined);
+  delete process.env.CAL_API_KEY;
 
   // ───────────────────── cal-slots ─────────────────────
   const slotsUrl = '/api/cal-slots?start=2026-07-01T00:00:00.000Z&end=2026-07-20T00:00:00.000Z&timeZone=America/New_York';
