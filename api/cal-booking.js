@@ -17,6 +17,7 @@ const DEFAULT_X_AUDIT_CALL_BOOKED_EVENT_ID = 'tw-r8ftv-rd0hl';
 
 const { sendCapiEvent, buildUserData } = require('./_meta-capi');
 const { sendXConversionEvent, buildIdentifiers } = require('./_x-capi');
+const { sendBookingAlert } = require('./_alert');
 
 // Cal.com metadata limits (per API docs): <=50 keys, key <=40 chars, string value <=500 chars.
 const META_MAX_KEYS = 50;
@@ -137,6 +138,11 @@ module.exports = async function handler(req, res) {
   const error = validate(body);
   if (error) return sendJson(res, 400, { error });
 
+  // The synthetic monitor (booking-canary GitHub Action) sends this header with a deliberately-past
+  // date. We skip ops alerts for it — the canary's own failure path handles alerting, and we don't
+  // want its expected "in the past" rejection emailing a false "customers can't book" alarm.
+  const isCanary = !!(req.headers && req.headers['x-rw-canary']);
+
   // Trim the key defensively — a stray newline/space in a Vercel env var is a classic
   // cause of "Invalid API Key" 401s that silently break every booking.
   const apiKey = (process.env.CAL_API_KEY || '').trim();
@@ -199,6 +205,7 @@ module.exports = async function handler(req, res) {
 
   if (attempt.kind === 'network') {
     console.error('cal-booking upstream error:', attempt.err && attempt.err.name, attempt.err && attempt.err.message);
+    if (!isCanary) await sendBookingAlert({ source: 'live booking', reason: 'Could not reach Cal.com (network/timeout)', detail: (attempt.err && attempt.err.message) || 'network error' });
     return sendJson(res, 502, { error: 'Unable to reach Cal.com right now.', fallback: true });
   }
 
@@ -214,6 +221,13 @@ module.exports = async function handler(req, res) {
       /already has|not available|no_available|no available|already booked|no longer available|fully booked|slot.*unavailable/.test(lower);
     // Transient/infra/throttle/auth: Cal.com's own booking page may still work → offer fallback.
     const fallback = !slotGone && (status === 401 || status === 403 || status === 408 || status === 429 || status >= 500);
+    // Alert on SYSTEMIC failures only. A taken slot is a normal race; "in the past" only comes from
+    // a malformed/synthetic request (the UI never sends a past slot) — neither means an outage.
+    // Everything else (config/parse errors like 4.required, 5xx, broken auth, throttling) does.
+    const benign = slotGone || /in the past/i.test(lower);
+    if (!isCanary && !benign) {
+      await sendBookingAlert({ source: 'live booking', status, reason: 'Cal.com rejected the booking', detail: message });
+    }
     return sendJson(res, status, {
       error: message,
       code: slotGone ? 'slot_unavailable' : undefined,

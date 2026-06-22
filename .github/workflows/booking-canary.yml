@@ -1,0 +1,81 @@
+name: Booking canary
+
+# Synthetic monitor for the /audit + /get-started booking flow.
+# Every ~10 minutes it sends a DELIBERATELY-PAST-DATE booking probe to production. A past date can
+# never create a real booking, but it still exercises the full path (our handler → Cal.com → the
+# event-type config parse). The ONLY healthy outcome is Cal replying "Attempting to book a meeting
+# in the past." — that proves validation passed. Anything else (e.g. the "4.required" config-parse
+# error that took bookings down for ~4 days undetected, a 5xx, or an unreachable site) fires an
+# urgent email and fails the job.
+#
+# SETUP (one time): add repo secret RESEND_API_KEY (Settings → Secrets and variables → Actions).
+# Use the same Resend key that's in Vercel. Without it the probe still runs and the job still goes
+# red on failure (GitHub emails you about failed scheduled runs) — you just won't get the rich email.
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'   # every 10 minutes (GitHub may delay/coalesce under load)
+  workflow_dispatch: {}       # allow manual runs from the Actions tab
+
+concurrency:
+  group: booking-canary
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe production booking endpoint (past date — never books)
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          ENDPOINT: https://revwhisper.com/api/cal-booking
+        run: |
+          set -uo pipefail
+
+          BODY='{"start":"2020-01-01T10:00:00Z","name":"Booking Canary","email":"canary@revwhisper.com","timeZone":"America/Toronto","phone":"+19059029454"}'
+
+          # x-rw-canary tells the handler to skip its own ops-alert for this synthetic request.
+          RESP=$(curl -sS -m 30 -w $'\n%{http_code}' -X POST "$ENDPOINT" \
+            -H 'Content-Type: application/json' \
+            -H 'x-rw-canary: 1' \
+            -d "$BODY" || printf '\n000')
+          CODE=$(printf '%s' "$RESP" | tail -n1)
+          JSON=$(printf '%s' "$RESP" | sed '$d')
+          echo "HTTP $CODE"
+          echo "BODY: $JSON"
+
+          # Healthy: validation passed and only the deliberately-past date stopped it.
+          if printf '%s' "$JSON" | grep -qi 'in the past'; then
+            echo "✅ Booking pipeline healthy."
+            exit 0
+          fi
+
+          echo "❌ Booking pipeline UNHEALTHY — sending urgent alert."
+          if [ -n "${RESEND_API_KEY:-}" ]; then
+            PAYLOAD=$(jq -n --arg code "$CODE" --arg body "$JSON" '{
+              from: "RevWhisper <team@hello.revwhisper.com>",
+              to: ["bgamble@revwhisper.com"],
+              subject: "🚨 URGENT: RevWhisper booking canary FAILED — customers may not be able to book",
+              html: ("<div style=\"font-family:system-ui,Arial,sans-serif;max-width:560px;margin:0 auto\">"
+                + "<div style=\"background:#b3261e;color:#fff;padding:18px 22px;border-radius:10px 10px 0 0\">"
+                + "<div style=\"font-size:12px;letter-spacing:.09em;text-transform:uppercase;opacity:.85\">RevWhisper · Booking Monitor</div>"
+                + "<div style=\"font-size:22px;font-weight:800;margin-top:4px\">🚨 Booking canary FAILED</div></div>"
+                + "<div style=\"border:1px solid #eee;border-top:none;border-radius:0 0 10px 10px;padding:22px;color:#1a1a1a\">"
+                + "<p style=\"font-size:16px\"><strong>The scheduled health check could not confirm bookings are working. Customers may be unable to book right now.</strong></p>"
+                + "<p><strong>HTTP status:</strong> " + $code + "</p>"
+                + "<p><strong>Response:</strong></p>"
+                + "<pre style=\"background:#f5f5f5;padding:10px;border-radius:6px;white-space:pre-wrap;word-break:break-word;font-size:12px\">" + $body + "</pre>"
+                + "<p style=\"font-size:13px;color:#555\">A healthy response contains \"Attempting to book a meeting in the past.\" If it doesn’t, check Cal.com event type <code>5076967</code> (booking questions) and the <code>/api/cal-booking</code> Vercel logs.</p>"
+                + "</div></div>")
+            }')
+            curl -sS -m 30 -X POST https://api.resend.com/emails \
+              -H "Authorization: Bearer $RESEND_API_KEY" \
+              -H 'Content-Type: application/json' \
+              -d "$PAYLOAD" || echo "(alert email send failed)"
+          else
+            echo "(RESEND_API_KEY not set — skipping email; this red job is itself the alert)"
+          fi
+          exit 1
