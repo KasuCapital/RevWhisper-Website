@@ -182,6 +182,30 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 .success-detail{display:inline-flex;align-items:center;gap:10px;padding:12px 20px;background:var(--g50);border:1px solid var(--g200);border-radius:var(--radius);font-size:13px;color:var(--g500)}
 .success-detail strong{color:var(--black);font-weight:600}
 
+/* ── Post-booking "what to expect" ── */
+.booked-meta{display:flex;flex-wrap:wrap;justify-content:center;gap:18px;margin-top:14px;font-size:13px;color:var(--g500);font-weight:300}
+.booked-meta-item{display:inline-flex;align-items:center;gap:6px}
+.booked-meta-item svg{flex-shrink:0;color:var(--accent)}
+
+.booked-body{margin-top:6px;text-align:left}
+.booked-sec{padding:26px 0;border-top:1px solid var(--g200)}
+.booked-eyebrow{font-size:11px;font-weight:600;color:var(--accent);letter-spacing:.1em;text-transform:uppercase;margin-bottom:11px}
+.booked-h{font-family:var(--heading);font-size:20px;font-weight:400;letter-spacing:-.01em;color:var(--black);margin-bottom:15px;line-height:1.25}
+.booked-h em{font-style:italic;color:var(--accent)}
+.booked-p{font-size:14.5px;line-height:1.7;color:var(--g600);font-weight:300}
+.booked-p strong{color:var(--g700);font-weight:600}
+.booked-steps{list-style:none;display:flex;flex-direction:column;gap:16px}
+.booked-steps li{display:flex;gap:14px;align-items:flex-start}
+.bs-num{flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--accent-light);border:1px solid var(--accent-border);color:var(--accent);font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center}
+.booked-steps li>div{font-size:14.5px;line-height:1.65;color:var(--g600);font-weight:300}
+.booked-steps li strong{color:var(--black);font-weight:600}
+.booked-list{list-style:none;display:flex;flex-direction:column;gap:11px;margin-top:2px}
+.booked-list li{position:relative;padding-left:22px;font-size:14.5px;line-height:1.6;color:var(--g600);font-weight:300}
+.booked-list li::before{content:"";position:absolute;left:4px;top:9px;width:6px;height:6px;border-radius:50%;background:var(--accent-border)}
+.booked-hosts{display:flex;gap:18px;align-items:flex-start}
+.booked-hosts .host-avatars{flex-shrink:0;display:flex}
+@media(max-width:640px){.booked-hosts{flex-direction:column;gap:14px}}
+
 /* ── Confetti ── */
 .confetti-wrap{position:fixed;inset:0;pointer-events:none;z-index:100;overflow:hidden}
 .confetti{position:absolute;width:8px;height:8px;border-radius:2px;opacity:0}
@@ -241,14 +265,14 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
             <img class="host-avatar" src="/images/team/nic.webp" alt="Nicolas" loading="lazy" width="40" height="40">
           </div>
           <div class="host-meta">
-            <span class="host-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>20 min</span>
+            <span class="host-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>30 min</span>
             <span class="host-meta-item"><svg width="13" height="13" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/></svg>Google Meet</span>
             <span class="host-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14.5 14.5 0 0 1 0 18M12 3a14.5 14.5 0 0 0 0 18"/></svg><span id="host-tz">UTC</span></span>
           </div>
         </div>
         <div class="step-eyebrow">Pick a date</div>
         <h2 class="step-title">When works <em>for you?</em></h2>
-        <p class="host-blurb"><em>20 min, no fluff.</em> A clear look at the revenue you're leaving on the table and exactly what we'd fix first.</p>
+        <p class="host-blurb"><em>30 min, no fluff.</em> A clear look at the revenue you're leaving on the table and exactly what we'd fix first.</p>
         <div id="cal-error-slot"></div>
         <div class="cal-shell">
           <div class="cal-nav">
@@ -302,12 +326,56 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
       <div class="step" data-step="4">
         <div class="success-state" id="success-state">
           <div class="success-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#4A6741" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div>
-          <h2 class="success-title">You're <em>all booked.</em></h2>
-          <p class="success-desc" id="success-desc">We'll see you on your live audit. A calendar invite is on its way to your inbox.</p>
+          <h2 class="success-title">You're booked<span id="success-name"></span>. <em>The real work starts here.</em></h2>
+          <p class="success-desc" id="success-desc">Your live audit is confirmed. A calendar invite is on its way to your inbox, and we'll text your Google Meet link and a reminder before we meet.</p>
           <div class="success-detail">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></svg>
             <span id="success-when">Confirmed</span>
           </div>
+          <div class="booked-meta">
+            <span class="booked-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>30 min</span>
+            <span class="booked-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>Google Meet</span>
+          </div>
+        </div>
+
+        <div class="booked-body">
+          <section class="booked-sec">
+            <div class="booked-eyebrow">What happens on the call</div>
+            <h3 class="booked-h">Here's how our 30 minutes go.</h3>
+            <ol class="booked-steps">
+              <li><span class="bs-num">1</span><div><strong>We get to know your <span data-one="property" data-many="portfolio">property</span>.</strong> Where it stands today, where you're trying to take it, and the number you believe it could hit. There's a lot we can't see from our side, so this is where you fill it in.</div></li>
+              <li><span class="bs-num">2</span><div><strong>We pull up your audit, live.</strong> We screen-share exactly where you're ranking right now across your real availability, and where your revenue opportunity is. This is the part most "free audits" skip.</div></li>
+              <li><span class="bs-num">3</span><div><strong>We show you what we'd do.</strong> A straight walk-through of RevWhisper and, if it's a fit, what working together looks like. If it's not, you still leave knowing exactly where you stand.</div></li>
+            </ol>
+          </section>
+
+          <section class="booked-sec">
+            <div class="booked-eyebrow">The part hosts remember</div>
+            <h3 class="booked-h">You'll see exactly <em>where you stand</em>.</h3>
+            <p class="booked-p">Where you rank decides what you earn, since about 75% of guests never scroll past the first page on Airbnb. On this call you'll see it live, across your real open dates: where your <span data-one="listing" data-many="listings">listing</span> actually <span data-one="stands" data-many="stand">stands</span> today, and where your biggest revenue opportunity is, whether that's climbing the rankings or charging what your <span data-one="spot" data-many="spots">spot</span> <span data-one="is" data-many="are">is</span> already worth. Most hosts tell us it's the clearest picture they've ever had of their <span data-one="listing" data-many="portfolio">listing</span>.</p>
+          </section>
+
+          <section class="booked-sec">
+            <div class="booked-eyebrow">Come ready</div>
+            <h3 class="booked-h">What's useful to have in mind.</h3>
+            <p class="booked-p">Nothing to prepare or pull together. The call just goes deeper if you've already thought about:</p>
+            <ul class="booked-list">
+              <li>The number in your head for what <span data-one="this property" data-many="your portfolio">this property</span> could do at its best.</li>
+              <li>Roughly where it landed last year. Ballpark is fine; no need to pull reports.</li>
+              <li>The one thing about your revenue or ranking that nags at you most.</li>
+            </ul>
+          </section>
+
+          <section class="booked-sec booked-hosts">
+            <div class="host-avatars">
+              <img class="host-avatar" src="/images/team/bryan.webp" alt="Bryan" loading="lazy" width="40" height="40">
+              <img class="host-avatar" src="/images/team/nic.webp" alt="Nicolas" loading="lazy" width="40" height="40">
+            </div>
+            <div>
+              <h3 class="booked-h" style="margin-bottom:10px">You'll be talking to fellow hosts.</h3>
+              <p class="booked-p">We run our own portfolio of short-term rentals across the US. The same system we'll show you is the one we run on our own money.</p>
+            </div>
+          </section>
         </div>
       </div>
 
@@ -331,6 +399,15 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 /* ───────────── Lead context (from /audit) ───────────── */
 var lead=null;
 try{ lead=JSON.parse(sessionStorage.getItem('rw_audit_lead')); }catch(e){}
+// Preview hook: /audit-booking?preview=success opens the post-booking screen directly so
+// it can be edited/previewed in isolation — no funnel context, no real booking, no tracking.
+// Seeds a dummy lead so the gate passes; previewSuccess() (on load) jumps to Step 4.
+var PREVIEW=(new URLSearchParams(location.search)).get('preview');
+if(PREVIEW==='success' && (!lead||!lead.email||!lead.name)){
+  // ?props=multi previews the portfolio wording; default previews the single-property wording.
+  var pvProps=(new URLSearchParams(location.search)).get('props');
+  lead={name:'Jordan Avery',email:'jordan@example.com',phone:'+15125550199',listings:pvProps==='multi'?'2-5':'1'};
+}
 if(!lead||!lead.email||!lead.name){
   // no funnel context — send them back to the audit form
   window.location.replace('/audit');
@@ -355,6 +432,7 @@ const booking={
 
 document.addEventListener('DOMContentLoaded',function(){
   var tzEl=document.getElementById('host-tz'); if(tzEl) tzEl.textContent=booking.timeZone;
+  if(PREVIEW==='success'){ previewSuccess(); return; } // skip slots — jump straight to the success screen
   if(lead&&lead.email) loadSlots(); // prefetch immediately
 });
 
@@ -587,8 +665,7 @@ async function confirmBooking(){
   rwTrack('booking_confirmed',{time:iso,page:'audit-booking'});
   renderSuccess(bookingResult);
   const fromLoader=current;current++;transitionStep(fromLoader,current,'forward'); // loader → success
-  // hide the now-redundant below-card extras
-  var sc=document.getElementById('scarcity'); if(sc) sc.style.display='none';
+  hideBookingChrome(); // drop the request pill, hero, and scarcity — the confirmation stands on its own
   setTimeout(launchConfetti,300);
   setTimeout(function(){var ss=document.getElementById('success-state');if(ss) ss.classList.add('revealed');},50);
   booking.bookingInFlight=false;
@@ -597,13 +674,52 @@ async function confirmBooking(){
 function renderSuccess(data){
   const desc=document.getElementById('success-desc');
   const when=document.getElementById('success-when');
+  const nameEl=document.getElementById('success-name');
   const start=data&&data.start?new Date(data.start):null;
-  if(start&&desc){
-    desc.textContent=`We'll see you ${start.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})} at ${start.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'})}. A calendar invite is on its way to your inbox.`;
+  const first=((booking.lead&&booking.lead.name)||'').trim().split(' ')[0];
+  if(nameEl) nameEl.textContent=first?(', '+first):'';
+  if(desc){
+    desc.textContent=start
+      ? `Your live audit is set for ${start.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})} at ${start.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'})}. A calendar invite is on its way to your inbox, and we'll text your Google Meet link and a reminder before we meet.`
+      : `Your live audit is confirmed. A calendar invite is on its way to your inbox, and we'll text your Google Meet link and a reminder before we meet.`;
   }
   if(when){
     when.textContent=start?(start.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'})+' · '+start.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'})+' ('+booking.timeZone+')'):'Confirmed';
   }
+  applyPropertyCopy();
+}
+
+/* Singular vs. portfolio wording — a host with more than one listing shouldn't read "your property".
+   Driven by the listing-count captured on /audit (lead.listings: '1','2-5','6-10',…); anything other
+   than a single listing (or a missing value defaulting to single) uses the data-many wording. */
+function applyPropertyCopy(){
+  const single=!(booking.lead&&booking.lead.listings)||String(booking.lead.listings).trim()==='1';
+  document.querySelectorAll('.step[data-step="4"] [data-one]').forEach(function(el){
+    el.textContent=single?el.getAttribute('data-one'):el.getAttribute('data-many');
+  });
+}
+
+/* ?preview=success entry point — fabricates a confirmed slot (3 days out, 2pm local) and
+   reveals Step 4 directly. No /api/cal-booking call and no Pixel/CAPI/X events fire. */
+function previewSuccess(){
+  const start=new Date(); start.setDate(start.getDate()+3); start.setHours(14,0,0,0);
+  renderSuccess({start:start.toISOString()});
+  document.querySelectorAll('.step').forEach(function(s){
+    s.classList.remove('active','exit-up','exit-down','enter-from-below','enter-from-above');
+  });
+  const s4=document.querySelector('.step[data-step="4"]'); if(s4) s4.classList.add('active');
+  current=4;
+  hideBookingChrome();
+  setTimeout(function(){const ss=document.getElementById('success-state'); if(ss) ss.classList.add('revealed');},50);
+  setTimeout(launchConfetti,300);
+}
+
+/* Entering the booked view — hide the funnel chrome (request pill, hero, scarcity) so the
+   confirmation stands on its own. Shared by a real booking and ?preview=success. */
+function hideBookingChrome(){
+  ['.confirm-pill','.reveal-h1','.reveal-sub','#scarcity'].forEach(function(sel){
+    const el=document.querySelector(sel); if(el) el.style.display='none';
+  });
 }
 
 function launchConfetti(){
