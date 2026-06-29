@@ -18,6 +18,7 @@ const DEFAULT_X_AUDIT_CALL_BOOKED_EVENT_ID = 'tw-r8ftv-rd0hl';
 const { sendCapiEvent, buildUserData } = require('./_meta-capi');
 const { sendXConversionEvent, buildIdentifiers } = require('./_x-capi');
 const { sendBookingAlert } = require('./_alert');
+const { sendAuditConfirmationEmail } = require('./_audit-confirmation-email');
 
 // Cal.com metadata limits (per API docs): <=50 keys, key <=40 chars, string value <=500 chars.
 const META_MAX_KEYS = 50;
@@ -101,6 +102,24 @@ function extractMessage(b) {
   return '';
 }
 
+// The Google Meet URL for the booking. Verified live: the legacy booking response puts the location
+// TYPE in `location` ("integrations:google:meet") and the real URL in `references[].meetingUrl`
+// (both a google_meet_video and a google_calendar reference carry it), present immediately with no
+// race. Prefer the video reference, then any reference, then a `location` that's already a URL.
+// Returns '' when absent so the confirmation email falls back gracefully (no broken button).
+function extractMeetingUrl(data) {
+  if (!data || typeof data !== 'object') return '';
+  const isUrl = (v) => typeof v === 'string' && /^https?:\/\//.test(v);
+  if (isUrl(data.meetingUrl)) return data.meetingUrl; // modern-format shape (top-level URL)
+  const refs = Array.isArray(data.references) ? data.references
+    : (Array.isArray(data.bookingReferences) ? data.bookingReferences : []);
+  const vid = refs.find((r) => r && r.type === 'google_meet_video' && isUrl(r.meetingUrl));
+  if (vid) return vid.meetingUrl;
+  const any = refs.find((r) => r && isUrl(r.meetingUrl));
+  if (any) return any.meetingUrl;
+  return isUrl(data.location) ? data.location : '';
+}
+
 // POST the booking to Cal.com. apiKey may be '' to send an unauthenticated (public) booking,
 // which Cal.com accepts for public team event types. Returns a normalized result object.
 async function postBooking(payload, apiKey) {
@@ -125,6 +144,31 @@ async function postBooking(payload, apiKey) {
     return { kind: 'network', err };
   } finally {
     clearTimeout(timeout);
+  }
+}
+
+// Resolve the Google Meet link for the confirmation email. Cal.com generates it when it creates the
+// Google Calendar event during booking. Verified live: the legacy POST response already carries the
+// real URL in references[].meetingUrl (present immediately, no race) — so extractMeetingUrl gets it
+// with no extra call. The uid re-read is belt-and-suspenders insurance for the rare case it's absent.
+// Never throws: on any failure returns '' and the email omits the link (falls back to the invite line).
+async function resolveMeetingUrl(data, apiKey) {
+  const fromPost = extractMeetingUrl(data);
+  if (fromPost) return fromPost;
+  const uid = data && data.uid;
+  if (!uid || !apiKey) return '';
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 6000);
+    const r = await fetch(`${CAL_API}/${encodeURIComponent(uid)}`, {
+      headers: { 'cal-api-version': '2024-08-13', Authorization: `Bearer ${apiKey}` },
+      signal: controller.signal
+    });
+    clearTimeout(timeout);
+    const j = await r.json().catch(() => null);
+    return extractMeetingUrl(j && j.data) || '';
+  } catch {
+    return '';
   }
 }
 
@@ -274,6 +318,20 @@ module.exports = async function handler(req, res) {
       }),
       description: 'Audit Call Booked',
       timeoutMs: 8000
+    });
+  }
+
+  // Post-booking "what to expect" email, sent immediately via Resend. Never throws and is skipped
+  // for the synthetic canary.
+  if (!isCanary) {
+    const meetingUrl = await resolveMeetingUrl(data, apiKey);
+    await sendAuditConfirmationEmail({
+      name: body.name,
+      email: body.email,
+      startIso: (data && (data.start || data.startTime)) || body.start,
+      timeZone: body.timeZone,
+      listings: body.listings,
+      meetingUrl
     });
   }
 

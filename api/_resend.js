@@ -14,7 +14,9 @@ function isEmailEnabled() {
 
 // Sends a single email via Resend. Never throws — returns a result object so callers
 // can decide whether the failure matters (fire-and-forget vs. surface to the user).
-async function sendEmail({ to, subject, html, from = DEFAULT_FROM, replyTo = DEFAULT_REPLY_TO }) {
+// scheduledAt (optional): an ISO-8601 string or Resend natural-language offset (e.g. "in 5 min").
+// When set, Resend holds the email and delivers it at that time instead of immediately.
+async function sendEmail({ to, subject, html, from = DEFAULT_FROM, replyTo = DEFAULT_REPLY_TO, scheduledAt }) {
   if (!RESEND_API_KEY) {
     console.warn('RESEND_API_KEY not set — skipping email.');
     return { ok: false, skipped: true, error: 'RESEND_API_KEY not configured.' };
@@ -32,7 +34,8 @@ async function sendEmail({ to, subject, html, from = DEFAULT_FROM, replyTo = DEF
         to: Array.isArray(to) ? to : [to],
         subject,
         html,
-        ...(replyTo ? { reply_to: replyTo } : {})
+        ...(replyTo ? { reply_to: replyTo } : {}),
+        ...(scheduledAt ? { scheduled_at: scheduledAt } : {})
       })
     });
 
