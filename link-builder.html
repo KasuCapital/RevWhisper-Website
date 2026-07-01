@@ -33,7 +33,7 @@ body{
 .field{margin-bottom:20px}
 .field-label{display:block;font-size:13px;font-weight:500;color:var(--black);margin-bottom:6px}
 .field-hint{font-size:12px;color:var(--g400);font-weight:300;margin-left:4px}
-select,input[type="number"],input[type="text"]{
+select,input[type="number"],input[type="text"],input[type="email"]{
   width:100%;padding:12px 14px;border:1.5px solid var(--g200);border-radius:var(--radius-sm);
   font-size:14px;font-family:var(--body);color:var(--black);background:#fff;
   transition:border-color .2s,box-shadow .2s;outline:none;
@@ -112,6 +112,11 @@ select:focus,input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(74
     </div>
   </div>
 
+  <div class="field">
+    <label class="field-label" for="prefill_email">Client email <span class="field-hint">(pre-fills the form &mdash; all they confirm is the listing count)</span></label>
+    <input type="email" id="prefill_email" placeholder="jane@example.com" autocomplete="off" autocapitalize="off" spellcheck="false">
+  </div>
+
   <button type="button" class="utm-toggle" id="utm-toggle">
     <span class="arrow" id="utm-arrow">&#9654;</span> Add UTM parameters
   </button>
@@ -155,6 +160,7 @@ const termMonthsEl = document.getElementById('term_months');
 const utmSource = document.getElementById('utm_source');
 const utmMedium = document.getElementById('utm_medium');
 const utmCampaign = document.getElementById('utm_campaign');
+const prefillEmail = document.getElementById('prefill_email');
 const output = document.getElementById('output');
 
 function buildUrl() {
@@ -166,6 +172,8 @@ function buildUrl() {
     if (onboardingFeeEl.value) params.set('onboarding_fee', onboardingFeeEl.value);
     if (termMonthsEl.value) params.set('term_months', termMonthsEl.value);
   }
+
+  if (prefillEmail.value.trim()) params.set('email', prefillEmail.value.trim());
 
   if (utmSource.value.trim()) params.set('utm_source', utmSource.value.trim());
   if (utmMedium.value.trim()) params.set('utm_medium', utmMedium.value.trim());

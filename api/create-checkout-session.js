@@ -80,16 +80,6 @@ module.exports = async function handler(req, res) {
   const onboardingFee = isEnterprise ? parseNumeric(payload.onboarding_fee) : 0;
   const monthlyCost = isEnterprise ? parseNumeric(payload.monthly_cost) : 0;
   const useSubscriptionMode = isEnterprise && onboardingFee === 0;
-  const enterpriseRedirectUrl =
-    process.env.ENTERPRISE_REDIRECT_URL || `${baseUrl}/get-started?plan=enterprise`;
-
-  if (!isEnterprise && listingCount > MAX_LISTINGS) {
-    return sendJson(res, 200, {
-      enterprise: true,
-      redirect_url: enterpriseRedirectUrl,
-      message: 'Portfolio size is 11+ listings. Redirect to enterprise pricing flow.'
-    });
-  }
 
   const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
 

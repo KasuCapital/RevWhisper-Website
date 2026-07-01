@@ -84,13 +84,13 @@ fbq('track', 'InitiateCheckout', {content_name: 'Enrollment Form'});
 <link rel="icon" href="icons/favicon-light.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=DM+Sans:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=DM+Sans:wght@200;300;400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{height:100%;overflow:hidden;overflow-x:hidden}
 body{
   font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;
-  background:#fff;color:#32302F;line-height:1.5;
+  background:#F8F7F6;color:#32302F;line-height:1.5;
   -webkit-font-smoothing:antialiased;
   height:100%;display:flex;align-items:center;justify-content:center;
   position:relative;overflow:hidden;
@@ -108,28 +108,25 @@ body{
   --sh-lg:0 16px 48px rgba(50,48,47,.1),0 4px 12px rgba(50,48,47,.05);
   --heading:'Lora','Georgia',serif;
   --body:'DM Sans','system-ui','Helvetica Neue',sans-serif;
+  --mono:'DM Mono','SF Mono',ui-monospace,monospace;
+  --terracotta:#8B4A3E;--gold:#9B7B3A;
   --ease-out-expo:cubic-bezier(.16,1,.3,1);
   --ease-out-back:cubic-bezier(.34,1.56,.64,1);
   --ease-spring:cubic-bezier(.25,.1,.25,1.4);
 }
 
-/* ── Ambient Background ── */
+/* ── Ambient Background — static, warm editorial wash ── */
 body::before{
-  content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%;
+  content:'';position:fixed;inset:0;
   background:
-    radial-gradient(ellipse at 30% 20%, rgba(74,103,65,.04) 0%, transparent 50%),
-    radial-gradient(ellipse at 70% 80%, rgba(74,103,65,.03) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 50%, rgba(74,103,65,.02) 0%, transparent 70%);
-  animation:ambientDrift 20s ease-in-out infinite alternate;
+    radial-gradient(ellipse 80% 60% at 50% -10%, rgba(74,103,65,.05) 0%, transparent 60%),
+    radial-gradient(ellipse 70% 50% at 100% 100%, rgba(155,123,58,.04) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 50% at 0% 90%, rgba(139,74,62,.03) 0%, transparent 55%);
   pointer-events:none;z-index:0;
-}
-@keyframes ambientDrift{
-  0%{transform:translate(0,0) rotate(0deg)}
-  100%{transform:translate(30px,-20px) rotate(2deg)}
 }
 
 /* ── Form Container ── */
-.form-shell{width:100%;max-width:560px;padding:28px;position:relative;z-index:1;margin:auto}
+.form-shell{width:100%;max-width:620px;padding:40px 28px 32px;position:relative;z-index:1;margin:auto}
 
 /* ── Step Container ── */
 .steps-viewport{position:relative}
@@ -206,9 +203,21 @@ body::before{
 .step.enter-from-below .form-actions,
 .step.enter-from-above .form-actions{animation:fadeSlideUp .5s var(--ease-out-expo) .46s both}
 
-.step.active .listings-section,
-.step.enter-from-below .listings-section,
-.step.enter-from-above .listings-section{animation:fadeSlideUp .5s var(--ease-out-expo) .38s both}
+.step.active .counter,
+.step.enter-from-below .counter,
+.step.enter-from-above .counter{animation:fadeSlideUp .5s var(--ease-out-expo) .38s both}
+
+.step.active .plan-badge,
+.step.enter-from-below .plan-badge,
+.step.enter-from-above .plan-badge{animation:fadeSlideUp .5s var(--ease-out-expo) .32s both}
+
+.step.active .price-block,
+.step.enter-from-below .price-block,
+.step.enter-from-above .price-block{animation:fadeSlideUp .5s var(--ease-out-expo) .46s both}
+
+.step.active .count-hint,
+.step.enter-from-below .count-hint,
+.step.enter-from-above .count-hint{animation:fadeSlideUp .5s var(--ease-out-expo) .52s both}
 
 .step.active .terms-section,
 .step.enter-from-below .terms-section,
@@ -221,7 +230,7 @@ body::before{
 
 /* ── Step Header ── */
 .step-eyebrow{font-size:11px;font-weight:500;color:var(--accent);letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px}
-.step-title{font-family:var(--heading);font-size:clamp(28px,4vw,36px);font-weight:400;letter-spacing:-.02em;line-height:1.15;color:var(--black);margin-bottom:10px}
+.step-title{font-family:var(--heading);font-size:clamp(34px,6vw,54px);font-weight:400;letter-spacing:-.025em;line-height:1.12;color:var(--black);margin-bottom:12px}
 .step-title em{font-style:italic;color:var(--accent);position:relative}
 .step-title em::after{
   content:'';position:absolute;bottom:-2px;left:-2%;width:104%;height:2px;
@@ -238,12 +247,6 @@ body::before{
   border-radius:20px;font-size:12px;font-weight:600;color:var(--accent);
   letter-spacing:.02em;margin-bottom:20px;
 }
-.plan-fee-note{
-  font-size:12px;color:var(--g400);line-height:1.6;margin:-10px 0 24px;
-  max-width:420px;
-}
-.plan-fee-note strong{color:var(--g700);font-weight:500}
-.plan-fee-note del{color:var(--g400);font-weight:400;text-decoration-thickness:1px}
 
 /* ── Promo Code ── */
 .promo-field{margin-bottom:20px}
@@ -298,72 +301,34 @@ body::before{
 .input-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--g400);display:flex;align-items:center;transition:color .3s;z-index:2;pointer-events:none}
 .field:focus-within .input-icon{color:var(--accent)}
 
-/* ── Phone Input ── */
-.phone-wrap{display:flex;gap:8px}
-.phone-code{
-  width:90px;padding:13px 12px;
-  border:1.5px solid var(--g200);border-radius:var(--radius);
-  font-size:14px;font-family:var(--body);color:var(--black);background:#fff;
-  outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23a39e9b' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-  background-repeat:no-repeat;background-position:right 10px center;
-  transition:border-color .3s,box-shadow .3s var(--ease-out-expo);
+/* ── Listing counter (immersive hero) ── */
+.counter{display:flex;align-items:center;justify-content:center;gap:clamp(22px,5vw,48px);margin:6px 0 2px}
+.count-btn{
+  width:64px;height:64px;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  font-size:30px;line-height:1;font-weight:300;color:var(--accent);
+  background:#fff;border:1.5px solid var(--accent-border);border-radius:50%;
+  cursor:pointer;font-family:var(--body);box-shadow:var(--sh-sm);
+  transition:border-color .2s,background .2s,color .2s,transform .15s var(--ease-out-expo),box-shadow .25s;
 }
-.phone-code:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(74,103,65,.1)}
-.phone-input{flex:1}
+.count-btn:hover{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 8px 24px rgba(74,103,65,.22);transform:translateY(-2px)}
+.count-btn:active{transform:translateY(0) scale(.9)}
+.count-btn:disabled{opacity:.28;cursor:not-allowed;background:#fff;color:var(--accent);box-shadow:none;transform:none}
+.count-btn:disabled:hover{background:#fff;color:var(--accent);transform:none}
 
-/* ── Listings Section ── */
-.listings-section{margin-bottom:28px}
-.listings-section .field-label{margin-bottom:12px}
-.listing-entries{display:flex;flex-direction:column;gap:10px}
-.listing-entry{display:flex;gap:8px;align-items:center}
-.listing-entry .input-icon-wrap{flex:1}
-.listing-remove{
-  width:36px;height:44px;display:flex;align-items:center;justify-content:center;
-  background:none;border:1.5px solid var(--g200);border-radius:var(--radius);
-  cursor:pointer;color:var(--g400);font-size:16px;
-  transition:border-color .2s,color .2s,background .2s;
-  flex-shrink:0;
-}
-.listing-remove:hover{border-color:#B85252;color:#B85252;background:rgba(184,82,82,.04)}
-.listing-remove:only-of-type{display:none}
-.listing-add{
-  display:inline-flex;align-items:center;gap:6px;
-  background:none;border:none;cursor:pointer;
-  font-size:13px;font-weight:500;color:var(--accent);
-  font-family:var(--body);padding:8px 0;
-  transition:opacity .2s;
-}
-.listing-add:hover{opacity:.7}
-.listing-add svg{transition:transform .2s var(--ease-out-back)}
-.listing-add:hover svg{transform:rotate(90deg)}
-/* ── Open Airbnb Helper ── */
-.open-airbnb-wrap{margin-top:16px}
-.open-airbnb-divider{
-  display:block;font-size:12px;color:var(--g400);font-weight:400;
-  text-align:center;margin-bottom:12px;position:relative;
-}
-.open-airbnb-divider::before,.open-airbnb-divider::after{
-  content:'';position:absolute;top:50%;width:calc(50% - 80px);height:1px;background:var(--g200);
-}
-.open-airbnb-divider::before{left:0}
-.open-airbnb-divider::after{right:0}
-.open-airbnb-btn{
-  display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
-  padding:12px 16px;border-radius:var(--radius);
-  border:1.5px solid var(--g200);background:var(--g50);
-  font-size:13px;font-weight:400;color:var(--g500);font-family:var(--body);
-  text-decoration:none;cursor:pointer;
-  transition:border-color .25s, color .25s, background .25s, transform .2s var(--ease-out-back), box-shadow .25s;
-}
-.open-airbnb-btn:hover{border-color:var(--g300);color:var(--black);background:#fff;transform:translateY(-1px);box-shadow:var(--sh-sm)}
-.open-airbnb-btn:active{transform:scale(.98)}
-.open-airbnb-btn svg{flex-shrink:0;opacity:.6;transition:opacity .25s}
-.open-airbnb-btn:hover svg{opacity:1}
+/* Odometer — rolling digits, DM Mono per brand */
+.odometer{display:inline-flex;line-height:1;font-family:var(--mono);font-weight:400;font-size:clamp(76px,15vw,120px);color:var(--black);font-variant-numeric:tabular-nums;letter-spacing:-.03em}
+.od-col{display:inline-block;height:1em;overflow:hidden;position:relative}
+.od-strip{display:flex;flex-direction:column;transition:transform .5s var(--ease-out-expo)}
+.od-cell{height:1em;display:flex;align-items:center;justify-content:center}
+.count-unit{display:block;margin-top:12px;font-family:var(--body);font-size:12px;color:var(--g500);text-transform:uppercase;letter-spacing:.18em;font-weight:500}
 
-.step.active .open-airbnb-wrap,
-.step.enter-from-below .open-airbnb-wrap,
-.step.enter-from-above .open-airbnb-wrap{animation:fadeSlideUp .5s var(--ease-out-expo) .54s both}
+/* Price block — the single place price is shown */
+.price-block{margin-top:32px}
+.price-amount{font-family:var(--mono);font-size:clamp(26px,5vw,34px);font-weight:400;color:var(--black);letter-spacing:-.01em;display:flex;align-items:baseline;justify-content:center;gap:8px}
+.price-suffix{font-family:var(--body);font-size:14px;font-weight:400;color:var(--g500);letter-spacing:0}
+.price-each{margin-top:9px;font-family:var(--body);font-size:13.5px;color:var(--g500);font-weight:400}
+.count-hint{margin:18px auto 0;font-size:13px;line-height:1.6;color:var(--g500);max-width:430px}
+.count-hint a{color:var(--accent);text-decoration:underline;text-underline-offset:2px;cursor:pointer}
 
 /* ── Terms Section ── */
 .terms-section{margin-bottom:24px}
@@ -567,7 +532,6 @@ body.terms-expanded .step[data-step="2"] .form-actions{
   body{padding:20px}
   .form-shell{max-width:100%;padding:20px}
   .step-title{font-size:26px}
-  .phone-code{width:84px;padding:13px 10px;font-size:13px}
   .terms-box{max-height:220px;font-size:13px;line-height:1.75;padding:18px}
   .terms-box h3{font-size:17px}
   .terms-box h4{font-size:13px}
@@ -578,12 +542,66 @@ body.terms-expanded .step[data-step="2"] .form-actions{
     padding:16px 16px 20px;
   }
 }
+
+/* ════════════════ Immersive premium chrome ════════════════ */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+/* Fixed top: progress bar + wordmark + secure badge */
+.progress-track{position:fixed;top:0;left:0;right:0;height:3px;background:var(--g200);z-index:41}
+.progress-fill{height:100%;width:0;background:var(--accent);border-radius:0 3px 3px 0;transition:width .5s var(--ease-out-expo)}
+.checkout-head{
+  position:fixed;top:0;left:0;right:0;z-index:40;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:22px 30px;pointer-events:none;
+}
+.checkout-head .fb-logo,.checkout-head .secure-badge{pointer-events:auto}
+.fb-logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--black);flex-shrink:0;transition:opacity .2s ease}
+.fb-logo:hover{opacity:.7}
+.lm{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--accent)}
+.ln{font-family:var(--heading);font-size:15px;font-weight:600;letter-spacing:-.02em}
+.secure-badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:var(--g500);letter-spacing:.01em}
+.secure-badge svg{color:var(--accent);display:block}
+
+/* Immersive, centered step layout */
+.form-shell{padding-top:96px}
+.steps-viewport{position:relative;text-align:center}
+.step{text-align:center}
+.step-eyebrow{margin-bottom:14px}
+.step-desc{margin-left:auto;margin-right:auto;font-size:16px;color:var(--g500);font-weight:400;margin-bottom:36px}
+.plan-badge{margin:0 auto 22px}
+.form-actions{justify-content:center;margin-top:36px}
+
+/* Contact step — generous, centered field */
+.step[data-step="0"] .field,
+.step[data-step="0"] .promo-field{max-width:430px;margin-left:auto;margin-right:auto;text-align:left}
+.field-input{padding:15px 16px;font-size:16px}
+
+/* Terms step — keep reading copy left-aligned inside its frame */
+.terms-section{max-width:580px;margin-left:auto;margin-right:auto}
+.step[data-step="2"] .terms-box{text-align:left}
+.step[data-step="2"] .terms-agree{text-align:left;max-width:540px;margin:0 auto}
+
+@media(max-width:640px){
+  .checkout-head{padding:16px 18px}
+  .form-shell{padding-top:78px}
+  .ln{font-size:13px}
+  .lm{width:28px;height:28px}
+  .secure-badge span{display:none}
+}
 </style>
 <!-- X Pixel base code -->
 <script src="/assets/x-pixel-base.js"></script>
 <!-- End X Pixel base code -->
 </head>
 <body>
+
+<div class="progress-track" aria-hidden="true"><div class="progress-fill" id="progress-fill"></div></div>
+<header class="checkout-head">
+  <a href="/" class="fb-logo" aria-label="RevWhisper home">
+    <div class="lm"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24" fill="none" aria-hidden="true"><path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <span class="ln">RevWhisper</span>
+  </a>
+  <span class="secure-badge"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg><span>Secure checkout</span></span>
+</header>
 
 <div class="form-shell">
   <form class="steps-viewport" autocomplete="on" onsubmit="event.preventDefault();">
@@ -592,22 +610,7 @@ body.terms-expanded .step[data-step="2"] .form-actions{
     <div class="step active" data-step="0">
       <div class="step-eyebrow">Enrollment</div>
       <h1 class="step-title">Let's get you <em>started.</em></h1>
-      <p class="step-desc">Tell us who you are so we can set up your account and begin listing optimization.</p>
-      <div id="plan-badge" class="plan-badge" style="display:none"></div>
-      <p class="plan-fee-note">One-time listing optimization fee: <strong>$996.00 per listing</strong> (charged upfront at enrollment). Your subscription begins once optimization is complete.</p>
-      <div class="field promo-field" id="promo-field">
-        <label class="field-label" for="promo-code">Promo code <span class="promo-optional">(optional)</span></label>
-        <div class="promo-row">
-          <input type="text" class="field-input promo-input" id="promo-code" placeholder="Enter code" autocomplete="off" autocapitalize="characters" spellcheck="false">
-          <button type="button" class="promo-apply" id="promo-apply" onclick="applyPromo()">Apply</button>
-        </div>
-        <div class="promo-msg" id="promo-msg" role="status" aria-live="polite"></div>
-      </div>
-      <div class="field">
-        <label class="field-label" for="full-name">Full Name</label>
-        <input type="text" class="field-input" id="full-name" placeholder="Jane Doe" autocomplete="name">
-        <div class="field-error">Please enter your name</div>
-      </div>
+      <p class="step-desc">Enter your email to set up your account and begin listing optimization.</p>
       <div class="field">
         <label class="field-label" for="email">Email</label>
         <div class="input-icon-wrap">
@@ -618,64 +621,40 @@ body.terms-expanded .step[data-step="2"] .form-actions{
         </div>
         <div class="field-error">Please enter a valid email</div>
       </div>
-      <div class="field">
-        <label class="field-label" for="phone">Phone Number</label>
-        <div class="phone-wrap">
-          <select class="phone-code" id="phone-code">
-            <option value="+1">🇺🇸 +1</option>
-            <option value="+44">🇬🇧 +44</option>
-            <option value="+61">🇦🇺 +61</option>
-            <option value="+33">🇫🇷 +33</option>
-            <option value="+49">🇩🇪 +49</option>
-            <option value="+81">🇯🇵 +81</option>
-            <option value="+52">🇲🇽 +52</option>
-            <option value="+34">🇪🇸 +34</option>
-            <option value="+39">🇮🇹 +39</option>
-            <option value="+55">🇧🇷 +55</option>
-          </select>
-          <input type="tel" class="field-input phone-input" id="phone" placeholder="(555) 123-4567" autocomplete="tel">
+      <div class="field promo-field" id="promo-field">
+        <label class="field-label" for="promo-code">Promo code <span class="promo-optional">(optional)</span></label>
+        <div class="promo-row">
+          <input type="text" class="field-input promo-input" id="promo-code" placeholder="Enter code" autocomplete="off" autocapitalize="characters" spellcheck="false">
+          <button type="button" class="promo-apply" id="promo-apply" onclick="applyPromo()">Apply</button>
         </div>
-        <div class="field-error">Please enter a valid phone number</div>
+        <div class="promo-msg" id="promo-msg" role="status" aria-live="polite"></div>
       </div>
       <div class="form-actions">
         <button type="button" class="btn-next" onclick="nextStep()" id="btn-step0">Next <span class="arrow">→</span></button>
       </div>
     </div>
 
-    <!-- Step 2: Airbnb Listings -->
+    <!-- Step 2: Listing Count -->
     <div class="step" data-step="1">
-      <div class="step-eyebrow">Your Listings</div>
-      <h2 class="step-title">Add your Airbnb <em>listings.</em></h2>
-      <p class="step-desc">Paste each listing URL individually. We'll audit and optimize every one.</p>
-      <div class="listings-section">
-        <label class="field-label">Airbnb Listing URLs</label>
-        <div class="listing-entries" id="listing-entries">
-          <div class="listing-entry">
-            <div class="input-icon-wrap">
-              <div class="input-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
-              </div>
-              <input type="url" class="field-input listing-url" placeholder="https://www.airbnb.com/rooms/..." autocomplete="off">
-            </div>
-            <button type="button" class="listing-remove" onclick="removeListing(this)" title="Remove listing">×</button>
-          </div>
-        </div>
-        <button type="button" class="listing-add" onclick="addListing()">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
-          Add another listing
-        </button>
-        <div class="field-error" id="listing-error" style="display:none">Please add at least one Airbnb listing URL</div>
+      <div class="step-eyebrow">Your portfolio</div>
+      <h2 class="step-title">How many <em>listings?</em></h2>
+      <p class="step-desc">Choose the number of properties for us to optimize. You'll confirm the exact listings with your onboarding specialist after enrollment.</p>
+      <div id="plan-badge" class="plan-badge" style="display:none"></div>
+      <div class="counter">
+        <button type="button" class="count-btn" id="count-minus" onclick="stepCount(-1)" aria-label="Fewer listings">&minus;</button>
+        <div class="odometer" id="count-value" aria-hidden="true"></div>
+        <button type="button" class="count-btn" id="count-plus" onclick="stepCount(1)" aria-label="More listings">+</button>
       </div>
+      <span class="count-unit" id="count-unit">listing</span>
+      <span class="sr-only" id="count-sr" role="status" aria-live="polite"></span>
+      <div class="price-block">
+        <div class="price-amount"><span id="price-number">$0.00</span><span class="price-suffix" id="price-suffix">due today</span></div>
+        <div class="price-each" id="price-each"></div>
+      </div>
+      <div class="count-hint" id="count-hint"></div>
       <div class="form-actions">
         <button type="button" class="btn-back" onclick="prevStep()"><span class="arrow">←</span> Back</button>
         <button type="button" class="btn-next" onclick="nextStep()" id="btn-step1">Next <span class="arrow">→</span></button>
-      </div>
-      <div class="open-airbnb-wrap">
-        <span class="open-airbnb-divider">Don't have it handy?</span>
-        <a href="https://www.airbnb.com" target="_blank" rel="noopener" class="open-airbnb-btn" id="open-airbnb-btn">
-          Open Airbnb — copy your listing URL, then come back
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6m4-3h6m0 0v6m0-6L10 14"/></svg>
-        </a>
       </div>
     </div>
 
@@ -852,6 +831,11 @@ const enterpriseMonthly = isEnterprise ? Number(params.get('monthly_cost')) || 0
 const enterpriseOnboarding = isEnterprise && params.get('onboarding_fee') ? Number(params.get('onboarding_fee')) : 998;
 const enterpriseTermMonths = isEnterprise ? Number(params.get('term_months')) || 0 : 0;
 const onboardingFee = isEnterprise ? enterpriseOnboarding : 996;
+// Listing count drives pricing (quantity × per-listing fee). No cap — any quantity checks out.
+let listingCount = (function() {
+  var n = parseInt(params.get('listing_count'), 10);
+  return (Number.isInteger(n) && n >= 1) ? n : 1;
+})();
 // Hardcoded promo codes → discount fraction off the onboarding fee. Server enforces this too.
 const PROMO_CODES = { 'welcome50': 0.5 };
 let appliedPromo = null; // { code, discount } once a valid code is applied
@@ -861,21 +845,26 @@ const DEFAULT_ENTERPRISE_URL = '/get-started?plan=enterprise';
 let submitInProgress = false;
 rwTrack('begin_checkout',{plan:selectedPlan,page:'checkout-form'});
 
-// Prefill contact fields when arriving from the conference link builder (additive — if
-// these params are absent the form behaves exactly as before).
+// Prefill email when arriving from a rep-built checkout link (additive — absent param =
+// normal flow). Email is the only contact field we collect.
+const prefilledEmail = (params.get('email') || '').trim();
 (function prefillContact() {
-  function setVal(id, val) { var el = document.getElementById(id); if (el && val) el.value = val; }
-  setVal('full-name', (params.get('name') || '').trim());
-  setVal('email', (params.get('email') || '').trim());
-  setVal('phone', (params.get('phone') || '').trim());
-  var code = (params.get('phone_code') || '').trim();
-  if (code) {
-    var sel = document.getElementById('phone-code');
-    if (sel && Array.prototype.some.call(sel.options, function(o) { return o.value === code; })) {
-      sel.value = code;
-    }
-  }
+  const el = document.getElementById('email');
+  if (el && prefilledEmail) el.value = prefilledEmail;
 })();
+
+// When the email is already prefilled, skip the contact step entirely and land the customer
+// directly on the listing-count step.
+const skipContactStep = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(prefilledEmail);
+if (skipContactStep) {
+  current = 1;
+  document.querySelectorAll('.step').forEach(function(s) { s.classList.remove('active'); });
+  const countStep = document.querySelector('.step[data-step="1"]');
+  if (countStep) countStep.classList.add('active');
+  // No contact step to go back to — hide the Back button on the count step.
+  const backBtn = document.querySelector('.step[data-step="1"] .btn-back');
+  if (backBtn) backBtn.style.display = 'none';
+}
 
 function showCheckoutTransition(email, destinationUrl, descriptionText, ctaText) {
   const paymentLink = document.getElementById('payment-link');
@@ -920,18 +909,96 @@ function formatUsd(n) {
   return '$' + Number(n).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
+// Price is shown once — on the count step. Promo/plan changes just refresh it there.
 function updateFeeNote() {
-  const note = document.querySelector('.plan-fee-note');
+  updateCountPrice();
+}
+
+// ── Listing count stepper ──
+function stepCount(delta) {
+  var next = listingCount + delta;
+  if (next < 1) return;
+  listingCount = next;
+  renderCount();
+}
+
+// Odometer: build digit columns and roll each to its target digit.
+function rollOdometer(container, str) {
+  var prev = container.dataset.val || '';
+  if (prev.length !== str.length) {
+    container.innerHTML = '';
+    for (var k = 0; k < str.length; k++) {
+      var col = document.createElement('span'); col.className = 'od-col';
+      var strip = document.createElement('span'); strip.className = 'od-strip';
+      for (var d = 0; d < 10; d++) {
+        var cell = document.createElement('span'); cell.className = 'od-cell'; cell.textContent = d;
+        strip.appendChild(cell);
+      }
+      col.appendChild(strip); container.appendChild(col);
+    }
+  }
+  var cols = container.querySelectorAll('.od-col');
+  for (var i = 0; i < str.length; i++) {
+    var digit = parseInt(str.charAt(i), 10);
+    var s = cols[i].querySelector('.od-strip');
+    s.style.transitionDelay = (i * 0.035) + 's';
+    s.style.transform = 'translateY(-' + (digit * 10) + '%)';
+  }
+  container.dataset.val = str;
+}
+
+function renderCount() {
+  var valEl = document.getElementById('count-value');
+  if (!valEl) return;
+  rollOdometer(valEl, String(listingCount));
+  document.getElementById('count-unit').textContent = listingCount === 1 ? 'listing' : 'listings';
+  var sr = document.getElementById('count-sr');
+  if (sr) sr.textContent = listingCount + (listingCount === 1 ? ' listing' : ' listings');
+  document.getElementById('count-minus').disabled = listingCount <= 1;
+  updateCountPrice();
+}
+
+// Count-up tween on the price total (ease-out quartic — snappy, no overshoot).
+var _priceRAF = null, _priceCur = 0;
+function tweenPrice(to) {
+  var el = document.getElementById('price-number');
+  if (!el) return;
+  var from = _priceCur;
+  if (from === to) { el.textContent = formatUsd(to); return; }
+  if (_priceRAF) cancelAnimationFrame(_priceRAF);
+  var dur = 500, start = null;
+  var ease = function (t) { return 1 - Math.pow(1 - t, 4); };
+  function frame(ts) {
+    if (start === null) start = ts;
+    var t = Math.min(1, (ts - start) / dur);
+    el.textContent = formatUsd(from + (to - from) * ease(t));
+    if (t < 1) { _priceRAF = requestAnimationFrame(frame); }
+    else { _priceCur = to; _priceRAF = null; }
+  }
+  _priceRAF = requestAnimationFrame(frame);
+}
+
+function updateCountPrice() {
+  var suffixEl = document.getElementById('price-suffix');
+  var eachEl = document.getElementById('price-each');
+  var hintEl = document.getElementById('count-hint');
+  if (!suffixEl) return;
+
   if (isSubscriptionOnly && enterpriseMonthly) {
-    note.innerHTML = 'Your RevWhisper monthly subscription begins at checkout &mdash; <strong>' + formatUsd(enterpriseMonthly) + ' per listing, per month</strong>. The one-time listing optimization fee has been waived.';
+    tweenPrice(enterpriseMonthly * listingCount);
+    suffixEl.textContent = '/mo';
+    eachEl.textContent = listingCount + ' × ' + formatUsd(enterpriseMonthly) + ' per listing · billed monthly';
+    hintEl.innerHTML = 'Your monthly subscription begins at checkout. The one-time optimization fee has been waived.';
     return;
   }
-  if (appliedPromo) {
-    const discounted = onboardingFee * (1 - appliedPromo.discount);
-    note.innerHTML = 'One-time listing optimization fee: <strong><del>' + formatUsd(onboardingFee) + '</del> ' + formatUsd(discounted) + ' per listing</strong> (' + appliedPromo.code.toUpperCase() + ' &mdash; ' + Math.round(appliedPromo.discount * 100) + '% off, charged upfront). Your subscription begins once optimization is complete.';
-  } else {
-    note.innerHTML = 'One-time listing optimization fee: <strong>' + formatUsd(onboardingFee) + ' per listing</strong> (charged upfront at enrollment). Your subscription begins once optimization is complete.';
-  }
+
+  var discount = (!isEnterprise && appliedPromo) ? appliedPromo.discount : 0;
+  var per = onboardingFee * (1 - discount);
+  tweenPrice(per * listingCount);
+  suffixEl.textContent = 'due today';
+  eachEl.textContent = listingCount + ' × ' + formatUsd(per) + ' per listing' +
+    (discount ? ' · ' + appliedPromo.code.toUpperCase() + ' applied' : '');
+  hintEl.innerHTML = 'One-time, charged upfront. Your monthly revenue-management subscription begins once optimization is complete.';
 }
 
 // Onboarding fee is waived in subscription-only mode — no promo code applies there.
@@ -993,6 +1060,8 @@ document.getElementById('promo-code').addEventListener('blur', function() {
 })();
 
 updateFeeNote();
+renderCount();
+updateProgress(current);
 
 // Populate dynamic service agreement sections
 (function() {
@@ -1076,9 +1145,19 @@ document.addEventListener('keydown', (event) => {
   }
 });
 
+// Progress bar: fill by step (contact/count/terms = 33/66/100, success = 100).
+function updateProgress(step) {
+  var fill = document.getElementById('progress-fill');
+  if (!fill) return;
+  var idx = Math.min(step, totalSteps - 1);
+  var pct = step >= totalSteps ? 100 : Math.round(((idx + 1) / totalSteps) * 100);
+  fill.style.width = pct + '%';
+}
+
 function transitionStep(from, to, direction) {
   if (isTransitioning) return;
   isTransitioning = true;
+  updateProgress(to);
 
   const fromEl = document.querySelector(`.step[data-step="${from}"]`);
   const toEl = document.querySelector(`.step[data-step="${to}"]`);
@@ -1117,42 +1196,17 @@ function transitionStep(from, to, direction) {
 function validateStep(step) {
   let valid = true;
   if (step === 0) {
-    const name = document.getElementById('full-name');
+    // Email is the only required contact field — name and phone are optional.
     const email = document.getElementById('email');
-    const phone = document.getElementById('phone');
-    if (!name.value.trim()) { name.classList.add('error'); valid = false; } else { name.classList.remove('error'); }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) { email.classList.add('error'); valid = false; } else { email.classList.remove('error'); }
-    if (!phone.value.trim()) { phone.classList.add('error'); valid = false; } else { phone.classList.remove('error'); }
   }
-  if (step === 1) {
-    const urls = document.querySelectorAll('.listing-url');
-    let hasValid = false;
-    urls.forEach(input => {
-      const val = input.value.trim();
-      if (val && (val.includes('airbnb.com') || val.includes('airbnb.'))) {
-        hasValid = true;
-        input.classList.remove('error');
-      } else if (val) {
-        input.classList.add('error');
-        valid = false;
-      } else {
-        input.classList.remove('error');
-      }
-    });
-    if (!hasValid) {
-      urls[0].classList.add('error');
-      document.getElementById('listing-error').style.display = 'block';
-      valid = false;
-    } else {
-      document.getElementById('listing-error').style.display = 'none';
-    }
-  }
+  // Step 1 (listing count) is always valid — the stepper is bounded to a minimum of 1.
   return valid;
 }
 
 function nextStep() {
   if (!validateStep(current)) return;
-  var stepNames=['contact','listings','terms'];
+  var stepNames=['contact','listing-count','terms'];
   const from = current;
   current++;
   rwTrack('checkout_step',{step:current,step_name:stepNames[current]||'unknown',plan:selectedPlan,page:'checkout-form'});
@@ -1167,62 +1221,11 @@ function prevStep() {
   }
 }
 
-// Dynamic listing management
-function addListing() {
-  const container = document.getElementById('listing-entries');
-  const entry = document.createElement('div');
-  entry.className = 'listing-entry';
-  entry.innerHTML = `
-    <div class="input-icon-wrap">
-      <div class="input-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
-      </div>
-      <input type="url" class="field-input listing-url" placeholder="https://www.airbnb.com/rooms/..." autocomplete="off">
-    </div>
-    <button type="button" class="listing-remove" onclick="removeListing(this)" title="Remove listing">×</button>
-  `;
-  container.appendChild(entry);
-
-  // Animate in
-  entry.style.opacity = '0';
-  entry.style.transform = 'translateY(8px)';
-  entry.style.transition = 'opacity .3s var(--ease-out-expo), transform .3s var(--ease-out-expo)';
-  void entry.offsetHeight;
-  entry.style.opacity = '1';
-  entry.style.transform = 'translateY(0)';
-
-  // Focus the new input
-  entry.querySelector('.listing-url').focus();
-
-  // Clear error on new input
-  entry.querySelector('.listing-url').addEventListener('input', function() {
-    this.classList.remove('error');
-    document.getElementById('listing-error').style.display = 'none';
-  });
-}
-
-function removeListing(btn) {
-  const entry = btn.closest('.listing-entry');
-  const entries = document.querySelectorAll('.listing-entry');
-  if (entries.length <= 1) return;
-
-  entry.style.opacity = '0';
-  entry.style.transform = 'translateX(-12px)';
-  entry.style.transition = 'opacity .25s, transform .25s';
-  setTimeout(() => entry.remove(), 250);
-}
-
 // Clear errors on input
 document.querySelectorAll('.field-input').forEach(input => {
   input.addEventListener('input', () => {
     input.classList.remove('error');
   });
-});
-
-// Clear listing error on first listing input
-document.querySelector('.listing-url').addEventListener('input', function() {
-  this.classList.remove('error');
-  document.getElementById('listing-error').style.display = 'none';
 });
 
 // ── Enter key advances to next step ──
@@ -1241,58 +1244,6 @@ document.addEventListener('keydown', function(e) {
     e.preventDefault();
     nextStep();
   }
-});
-
-// ── Airbnb URL normalizer ──
-function normalizeAirbnbUrl(raw) {
-  var s = raw.trim();
-  if (!s) return null;
-  s = s.replace(/^["'<]+|["'>]+$/g, '');
-  if (!/^https?:\/\//i.test(s)) {
-    s = 'https://' + s.replace(/^\/\//, '');
-  }
-  var url;
-  try { url = new URL(s); } catch (e) { return null; }
-  var host = url.hostname.replace(/^www\./, '');
-  if (!/^airbnb\.[a-z.]+$/i.test(host)) return null;
-  var path = url.pathname.replace(/\/+$/, '');
-  if (/^\/rooms\/\d+/.test(path)) return url.href;
-  if (/^\/h\/[a-zA-Z0-9_-]+/.test(path)) return url.href;
-  if (/^\/users\/show\/\d+/.test(path)) return url.href;
-  if (/^\/p\/[a-zA-Z0-9_-]+/.test(path)) return url.href;
-  var systemPaths = ['hosting','login','signup','help','account','settings','experiences','s','luxury','wishlists','messages','trips','notifications','manage-listing','resources'];
-  var firstSegment = path.split('/')[1];
-  if (firstSegment && !systemPaths.includes(firstSegment) && /^[a-zA-Z0-9_-]+$/.test(firstSegment)) {
-    return url.href;
-  }
-  return null;
-}
-
-// ── Clipboard auto-detect on return from Airbnb ──
-var openedAirbnb = false;
-
-document.getElementById('open-airbnb-btn').addEventListener('click', function() {
-  openedAirbnb = true;
-});
-
-document.addEventListener('visibilitychange', function() {
-  if (document.visibilityState !== 'visible') return;
-  if (!openedAirbnb) return;
-  if (current !== 1) return; // listings step
-
-  navigator.clipboard.readText().then(function(text) {
-    var normalized = normalizeAirbnbUrl(text);
-    if (!normalized) return;
-    var inputs = document.querySelectorAll('.listing-url');
-    var target = null;
-    for (var i = 0; i < inputs.length; i++) {
-      if (!inputs[i].value.trim()) { target = inputs[i]; break; }
-    }
-    if (!target) { target = inputs[inputs.length - 1]; }
-    target.value = normalized;
-    target.classList.remove('error');
-    document.getElementById('listing-error').style.display = 'none';
-  }).catch(function() {});
 });
 
 function launchConfetti() {
@@ -1324,33 +1275,12 @@ async function submitForm() {
   }
   if (submitInProgress) return;
 
-  // Collect listing URLs
-  const listingUrls = [];
-  document.querySelectorAll('.listing-url').forEach(input => {
-    const val = input.value.trim();
-    if (val) listingUrls.push(val);
-  });
-
-  const fullName = document.getElementById('full-name').value.trim();
-  const nameParts = fullName.split(/\s+/).filter(Boolean);
-  const firstName = nameParts[0] || '';
-  const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
   const email = document.getElementById('email').value.trim();
-  const phoneCode = document.getElementById('phone-code').value.trim();
-  const phoneNumber = document.getElementById('phone').value.trim();
-  const phoneFull = `${phoneCode} ${phoneNumber}`.trim();
 
   const data = {
     plan: selectedPlan,
-    first_name: firstName,
-    last_name: lastName,
-    full_name: fullName,
     email: email,
-    phone_code: phoneCode,
-    phone_number: phoneNumber,
-    phone_full: phoneFull,
-    listings: listingUrls,
-    listing_count: listingUrls.length,
+    listing_count: listingCount,
     agreed_to_terms: document.getElementById('agree-check').checked,
     submitted_at: new Date().toISOString(),
     source: 'checkout',
@@ -1372,7 +1302,7 @@ async function submitForm() {
   }
 
   console.log('Enrollment submitted:', data);
-  rwTrack('checkout_submit',{plan:selectedPlan,listing_count:listingUrls.length,page:'checkout-form'});
+  rwTrack('checkout_submit',{plan:selectedPlan,listing_count:listingCount,page:'checkout-form'});
 
   submitInProgress = true;
   const submitBtn = document.getElementById('btn-submit');
