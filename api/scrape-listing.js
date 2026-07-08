@@ -27,7 +27,19 @@ module.exports = async function handler(req, res) {
 
   let body;
   try {
-    body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+    if (req.body && typeof req.body === 'object') {
+      body = req.body;
+    } else if (typeof req.body === 'string') {
+      body = JSON.parse(req.body);
+    } else {
+      // Not every runtime pre-populates req.body (Vercel does; the local dev server
+      // does not) — fall back to reading the raw request stream.
+      const chunks = [];
+      for await (const chunk of req) {
+        chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
+      }
+      body = chunks.length ? JSON.parse(Buffer.concat(chunks).toString('utf8')) : {};
+    }
   } catch (e) {
     return sendJson(res, 400, { error: 'Invalid JSON.' });
   }

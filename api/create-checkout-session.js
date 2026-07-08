@@ -22,12 +22,28 @@ function resolveBaseUrl(req) {
   return `${protocol}://${host}`;
 }
 
-function parseBody(req) {
-  if (!req.body) return {};
-  if (typeof req.body === 'object') return req.body;
-  if (typeof req.body !== 'string') return {};
+// Mirrors form-webhook.js: falls back to reading the raw request stream because not
+// every runtime pre-populates req.body (Vercel does; the local dev server does not).
+async function parseBody(req) {
+  if (req.body && typeof req.body === 'object') return req.body;
+
+  if (typeof req.body === 'string') {
+    try {
+      return JSON.parse(req.body);
+    } catch (error) {
+      return {};
+    }
+  }
+
+  const chunks = [];
+  for await (const chunk of req) {
+    chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
+  }
+
+  if (!chunks.length) return {};
+
   try {
-    return JSON.parse(req.body);
+    return JSON.parse(Buffer.concat(chunks).toString('utf8'));
   } catch (error) {
     return {};
   }
@@ -44,13 +60,33 @@ function parseListingCount(payload) {
   return 0;
 }
 
+// One-time onboarding line item, honoring an optional cap on the total charge.
+// Uncapped: unit_amount × listingCount as usual. Capped: a single line item at the
+// cap amount covering all listings (Stripe has no native "cap" on quantity pricing).
+function setOnboardingLineItem(params, unitAmountCents, listingCount, productName, capDollars) {
+  const capCents = capDollars > 0 ? Math.round(capDollars * 100) : 0;
+  params.set('line_items[0][price_data][currency]', 'usd');
+  if (capCents > 0 && unitAmountCents * listingCount > capCents) {
+    params.set('line_items[0][price_data][unit_amount]', String(capCents));
+    params.set(
+      'line_items[0][price_data][product_data][name]',
+      `${productName} — ${listingCount} listings`
+    );
+    params.set('line_items[0][quantity]', '1');
+  } else {
+    params.set('line_items[0][price_data][unit_amount]', String(unitAmountCents));
+    params.set('line_items[0][price_data][product_data][name]', productName);
+    params.set('line_items[0][quantity]', String(listingCount));
+  }
+}
+
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
     return sendJson(res, 405, { error: 'Method not allowed.' });
   }
 
-  const payload = parseBody(req);
+  const payload = await parseBody(req);
   const email = String(payload.email || '').trim().toLowerCase();
   const submittedPlan = String(payload.plan || '').trim().toLowerCase();
   const plan = VALID_PLANS.has(submittedPlan) ? submittedPlan : 'monthly';
@@ -79,6 +115,9 @@ module.exports = async function handler(req, res) {
   };
   const onboardingFee = isEnterprise ? parseNumeric(payload.onboarding_fee) : 0;
   const monthlyCost = isEnterprise ? parseNumeric(payload.monthly_cost) : 0;
+  // Optional cap on the TOTAL one-time onboarding charge (set via rep-built checkout
+  // links). When per-listing fee × count exceeds it, we bill the cap amount instead.
+  const onboardingCap = parseNumeric(payload.onboarding_cap);
   const useSubscriptionMode = isEnterprise && onboardingFee === 0;
 
   const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
@@ -103,9 +142,21 @@ module.exports = async function handler(req, res) {
 
   const successUrl =
     process.env.STRIPE_SUCCESS_URL || `${baseUrl}/success-b?session_id={CHECKOUT_SESSION_ID}`;
+  // Cancel must land the customer back on the form with their full context intact —
+  // prefilled email (skips the contact step) and any custom pricing (enterprise
+  // fees, onboarding cap, promo). Dropping these would silently revert to defaults.
+  const cancelQuery = new URLSearchParams({ plan });
+  cancelQuery.set('email', email);
+  cancelQuery.set('listing_count', String(listingCount));
+  if (isEnterprise) {
+    cancelQuery.set('onboarding_fee', String(onboardingFee));
+    if (monthlyCost) cancelQuery.set('monthly_cost', String(monthlyCost));
+    if (payload.term_months) cancelQuery.set('term_months', String(payload.term_months));
+  }
+  if (onboardingCap > 0) cancelQuery.set('onboarding_cap', String(onboardingCap));
+  if (promoDiscount > 0) cancelQuery.set('promo', promoCode);
   const cancelUrl =
-    process.env.STRIPE_CANCEL_URL ||
-    `${baseUrl}/checkout-form${plan ? `?plan=${encodeURIComponent(plan)}` : ''}`;
+    process.env.STRIPE_CANCEL_URL || `${baseUrl}/checkout-form?${cancelQuery.toString()}`;
 
   const params = new URLSearchParams();
   params.set('mode', useSubscriptionMode ? 'subscription' : 'payment');
@@ -123,17 +174,22 @@ module.exports = async function handler(req, res) {
     params.set('line_items[0][quantity]', String(listingCount));
   } else if (isEnterprise) {
     // Dynamic pricing via price_data for enterprise
-    params.set('line_items[0][price_data][currency]', 'usd');
-    params.set('line_items[0][price_data][unit_amount]', String(Math.round(onboardingFee * 100)));
-    params.set('line_items[0][price_data][product_data][name]', 'Listing Optimization Fee (Enterprise)');
-    params.set('line_items[0][quantity]', String(listingCount));
+    setOnboardingLineItem(
+      params,
+      Math.round(onboardingFee * 100),
+      listingCount,
+      'Listing Optimization Fee (Enterprise)',
+      onboardingCap
+    );
   } else {
     // Standard onboarding: one-time fee per listing, with optional promo discount applied server-side.
-    const unitAmount = Math.round(ONBOARDING_FEE_PER_LISTING * (1 - promoDiscount) * 100);
-    params.set('line_items[0][price_data][currency]', 'usd');
-    params.set('line_items[0][price_data][unit_amount]', String(unitAmount));
-    params.set('line_items[0][price_data][product_data][name]', 'RevWhisper Listing Optimization (one-time)');
-    params.set('line_items[0][quantity]', String(listingCount));
+    setOnboardingLineItem(
+      params,
+      Math.round(ONBOARDING_FEE_PER_LISTING * (1 - promoDiscount) * 100),
+      listingCount,
+      'RevWhisper Listing Optimization (one-time)',
+      onboardingCap
+    );
   }
 
   params.set('metadata[email]', email);
@@ -151,6 +207,10 @@ module.exports = async function handler(req, res) {
       'metadata[onboarding_fee_per_listing]',
       String(Math.round(ONBOARDING_FEE_PER_LISTING * (1 - promoDiscount)))
     );
+  }
+
+  if (onboardingCap > 0 && !useSubscriptionMode) {
+    params.set('metadata[onboarding_cap]', String(onboardingCap));
   }
 
   if (promoDiscount > 0) {

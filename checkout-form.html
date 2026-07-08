@@ -831,6 +831,12 @@ const enterpriseMonthly = isEnterprise ? Number(params.get('monthly_cost')) || 0
 const enterpriseOnboarding = isEnterprise && params.get('onboarding_fee') ? Number(params.get('onboarding_fee')) : 998;
 const enterpriseTermMonths = isEnterprise ? Number(params.get('term_months')) || 0 : 0;
 const onboardingFee = isEnterprise ? enterpriseOnboarding : 996;
+// Optional cap on the TOTAL one-time onboarding charge — set via rep-built links
+// (?onboarding_cap=1000). Total billed is min(per-listing fee × count, cap).
+const onboardingCap = (function() {
+  var n = Number(params.get('onboarding_cap'));
+  return (Number.isFinite(n) && n > 0) ? n : 0;
+})();
 // Listing count drives pricing (quantity × per-listing fee). No cap — any quantity checks out.
 let listingCount = (function() {
   var n = parseInt(params.get('listing_count'), 10);
@@ -994,10 +1000,15 @@ function updateCountPrice() {
 
   var discount = (!isEnterprise && appliedPromo) ? appliedPromo.discount : 0;
   var per = onboardingFee * (1 - discount);
-  tweenPrice(per * listingCount);
+  var total = per * listingCount;
+  var capped = onboardingCap > 0 && total > onboardingCap;
+  if (capped) total = onboardingCap;
+  tweenPrice(total);
   suffixEl.textContent = 'due today';
-  eachEl.textContent = listingCount + ' × ' + formatUsd(per) + ' per listing' +
-    (discount ? ' · ' + appliedPromo.code.toUpperCase() + ' applied' : '');
+  eachEl.textContent = capped
+    ? listingCount + ' listings · capped at ' + formatUsd(onboardingCap) + ' total'
+    : listingCount + ' × ' + formatUsd(per) + ' per listing' +
+      (discount ? ' · ' + appliedPromo.code.toUpperCase() + ' applied' : '');
   hintEl.innerHTML = 'One-time, charged upfront. Your monthly revenue-management subscription begins once optimization is complete.';
 }
 
@@ -1277,6 +1288,18 @@ async function submitForm() {
 
   const email = document.getElementById('email').value.trim();
 
+  // Guard: if the email is somehow missing/invalid at submit time (server would 400),
+  // return the user to the contact step with the inline error instead of alerting.
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    const backBtn = document.querySelector('.step[data-step="1"] .btn-back');
+    if (backBtn) backBtn.style.display = '';
+    document.getElementById('email').classList.add('error');
+    const from = current;
+    current = 0;
+    transitionStep(from, current, 'backward');
+    return;
+  }
+
   const data = {
     plan: selectedPlan,
     email: email,
@@ -1293,6 +1316,8 @@ async function submitForm() {
     if (enterpriseMonthly) data.monthly_cost = enterpriseMonthly;
     if (enterpriseTermMonths) data.term_months = enterpriseTermMonths;
   }
+
+  if (onboardingCap > 0) data.onboarding_cap = onboardingCap;
 
   // Honor a valid promo code typed into the field even if the user never clicked "Apply".
   const typedPromo = (document.getElementById('promo-code').value || '').trim().toLowerCase();

@@ -113,6 +113,11 @@ select:focus,input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(74
   </div>
 
   <div class="field">
+    <label class="field-label" for="onboarding_cap">Onboarding Cap <span class="field-hint">(optional &mdash; total onboarding charge never exceeds this amount, no matter the listing count)</span></label>
+    <input type="number" id="onboarding_cap" placeholder="e.g. 1000" min="1" step="1">
+  </div>
+
+  <div class="field">
     <label class="field-label" for="prefill_email">Client email <span class="field-hint">(pre-fills the form &mdash; all they confirm is the listing count)</span></label>
     <input type="email" id="prefill_email" placeholder="jane@example.com" autocomplete="off" autocapitalize="off" spellcheck="false">
   </div>
@@ -157,6 +162,7 @@ const enterpriseWrap = document.getElementById('enterprise-fields');
 const monthlyCostEl = document.getElementById('monthly_cost');
 const onboardingFeeEl = document.getElementById('onboarding_fee');
 const termMonthsEl = document.getElementById('term_months');
+const onboardingCapEl = document.getElementById('onboarding_cap');
 const utmSource = document.getElementById('utm_source');
 const utmMedium = document.getElementById('utm_medium');
 const utmCampaign = document.getElementById('utm_campaign');
@@ -171,6 +177,10 @@ function buildUrl() {
     if (monthlyCostEl.value) params.set('monthly_cost', monthlyCostEl.value);
     if (onboardingFeeEl.value) params.set('onboarding_fee', onboardingFeeEl.value);
     if (termMonthsEl.value) params.set('term_months', termMonthsEl.value);
+  }
+
+  if (onboardingCapEl.value && Number(onboardingCapEl.value) > 0) {
+    params.set('onboarding_cap', onboardingCapEl.value);
   }
 
   if (prefillEmail.value.trim()) params.set('email', prefillEmail.value.trim());
