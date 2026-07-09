@@ -182,6 +182,24 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 .success-detail{display:inline-flex;align-items:center;gap:10px;padding:12px 20px;background:var(--g50);border:1px solid var(--g200);border-radius:var(--radius);font-size:13px;color:var(--g500)}
 .success-detail strong{color:var(--black);font-weight:600}
 
+/* ── Post-booking VSL (per-host intro video) ── */
+.vsl-host{display:flex;align-items:center;gap:13px;margin-bottom:18px}
+.vsl-host-avatar{width:46px;height:46px;border-radius:50%;border:2px solid #fff;box-shadow:0 1px 4px rgba(50,48,47,.12),0 0 0 1px var(--g200);object-fit:cover;object-position:center 15%;background:var(--g100);flex-shrink:0}
+.vsl-host-copy{font-size:14px;line-height:1.55;color:var(--g600);font-weight:300}
+.vsl-host-copy strong{color:var(--black);font-weight:600}
+.vsl-player{position:relative;aspect-ratio:16/9;border-radius:var(--radius);overflow:hidden;background:var(--black);border:1px solid var(--g200);box-shadow:var(--sh)}
+.vsl-player iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
+.vsl-facade{position:absolute;inset:0;width:100%;height:100%;display:block;padding:0;border:none;background:var(--black);cursor:pointer;font-family:var(--body)}
+.vsl-thumb{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s var(--ease-out-expo)}
+.vsl-facade::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(20,19,18,.08) 0%,rgba(20,19,18,.32) 100%);transition:opacity .3s}
+.vsl-facade:hover .vsl-thumb{transform:scale(1.025)}
+.vsl-play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:64px;height:64px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 24px rgba(20,19,18,.35);transition:transform .25s var(--ease-out-back),box-shadow .3s;z-index:1}
+.vsl-play svg{margin-left:3px}
+.vsl-facade:hover .vsl-play{transform:translate(-50%,-50%) scale(1.08);box-shadow:0 10px 32px rgba(20,19,18,.45)}
+.vsl-dur{position:absolute;bottom:10px;right:12px;background:rgba(20,19,18,.72);color:#fff;font-size:11.5px;font-weight:500;letter-spacing:.03em;padding:3px 9px;border-radius:5px;z-index:1}
+.vsl-note{font-size:13px;line-height:1.65;color:var(--g500);font-weight:300;margin-top:14px}
+.vsl-note strong{color:var(--g700);font-weight:600}
+
 /* ── Post-booking "what to expect" ── */
 .booked-meta{display:flex;flex-wrap:wrap;justify-content:center;gap:18px;margin-top:14px;font-size:13px;color:var(--g500);font-weight:300}
 .booked-meta-item{display:inline-flex;align-items:center;gap:6px}
@@ -339,6 +357,23 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
         </div>
 
         <div class="booked-body">
+          <section class="booked-sec">
+            <div class="booked-eyebrow">Before your call</div>
+            <h3 class="booked-h">Watch this before we <em>meet</em>.</h3>
+            <div class="vsl-host" id="vsl-host" hidden>
+              <img class="vsl-host-avatar" id="vsl-host-img" src="" alt="" width="46" height="46" loading="lazy">
+              <div class="vsl-host-copy" id="vsl-host-copy"></div>
+            </div>
+            <div class="vsl-player">
+              <button class="vsl-facade" id="vsl-facade" type="button" aria-label="Play the video">
+                <img class="vsl-thumb" id="vsl-thumb" src="" alt="" loading="lazy">
+                <span class="vsl-play"><svg width="22" height="22" viewBox="0 0 24 24" fill="#fff"><path d="M8 5.5v13l11-6.5z"/></svg></span>
+                <span class="vsl-dur" id="vsl-dur"></span>
+              </button>
+            </div>
+            <p class="vsl-note" id="vsl-note"></p>
+          </section>
+
           <section class="booked-sec">
             <div class="booked-eyebrow">What happens on the call</div>
             <h3 class="booked-h">Here's how our 30 minutes go.</h3>
@@ -671,6 +706,65 @@ async function confirmBooking(){
   booking.bookingInFlight=false;
 }
 
+/* ── Per-host intro video (VSL) ──
+   The Discovery event is round-robin between Bryan and Nick; /api/cal-booking returns the assigned
+   host ({name,email}) so the confirmation can show THEIR photo and THEIR walkthrough video. If the
+   host can't be determined (shouldn't happen — the booking title carries it as a fallback), we show
+   the video with neutral copy and no photo rather than guessing at a face. */
+var VSL_HOSTS={
+  bryan:{key:'bryan',first:'Bryan',name:'Bryan Gamble',img:'/images/team/bryan.webp',videoId:'Trovk73GTWc',durBadge:'4:45',durText:'just under 5 minutes'},
+  nick:{key:'nick',first:'Nicolas',name:'Nicolas Luna',img:'/images/team/nic.webp',videoId:'nS31JRQbJ04',durBadge:'1:31',durText:'90 seconds'}
+};
+var vslActive=null; // host whose video is loaded in the facade (set by setupVsl)
+
+function resolveVslHost(b){
+  var s='';
+  if(b&&b.host&&(b.host.email||b.host.name)) s=((b.host.email||'')+' '+(b.host.name||'')).toLowerCase();
+  if(!s&&b&&typeof b.title==='string'){
+    // Cal titles bookings "<event> between <host> and <attendee>" — match the HOST segment only,
+    // never the whole title (the attendee's name could contain "bryan"/"nicolas" too).
+    var m=b.title.match(/between (.+?) and .+/i); if(m) s=m[1].toLowerCase();
+  }
+  if(/bgamble|bryan/.test(s)) return VSL_HOSTS.bryan;
+  if(/nluna|nicolas|nick/.test(s)) return VSL_HOSTS.nick;
+  return null;
+}
+
+function setupVsl(host){
+  var v=host||VSL_HOSTS.bryan; // no confirmed host → neutral copy, default video, no photo
+  vslActive=v;
+  var thumb=document.getElementById('vsl-thumb');
+  if(thumb){
+    thumb.src='https://i.ytimg.com/vi/'+v.videoId+'/maxresdefault.jpg';
+    thumb.onerror=function(){this.onerror=null;this.src='https://i.ytimg.com/vi/'+v.videoId+'/hqdefault.jpg';};
+  }
+  var dur=document.getElementById('vsl-dur'); if(dur) dur.textContent=v.durBadge;
+  var row=document.getElementById('vsl-host');
+  if(row&&host){
+    row.hidden=false;
+    var img=document.getElementById('vsl-host-img');
+    if(img){img.src=host.img;img.alt=host.first;}
+    var copy=document.getElementById('vsl-host-copy');
+    if(copy) copy.innerHTML='Recorded by <strong>'+host.first+'</strong> — exactly who you’ll be meeting on your call.';
+  }
+  var note=document.getElementById('vsl-note');
+  if(note) note.innerHTML='It’s '+v.durText+' and walks through what’s inside your audit and how the 30 minutes run — so your call starts at your numbers, not the intro. <strong>Please watch it before we talk.</strong>';
+  var facade=document.getElementById('vsl-facade');
+  if(facade) facade.onclick=playVsl;
+}
+
+function playVsl(){
+  var v=vslActive||VSL_HOSTS.bryan;
+  var player=document.querySelector('.vsl-player'); if(!player) return;
+  var iframe=document.createElement('iframe');
+  iframe.src='https://www.youtube-nocookie.com/embed/'+v.videoId+'?autoplay=1&rel=0&modestbranding=1&playsinline=1';
+  iframe.title='What to expect on your RevWhisper audit call';
+  iframe.allow='autoplay; encrypted-media; picture-in-picture; fullscreen';
+  iframe.setAttribute('allowfullscreen','');
+  player.innerHTML='';player.appendChild(iframe);
+  rwTrack('vsl_play',{host:v.key,page:'audit-booking'});
+}
+
 function renderSuccess(data){
   const desc=document.getElementById('success-desc');
   const when=document.getElementById('success-when');
@@ -680,12 +774,13 @@ function renderSuccess(data){
   if(nameEl) nameEl.textContent=first?(', '+first):'';
   if(desc){
     desc.textContent=start
-      ? `Your live audit is set for ${start.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})} at ${start.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'})}. A calendar invite is on its way to your inbox, and we'll text your Google Meet link and a reminder before we meet.`
-      : `Your live audit is confirmed. A calendar invite is on its way to your inbox, and we'll text your Google Meet link and a reminder before we meet.`;
+      ? `Your live audit is set for ${start.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})} at ${start.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'})}. A calendar invite is on its way to your inbox, and we'll text your Google Meet link before we meet. One ask before then: watch the short video below.`
+      : `Your live audit is confirmed. A calendar invite is on its way to your inbox, and we'll text your Google Meet link before we meet. One ask before then: watch the short video below.`;
   }
   if(when){
     when.textContent=start?(start.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'})+' · '+start.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'})+' ('+booking.timeZone+')'):'Confirmed';
   }
+  setupVsl(resolveVslHost(data));
   applyPropertyCopy();
 }
 
@@ -700,10 +795,14 @@ function applyPropertyCopy(){
 }
 
 /* ?preview=success entry point — fabricates a confirmed slot (3 days out, 2pm local) and
-   reveals Step 4 directly. No /api/cal-booking call and no Pixel/CAPI/X events fire. */
+   reveals Step 4 directly. No /api/cal-booking call and no Pixel/CAPI/X events fire.
+   &host=nick|bryan previews that host's photo + video (default bryan); &host=none previews
+   the neutral no-host fallback. */
 function previewSuccess(){
   const start=new Date(); start.setDate(start.getDate()+3); start.setHours(14,0,0,0);
-  renderSuccess({start:start.toISOString()});
+  var pvHost=(new URLSearchParams(location.search)).get('host');
+  var fakeHost=pvHost==='none'?null:(VSL_HOSTS[pvHost]||VSL_HOSTS.bryan);
+  renderSuccess({start:start.toISOString(),host:fakeHost?{name:fakeHost.name,email:''}:null});
   document.querySelectorAll('.step').forEach(function(s){
     s.classList.remove('active','exit-up','exit-down','enter-from-below','enter-from-above');
   });

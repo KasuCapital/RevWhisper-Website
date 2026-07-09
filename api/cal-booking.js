@@ -92,6 +92,20 @@ function parseEventTypeId(raw) {
   return Number.isInteger(n) && n > 0 ? n : null;
 }
 
+// Which team member the round-robin assigned. The legacy booking response carries the host in
+// `user` ({name,email,username}); `hosts[]`/`organizer` cover other response shapes. Last resort:
+// Cal titles bookings "<event> between <host> and <attendee>", so the host is parseable from the
+// title. Returns {name,email} or null — the client maps it to a photo + intro video.
+function extractHost(data) {
+  if (!data || typeof data !== 'object') return null;
+  const u = data.user || data.organizer || (Array.isArray(data.hosts) && data.hosts[0]) || null;
+  if (u && typeof u === 'object' && (u.name || u.email)) {
+    return { name: u.name ? String(u.name) : '', email: u.email ? String(u.email) : '' };
+  }
+  const m = typeof data.title === 'string' && data.title.match(/between (.+?) and .+/i);
+  return m ? { name: m[1].trim(), email: '' } : null;
+}
+
 function extractMessage(b) {
   if (!b) return '';
   if (typeof b === 'string') return b;
@@ -345,7 +359,8 @@ module.exports = async function handler(req, res) {
           end: data.end || data.endTime,
           location: data.location,
           duration: data.duration,
-          title: data.title
+          title: data.title,
+          host: extractHost(data)
         }
       : null
   });
