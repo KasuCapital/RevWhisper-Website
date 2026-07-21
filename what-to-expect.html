@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Attribution tracking (cookie-free) -->
+<script>
+function rwAttribution(){try{return JSON.parse(localStorage.getItem('rw_attribution')||sessionStorage.getItem('rw_attribution'))||{};}catch(e){return {};}}
+function rwCookie(n){try{var m=document.cookie.match(new RegExp('(?:^|; )'+n.replace(/([.$?*|{}()\[\]\\\/+^])/g,'\\$1')+'=([^;]*)'));return m?decodeURIComponent(m[1]):'';}catch(e){return '';}}
+</script>
+<!-- GA4 (consent-mode) — honors prior consent -->
+<script>
+window.dataLayer=window.dataLayer||[];
+function gtag(){dataLayer.push(arguments);}
+gtag('consent','default',{'analytics_storage':'denied','ad_storage':'denied'});
+gtag('js',new Date());
+gtag('config','G-Y1FYZ5849B');
+(function(){var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-Y1FYZ5849B';document.head.appendChild(s);})();
+function rwTrack(e,p){gtag('event',e,p||{});}
+(function(){if(localStorage.getItem('rw_cookie_consent')==='accepted'){gtag('consent','update',{'analytics_storage':'granted','ad_storage':'granted'});}})();
+</script>
+<!-- Meta Pixel — PageView on load; Schedule (Call Booked) fires on confirmed booking -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '959022406709300');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=959022406709300&ev=PageView&noscript=1"/></noscript>
+<!-- End Meta Pixel -->
+<!-- X Pixel base code + audit conversion helper -->
+<script src="/assets/x-pixel-base.js"></script>
+<script src="/assets/x-tracking.js"></script>
+<!-- End X Pixel base code -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What to expect on your live audit | RevWhisper</title>
+<meta name="description" content="30 minutes, live on Google Meet: where you rank, what it's costing you, and what we'd fix first. See how the live audit runs — and grab a time.">
+<meta name="robots" content="noindex, nofollow">
+<meta property="og:title" content="What to expect on your live audit — RevWhisper">
+<meta property="og:description" content="30 minutes, live on Google Meet: where you rank, what it's costing you, and what we'd fix first.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://revwhisper.com/what-to-expect">
+<link rel="icon" href="icons/favicon-light.svg" type="image/svg+xml" media="(prefers-color-scheme: light)">
+<link rel="icon" href="icons/favicon-dark.svg" type="image/svg+xml" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="icons/favicon-light.svg" type="image/svg+xml">
+<!-- Self-hosted variable fonts (latin subset) — no render-blocking third-party CSS -->
+<link rel="preload" href="/fonts/lora-normal-400-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/dm-sans-normal-300-700.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+/* ── Self-hosted fonts (latin, variable) ── */
+@font-face{font-family:'Lora';font-style:normal;font-weight:400 700;font-display:swap;src:url(/fonts/lora-normal-400-700.woff2) format('woff2')}
+@font-face{font-family:'Lora';font-style:italic;font-weight:400 700;font-display:swap;src:url(/fonts/lora-italic-400-700.woff2) format('woff2')}
+@font-face{font-family:'DM Sans';font-style:normal;font-weight:300 700;font-display:swap;src:url(/fonts/dm-sans-normal-300-700.woff2) format('woff2')}
+/* ── Reset & Tokens ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{overflow-x:hidden;scroll-behavior:smooth}
+body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#fff;color:#32302F;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh}
+:root{
+  --black:#32302F;--white:#fff;--accent:#4A6741;--accent-light:#dce6d8;--accent-border:#b3c5ab;
+  --stone:#f3f1ef;--g50:#faf9f8;--g100:#f3f1ef;--g200:#E0DCDA;--g300:#ccc8c5;--g400:#a39e9b;--g500:#706b68;--g600:#58534f;--g700:#48433f;
+  --radius:8px;--radius-sm:6px;--radius-lg:16px;
+  --sh-sm:0 1px 3px rgba(50,48,47,.06),0 1px 2px rgba(50,48,47,.04);
+  --sh:0 4px 16px rgba(50,48,47,.07),0 2px 6px rgba(50,48,47,.04);
+  --sh-lg:0 16px 48px rgba(50,48,47,.1),0 4px 12px rgba(50,48,47,.05);
+  --heading:'Lora','Georgia',serif;--body:'DM Sans','system-ui','Helvetica Neue',sans-serif;
+  --ease-out-expo:cubic-bezier(.16,1,.3,1);--ease-out-back:cubic-bezier(.34,1.56,.64,1);
+}
+.wrap{max-width:620px;margin:0 auto;padding:clamp(34px,6vw,64px) 22px 64px;position:relative;z-index:1}
+/* ambient bg */
+body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(ellipse at 30% 18%,rgba(74,103,65,.05) 0%,transparent 50%),radial-gradient(ellipse at 70% 82%,rgba(74,103,65,.03) 0%,transparent 50%);pointer-events:none;z-index:0}
+
+/* ── Page header ── */
+.confirm-pill{display:inline-flex;align-items:center;gap:8px;background:var(--accent-light);border:1px solid var(--accent-border);color:var(--accent);font-size:12.5px;font-weight:600;padding:7px 15px;border-radius:100px;margin-bottom:22px}
+.confirm-pill svg{flex-shrink:0}
+.reveal-h1{font-family:var(--heading);font-size:clamp(30px,5.2vw,44px);font-weight:400;letter-spacing:-.025em;line-height:1.1;color:var(--black);margin-bottom:18px}
+.reveal-h1 em{font-style:italic;color:var(--accent);margin-left:-.12em}
+.reveal-sub{font-size:clamp(15px,1.9vw,17px);color:var(--g500);line-height:1.7;font-weight:300;margin-bottom:34px}
+.reveal-sub strong{color:var(--black);font-weight:500}
+
+/* ── Card ── */
+.book-card{background:#fff;border:1px solid var(--g200);border-radius:var(--radius-lg);box-shadow:var(--sh-lg);padding:clamp(22px,4vw,32px)}
+
+/* ── Card header (mirrors the post-booking confirmation) ── */
+.success-state{text-align:center;padding:24px 0}
+.success-icon{width:80px;height:80px;border-radius:50%;background:var(--accent-light);border:2px solid var(--accent-border);display:flex;align-items:center;justify-content:center;margin:0 auto 26px;position:relative}
+.success-state.revealed .success-icon{animation:iconBounceIn .6s var(--ease-out-back) forwards}
+@keyframes iconBounceIn{0%{opacity:0;transform:scale(0)}50%{transform:scale(1.12)}70%{transform:scale(.95)}100%{opacity:1;transform:scale(1)}}
+.success-title{font-family:var(--heading);font-size:clamp(26px,4vw,32px);font-weight:400;letter-spacing:-.02em;color:var(--black);margin-bottom:10px}
+.success-title em{font-style:italic;color:var(--accent)}
+.success-desc{font-size:15px;color:var(--g500);line-height:1.7;font-weight:300;max-width:400px;margin:0 auto 26px}
+.success-detail{display:inline-flex;align-items:center;gap:10px;padding:12px 20px;background:var(--g50);border:1px solid var(--g200);border-radius:var(--radius);font-size:13px;color:var(--g500)}
+.success-detail strong{color:var(--black);font-weight:600}
+.booked-meta{display:flex;flex-wrap:wrap;justify-content:center;gap:18px;margin-top:14px;font-size:13px;color:var(--g500);font-weight:300}
+.booked-meta-item{display:inline-flex;align-items:center;gap:6px}
+.booked-meta-item svg{flex-shrink:0;color:var(--accent)}
+
+/* ── Host avatars ── */
+.host-avatars{display:inline-flex;flex-shrink:0;align-items:center}
+.host-avatar{width:40px;height:40px;border-radius:50%;border:2px solid #fff;box-shadow:0 1px 4px rgba(50,48,47,.12),0 0 0 1px var(--g200);object-fit:cover;object-position:center 15%;background:var(--g100)}
+.host-avatar + .host-avatar{margin-left:-10px}
+
+/* ── Intro video (VSL) ── */
+.vsl-host{display:flex;align-items:center;gap:13px;margin-bottom:18px}
+.vsl-host-avatar{width:46px;height:46px;border-radius:50%;border:2px solid #fff;box-shadow:0 1px 4px rgba(50,48,47,.12),0 0 0 1px var(--g200);object-fit:cover;object-position:center 15%;background:var(--g100);flex-shrink:0}
+.vsl-host-copy{font-size:14px;line-height:1.55;color:var(--g600);font-weight:300}
+.vsl-host-copy strong{color:var(--black);font-weight:600}
+.vsl-player{position:relative;aspect-ratio:16/9;border-radius:var(--radius);overflow:hidden;background:var(--black);border:1px solid var(--g200);box-shadow:var(--sh)}
+.vsl-player iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
+.vsl-facade{position:absolute;inset:0;width:100%;height:100%;display:block;padding:0;border:none;background:var(--black);cursor:pointer;font-family:var(--body)}
+.vsl-thumb{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s var(--ease-out-expo)}
+.vsl-facade::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(20,19,18,.08) 0%,rgba(20,19,18,.32) 100%);transition:opacity .3s}
+.vsl-facade:hover .vsl-thumb{transform:scale(1.025)}
+.vsl-play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:64px;height:64px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 24px rgba(20,19,18,.35);transition:transform .25s var(--ease-out-back),box-shadow .3s;z-index:1}
+.vsl-play svg{margin-left:3px}
+.vsl-facade:hover .vsl-play{transform:translate(-50%,-50%) scale(1.08);box-shadow:0 10px 32px rgba(20,19,18,.45)}
+.vsl-dur{position:absolute;bottom:10px;right:12px;background:rgba(20,19,18,.72);color:#fff;font-size:11.5px;font-weight:500;letter-spacing:.03em;padding:3px 9px;border-radius:5px;z-index:1}
+.vsl-note{font-size:13px;line-height:1.65;color:var(--g500);font-weight:300;margin-top:14px}
+.vsl-note strong{color:var(--g700);font-weight:600}
+
+/* ── "What goes into the call" sections ── */
+.booked-body{margin-top:6px;text-align:left}
+.booked-sec{padding:26px 0;border-top:1px solid var(--g200)}
+.booked-eyebrow{font-size:11px;font-weight:600;color:var(--accent);letter-spacing:.1em;text-transform:uppercase;margin-bottom:11px}
+.booked-h{font-family:var(--heading);font-size:20px;font-weight:400;letter-spacing:-.01em;color:var(--black);margin-bottom:15px;line-height:1.25}
+.booked-h em{font-style:italic;color:var(--accent)}
+.booked-p{font-size:14.5px;line-height:1.7;color:var(--g600);font-weight:300}
+.booked-p strong{color:var(--g700);font-weight:600}
+.booked-steps{list-style:none;display:flex;flex-direction:column;gap:16px}
+.booked-steps li{display:flex;gap:14px;align-items:flex-start}
+.bs-num{flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--accent-light);border:1px solid var(--accent-border);color:var(--accent);font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center}
+.booked-steps li>div{font-size:14.5px;line-height:1.65;color:var(--g600);font-weight:300}
+.booked-steps li strong{color:var(--black);font-weight:600}
+.booked-list{list-style:none;display:flex;flex-direction:column;gap:11px;margin-top:2px}
+.booked-list li{position:relative;padding-left:22px;font-size:14.5px;line-height:1.6;color:var(--g600);font-weight:300}
+.booked-list li::before{content:"";position:absolute;left:4px;top:9px;width:6px;height:6px;border-radius:50%;background:var(--accent-border)}
+.booked-hosts{display:flex;gap:18px;align-items:flex-start}
+.booked-hosts .host-avatars{flex-shrink:0;display:flex}
+@media(max-width:640px){.booked-hosts{flex-direction:column;gap:14px}}
+
+/* ── Steps machinery — height-animated viewport (booking widget) ── */
+.steps-viewport{position:relative;transition:height .42s var(--ease-out-expo)}
+.step{position:absolute;top:0;left:0;right:0;opacity:0;visibility:hidden;transform:translateY(14px);transition:none;pointer-events:none}
+.step.active{position:relative;opacity:1;visibility:visible;transform:translateY(0);pointer-events:auto}
+.step.exit-up{position:absolute;opacity:0;visibility:visible;transform:translateY(-14px);transition:opacity .28s var(--ease-out-expo),transform .28s var(--ease-out-expo),visibility 0s .28s;pointer-events:none}
+.step.exit-down{position:absolute;opacity:0;visibility:visible;transform:translateY(14px);transition:opacity .28s var(--ease-out-expo),transform .28s var(--ease-out-expo),visibility 0s .28s;pointer-events:none}
+.step.enter-from-below,.step.enter-from-above{position:relative;opacity:1;visibility:visible;transform:translateY(0);transition:opacity .4s var(--ease-out-expo) .06s,transform .4s var(--ease-out-expo) .06s;pointer-events:auto}
+.step-eyebrow{font-size:11px;font-weight:600;color:var(--accent);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px}
+.step-title{font-family:var(--heading);font-size:clamp(22px,3.4vw,28px);font-weight:400;letter-spacing:-.02em;line-height:1.15;color:var(--black);margin-bottom:8px}
+.step-title em{font-style:italic;color:var(--accent)}
+.step-desc{font-size:14px;color:var(--g500);line-height:1.6;font-weight:300;margin-bottom:24px;max-width:440px}
+.form-actions{display:flex;align-items:center;gap:12px;margin-top:8px}
+.btn-back{display:inline-flex;align-items:center;gap:6px;background:transparent;color:var(--g500);font-size:13px;font-weight:400;padding:13px 16px;border-radius:var(--radius-sm);border:1.5px solid var(--g200);cursor:pointer;font-family:var(--body);transition:border-color .25s,color .25s,transform .2s var(--ease-out-back)}
+.btn-back:hover{border-color:var(--g300);color:var(--black)}
+.btn-back .arrow{transition:transform .25s}.btn-back:hover .arrow{transform:translateX(-3px)}
+
+/* ── Details step ── */
+.confirm-summary{display:flex;align-items:center;gap:10px;background:var(--g50);border:1px solid var(--g200);border-radius:var(--radius);padding:12px 15px;font-size:13.5px;color:var(--g600);line-height:1.4;margin-bottom:20px}
+.confirm-summary svg{flex-shrink:0;color:var(--accent)}
+.confirm-summary strong{color:var(--black);font-weight:600}
+.book-field{margin-bottom:14px}
+.book-field-label{display:block;font-size:13px;font-weight:500;color:var(--black);margin-bottom:7px}
+.book-field-optional{font-weight:400;color:var(--g400)}
+.book-input{width:100%;padding:13px 16px;border:1.5px solid var(--g200);border-radius:var(--radius);font-size:16px;font-family:var(--body);color:var(--black);background:#fff;outline:none;transition:border-color .25s,box-shadow .25s}
+.book-input::placeholder{color:var(--g400)}
+.book-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(74,103,65,.1)}
+.book-input.error{border-color:#B85252;box-shadow:0 0 0 3px rgba(184,82,82,.1)}
+.book-phone-wrap{display:flex;gap:8px}
+.book-phone-code{width:92px;padding:13px 12px;border:1.5px solid var(--g200);border-radius:var(--radius);font-size:14px;font-family:var(--body);color:var(--black);background:#fff;outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23a39e9b' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;transition:border-color .25s,box-shadow .25s}
+.book-phone-code:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(74,103,65,.1)}
+.book-phone-wrap .book-input{flex:1}
+.book-field-hint{font-size:12px;color:var(--g400);margin-top:8px;font-weight:300;line-height:1.45}
+.btn-confirm{display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;background:var(--accent);color:#fff;font-size:15px;font-weight:500;padding:15px 24px;border-radius:var(--radius);border:none;cursor:pointer;font-family:var(--body);margin-top:18px;text-decoration:none;transition:transform .2s var(--ease-out-back),box-shadow .3s,opacity .3s}
+.btn-confirm .arrow{transition:transform .25s var(--ease-out-expo)}
+.btn-confirm:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 22px rgba(74,103,65,.26)}
+.btn-confirm:hover:not(:disabled) .arrow{transform:translateX(3px)}
+.btn-confirm:active:not(:disabled){transform:translateY(0) scale(.98)}
+.btn-confirm:disabled{opacity:.5;cursor:not-allowed}
+
+/* ── Calendar ── */
+.cal-shell{margin-bottom:8px;min-height:330px}
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.cal-month-label{font-family:var(--heading);font-size:18px;font-weight:500;color:var(--black);letter-spacing:-.01em}
+.cal-nav-btn{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:var(--radius-sm);border:1.5px solid var(--g200);background:#fff;color:var(--g500);cursor:pointer;transition:border-color .25s,color .25s,transform .2s var(--ease-out-back)}
+.cal-nav-btn:hover:not(:disabled){border-color:var(--g300);color:var(--black);transform:translateY(-1px);box-shadow:var(--sh-sm)}
+.cal-nav-btn:disabled{opacity:.3;cursor:not-allowed}
+.cal-weekdays{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:8px}
+.cal-weekday{text-align:center;font-size:11px;font-weight:500;color:var(--g400);letter-spacing:.08em;text-transform:uppercase;padding:6px 0}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.cal-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:400;color:var(--g700);background:transparent;border:1.5px solid transparent;border-radius:var(--radius-sm);cursor:default;position:relative;transition:border-color .25s,background .25s,color .25s,transform .25s var(--ease-out-back),box-shadow .25s}
+.cal-day.empty{visibility:hidden}
+.cal-day.available{border-color:var(--g200);background:#fff;color:var(--black);cursor:pointer}
+.cal-day.available:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-1px);box-shadow:var(--sh-sm)}
+.cal-day.selected{border-color:var(--accent);background:var(--accent);color:#fff;font-weight:600}
+.cal-day.today::after{content:'';position:absolute;bottom:5px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--accent)}
+.cal-day.unavailable{color:var(--g300);cursor:not-allowed}
+.cal-loading{display:flex;align-items:center;justify-content:center;gap:10px;padding:48px 0;color:var(--g500);font-size:13px}
+.cal-spinner{width:18px;height:18px;border:2px solid var(--g200);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.cal-error{padding:16px;border:1.5px solid #f0d4d4;background:#fbf3f3;color:#8b3a3a;border-radius:var(--radius);font-size:13px;margin-bottom:20px;line-height:1.5}
+.cal-error a{color:#8b3a3a;font-weight:600;text-decoration:underline}
+
+/* ── Time slots ── */
+.slot-date-label{font-family:var(--heading);font-size:19px;font-weight:500;color:var(--black);letter-spacing:-.01em;margin-bottom:18px}
+.slot-tz{display:inline-block;font-family:var(--body);font-size:11px;font-weight:500;color:var(--g500);background:var(--g100);border-radius:100px;padding:3px 10px;margin-left:8px;letter-spacing:.02em;vertical-align:middle}
+.slot-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px;margin-bottom:8px}
+.slot-btn{padding:13px 8px;border:1.5px solid var(--g200);border-radius:var(--radius);background:#fff;color:var(--g700);font-size:14px;font-weight:500;font-family:var(--body);text-align:center;cursor:pointer;transition:border-color .25s,color .25s,transform .25s var(--ease-out-back),box-shadow .25s}
+.slot-btn:hover:not(:disabled){border-color:var(--accent);color:var(--accent);transform:translateY(-2px);box-shadow:var(--sh-sm)}
+.slot-btn:disabled{opacity:.4;cursor:not-allowed}
+.slot-empty{text-align:center;color:var(--g500);font-size:13px;padding:32px 0}
+
+/* ── Booking loader ── */
+.booking-loader{text-align:center;padding:40px 0 28px}
+.booking-loader-icon{width:72px;height:72px;margin:0 auto 24px;position:relative}
+.booking-loader-icon::before{content:'';position:absolute;inset:0;border:3px solid var(--g200);border-top-color:var(--accent);border-radius:50%;animation:spin .9s cubic-bezier(.5,0,.5,1) infinite}
+.booking-loader-icon::after{content:'';position:absolute;inset:25px;background:var(--accent);border-radius:50%;animation:loaderPulse 1.6s ease-in-out infinite}
+@keyframes loaderPulse{0%,100%{opacity:.35;transform:scale(.9)}50%{opacity:1;transform:scale(1.15)}}
+.booking-loader-meta{font-size:14px;color:var(--g500);font-weight:300;margin-top:12px}
+.booking-loader-meta strong{color:var(--black);font-weight:500}
+
+/* ── Confetti ── */
+.confetti-wrap{position:fixed;inset:0;pointer-events:none;z-index:100;overflow:hidden}
+.confetti{position:absolute;width:8px;height:8px;border-radius:2px;opacity:0}
+.confetti.go{animation:confettiFall var(--fall-dur,2.5s) var(--ease-out-expo) forwards}
+@keyframes confettiFall{0%{opacity:1;transform:translateY(0) rotate(0) scale(1)}20%{opacity:1}100%{opacity:0;transform:translateY(calc(100vh + 50px)) rotate(var(--spin,720deg)) scale(.3)}}
+
+/* ── Below-card reassurance ── */
+.scarcity{display:flex;align-items:center;justify-content:center;gap:9px;margin-top:22px;font-size:13.5px;color:var(--g500);font-weight:300;text-align:center}
+.scarcity svg{flex-shrink:0;color:var(--accent)}
+
+/* ── Footer ── */
+.mini-footer{text-align:center;padding:30px 22px;border-top:1px solid var(--g200);background:#fff;position:relative;z-index:1}
+.mf-copy{font-size:12px;color:var(--g400)}
+.mf-copy .tag{font-style:italic;display:block;margin-bottom:6px;color:var(--g500)}
+
+/* entrance animations for cal/slot children */
+.step.active .cal-day{animation:dayFadeIn .42s var(--ease-out-expo) calc(var(--idx,0) * 12ms + .2s) both}
+@keyframes dayFadeIn{from{opacity:0}to{opacity:1}}
+.step.active .slot-btn{animation:slotPop .45s var(--ease-out-back) calc(var(--idx,0) * 22ms + .1s) both}
+@keyframes slotPop{from{opacity:0;transform:translateY(8px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+@media(max-width:640px){
+  .wrap{padding:26px 16px 56px}
+  .book-card{padding:20px 16px}
+  .slot-list{grid-template-columns:repeat(auto-fill,minmax(92px,1fr))}
+  .cal-day{font-size:13px}
+}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;transition-duration:.001ms!important}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="confirm-pill">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+    The live audit, start to finish
+  </div>
+  <h1 class="reveal-h1">Here's what goes into <em>your live audit</em>.</h1>
+  <p class="reveal-sub">No deck, no "discovery call." We pull up your listing and deliver the audit itself, live on the call — what's working, what's costing you bookings, and what we'd fix first. <strong>Here's exactly how those 30 minutes run,</strong> and when you're ready, you can grab a time right from this page.</p>
+
+  <div class="book-card">
+
+    <div class="success-state revealed-on-load" id="card-header">
+      <div class="success-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#4A6741" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div>
+      <h2 class="success-title">Your audit, <em>delivered live.</em></h2>
+      <p class="success-desc">30 minutes on Google Meet with a fellow host. We screen-share your real numbers — where you rank, what it's costing you, and what we'd do about it — and the findings are yours to keep either way.</p>
+      <div class="booked-meta">
+        <span class="booked-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>30 min</span>
+        <span class="booked-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>Google Meet</span>
+        <span class="booked-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Live screen-share</span>
+      </div>
+    </div>
+
+    <div class="booked-body">
+      <section class="booked-sec">
+        <div class="booked-eyebrow">Start here</div>
+        <h3 class="booked-h">Watch this before we <em>meet</em>.</h3>
+        <div class="vsl-host" id="vsl-host" hidden>
+          <img class="vsl-host-avatar" id="vsl-host-img" src="" alt="" width="46" height="46" loading="lazy">
+          <div class="vsl-host-copy" id="vsl-host-copy"></div>
+        </div>
+        <div class="vsl-player">
+          <button class="vsl-facade" id="vsl-facade" type="button" aria-label="Play the video">
+            <img class="vsl-thumb" id="vsl-thumb" src="" alt="" loading="lazy">
+            <span class="vsl-play"><svg width="22" height="22" viewBox="0 0 24 24" fill="#fff"><path d="M8 5.5v13l11-6.5z"/></svg></span>
+            <span class="vsl-dur" id="vsl-dur"></span>
+          </button>
+        </div>
+        <p class="vsl-note" id="vsl-note"></p>
+      </section>
+
+      <section class="booked-sec">
+        <div class="booked-eyebrow">What happens on the call</div>
+        <h3 class="booked-h">Here's how the 30 minutes go.</h3>
+        <ol class="booked-steps">
+          <li><span class="bs-num">1</span><div><strong>We get to know your property.</strong> Where it stands today, where you're trying to take it, and the number you believe it could hit. There's a lot we can't see from our side, so this is where you fill it in.</div></li>
+          <li><span class="bs-num">2</span><div><strong>We pull up your audit, live.</strong> We screen-share exactly where you're ranking right now across your real availability, and where your revenue opportunity is. This is the part most "free audits" skip.</div></li>
+          <li><span class="bs-num">3</span><div><strong>We show you what we'd do.</strong> A straight walk-through of RevWhisper and, if it's a fit, what working together looks like. If it's not, you still leave knowing exactly where you stand.</div></li>
+        </ol>
+      </section>
+
+      <section class="booked-sec">
+        <div class="booked-eyebrow">The part hosts remember</div>
+        <h3 class="booked-h">You'll see exactly <em>where you stand</em>.</h3>
+        <p class="booked-p">Where you rank decides what you earn, since about 75% of guests never scroll past the first page on Airbnb. On this call you'll see it live, across your real open dates: where your listing actually stands today, and where your biggest revenue opportunity is, whether that's climbing the rankings or charging what your spot is already worth. Most hosts tell us it's the clearest picture they've ever had of their listing.</p>
+      </section>
+
+      <section class="booked-sec">
+        <div class="booked-eyebrow">Come ready</div>
+        <h3 class="booked-h">What's useful to have in mind.</h3>
+        <p class="booked-p">Nothing to prepare or pull together. The call just goes deeper if you've already thought about:</p>
+        <ul class="booked-list">
+          <li>The number in your head for what your property could do at its best.</li>
+          <li>Roughly where it landed last year. Ballpark is fine; no need to pull reports.</li>
+          <li>The one thing about your revenue or ranking that nags at you most.</li>
+        </ul>
+      </section>
+
+      <section class="booked-sec booked-hosts">
+        <div class="host-avatars">
+          <img class="host-avatar" src="/images/team/bryan.webp" alt="Bryan" loading="lazy" width="40" height="40">
+          <img class="host-avatar" src="/images/team/nic.webp" alt="Nicolas" loading="lazy" width="40" height="40">
+        </div>
+        <div>
+          <h3 class="booked-h" style="margin-bottom:10px">You'll be talking to fellow hosts.</h3>
+          <p class="booked-p">We run our own portfolio of short-term rentals across the US. The same system we'll show you is the one we run on our own money.</p>
+        </div>
+      </section>
+
+      <!-- ── Embedded booking — book directly from this page ── -->
+      <section class="booked-sec" id="book">
+        <div class="booked-eyebrow" id="book-eyebrow">When you're ready</div>
+        <h3 class="booked-h" id="book-heading">Grab a time. <em>We'll do the digging.</em></h3>
+        <p class="booked-p" id="book-desc" style="margin-bottom:22px">Pick a slot below and drop your details — we pull your numbers before we meet, so the 30 minutes start at your audit, not the intro.</p>
+
+        <div class="steps-viewport">
+
+          <!-- Step 0: Date picker -->
+          <div class="step active" data-step="0">
+            <div id="cal-error-slot"></div>
+            <div class="cal-shell">
+              <div class="cal-nav">
+                <button type="button" class="cal-nav-btn" id="cal-prev" aria-label="Previous month"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
+                <div class="cal-month-label" id="cal-month-label">…</div>
+                <button type="button" class="cal-nav-btn" id="cal-next" aria-label="Next month"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
+              </div>
+              <div class="cal-weekdays"><div class="cal-weekday">Sun</div><div class="cal-weekday">Mon</div><div class="cal-weekday">Tue</div><div class="cal-weekday">Wed</div><div class="cal-weekday">Thu</div><div class="cal-weekday">Fri</div><div class="cal-weekday">Sat</div></div>
+              <div class="cal-grid" id="cal-grid"><div class="cal-loading" style="grid-column:1/-1"><div class="cal-spinner"></div><span>Loading availability…</span></div></div>
+            </div>
+            <div class="book-field-hint" style="text-align:center">Times are shown in your timezone — <span id="host-tz">UTC</span>.</div>
+          </div>
+
+          <!-- Step 1: Time picker -->
+          <div class="step" data-step="1">
+            <div id="slot-error-slot"></div>
+            <div class="slot-shell">
+              <div class="slot-date-label" id="slot-date-label">…<span class="slot-tz" id="slot-tz">UTC</span></div>
+              <div class="slot-list" id="slot-list"></div>
+            </div>
+            <div class="form-actions"><button class="btn-back" type="button" onclick="prevStep()"><span class="arrow">←</span> Back</button></div>
+          </div>
+
+          <!-- Step 2: Your details + confirm -->
+          <div class="step" data-step="2">
+            <div class="confirm-summary">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></svg>
+              <span>Your audit — <strong id="confirm-when">your selected time</strong></span>
+            </div>
+            <div id="confirm-error-slot"></div>
+            <div class="book-field">
+              <label class="book-field-label" for="book-name">Your name</label>
+              <input class="book-input" type="text" id="book-name" placeholder="First and last name" autocomplete="name">
+            </div>
+            <div class="book-field">
+              <label class="book-field-label" for="book-email">Email</label>
+              <input class="book-input" type="email" id="book-email" placeholder="you@example.com" autocomplete="email" inputmode="email">
+            </div>
+            <div class="book-field">
+              <label class="book-field-label" for="book-phone">Phone <span class="book-field-optional">(optional)</span></label>
+              <div class="book-phone-wrap">
+                <select class="book-phone-code" id="book-phone-code" aria-label="Country code">
+                  <option value="+1">🇺🇸 +1</option><option value="+44">🇬🇧 +44</option><option value="+61">🇦🇺 +61</option><option value="+33">🇫🇷 +33</option><option value="+49">🇩🇪 +49</option><option value="+52">🇲🇽 +52</option><option value="+34">🇪🇸 +34</option><option value="+39">🇮🇹 +39</option><option value="+55">🇧🇷 +55</option>
+                </select>
+                <input class="book-input" type="tel" id="book-phone" placeholder="(555) 123-4567" autocomplete="tel" inputmode="tel" maxlength="16">
+              </div>
+              <div class="book-field-hint">Add it and we'll text your Google Meet link and a reminder before your audit. Nothing else.</div>
+            </div>
+            <button class="btn-confirm" type="button" id="confirm-btn" onclick="confirmBooking()">Confirm my audit <span class="arrow">→</span></button>
+            <div class="form-actions"><button class="btn-back" type="button" onclick="prevStep()"><span class="arrow">←</span> Back</button></div>
+          </div>
+
+          <!-- Step 3: Booking in flight -->
+          <div class="step" data-step="3">
+            <div class="booking-loader">
+              <div class="booking-loader-icon"></div>
+              <div class="step-eyebrow">One moment</div>
+              <h2 class="step-title">Locking in your <em>time…</em></h2>
+              <p class="booking-loader-meta" id="loader-when">Confirming with our team</p>
+            </div>
+          </div>
+
+          <!-- Step 4: Booked -->
+          <div class="step" data-step="4">
+            <div class="success-state" id="success-state">
+              <div class="success-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#4A6741" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div>
+              <h2 class="success-title">You're booked<span id="success-name"></span>. <em>The real work starts here.</em></h2>
+              <p class="success-desc" id="success-desc">Your live audit is confirmed. A calendar invite is on its way to your inbox.</p>
+              <div class="success-detail">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></svg>
+                <span id="success-when">Confirmed</span>
+              </div>
+              <div class="booked-meta">
+                <span class="booked-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>30 min</span>
+                <span class="booked-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>Google Meet</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </div>
+
+  </div>
+
+  <div class="scarcity" id="scarcity">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+    We run a limited number of live audits each week. Grab a time while it's open.
+  </div>
+
+</div>
+
+<footer class="mini-footer">
+  <div class="mf-copy"><span class="tag">Stop Guessing. Start Whispering.</span>&copy; 2026 MCO CORP d/b/a RevWhisper. All rights reserved.</div>
+</footer>
+
+<div class="confetti-wrap" id="confetti-wrap"></div>
+
+<script>
+/* Static "what to expect" page — the de-personalized twin of the /audit-booking success
+   screen, with the booking flow embedded so a prospect can book directly from here.
+   No lead context needed: name/email/phone are collected at the confirm step.
+   ?host=nick swaps in Nick's video + photo (default bryan); ?host=none shows the
+   default video with neutral copy and no photo. */
+
+/* ───────────── Intro video (VSL) ───────────── */
+var VSL_HOSTS={
+  bryan:{key:'bryan',first:'Bryan',img:'/images/team/bryan.webp',videoId:'Trovk73GTWc',durBadge:'4:45',durText:'just under 5 minutes'},
+  nick:{key:'nick',first:'Nicolas',img:'/images/team/nic.webp',videoId:'nS31JRQbJ04',durBadge:'1:31',durText:'90 seconds'}
+};
+var qsHost=(new URLSearchParams(location.search)).get('host');
+var vslHost=qsHost==='none'?null:(VSL_HOSTS[qsHost]||VSL_HOSTS.bryan);
+var vslActive=vslHost||VSL_HOSTS.bryan; // neutral fallback still plays the default video
+
+(function setupVsl(){
+  var v=vslActive;
+  var thumb=document.getElementById('vsl-thumb');
+  if(thumb){
+    thumb.src='https://i.ytimg.com/vi/'+v.videoId+'/maxresdefault.jpg';
+    thumb.onerror=function(){this.onerror=null;this.src='https://i.ytimg.com/vi/'+v.videoId+'/hqdefault.jpg';};
+  }
+  var dur=document.getElementById('vsl-dur'); if(dur) dur.textContent=v.durBadge;
+  var row=document.getElementById('vsl-host');
+  if(row&&vslHost){
+    row.hidden=false;
+    var img=document.getElementById('vsl-host-img');
+    if(img){img.src=vslHost.img;img.alt=vslHost.first;}
+    var copy=document.getElementById('vsl-host-copy');
+    if(copy) copy.innerHTML='Recorded by <strong>'+vslHost.first+'</strong> — one of the hosts who runs these audits.';
+  }
+  var note=document.getElementById('vsl-note');
+  if(note) note.innerHTML='It’s '+v.durText+' and walks through what’s inside your audit and how the 30 minutes run — so your call starts at your numbers, not the intro. <strong>It’s the best place to start.</strong>';
+  var facade=document.getElementById('vsl-facade');
+  if(facade) facade.onclick=playVsl;
+})();
+
+function playVsl(){
+  var v=vslActive;
+  var player=document.querySelector('.vsl-player'); if(!player) return;
+  var iframe=document.createElement('iframe');
+  iframe.src='https://www.youtube-nocookie.com/embed/'+v.videoId+'?autoplay=1&rel=0&modestbranding=1&playsinline=1';
+  iframe.title='What to expect on your RevWhisper audit call';
+  iframe.allow='autoplay; encrypted-media; picture-in-picture; fullscreen';
+  iframe.setAttribute('allowfullscreen','');
+  player.innerHTML='';player.appendChild(iframe);
+  rwTrack('vsl_play',{host:v.key,page:'what-to-expect'});
+}
+
+/* ───────────── Booking state ───────────── */
+let current=0;
+let isTransitioning=false;
+const CAL_SLOTS_ENDPOINT='/api/cal-slots';
+const CAL_BOOKING_ENDPOINT='/api/cal-booking';
+const booking={
+  timeZone:(Intl.DateTimeFormat().resolvedOptions().timeZone)||'UTC',
+  slotsByDate:{},rangeStart:null,rangeEnd:null,loaded:false,loading:false,
+  selectedDate:null,selectedSlot:null,bookingInFlight:false,visibleMonth:null,
+  lead:{}
+};
+
+document.addEventListener('DOMContentLoaded',function(){
+  var tzEl=document.getElementById('host-tz'); if(tzEl) tzEl.textContent=booking.timeZone;
+  var hdr=document.getElementById('card-header'); if(hdr) setTimeout(function(){hdr.classList.add('revealed');},50);
+  loadSlots(); // prefetch so the calendar is ready by the time they scroll down
+});
+
+function transitionStep(from,to,direction){
+  if(isTransitioning) return;
+  isTransitioning=true;
+  const vp=document.querySelector('.steps-viewport');
+  const fromEl=document.querySelector(`.step[data-step="${from}"]`);
+  const toEl=document.querySelector(`.step[data-step="${to}"]`);
+  if(!fromEl||!toEl){isTransitioning=false;return;}
+  const startH=vp.offsetHeight;
+  fromEl.classList.remove('active','enter-from-below','enter-from-above');
+  fromEl.classList.add(direction==='forward'?'exit-up':'exit-down');
+  toEl.classList.remove('active','exit-up','exit-down');
+  toEl.style.transition='none';
+  toEl.style.position='relative';toEl.style.opacity='0';toEl.style.visibility='visible';
+  toEl.style.transform=direction==='forward'?'translateY(14px)':'translateY(-14px)';
+  toEl.style.pointerEvents='auto';
+  void toEl.offsetHeight;
+  const endH=toEl.offsetHeight;
+  vp.style.height=startH+'px';
+  void vp.offsetHeight;
+  vp.style.height=endH+'px';
+  toEl.style.transition='';
+  toEl.classList.add(direction==='forward'?'enter-from-below':'enter-from-above');
+  toEl.style.position='';toEl.style.opacity='';toEl.style.visibility='';toEl.style.transform='';toEl.style.pointerEvents='';
+  setTimeout(function(){fromEl.classList.remove('exit-up','exit-down');fromEl.style.position='';vp.style.height='';isTransitioning=false;},480);
+}
+function prevStep(){ if(current>0){const from=current;current--;transitionStep(from,current,'backward');} }
+
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function showCalError(message,options){
+  const slot=document.getElementById('cal-error-slot'); if(!slot) return;
+  const showRetry=options&&options.retry!==false;
+  slot.innerHTML=`<div class="cal-error"><div>${esc(message)}</div>${showRetry?'<div style="margin-top:8px"><a href="#" id="cal-retry">Try again</a></div>':''}</div>`;
+  const r=document.getElementById('cal-retry'); if(r) r.addEventListener('click',function(e){e.preventDefault();slot.innerHTML='';booking.loaded=false;booking.loading=false;loadSlots();});
+}
+function recoverStaleSlot(){
+  booking.bookingInFlight=false;
+  booking.loaded=false;booking.loading=false;
+  rwTrack('booking_slot_taken',{page:'what-to-expect'});
+  const fromLoader=current;current=0;transitionStep(fromLoader,current,'backward');
+  showCalError("That time was just booked by someone else. Here are the latest open times — please pick another.",{retry:false});
+  loadSlots();
+}
+
+async function loadSlots(){
+  if(booking.loading||booking.loaded) return;
+  booking.loading=true;
+  const grid=document.getElementById('cal-grid');
+  if(grid) grid.innerHTML='<div class="cal-loading" style="grid-column:1/-1"><div class="cal-spinner"></div><span>Loading availability…</span></div>';
+  const start=new Date();start.setHours(0,0,0,0);
+  const end=new Date(start.getTime());end.setDate(end.getDate()+60);
+  booking.rangeStart=start;booking.rangeEnd=end;
+  booking.visibleMonth=booking.visibleMonth||new Date(start.getFullYear(),start.getMonth(),1);
+  const params=new URLSearchParams({start:start.toISOString(),end:end.toISOString(),timeZone:booking.timeZone});
+  try{
+    const res=await fetch(`${CAL_SLOTS_ENDPOINT}?${params.toString()}`);
+    if(!res.ok){const b=await res.json().catch(()=>({}));throw new Error(b.error||`Cal.com returned ${res.status}`);}
+    const json=await res.json();
+    const data=(json&&json.data)||{};
+    booking.slotsByDate={};
+    Object.keys(data).forEach(function(k){
+      const arr=data[k];
+      if(Array.isArray(arr)&&arr.length>0){booking.slotsByDate[k]=arr.map(function(it){return typeof it==='string'?it:(it&&it.start)||null;}).filter(Boolean);}
+    });
+    booking.loaded=true;renderCalendar();
+    if(Object.keys(booking.slotsByDate).length===0){
+      showCalError("We don't have open times in the next 60 days right now. Please try again shortly.",{retry:true});
+    }
+  }catch(err){
+    console.error('loadSlots failed:',err);
+    showCalError(err&&err.message?`We couldn't load availability: ${err.message}`:"We couldn't load availability.",{retry:true});
+    if(grid) grid.innerHTML='';
+  }finally{booking.loading=false;}
+}
+
+function ymdKey(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+function sameDay(a,b){return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate();}
+
+function renderCalendar(){
+  const grid=document.getElementById('cal-grid');
+  const label=document.getElementById('cal-month-label');
+  const prevBtn=document.getElementById('cal-prev');
+  const nextBtn=document.getElementById('cal-next');
+  if(!grid||!label) return;
+  const month=booking.visibleMonth;
+  const monthStart=new Date(month.getFullYear(),month.getMonth(),1);
+  const monthEnd=new Date(month.getFullYear(),month.getMonth()+1,0);
+  const today=new Date();today.setHours(0,0,0,0);
+  label.textContent=monthStart.toLocaleDateString(undefined,{month:'long',year:'numeric'});
+  const rangeStartMonth=new Date(booking.rangeStart.getFullYear(),booking.rangeStart.getMonth(),1);
+  const rangeEndMonth=new Date(booking.rangeEnd.getFullYear(),booking.rangeEnd.getMonth(),1);
+  if(prevBtn) prevBtn.disabled=monthStart<=rangeStartMonth;
+  if(nextBtn) nextBtn.disabled=monthStart>=rangeEndMonth;
+  const cells=[];
+  for(let i=0;i<monthStart.getDay();i++) cells.push(null);
+  for(let d=1;d<=monthEnd.getDate();d++) cells.push(new Date(month.getFullYear(),month.getMonth(),d));
+  while(cells.length<42) cells.push(null);
+  grid.innerHTML='';
+  cells.forEach(function(date,i){
+    const cell=document.createElement('div');
+    cell.className='cal-day';cell.style.setProperty('--idx',String(i));
+    if(!date){cell.classList.add('empty');grid.appendChild(cell);return;}
+    cell.textContent=date.getDate();
+    if(sameDay(date,today)) cell.classList.add('today');
+    const key=ymdKey(date);
+    const isPast=date<today;
+    const inRange=date>=booking.rangeStart&&date<=booking.rangeEnd;
+    const hasSlots=!!booking.slotsByDate[key];
+    if(!isPast&&inRange&&hasSlots){
+      cell.classList.add('available');cell.setAttribute('role','button');cell.setAttribute('tabindex','0');
+      cell.addEventListener('click',function(){selectDate(key);});
+      cell.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();selectDate(key);}});
+    }else{cell.classList.add('unavailable');}
+    grid.appendChild(cell);
+  });
+}
+function selectDate(dateKey){
+  booking.selectedDate=dateKey;
+  rwTrack('select_booking_date',{date:dateKey,page:'what-to-expect'});
+  renderSlots();
+  const from=current;current++;transitionStep(from,current,'forward');
+}
+function renderSlots(){
+  const list=document.getElementById('slot-list');
+  const label=document.getElementById('slot-date-label');
+  const tzEl=document.getElementById('slot-tz');
+  const errEl=document.getElementById('slot-error-slot');
+  if(errEl) errEl.innerHTML='';
+  if(!list||!label) return;
+  const slots=booking.slotsByDate[booking.selectedDate]||[];
+  const dateObj=new Date(booking.selectedDate+'T12:00:00');
+  label.firstChild.textContent=dateObj.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})+' ';
+  if(tzEl) tzEl.textContent=booking.timeZone;
+  if(slots.length===0){list.innerHTML='<div class="slot-empty" style="grid-column:1/-1">No times available. Pick another day.</div>';return;}
+  list.innerHTML='';
+  slots.forEach(function(iso,i){
+    const btn=document.createElement('button');
+    btn.type='button';btn.className='slot-btn';btn.style.setProperty('--idx',String(i));
+    btn.textContent=new Date(iso).toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});
+    btn.dataset.iso=iso;
+    btn.addEventListener('click',function(){selectSlot(iso,btn);});
+    list.appendChild(btn);
+  });
+}
+
+/* Tap a time → go to the details + confirm step (does NOT book yet) */
+function selectSlot(iso,btn){
+  if(booking.bookingInFlight) return;
+  booking.selectedSlot=iso;
+  rwTrack('select_booking_time',{time:iso,page:'what-to-expect'});
+  const t=new Date(iso);
+  const when=t.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})+' at '+t.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});
+  const cw=document.getElementById('confirm-when'); if(cw) cw.textContent=when;
+  const lw=document.getElementById('loader-when'); if(lw) lw.innerHTML='Confirming <strong>'+esc(when)+'</strong>';
+  const errEl=document.getElementById('confirm-error-slot'); if(errEl) errEl.innerHTML='';
+  const cb=document.getElementById('confirm-btn'); if(cb) cb.disabled=false; // re-enable on (re)entry
+  const from=current;current++;transitionStep(from,current,'forward'); // time → details
+}
+
+function showConfirmError(message){
+  const errEl=document.getElementById('confirm-error-slot'); if(!errEl) return;
+  errEl.innerHTML='<div class="cal-error">'+esc(message)+'</div>';
+}
+
+/* Phone input: country-code-aware live mask + validation (US/Canada = 10 digits; intl = 7-15) */
+function rwPhoneDigits(v){ return (String(v||'').match(/\d/g)||[]).join(''); }
+function rwFormatPhone(code,raw){
+  var d=rwPhoneDigits(raw);
+  if(code==='+1'){
+    d=d.slice(0,10);
+    if(!d) return '';
+    if(d.length<4) return '('+d;
+    if(d.length<7) return '('+d.slice(0,3)+') '+d.slice(3);
+    return '('+d.slice(0,3)+') '+d.slice(3,6)+'-'+d.slice(6);
+  }
+  return d.slice(0,15);
+}
+function rwPhoneValid(code,raw){
+  var n=rwPhoneDigits(raw).length;
+  return code==='+1' ? n===10 : (n>=7&&n<=15);
+}
+(function(){
+  var p=document.getElementById('book-phone'),c=document.getElementById('book-phone-code');
+  function applyMask(){
+    if(!p||!c) return;
+    p.value=rwFormatPhone(c.value,p.value);
+    p.placeholder=c.value==='+1'?'(555) 123-4567':'Phone number';
+    p.classList.remove('error');
+  }
+  if(p) p.addEventListener('input',applyMask);
+  if(c) c.addEventListener('change',applyMask);
+  ['book-name','book-email'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el) el.addEventListener('input',function(){el.classList.remove('error');});
+  });
+})();
+
+/* Validate the details fields → booking.lead. Returns null if OK, else an error message. */
+function collectLead(){
+  var nameEl=document.getElementById('book-name');
+  var emailEl=document.getElementById('book-email');
+  var phoneEl=document.getElementById('book-phone');
+  var codeEl=document.getElementById('book-phone-code');
+  var name=(nameEl&&nameEl.value||'').trim();
+  var email=(emailEl&&emailEl.value||'').trim();
+  var phoneRaw=(phoneEl&&phoneEl.value||'').trim();
+  var code=(codeEl&&codeEl.value||'+1').trim();
+  var bad=null;
+  if(!name){nameEl.classList.add('error');bad=bad||'Please add your name.';}
+  if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){emailEl.classList.add('error');bad=bad||'Please add a valid email — that\'s where your calendar invite goes.';}
+  if(phoneRaw&&!rwPhoneValid(code,phoneRaw)){phoneEl.classList.add('error');bad=bad||'That phone number doesn\'t look complete — fix it or clear the field.';}
+  if(bad) return bad;
+  booking.lead={name:name,email:email,phone:phoneRaw?(code+' '+phoneRaw):'',attribution:rwAttribution()};
+  return null;
+}
+
+/* Details step → book the selected slot. */
+async function confirmBooking(){
+  if(booking.bookingInFlight) return;
+  const ce=document.getElementById('confirm-error-slot'); if(ce) ce.innerHTML='';
+  const fieldError=collectLead();
+  if(fieldError){ showConfirmError(fieldError); return; }
+  booking.bookingInFlight=true;
+  const cbtn=document.getElementById('confirm-btn'); if(cbtn) cbtn.disabled=true;
+  const l=booking.lead;
+  const iso=booking.selectedSlot;
+  const from=current;current++;transitionStep(from,current,'forward'); // details → loader
+  const startedAt=Date.now();const MIN_LOADER_MS=1100;
+  // Meta Schedule event_id — generated up front and sent with the booking so /api/cal-booking
+  // can fire a server-side Schedule (CAPI) with the SAME id, deduped against the browser event
+  // below. _fbp/_fbc raise match quality for that server event.
+  var evId='sched_'+Date.now()+'_'+Math.random().toString(36).slice(2,10);
+  var xConversionId=typeof rwXConversionId==='function'?rwXConversionId('audit_call'):'audit_call_'+Date.now();
+  var fbp=rwCookie('_fbp'), fbc=rwCookie('_fbc');
+  const payload={start:iso,name:l.name,email:l.email,phone:l.phone,timeZone:booking.timeZone,source:'what-to-expect',attribution:l.attribution||{},fbEventId:evId,fbp:fbp,fbc:fbc,xConversionId:xConversionId,twclid:(l.attribution&&l.attribution.twclid)||''};
+  let bookingResult=null,bookingError=null,shouldFallback=false,slotUnavailable=false;
+  try{
+    const res=await fetch(CAL_BOOKING_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    const body=await res.json().catch(()=>({}));
+    if(!res.ok||!body.ok){
+      if(body&&body.code==='slot_unavailable'){slotUnavailable=true;}
+      else if(body&&body.fallback){shouldFallback=true;}
+      else throw new Error((body&&body.error)||`Cal.com returned ${res.status}`);
+    }
+    else{ bookingResult=body.booking; }
+  }catch(err){ bookingError=err; }
+  const elapsed=Date.now()-startedAt;
+  if(elapsed<MIN_LOADER_MS){ await new Promise(function(r){setTimeout(r,MIN_LOADER_MS-elapsed);}); }
+  if(slotUnavailable){ recoverStaleSlot(); return; }
+  // Booking didn't go through (Cal.com error/upstream hiccup/network) → keep the customer on
+  // our page, re-enable the button, and let them retry. No off-site redirect.
+  if(shouldFallback||bookingError){
+    console.error('Booking failed:',bookingError||'scheduler_unavailable');
+    booking.bookingInFlight=false;
+    const fromLoader=current;current--;transitionStep(fromLoader,current,'backward'); // loader → details
+    setTimeout(function(){
+      const cb2=document.getElementById('confirm-btn'); if(cb2) cb2.disabled=false;
+      showConfirmError(bookingError&&bookingError.message?`That didn't work: ${bookingError.message}.`:"We couldn't reach the scheduler just now. Please try again in a moment.");
+    },450);
+    return;
+  }
+  // Success → fire Call Booked (Schedule). /api/cal-booking fires the same event server-side
+  // (CAPI) with this same event_id, so Meta dedupes the browser + server pair into one.
+  try{ fbq('track','Schedule',{content_name:'Audit Call Booked',content_category:'Audit'},{eventID:evId}); }catch(e){}
+  function fireXCallBooked(){
+    var xParams={conversion_id:xConversionId,email_address:l.email};
+    if(l.phone&&typeof rwXNormalizePhone==='function') xParams.phone_number=rwXNormalizePhone(l.phone);
+    try{ rwXTrack('auditCallBooked',xParams); }catch(e){}
+  }
+  if(window.rwXReady&&typeof window.rwXReady.then==='function'){
+    Promise.race([window.rwXReady,new Promise(function(resolve){setTimeout(resolve,120);})]).then(fireXCallBooked).catch(function(){});
+  }else{
+    fireXCallBooked();
+  }
+  rwTrack('call_booked',{time:iso,page:'what-to-expect'});
+  rwTrack('booking_confirmed',{time:iso,page:'what-to-expect'});
+  renderSuccess(bookingResult);
+  const fromLoader=current;current++;transitionStep(fromLoader,current,'forward'); // loader → success
+  hideBookingIntro(); // the section header steps aside — the confirmation stands on its own
+  setTimeout(launchConfetti,300);
+  setTimeout(function(){var ss=document.getElementById('success-state');if(ss) ss.classList.add('revealed');},50);
+  booking.bookingInFlight=false;
+}
+
+function renderSuccess(data){
+  const desc=document.getElementById('success-desc');
+  const when=document.getElementById('success-when');
+  const nameEl=document.getElementById('success-name');
+  const start=data&&data.start?new Date(data.start):null;
+  const first=((booking.lead&&booking.lead.name)||'').trim().split(' ')[0];
+  if(nameEl) nameEl.textContent=first?(', '+first):'';
+  const textLink=booking.lead&&booking.lead.phone?" and we'll text your Google Meet link before we meet":" with your Google Meet link inside";
+  if(desc){
+    desc.textContent=start
+      ? `Your live audit is set for ${start.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})} at ${start.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'})}. A calendar invite is on its way to your inbox${textLink}. One ask before then: watch the short video at the top of this page.`
+      : `Your live audit is confirmed. A calendar invite is on its way to your inbox${textLink}. One ask before then: watch the short video at the top of this page.`;
+  }
+  if(when){
+    when.textContent=start?(start.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'})+' · '+start.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'})+' ('+booking.timeZone+')'):'Confirmed';
+  }
+}
+
+/* Entering the booked view — hide the section intro and the scarcity line so the
+   confirmation stands on its own. */
+function hideBookingIntro(){
+  ['#book-eyebrow','#book-heading','#book-desc','#scarcity'].forEach(function(sel){
+    const el=document.querySelector(sel); if(el) el.style.display='none';
+  });
+}
+
+function launchConfetti(){
+  const wrap=document.getElementById('confetti-wrap');
+  const colors=['#4A6741','#dce6d8','#b3c5ab','#32302F','#E0DCDA','#706b68','#8aab7f','#c5d6bf'];
+  for(let i=0;i<60;i++){
+    const el=document.createElement('div');el.className='confetti';
+    el.style.background=colors[Math.floor(Math.random()*colors.length)];
+    el.style.left=(Math.random()*100)+'%';el.style.top=(-10-Math.random()*20)+'%';
+    el.style.width=(5+Math.random()*6)+'px';el.style.height=(5+Math.random()*6)+'px';
+    el.style.borderRadius=Math.random()>.5?'50%':'2px';
+    el.style.setProperty('--fall-dur',(1.8+Math.random()*1.5)+'s');
+    el.style.setProperty('--spin',(360+Math.random()*720)+'deg');
+    wrap.appendChild(el);
+    setTimeout(function(){el.classList.add('go');},Math.random()*400);
+  }
+  setTimeout(function(){wrap.innerHTML='';},4000);
+}
+
+document.addEventListener('DOMContentLoaded',function(){
+  const prev=document.getElementById('cal-prev');
+  const next=document.getElementById('cal-next');
+  if(prev) prev.addEventListener('click',function(){const m=booking.visibleMonth;booking.visibleMonth=new Date(m.getFullYear(),m.getMonth()-1,1);renderCalendar();});
+  if(next) next.addEventListener('click',function(){const m=booking.visibleMonth;booking.visibleMonth=new Date(m.getFullYear(),m.getMonth()+1,1);renderCalendar();});
+});
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
