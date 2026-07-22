@@ -4,3 +4,7 @@ New Website Elements/
 .env
 .env.*
 !.env.example
+
+# Photo-tour source drop folders (local working files; site serves images/properties/tours/)
+images/properties/photo-tours/*
+!images/properties/photo-tours/README.md

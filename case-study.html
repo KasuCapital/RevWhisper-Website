@@ -5,16 +5,23 @@
 <script>
 (function(){
   var key='rw_attribution';
+  var TTL=7776000000; // 90 days — keep the last paid touch across tabs/sessions
   var params=new URLSearchParams(window.location.search);
   var utmFields=['utm_source','utm_medium','utm_campaign','utm_term','utm_content'];
-  var hasUtm=utmFields.some(function(f){return params.has(f);});
-  if(hasUtm||!sessionStorage.getItem(key)){
+  var clickFields=['fbclid','gclid','ttclid','twclid','msclkid','li_fat_id'];
+  var trackedFields=utmFields.concat(clickFields);
+  var hasTracked=trackedFields.some(function(f){return params.has(f);});
+  function rwGet(k){try{return localStorage.getItem(k)||sessionStorage.getItem(k);}catch(e){try{return sessionStorage.getItem(k);}catch(e2){return null;}}}
+  function rwSet(k,v){try{localStorage.setItem(k,v);}catch(e){try{sessionStorage.setItem(k,v);}catch(e2){}}}
+  var prev=null;try{prev=JSON.parse(rwGet(key));}catch(e){prev=null;}
+  var fresh=prev&&prev.arrived_at&&((Date.now()-new Date(prev.arrived_at).getTime())<TTL);
+  if(hasTracked||!fresh){
     var data={};
-    utmFields.forEach(function(f){if(params.get(f))data[f]=params.get(f);});
+    trackedFields.forEach(function(f){if(params.get(f))data[f]=params.get(f);});
     try{data.referrer=document.referrer?new URL(document.referrer).hostname:'direct';}catch(e){data.referrer=document.referrer||'direct';}
     data.landing_page=window.location.pathname;
     data.arrived_at=new Date().toISOString();
-    sessionStorage.setItem(key,JSON.stringify(data));
+    rwSet(key,JSON.stringify(data));
   }
 })();
 </script>
@@ -71,8 +78,8 @@ document.addEventListener('DOMContentLoaded',function(){
 <!-- End Meta Pixel -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Case Study &mdash; The Whisper Wheel in Action | RevWhisper</title>
-<meta name="description" content="See how RevWhisper's Whisper Wheel system lifted revenue by 33% across three Florida Airbnb properties in 90 days with zero physical modifications.">
+<title>Case Studies &mdash; What Our Clients&rsquo; Calendars Look Like Right Now | RevWhisper</title>
+<meta name="description" content="Real client results read straight from PriceLabs: sold-out peak months at higher rates, off-season occupancy up 65%, and new listings launched at full rate with no discount phase.">
 <link rel="canonical" href="https://revwhisper.com/case-study">
 <link rel="icon" href="/icons/favicon-light.svg" type="image/svg+xml" media="(prefers-color-scheme: light)">
 <link rel="icon" href="/icons/favicon-dark.svg" type="image/svg+xml" media="(prefers-color-scheme: dark)">
@@ -99,6 +106,8 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
   --red:#B85252;
   --terra:#8B4A3E;
   --gold:#9B7B3A;
+  --gold-bg:#f0e9da;
+  --terra-bg:#f0e2de;
   --stone:#f3f1ef;
   --g50:#faf9f8;--g100:#f3f1ef;--g200:#E0DCDA;--g300:#ccc8c5;--g400:#a39e9b;--g500:#706b68;--g600:#58534f;--g700:#48433f;
   --radius:8px;--radius-sm:6px;
@@ -113,92 +122,175 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
 /* ── Layout ── */
 .w{max-width:1100px;margin:0 auto;padding:0 28px}
 
-/* ── Hero ── */
-.cs-hero{background:var(--accent);color:var(--white);padding:140px 28px 80px;text-align:center;position:relative;overflow:hidden}
-.cs-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% -20%,rgba(255,255,255,.08),transparent 50%),radial-gradient(ellipse at 70% 120%,rgba(0,0,0,.12),transparent 50%);pointer-events:none}
+/* ── Hero (home-page style: white, glow, big serif, drawn underline) ── */
+.cs-hero{background:var(--white);color:var(--black);padding:150px 28px 44px;text-align:center;position:relative;overflow:hidden}
+.hero-glow{position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:800px;max-width:100vw;height:500px;background:radial-gradient(ellipse at 50% 40%,rgba(74,103,65,.07) 0%,transparent 65%);pointer-events:none}
 .cs-hero .w{position:relative;z-index:1}
-.cs-hero-eyebrow{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;opacity:.65;margin-bottom:20px}
-.cs-hero h1{font-family:var(--heading);font-size:clamp(36px,5vw,56px);font-weight:400;line-height:1.15;max-width:800px;margin:0 auto 24px;letter-spacing:-.02em}
-.cs-hero p{font-size:17px;max-width:600px;margin:0 auto;opacity:.8;line-height:1.7;font-weight:300}
+.cs-hero-h1{font-family:var(--heading);font-size:clamp(42px,6.2vw,76px);font-weight:400;letter-spacing:-.025em;line-height:1.16;color:var(--black);max-width:920px;margin:0 auto 26px}
+.cs-hero-h1 em{font-style:italic;color:var(--accent)}
+.cs-hero-sub{font-size:17px;color:var(--g500);max-width:580px;margin:0 auto;line-height:1.7;font-weight:300}
+.em-mark{position:relative;display:inline;white-space:nowrap;font-style:italic;color:var(--accent)}
+.em-mark::after{content:'';position:absolute;left:-2%;right:-2%;bottom:-6px;height:14px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 16' preserveAspectRatio='none'%3E%3Cpath d='M2 11 C25 4, 75 4, 98 11' fill='none' stroke='%234A6741' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center/100% 100%;pointer-events:none;transform:rotate(-0.5deg);clip-path:inset(0 100% 0 0)}
+.r.in .em-mark::after{animation:ctaUnderlineDraw .8s .4s ease both}
+@keyframes ctaUnderlineDraw{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+.hero-trust{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:22px}
+.ht-item{font-size:13px;color:var(--g500);display:flex;align-items:center;gap:5px}
+.ht-sep{width:3px;height:3px;border-radius:50%;background:var(--g300)}
+.d1{transition-delay:.07s}.d2{transition-delay:.14s}.d3{transition-delay:.21s}
 
-/* ── Stats Banner ── */
-.stats-banner{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--g200)}
-.stat-item{padding:40px 32px;text-align:center;border-right:1px solid var(--g200)}
-.stat-item:last-child{border-right:none}
-.stat-value{font-family:var(--mono);font-size:40px;font-weight:500;color:var(--accent);line-height:1;margin-bottom:8px}
-.stat-label{font-size:14px;color:var(--g500)}
+/* ── Headline Band (percent-only, serif numerals, no rules) ── */
+.stats-banner{display:flex;justify-content:center;align-items:flex-start;gap:clamp(40px,7vw,96px);max-width:1100px;margin:0 auto;padding:20px 28px 0;flex-wrap:wrap}
+.stat-item{text-align:center;max-width:250px}
+.stat-value{font-family:var(--heading);font-size:clamp(44px,5vw,60px);font-weight:500;color:var(--accent);line-height:1;margin-bottom:10px;letter-spacing:-.02em}
+.stat-label{font-size:13.5px;color:var(--g500);line-height:1.55}
+.band-source{text-align:center;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--g400);padding:30px 28px 6px}
 
-/* ── Section ── */
-.cs-section{max-width:1100px;margin:0 auto;padding:80px 28px}
+/* ── Section scaffolding ── */
+.cs-section{max-width:1100px;margin:0 auto;padding:72px 28px}
 .cs-section-alt{background:var(--g50)}
 .cs-eyebrow{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
 .cs-section h2{font-family:var(--heading);font-size:clamp(28px,3.5vw,36px);font-weight:400;line-height:1.2;margin-bottom:16px;letter-spacing:-.02em}
-.cs-section-intro{font-size:17px;max-width:680px;color:var(--g500);margin-bottom:48px;line-height:1.7;font-weight:300}
+.cs-section h2 em{font-style:italic;color:var(--accent)}
+.cs-section-intro{font-size:17px;max-width:680px;color:var(--g500);margin-bottom:40px;line-height:1.7;font-weight:300}
 
-/* ── Whisper Wheel Overview ── */
-.wheel-overview{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:48px}
-.wheel-spoke{text-align:center;padding:20px 12px;background:var(--g50);border-radius:var(--radius);border-top:3px solid var(--accent)}
-.cs-section-alt .wheel-spoke{background:var(--white)}
-.wheel-spoke-number{font-family:var(--mono);font-size:24px;font-weight:500;color:var(--accent);margin-bottom:8px}
-.wheel-spoke-name{font-family:var(--heading);font-size:14px;line-height:1.3;color:var(--black)}
+/* ── Four Levers (audit-page "what we look at" layout: head + list left, Airbnb card right) ── */
+.look-split{display:grid;grid-template-columns:1fr minmax(0,.92fr);grid-template-areas:"head media" "list media";column-gap:clamp(36px,5vw,68px);align-items:center}
+.look-media{grid-area:media;align-self:center}
+.look-head{grid-area:head;align-self:end}
+.look-list{grid-area:list;align-self:start;margin-top:28px;display:flex;flex-direction:column;gap:2px}
+.lk-h2{font-family:var(--heading);font-size:clamp(30px,4vw,44px);font-weight:400;letter-spacing:-.02em;line-height:1.14;color:var(--black)}
+.lk-h2 em{font-style:italic;color:var(--accent)}
+.lk-lead{font-size:17px;color:var(--g500);line-height:1.65;font-weight:300;max-width:560px;margin-top:18px}
+.look-item{display:flex;gap:15px;padding:15px 16px;border-radius:16px;transition:background .25s cubic-bezier(.16,1,.3,1)}
+.look-item:hover{background:var(--g50)}
+.look-ico{width:42px;height:42px;flex-shrink:0;border-radius:11px;background:var(--accent-light);border:1px solid var(--accent-border);display:flex;align-items:center;justify-content:center;color:var(--accent)}
+.look-item h3{font-family:var(--heading);font-size:18px;font-weight:500;color:var(--black);margin-bottom:4px}
+.look-item p{font-size:14px;color:var(--g500);line-height:1.6;font-weight:300}
+.pillar-q{display:block;font-size:13px;color:var(--accent);font-weight:500;margin-top:9px;text-decoration:none}
+a.pillar-q:hover{text-decoration:underline;text-underline-offset:3px}
+.bnb-card{max-width:430px;margin:0 auto;font-family:var(--body)}
+.bnb-photo{position:relative;aspect-ratio:1/1;border-radius:14px;overflow:hidden;background:var(--g100);box-shadow:var(--sh)}
+.bnb-photo img{width:100%;height:100%;object-fit:cover}
+.bnb-heart{position:absolute;top:14px;right:14px;width:26px;height:26px;line-height:0;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
+.bnb-heart svg{width:26px;height:26px;fill:rgba(0,0,0,.35);stroke:#fff;stroke-width:2}
+.bnb-info{padding:15px 4px 0}
+.bnb-title{font-size:16px;font-weight:600;color:var(--black);letter-spacing:-.01em;line-height:1.3}
+.bnb-meta{font-size:15px;color:var(--g500);margin-top:3px;font-weight:300}
+@media(max-width:920px){
+  .look-split{grid-template-columns:1fr;grid-template-areas:"head" "media" "list";row-gap:6px}
+  .look-head{align-self:auto}
+  .look-media{align-self:auto;margin:22px 0 4px}
+  .look-list{align-self:auto;margin-top:18px}
+  .look-item{padding:14px 12px}
+}
 
-/* ── Property Card ── */
-.property-card{background:var(--white);border-radius:var(--radius);box-shadow:var(--sh);overflow:hidden;margin-bottom:64px;border:1px solid var(--g200)}
-.property-header{display:grid;grid-template-columns:1fr 1fr;min-height:320px}
-.property-photo{background:var(--g200);position:relative;overflow:hidden;min-height:320px}
-.property-photo img{width:100%;height:100%;object-fit:cover;display:block}
-.property-summary{padding:48px 40px;display:flex;flex-direction:column;justify-content:center}
-.property-tag{display:inline-block;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;background:var(--accent-light);color:var(--accent);padding:4px 12px;border-radius:4px;margin-bottom:16px;width:fit-content}
-.property-name{font-family:var(--heading);font-size:28px;font-weight:400;margin-bottom:8px;letter-spacing:-.02em}
-.property-location{font-size:15px;color:var(--g400);margin-bottom:24px}
-.property-desc{font-size:16px;line-height:1.65;color:var(--g500);margin-bottom:32px}
+/* ── Group nav chips ── */
+.chip-nav{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+.chip{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.04em;text-transform:uppercase;color:var(--g600);background:var(--white);border:1px solid var(--g200);padding:9px 16px;border-radius:100px;text-decoration:none;transition:all .2s ease;white-space:nowrap}
+.chip:hover{border-color:var(--accent-border);color:var(--accent);background:var(--accent-light)}
 
-/* ── Mini Stats ── */
-.mini-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.mini-stat{background:var(--g50);border-radius:var(--radius-sm);padding:16px;text-align:center}
-.mini-stat-label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--g400);margin-bottom:6px}
-.mini-stat-before{font-family:var(--mono);font-size:14px;color:var(--terra);text-decoration:line-through;opacity:.6;margin-bottom:2px}
-.mini-stat-after{font-family:var(--mono);font-size:22px;font-weight:500;color:var(--accent);line-height:1.2}
-.mini-stat-delta{font-family:var(--mono);font-size:12px;color:var(--accent);margin-top:2px}
+/* ── Group headers ── */
+.group-head{max-width:1100px;margin:0 auto;padding:64px 28px 8px}
+.group-head .cs-eyebrow{margin-bottom:10px}
+.group-head h2{font-family:var(--heading);font-size:clamp(26px,3.2vw,34px);font-weight:400;line-height:1.2;letter-spacing:-.02em;margin-bottom:12px}
+.group-head h2 em{font-style:italic;color:var(--accent)}
+.group-head p{font-size:16px;max-width:640px;color:var(--g500);line-height:1.7;font-weight:300}
 
-/* ── Improvements ── */
-.improvements{padding:40px;border-top:1px solid var(--g200)}
-.improvements-title{font-family:var(--mono);font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);margin-bottom:32px}
-.improvements-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.improvement-item{padding:24px;background:var(--g50);border-radius:var(--radius)}
-.improvement-pillar{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
-.improvement-heading{font-family:var(--heading);font-size:17px;font-weight:400;margin-bottom:10px;line-height:1.3}
+/* ── Case card (identical template for every property) ── */
+.case-wrap{max-width:1100px;margin:0 auto;padding:24px 28px 40px;display:flex;flex-direction:column;gap:28px}
+.case-card{background:var(--white);border:1px solid var(--g200);border-radius:var(--radius);box-shadow:var(--sh);padding:40px;position:relative}
+.cc-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:6px}
+.cc-tag{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--g400)}
+.cc-badge{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;padding:4px 12px;border-radius:4px;white-space:nowrap}
+.cc-badge--est{background:var(--accent-light);color:var(--accent)}
+.cc-badge--new{background:var(--gold-bg);color:var(--gold)}
+.cc-badge--turn{background:var(--terra-bg);color:var(--terra)}
+.cc-name{font-family:var(--heading);font-size:26px;font-weight:400;letter-spacing:-.02em;margin:6px 0 6px}
+.cc-meta{font-size:14px;color:var(--g400);margin-bottom:24px}
+.cc-meta .dot{margin:0 6px;color:var(--g300)}
 
+/* ── Standardized comparison grid — same three metrics, same order, every card ── */
+.cc-context{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--g500);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.cc-context::after{content:'';flex:1;height:1px;background:var(--g100)}
+.cc-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px}
+.cc-stat{background:var(--g50);border-radius:var(--radius-sm);padding:18px 16px}
+.cc-stat-label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--g400);margin-bottom:8px;line-height:1.4}
+.cc-stat-value{font-family:var(--mono);font-size:26px;font-weight:500;color:var(--black);line-height:1.15}
+.cc-stat-value.pending{color:var(--g300)}
+.cc-stat-delta{font-family:var(--mono);font-size:13px;color:var(--accent);margin-top:4px}
+.cc-stat-delta.muted{color:var(--g500)}
+.cc-stat-delta.neg{color:var(--terra)}
+.cc-stat-delta.pending{color:var(--g400);font-style:italic}
 
-/* ── Timeline ── */
-.timeline{padding:40px;border-top:1px solid var(--g200)}
-.timeline-title{font-family:var(--mono);font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);margin-bottom:28px}
-.timeline-row{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
-.timeline-phase{position:relative;padding-left:20px}
-.timeline-phase::before{content:'';position:absolute;left:0;top:4px;width:8px;height:8px;border-radius:50%;background:var(--accent)}
-.timeline-phase::after{content:'';position:absolute;left:3.5px;top:16px;width:1px;height:calc(100% - 16px);background:var(--g200)}
-.timeline-phase:last-child::after{display:none}
-.timeline-phase-label{font-family:var(--mono);font-size:12px;font-weight:500;color:var(--accent);margin-bottom:6px}
-.timeline-phase-text{font-size:15px;line-height:1.6;color:var(--g500)}
+.cc-story{font-size:16px;line-height:1.7;color:var(--g600);max-width:760px;margin-bottom:28px}
+.cc-story strong{font-weight:600;color:var(--black)}
 
-/* ── Quote ── */
-.quote-block{background:var(--accent);color:var(--white);padding:48px;border-radius:var(--radius);margin:0 auto;max-width:1100px;text-align:center;position:relative;overflow:hidden}
-.quote-block::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% -20%,rgba(255,255,255,.06),transparent 50%);pointer-events:none}
-.quote-block blockquote{font-family:var(--heading);font-size:clamp(20px,2.5vw,24px);line-height:1.5;font-style:italic;max-width:700px;margin:0 auto 16px;position:relative}
-.quote-attr{font-size:14px;opacity:.7;position:relative}
+/* ── Receipt strip: LY vs TY bars ── */
+.cc-receipt{border-top:1px solid var(--g100);padding-top:24px}
+.cc-receipt-caption{font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--g500);margin-bottom:14px}
+.cc-receipt-note{font-size:13px;color:var(--g400);margin:-8px 0 14px;max-width:640px;line-height:1.5}
+.bars{display:flex;flex-direction:column;gap:10px;max-width:640px}
+.bar-row{display:grid;grid-template-columns:110px 1fr 84px;align-items:center;gap:12px}
+.bar-label{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--g400);text-align:right}
+.bar-track{background:var(--g100);border-radius:4px;height:22px;overflow:hidden}
+.bar-fill{height:100%;border-radius:4px;background:var(--g300);min-width:6px}
+.bar-row.now .bar-fill{background:var(--accent)}
+.bar-value{font-family:var(--mono);font-size:14px;color:var(--g500);white-space:nowrap}
+.bar-row.now .bar-value{color:var(--accent);font-weight:500}
+
+/* ── Receipt strip: launch milestones ── */
+.milestones{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:760px}
+.milestone{position:relative;padding-left:20px}
+.milestone::before{content:'';position:absolute;left:0;top:5px;width:8px;height:8px;border-radius:50%;background:var(--gold)}
+.milestone::after{content:'';position:absolute;left:3.5px;top:17px;width:1px;height:calc(100% - 17px);background:var(--g200)}
+.milestone:last-child::after{display:none}
+.milestone-label{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
+.milestone-value{font-family:var(--mono);font-size:16px;font-weight:500;color:var(--black)}
+.milestone-note{font-size:13px;color:var(--g500);line-height:1.5;margin-top:2px}
+
+.cc-source{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--g400);margin-top:20px}
+
+/* ── Photo tour (per property): Airbnb-style 5-photo gallery, before then after ──
+   Grid = 1 large cover spanning two rows + 4 tiles. Container aspect 2:1 keeps
+   the cover and tiles square, matching Airbnb's listing-page arrangement.
+   To drop in real photos later: paste five <img> tags inside a .gal (cover first)
+   and delete nothing else — the placeholder filler skips non-empty galleries. ── */
+.cc-photos{border-top:1px solid var(--g100);padding-top:24px;margin-top:28px;display:flex;flex-direction:column;gap:12px;position:relative}
+/* Curved before→after arrow OUTSIDE the card: emerges from under the card's
+   border, arcs through the page gutter, tip stops back at the border pointing
+   at the after gallery. The wrapper's inner edge sits exactly on the card
+   border (cc-photos inset = 40px card padding) and clips the path start so it
+   reads as coming out from beneath the card. Sides alternate per card (JS adds
+   cc-photos--right / --left in page order). */
+.tour-arrow{position:absolute;top:50%;width:80px;height:420px;overflow:hidden;pointer-events:none;color:var(--accent);opacity:.9;z-index:2}
+.tour-arrow svg{display:block;width:100%;height:100%}
+.cc-photos--right .tour-arrow{right:-120px;transform:translateY(-50%)}
+.cc-photos--left .tour-arrow{left:-120px;transform:translateY(-50%) scaleX(-1)}
+@media(max-width:1199px){.tour-arrow{display:none}}
+.gal-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.gal-badge{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:4px 12px;border-radius:4px}
+.gal-badge--before{background:var(--g100);color:var(--g500)}
+.gal-badge--after{background:var(--accent-light);color:var(--accent)}
+.gal-note{font-size:13px;color:var(--g400)}
+.gal{display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:1fr 1fr;gap:8px;aspect-ratio:2/1;min-height:0;overflow:hidden;margin-bottom:8px}
+.gal>:first-child{grid-row:1/3}
+.gal img{width:100%;height:100%;min-width:0;min-height:0;object-fit:cover;border-radius:4px;display:block}
+.gal-slot{border:1.5px dashed var(--g300);border-radius:4px;background:var(--g50);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:0}
+.gal-slot svg{opacity:.4;flex-shrink:0}
+.gal-slot-label{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--g400);text-align:center;padding:0 4px}
+.gal--after .gal-slot{border-color:var(--accent-border);background:#f4f7f2}
+.gal--after .gal-slot-label{color:var(--accent)}
+.gal--after .gal-slot svg{opacity:.5}
 
 /* ── CTA Footer ── */
-.cs-cta{background:var(--accent);color:var(--white);text-align:center;padding:80px 28px;position:relative;overflow:hidden}
+.cs-cta{background:var(--accent);color:var(--white);text-align:center;padding:88px 28px;position:relative;overflow:hidden}
 .cs-cta::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% -20%,rgba(255,255,255,.08),transparent 50%),radial-gradient(ellipse at 70% 120%,rgba(0,0,0,.12),transparent 50%);pointer-events:none}
 .cs-cta h2{font-family:var(--heading);font-size:clamp(32px,4.5vw,42px);font-weight:400;margin-bottom:16px;letter-spacing:-.02em;position:relative}
-.cs-cta p{font-size:17px;color:rgba(255,255,255,.7);margin-bottom:36px;font-weight:300;position:relative}
+.cs-cta p{font-size:17px;color:rgba(255,255,255,.75);margin:0 auto 36px;font-weight:300;position:relative;max-width:620px;line-height:1.7}
 .cs-cta-btn{display:inline-flex;align-items:center;gap:8px;background:#fff;color:var(--accent);font-family:var(--body);font-weight:600;font-size:16px;padding:16px 40px;border-radius:var(--radius);text-decoration:none;transition:transform .25s ease,box-shadow .25s ease;box-shadow:0 4px 16px rgba(0,0,0,.15);position:relative}
 .cs-cta-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,.25)}
-.cs-cta-contact{margin-top:32px;font-size:14px;color:var(--g500)}
-.cs-cta-contact a{color:var(--g400);text-decoration:underline;text-underline-offset:3px;transition:color .2s}
-.cs-cta-contact a:hover{color:var(--white)}
+.cs-cta-note{margin-top:20px;font-size:13px;color:rgba(255,255,255,.55);position:relative}
 
-/* ── Footer ── */
 /* ── Animations ── */
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 .r{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
@@ -206,23 +298,20 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
 
 /* ── Responsive ── */
 @media(max-width:768px){
-  .cs-hero{padding:120px 20px 60px}
+  .cs-hero{padding:120px 20px 36px}
   .cs-section{padding:56px 20px}
-  .stats-banner{grid-template-columns:1fr}
-  .stat-item{border-right:none;border-bottom:1px solid var(--g200)}
-  .stat-item:last-child{border-bottom:none}
-  .property-header{grid-template-columns:1fr}
-  .property-photo{min-height:200px}
-  .property-summary{padding:32px 20px}
-  .improvements-grid{grid-template-columns:1fr}
-  .timeline-row{grid-template-columns:1fr}
-  .wheel-overview{grid-template-columns:repeat(3,1fr)}
-  .mini-stats{grid-template-columns:1fr}
-  .improvements,.timeline{padding:32px 20px}
-  .quote-block{padding:32px 20px;margin:0 20px}
-}
-@media(max-width:480px){
-  .wheel-overview{grid-template-columns:repeat(2,1fr)}
+  .group-head{padding:48px 20px 8px}
+  .case-wrap{padding:20px 20px 32px;gap:20px}
+  .stats-banner{flex-direction:column;align-items:center;gap:28px}
+  .case-card{padding:28px 20px}
+  .cc-top{flex-direction:column;gap:10px}
+  .cc-stats{grid-template-columns:1fr}
+  .milestones{grid-template-columns:1fr;gap:16px}
+  .bar-row{grid-template-columns:82px 1fr 74px;gap:8px}
+  .gal{gap:5px}
+  .gal-slot svg{width:16px;height:16px}
+  .gal-slot .gal-slot-label{display:none}
+  .gal>:first-child .gal-slot-label{display:block}
 }
 @media(prefers-reduced-motion:reduce){
   .r{opacity:1;transform:none;transition:none}
@@ -254,15 +343,15 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
       </button>
       <div class="fb-menu" id="fb-menu-services">
 
-        <!-- Listing Optimization: paper + wavy text lines + sparkle (optimization mark) -->
+        <!-- Listing Optimization: document with text lines -->
         <a href="/airbnb-listing-optimization" class="fb-menu-item">
           <span class="fb-menu-icon">
             <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M6.5 3.5h11a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1v-15a1 1 0 0 1 1-1Z"/>
-              <path d="M8.5 9c1.3-.7 2.7-.7 4 0s2.7.7 3 0"/>
-              <path d="M8.5 13c1.3-.7 2.7-.7 4 0s2.7.7 3 0"/>
-              <path d="M8.5 17q1.5-.7 3 0"/>
-              <path d="M16.5 5v2.5M15.3 6.2h2.4"/>
+              <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/>
+              <path d="M14 2v4a2 2 0 0 0 2 2h4"/>
+              <path d="M10 9H8"/>
+              <path d="M16 13H8"/>
+              <path d="M16 17H8"/>
             </svg>
           </span>
           <span class="fb-menu-content">
@@ -273,15 +362,13 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
           </span>
         </a>
 
-        <!-- Revenue Management: hand-drawn stacked coins with squiggle on top -->
+        <!-- Revenue Management: stacked coins / database cylinder -->
         <a href="/revenue-management" class="fb-menu-item">
           <span class="fb-menu-icon">
             <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <ellipse cx="12" cy="6" rx="6" ry="2"/>
-              <path d="M6 6v12.5c0 1.1 2.7 2 6 2s6-.9 6-2V6"/>
-              <path d="M6 10c0 1.1 2.7 2 6 2s6-.9 6-2"/>
-              <path d="M6 14c0 1.1 2.7 2 6 2s6-.9 6-2"/>
-              <path d="M9.5 6q1.2-.7 2.5 0t2.5 0"/>
+              <ellipse cx="12" cy="5" rx="9" ry="3"/>
+              <path d="M3 5v14a9 3 0 0 0 18 0V5"/>
+              <path d="M3 12a9 3 0 0 0 18 0"/>
             </svg>
           </span>
           <span class="fb-menu-content">
@@ -292,13 +379,13 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
           </span>
         </a>
 
-        <!-- Photo Optimization: frame + sun + horizon wave (contained inside the frame) -->
+        <!-- Photo Optimization: photo frame with sun + mountains -->
         <a href="/photoediting" class="fb-menu-item">
           <span class="fb-menu-icon">
             <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M4.5 5h15a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-15a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z"/>
-              <circle cx="8.5" cy="9.5" r="1.4" fill="currentColor"/>
-              <path d="M5 15.5c2-1.5 4-3 6.5-2s5 .5 7.5-1"/>
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              <circle cx="9" cy="9" r="2"/>
+              <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
             </svg>
           </span>
           <span class="fb-menu-content">
@@ -320,14 +407,18 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
       </button>
       <div class="fb-menu" id="fb-menu-resources">
 
-        <!-- Blog: notebook with binding + wavy lines -->
+        <!-- Blog: notebook with binding + text lines -->
         <a href="/blog" class="fb-menu-item">
           <span class="fb-menu-icon">
             <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M6 3.5h12a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-15a1 1 0 0 1 1-1Z"/>
-              <path d="M8.5 3.5v3M12 3.5v3M15.5 3.5v3"/>
-              <path d="M8 12c1.3-.7 2.7-.7 4 0s2.7.7 4 0"/>
-              <path d="M8 16c1.3-.7 2.7-.7 4 0s2 .3 2.5 0"/>
+              <rect x="4" y="2" width="16" height="20" rx="2"/>
+              <path d="M2 6h4"/>
+              <path d="M2 10h4"/>
+              <path d="M2 14h4"/>
+              <path d="M2 18h4"/>
+              <path d="M9.5 8h5"/>
+              <path d="M9.5 12H16"/>
+              <path d="M9.5 16H14"/>
             </svg>
           </span>
           <span class="fb-menu-content">
@@ -342,8 +433,8 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
         <a href="/case-study" class="fb-menu-item">
           <span class="fb-menu-icon">
             <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M3 6c2-1 4.5-1.5 7-1q1.5.4 2 2v13q-.5-1.5-2-2c-2.5-.5-5 0-7 1Z"/>
-              <path d="M21 6c-2-1-4.5-1.5-7-1q-1.5.4-2 2v13q.5-1.5 2-2c2.5-.5 5 0 7 1Z"/>
+              <path d="M12 7v14"/>
+              <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>
             </svg>
           </span>
           <span class="fb-menu-content">
@@ -389,340 +480,732 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
      HERO
      ════════════════════════════════════════════════ -->
 <section class="cs-hero">
+  <div class="hero-glow"></div>
   <div class="w">
-    <div class="cs-hero-eyebrow">The Whisper Wheel in Action</div>
-    <h1>Three Properties. 90 Days. Zero Physical Modifications.</h1>
-    <p>Every property below was optimized using RevWhisper's six-pillar Whisper Wheel system. No renovations. No new furniture. Just revenue, engineered.</p>
+    <h1 class="cs-hero-h1 r d1">What our clients&rsquo; calendars look like <em class="em-mark">right now</em>.</h1>
+    <p class="cs-hero-sub r d2">Established listings measured against the same period last year &mdash; full periods, no cherry-picked months. New launches shown from a standing start.</p>
+    <div class="hero-trust r d3">
+      <span class="ht-item">&#10003; Read straight from PriceLabs</span>
+      <div class="ht-sep"></div>
+      <span class="ht-item">&#10003; Soft months included</span>
+      <div class="ht-sep"></div>
+      <span class="ht-item">&#10003; No renovations required</span>
+    </div>
   </div>
 </section>
 
 <!-- ════════════════════════════════════════════════
-     AGGREGATE STATS
+     HEADLINE BAND — sources, updated 2026-07-22.
+     $5M+   = annual revenue under management, per Bryan (2026-07-22):
+              $2.9M gross trailing-12 verified in this PriceLabs
+              account (rental-only $2,537,099; incl. fees ≈ $2.9M,
+              Aug 2025–Jul 2026, all connected listings) PLUS client
+              listings managed outside this PriceLabs account.
+              The balance above $2.9M is not traceable to one PL view.
+     +35%   = mean of the five headline gains on the comparison cards:
+              +61, +38, +33, +13, +31 → 35.2.
+     100%   = every comparison listing on this page (the five with a
+              prior-year baseline) is ahead of last year:
+              +61 / +38 / +33 / +13 / +31.
      ════════════════════════════════════════════════ -->
-<div class="stats-banner">
+<div class="stats-banner r">
   <div class="stat-item">
-    <div class="stat-value">+33%</div>
-    <div class="stat-label">Average Revenue Lift</div>
+    <div class="stat-value">+35%</div>
+    <div class="stat-label">Average revenue gain vs. the same time last year, across every listing with a prior-year baseline</div>
   </div>
   <div class="stat-item">
-    <div class="stat-value">+19 pts</div>
-    <div class="stat-label">Average Occupancy Gain</div>
+    <div class="stat-value">$5M+</div>
+    <div class="stat-label">Annual revenue under management &mdash; across every client listing on the system</div>
   </div>
   <div class="stat-item">
-    <div class="stat-value">90 days</div>
-    <div class="stat-label">Time to Measurable Results</div>
+    <div class="stat-value">100%</div>
+    <div class="stat-label">Of owners ahead of last year&rsquo;s revenue &mdash; every comparison listing on this page</div>
   </div>
 </div>
+<div class="band-source">Source: PriceLabs &middot; Booking Insights &mdash; full calendars shown, soft months included</div>
 
 <!-- ════════════════════════════════════════════════
-     WHISPER WHEEL OVERVIEW
+     FOUR LEVERS + GROUP NAV
      ════════════════════════════════════════════════ -->
 <div class="cs-section r">
-  <div class="cs-eyebrow">The Framework</div>
-  <h2>Six Pillars. One Compounding System.</h2>
-  <p class="cs-section-intro">Each property was optimized across all six determinants of the Whisper Wheel. Unlike point solutions that address one variable at a time, the Wheel creates compounding momentum where every improvement feeds the next.</p>
-  <div class="wheel-overview">
-    <div class="wheel-spoke">
-      <div class="wheel-spoke-number">1</div>
-      <div class="wheel-spoke-name">Ideal Booker Profile</div>
+  <div class="look-split">
+    <!-- Heading + intro -->
+    <div class="look-head">
+      <div class="cs-eyebrow">The System</div>
+      <h2 class="lk-h2">The lift comes from four levers, <em>running daily.</em></h2>
+      <p class="lk-lead">Same operating system on every listing on this page &mdash; no renovations, no new furniture. Every number below is pulled from the same PriceLabs view a host sees.</p>
     </div>
-    <div class="wheel-spoke">
-      <div class="wheel-spoke-number">2</div>
-      <div class="wheel-spoke-name">Photo Tour Engineering</div>
-    </div>
-    <div class="wheel-spoke">
-      <div class="wheel-spoke-number">3</div>
-      <div class="wheel-spoke-name">Listing Architecture</div>
-    </div>
-    <div class="wheel-spoke">
-      <div class="wheel-spoke-number">4</div>
-      <div class="wheel-spoke-name">Search Competitor Analysis</div>
-    </div>
-    <div class="wheel-spoke">
-      <div class="wheel-spoke-number">5</div>
-      <div class="wheel-spoke-name">Pricing Model Layering</div>
-    </div>
-    <div class="wheel-spoke">
-      <div class="wheel-spoke-number">6</div>
-      <div class="wheel-spoke-name">Search Rank Tracking</div>
-    </div>
-  </div>
-</div>
-
-<!-- ════════════════════════════════════════════════
-     PROPERTY 1
-     ════════════════════════════════════════════════ -->
-<div class="cs-section-alt">
-  <div class="cs-section r">
-    <div class="cs-eyebrow">Property 01</div>
-    <h2>Poolside Retreat, Gulf Coast FL</h2>
-    <p class="cs-section-intro">A 4-bedroom beachside home with a private pool, sport court, and large outdoor entertaining space. The owner was self-managing pricing with a static nightly rate and had not updated the listing copy or photos in over two years.</p>
-
-    <div class="property-card">
-      <div class="property-header">
-        <div class="property-photo">
-          <img src="/images/properties/case-study-1.png" alt="Aerial view of Poolside Retreat, Gulf Coast FL" loading="lazy">
+    <!-- Airbnb-style listing card: Candler Estate, featured below -->
+    <div class="look-media">
+      <div class="bnb-card">
+        <div class="bnb-photo">
+          <img src="/images/properties/ash2-estate.webp" alt="Candler Estate as it appears on Airbnb &mdash; six-bedroom mountain estate with heated pool near Asheville, NC" loading="lazy" width="430" height="430">
+          <span class="bnb-heart" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M16 28c7.3-4.6 12-9.7 12-15.2 0-3.6-2.7-6.3-6-6.3-2.4 0-4.4 1.3-6 3.6-1.6-2.3-3.6-3.6-6-3.6-3.3 0-6 2.7-6 6.3C4 18.3 8.7 23.4 16 28z"/></svg></span>
         </div>
-        <div class="property-summary">
-          <div class="property-tag">4 BR &middot; Sleeps 10 &middot; Private Pool</div>
-          <h3 class="property-name">From Page 3 to Rank 3</h3>
-          <p class="property-location">Gulf Coast, Florida</p>
-          <p class="property-desc">This property had strong fundamentals but was invisible in search. The listing hadn't been touched since 2022, the photo order buried the pool (its top asset), and pricing was flat year-round with no seasonal or demand-based adjustment.</p>
-          <div class="mini-stats">
-            <div class="mini-stat">
-              <div class="mini-stat-label">Monthly Revenue</div>
-              <div class="mini-stat-before">$18,800</div>
-              <div class="mini-stat-after">$23,500</div>
-              <div class="mini-stat-delta">+25%</div>
-            </div>
-            <div class="mini-stat">
-              <div class="mini-stat-label">Occupancy</div>
-              <div class="mini-stat-before">74%</div>
-              <div class="mini-stat-after">91%</div>
-              <div class="mini-stat-delta">+17 pts</div>
-            </div>
-            <div class="mini-stat">
-              <div class="mini-stat-label">Search Rank</div>
-              <div class="mini-stat-before">Page 3</div>
-              <div class="mini-stat-after">Rank 3</div>
-              <div class="mini-stat-delta">Top 5</div>
-            </div>
-          </div>
+        <div class="bnb-info">
+          <div class="bnb-title">Entire home in Candler, North Carolina</div>
+          <div class="bnb-meta">18 guests &middot; 6 bedrooms &middot; Heated pool &middot; Theater</div>
         </div>
       </div>
-
-      <div class="improvements">
-        <div class="improvements-title">What We Changed</div>
-        <div class="improvements-grid">
-          <div class="improvement-item">
-            <div class="improvement-pillar">1 &mdash; Photo Tour Restructure</div>
-            <div class="improvement-heading">Resequenced all 32 photos using Airbnb&rsquo;s Vision Transformer logic</div>
-          </div>
-          <div class="improvement-item">
-            <div class="improvement-pillar">2 &mdash; Listing Completeness Score</div>
-            <div class="improvement-heading">Filled every algorithm-weighted field the listing was missing</div>
-          </div>
-          <div class="improvement-item">
-            <div class="improvement-pillar">3 &mdash; Title &amp; Keyword Optimization</div>
-            <div class="improvement-heading">Front-loaded the 50-character title for mobile search</div>
-          </div>
-          <div class="improvement-item">
-            <div class="improvement-pillar">4 &mdash; Cancellation &amp; Booking Settings</div>
-            <div class="improvement-heading">Switched from Strict to Moderate policy, enabled Instant Book</div>
-          </div>
-          <div class="improvement-item">
-            <div class="improvement-pillar">5 &mdash; Dynamic Pricing via PriceLabs</div>
-            <div class="improvement-heading">Replaced flat year-round pricing with a market-responsive model</div>
-          </div>
-          <div class="improvement-item">
-            <div class="improvement-pillar">6 &mdash; Review Velocity &amp; Freshness</div>
-            <div class="improvement-heading">Engineered the signals the algorithm weights heaviest</div>
-          </div>
+    </div>
+    <!-- Four levers -->
+    <div class="look-list">
+      <div class="look-item">
+        <div class="look-ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20v-4q0-1 1-1h1.5q1 0 1 1v4"/><path d="M11 20v-9q0-1 1-1h1.5q1 0 1 1v9"/><path d="M17 20V5q0-1 1-1h1.5q1 0 1 1v15"/><path d="M3 20.5q9.5.5 19 0"/></svg></div>
+        <div>
+          <h3>Search rank, tracked daily</h3>
+          <p>Position monitored on every unbooked date, so slippage gets caught the day it happens &mdash; not at month end.</p>
+          <a class="pillar-q" href="#dead-months">&rarr; A Bear&rsquo;s Tale: 100% booked in a saturated market</a>
         </div>
       </div>
-
-      <div class="timeline">
-        <div class="timeline-title">90-Day Timeline</div>
-        <div class="timeline-row">
-          <div class="timeline-phase">
-            <div class="timeline-phase-label">Days 1-14 / Deep Audit</div>
-            <div class="timeline-phase-text">Full competitive analysis, booker profile definition, photo resequencing, and listing rewrite deployed. Dynamic pricing model activated on Day 7.</div>
-          </div>
-          <div class="timeline-phase">
-            <div class="timeline-phase-label">Days 15-45 / Momentum Build</div>
-            <div class="timeline-phase-text">Search rank climbed from page 3 to page 1 within 3 weeks. Occupancy jumped 11 points as the new pricing model captured previously empty midweek nights. Two 5-star reviews triggered during this phase.</div>
-          </div>
-          <div class="timeline-phase">
-            <div class="timeline-phase-label">Days 46-90 / Compounding</div>
-            <div class="timeline-phase-text">Rank stabilized at position 3. Higher conversion rates allowed rate increases of 12% on peak nights without occupancy loss. Monthly revenue plateaued at $23,500, up from $18,800.</div>
-          </div>
+      <div class="look-item">
+        <div class="look-ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M14.8 9.3c-.5-1-1.6-1.6-2.8-1.6-1.7 0-3 .9-3 2.2s1.3 1.8 3 2.1 3 .9 3 2.2-1.3 2.2-3 2.2c-1.2 0-2.3-.6-2.8-1.6"/><path d="M12 6.2v11.6"/></svg></div>
+        <div>
+          <h3>Pricing tuned to a true comp set</h3>
+          <p>A PriceLabs strategy set against the listings guests actually compare, not the whole market average.</p>
+          <a class="pillar-q" href="#premium">&rarr; Moonlit Peak: July up 47%, $295 above last year</a>
+        </div>
+      </div>
+      <div class="look-item">
+        <div class="look-ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 5h15a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-15a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z"/><circle cx="8.5" cy="9.5" r="1.4" fill="currentColor"/><path d="M5 15.5c2-1.5 4-3 6.5-2s5 .5 7.5-1"/></svg></div>
+        <div>
+          <h3>Continuous listing health</h3>
+          <p>Photos, copy, amenities, and settings maintained like an asset, not set and forgotten.</p>
+          <a class="pillar-q" href="#premium">&rarr; The before &amp; after photo tours on every card</a>
+        </div>
+      </div>
+      <div class="look-item">
+        <div class="look-ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M8 3.5v3M16 3.5v3M3.5 10h17"/><rect x="7" y="13" width="3.2" height="3.2" rx=".8" fill="currentColor" stroke="none"/><path d="M13.5 14.6h3.5"/></svg></div>
+        <div>
+          <h3>Orphan-day &amp; last-minute logic</h3>
+          <p>The awkward gaps between bookings keep earning instead of sitting empty.</p>
+          <a class="pillar-q" href="#dead-months">&rarr; Gulfstream Villa: +73% in the deadest month</a>
         </div>
       </div>
     </div>
   </div>
+  <div class="chip-nav" style="margin-top:36px">
+    <a class="chip" href="#premium">Sold out at a premium</a>
+    <a class="chip" href="#dead-months">The dead months pay now</a>
+    <a class="chip" href="#launches">Launched at full rate</a>
+  </div>
 </div>
 
+<!-- ════════════════════════════════════════════════════════════════
+     STANDARDIZED CARDS — every card: REVENUE / OCCUPANCY / NIGHTLY RATE
+     stat row + a two-bar receipt; the stat revenue always equals the
+     bar value, and each receipt carries a plain-words note naming its
+     window ("on the books", "booked to date", "months on the system").
+
+     PROVENANCE: all values pulled live from PriceLabs (MCP) on
+     2026-07-22, reservation-level rental_revenue prorated per stay
+     night. "On the books" = stays booked as of the pull date vs what
+     was booked by the same date last year. Occupancy/ADR stats are
+     PriceLabs calendar-YTD ("2026 so far") unless labeled otherwise.
+     Bookings move daily — when refreshing, refresh EVERY card in one
+     pass and bump the "as of July" wording. Full audit notes live in
+     the repo owner's Claude memory (case-study-standard-receipts).
+     ════════════════════════════════════════════════════════════════ -->
+
 <!-- ════════════════════════════════════════════════
-     PROPERTY 2
+     GROUP A — SOLD OUT AT A PREMIUM
      ════════════════════════════════════════════════ -->
-<div class="cs-section r">
-  <div class="cs-eyebrow">Property 02</div>
-  <h2>Modern Villa, Tampa Bay Area</h2>
-  <p class="cs-section-intro">A recently renovated 5-bedroom villa with a heated pool, outdoor kitchen, and proximity to Tampa's top attractions. High-quality property, but the listing was underperforming relative to its physical product due to poor positioning and a generic pricing strategy.</p>
+<div class="cs-section-alt" id="premium">
+  <div class="group-head r">
+    <div class="cs-eyebrow">01 &middot; Sold Out at a Premium</div>
+    <h2>Full calendars are easy to buy with discounts. <em>These filled while the rate went up.</em></h2>
+    <p>Not sold out through discounting &mdash; sold out at a premium. Occupancy and average rate moving up together is the whole point.</p>
+  </div>
+  <div class="case-wrap">
 
-  <div class="property-card">
-    <div class="property-header">
-      <div class="property-photo">
-        <img src="/images/properties/case-study-2.jpg" alt="Modern Villa, Tampa Bay Area" loading="lazy">
+    <!-- Card: Moonlit Peak -->
+    <article class="case-card r">
+      <div class="cc-top">
+        <span class="cc-tag">Sold out at a premium</span>
+        <span class="cc-badge cc-badge--est">Established &middot; vs same period last year</span>
       </div>
-      <div class="property-summary">
-        <div class="property-tag">5 BR &middot; Sleeps 14 &middot; Heated Pool</div>
-        <h3 class="property-name">From Page 4 to Rank 2</h3>
-        <p class="property-location">Tampa Bay Area, Florida</p>
-        <p class="property-desc">This villa had a recent renovation but the listing still described the pre-renovation property. Photos were a mix of old and new. Pricing didn't reflect the premium product, and the listing sat buried on page 4 of search results.</p>
-        <div class="mini-stats">
-          <div class="mini-stat">
-            <div class="mini-stat-label">Monthly Revenue</div>
-            <div class="mini-stat-before">$21,950</div>
-            <div class="mini-stat-after">$29,200</div>
-            <div class="mini-stat-delta">+33%</div>
-          </div>
-          <div class="mini-stat">
-            <div class="mini-stat-label">Occupancy</div>
-            <div class="mini-stat-before">76%</div>
-            <div class="mini-stat-after">95%</div>
-            <div class="mini-stat-delta">+19 pts</div>
-          </div>
-          <div class="mini-stat">
-            <div class="mini-stat-label">Search Rank</div>
-            <div class="mini-stat-before">Page 4</div>
-            <div class="mini-stat-after">Rank 2</div>
-            <div class="mini-stat-delta">Top 3</div>
-          </div>
+      <h3 class="cc-name">Moonlit Peak: Luxe Lake Escape</h3>
+      <p class="cc-meta">4 BR<span class="dot">&middot;</span>Pocono Mountains, PA<span class="dot">&middot;</span>Lakefront</p>
+      <div class="cc-context">On the books for 2026, as of July &middot; vs the same time last year</div>
+      <div class="cc-stats">
+        <div class="cc-stat">
+          <div class="cc-stat-label">Revenue</div>
+          <div class="cc-stat-value">$125.0K</div>
+          <div class="cc-stat-delta">+61% vs this date last year</div>
+        </div>
+        <div class="cc-stat">
+          <div class="cc-stat-label">Occupancy</div>
+          <div class="cc-stat-value">56%</div>
+          <div class="cc-stat-delta">+13% &middot; 2026 so far</div>
+        </div>
+        <div class="cc-stat">
+          <div class="cc-stat-label">Nightly rate</div>
+          <div class="cc-stat-value">$711</div>
+          <div class="cc-stat-delta">+27% &middot; 2026 so far</div>
         </div>
       </div>
-    </div>
+      <p class="cc-story">July closed with revenue up 47% on last July, at an average rate <strong>$295 higher</strong> &mdash; not sold through discounting, sold at a premium. The month before took the same shape from the other side: revenue up on <em>fewer</em> nights sold, because the average rate moved $308 higher. The system held price, and the market paid it.</p>
+      <div class="cc-receipt">
+        <div class="cc-receipt-caption">Revenue &middot; on the books for 2026</div>
+        <div class="cc-receipt-note">Every 2026 stay on the calendar as of this July, next to what the 2025 calendar held in July a year ago.</div>
+        <div class="bars" role="img" aria-label="Revenue on the books for the year, vs what was on the books at the same date last year: last year $77.4K, this year $125.0K">
+          <div class="bar-row">
+            <div class="bar-label">Last year</div>
+            <div class="bar-track"><div class="bar-fill" style="width:62%"></div></div>
+            <div class="bar-value">$77.4K</div>
+          </div>
+          <div class="bar-row now">
+            <div class="bar-label">This year</div>
+            <div class="bar-track"><div class="bar-fill" style="width:100%"></div></div>
+            <div class="bar-value">$125.0K</div>
+          </div>
+        </div>
+        <div class="cc-source">Source: PriceLabs &middot; Booking Insights</div>
+      </div>
+      <div class="cc-photos">
+        <div class="gal-head">
+          <span class="gal-badge gal-badge--before">Photo tour &middot; Before</span>
+          <span class="gal-note">The first five, as guests found them</span>
+        </div>
+        <div class="gal" aria-label="Moonlit Peak photo tour before, first five photos">
+          <img src="images/properties/tours/moonlit-peak/before-1.webp" alt="A-frame exterior at night with string lights" loading="lazy" decoding="async">
+          <img src="images/properties/tours/moonlit-peak/before-2.webp" alt="Hot tub at sunset" loading="lazy" decoding="async">
+          <img src="images/properties/tours/moonlit-peak/before-3.webp" alt="A-frame exterior in daylight" loading="lazy" decoding="async">
+          <img src="images/properties/tours/moonlit-peak/before-4.webp" alt="Lakeside dock with Adirondack chairs at sunset" loading="lazy" decoding="async">
+          <img src="images/properties/tours/moonlit-peak/before-5.webp" alt="Living room with fireplace and TV" loading="lazy" decoding="async">
+        </div>
+        <div class="gal-head">
+          <span class="gal-badge gal-badge--after">Photo tour &middot; After</span>
+          <span class="gal-note">The first five &mdash; no reshoots, just editing and resequencing</span>
+        </div>
+        <div class="gal gal--after" aria-label="Moonlit Peak photo tour after, first five photos">
+          <img src="images/properties/tours/moonlit-peak/after-1.webp" alt="Aerial dusk view of the lakefront A-frame and dock" loading="lazy" decoding="async">
+          <img src="images/properties/tours/moonlit-peak/after-2.webp" alt="Sunset over the lake from the dock" loading="lazy" decoding="async">
+          <img src="images/properties/tours/moonlit-peak/after-3.webp" alt="A-frame glowing at night under string lights" loading="lazy" decoding="async">
+          <img src="images/properties/tours/moonlit-peak/after-4.webp" alt="Living room with modern fireplace" loading="lazy" decoding="async">
+          <img src="images/properties/tours/moonlit-peak/after-5.webp" alt="Hot tub overlooking the lake at sunset" loading="lazy" decoding="async">
+        </div>
+      </div>
+    </article>
 
-    <div class="improvements">
-      <div class="improvements-title">What We Changed</div>
-      <div class="improvements-grid">
-        <div class="improvement-item">
-          <div class="improvement-pillar">1 &mdash; Photo Accuracy &amp; AI Scoring</div>
-          <div class="improvement-heading">Eliminated 7 pre-renovation photos that were tanking quality score</div>
+    <!-- Card: Candler Estate -->
+    <article class="case-card r">
+      <div class="cc-top">
+        <span class="cc-tag">Sold out at a premium</span>
+        <span class="cc-badge cc-badge--est">Established &middot; vs same period last year</span>
+      </div>
+      <h3 class="cc-name">Candler Estate</h3>
+      <p class="cc-meta">6 BR<span class="dot">&middot;</span>Sleeps 18<span class="dot">&middot;</span>20 min from Asheville, NC<span class="dot">&middot;</span>Heated pool<span class="dot">&middot;</span>Private theater</p>
+      <div class="cc-context">Went live in November &middot; first 8 months of operating, no prior-year data</div>
+      <div class="cc-stats">
+        <div class="cc-stat">
+          <div class="cc-stat-label">Revenue</div>
+          <div class="cc-stat-value">$279.1K</div>
+          <div class="cc-stat-delta muted">booked &middot; first 8 months live</div>
         </div>
-        <div class="improvement-item">
-          <div class="improvement-pillar">2 &mdash; Search Filter Optimization</div>
-          <div class="improvement-heading">Added 28 missing amenities to unlock filtered search visibility</div>
+        <div class="cc-stat">
+          <div class="cc-stat-label">Occupancy</div>
+          <div class="cc-stat-value">86%</div>
+          <div class="cc-stat-delta muted">2026 so far</div>
         </div>
-        <div class="improvement-item">
-          <div class="improvement-pillar">3 &mdash; Conversion-Optimized Description</div>
-          <div class="improvement-heading">Structured 450 words across all four description fields</div>
-        </div>
-        <div class="improvement-item">
-          <div class="improvement-pillar">4 &mdash; Competitive Pricing Intelligence</div>
-          <div class="improvement-heading">Mapped 20 comp-set listings and found a positioning vacuum</div>
-        </div>
-        <div class="improvement-item">
-          <div class="improvement-pillar">5 &mdash; Event-Tiered Pricing Model</div>
-          <div class="improvement-heading">3-tier dynamic pricing with weekly/monthly discounts</div>
-        </div>
-        <div class="improvement-item">
-          <div class="improvement-pillar">6 &mdash; Booking Velocity Acceleration</div>
-          <div class="improvement-heading">Drove 8 bookings in 18 days to trigger compound ranking</div>
+        <div class="cc-stat">
+          <div class="cc-stat-label">Nightly rate</div>
+          <div class="cc-stat-value">$1,066</div>
+          <div class="cc-stat-delta muted">2026 so far</div>
         </div>
       </div>
-    </div>
+      <p class="cc-story">We published this one pacing at 93%. It closed <strong>completely full &mdash; $34.2K at a $1,370 average rate</strong> &mdash; and the month behind it is fully booked too. A sustained four-figure rate on a full calendar is the hardest combination in this business to hold. Two consecutive months of it is not luck.</p>
+      <div class="cc-receipt">
+        <div class="cc-receipt-caption">Revenue &middot; booked to date</div>
+        <div class="cc-receipt-note">Everything booked in the 8 months since going live, counted as of July &mdash; no prior year to compare.</div>
+        <div class="bars" role="img" aria-label="Revenue booked in the first 8 months of operating: $279.1K; went live in November, no prior year">
+          <div class="bar-row">
+            <div class="bar-label">Last year</div>
+            <div class="bar-track"><div class="bar-fill" style="width:0"></div></div>
+            <div class="bar-value">&mdash;</div>
+          </div>
+          <div class="bar-row now">
+            <div class="bar-label">This year</div>
+            <div class="bar-track"><div class="bar-fill" style="width:100%"></div></div>
+            <div class="bar-value">$279.1K</div>
+          </div>
+        </div>
+        <div class="cc-source">Source: PriceLabs &middot; Booking Insights</div>
+      </div>
+      <div class="cc-photos">
+        <div class="gal-head">
+          <span class="gal-badge gal-badge--before">Photo tour &middot; Before</span>
+          <span class="gal-note">The first five, as guests found them</span>
+        </div>
+        <div class="gal" aria-label="Candler Estate photo tour before, first five photos">
+          <img src="images/properties/tours/candler-estate/before-1.webp" alt="Aerial view of the estate and covered pool" loading="lazy" decoding="async">
+          <img src="images/properties/tours/candler-estate/before-2.webp" alt="House and pool lit at dusk" loading="lazy" decoding="async">
+          <img src="images/properties/tours/candler-estate/before-3.webp" alt="Open-plan living room" loading="lazy" decoding="async">
+          <img src="images/properties/tours/candler-estate/before-4.webp" alt="Home theater seating" loading="lazy" decoding="async">
+          <img src="images/properties/tours/candler-estate/before-5.webp" alt="Game room with dining table" loading="lazy" decoding="async">
+        </div>
+        <div class="gal-head">
+          <span class="gal-badge gal-badge--after">Photo tour &middot; After</span>
+          <span class="gal-note">The first five &mdash; no reshoots, just editing and resequencing</span>
+        </div>
+        <div class="gal gal--after" aria-label="Candler Estate photo tour after, first five photos">
+          <img src="images/properties/tours/candler-estate/after-1.webp" alt="Aerial of the estate with enclosed pool, giant chess set and barrel sauna" loading="lazy" decoding="async">
+          <img src="images/properties/tours/candler-estate/after-2.webp" alt="Fire pit circle with Blue Ridge mountain view at dusk" loading="lazy" decoding="async">
+          <img src="images/properties/tours/candler-estate/after-3.webp" alt="Heated pool under the enclosure at night" loading="lazy" decoding="async">
+          <img src="images/properties/tours/candler-estate/after-4.webp" alt="Private theater with recliner seating" loading="lazy" decoding="async">
+          <img src="images/properties/tours/candler-estate/after-5.webp" alt="Game room with slide, pool table and bar" loading="lazy" decoding="async">
+        </div>
+      </div>
+    </article>
 
-    <div class="timeline">
-      <div class="timeline-title">90-Day Timeline</div>
-      <div class="timeline-row">
-        <div class="timeline-phase">
-          <div class="timeline-phase-label">Days 1-14 / Deep Audit</div>
-          <div class="timeline-phase-text">Removed 7 outdated photos, rewrote the full listing with group-focused positioning, activated the layered pricing model, and began daily rank tracking across 12 queries.</div>
-        </div>
-        <div class="timeline-phase">
-          <div class="timeline-phase-label">Days 15-45 / Momentum Build</div>
-          <div class="timeline-phase-text">Rank jumped from page 4 to page 2 by day 18. Three group bookings came in at the new weekend rate within 10 days. Occupancy crossed 85% for the first time in the property's history.</div>
-        </div>
-        <div class="timeline-phase">
-          <div class="timeline-phase-label">Days 46-90 / Compounding</div>
-          <div class="timeline-phase-text">Stabilized at Rank 2. Event-weekend pricing generated $649/night bookings consistently. Monthly revenue hit $29,200 with 95% occupancy. The owner reported their highest-grossing quarter ever.</div>
-        </div>
-      </div>
-    </div>
   </div>
 </div>
 
 <!-- ════════════════════════════════════════════════
-     PROPERTY 3
+     GROUP B — THE DEAD MONTHS PAY NOW
      ════════════════════════════════════════════════ -->
-<div class="cs-section-alt">
-  <div class="cs-section r">
-    <div class="cs-eyebrow">Property 03</div>
-    <h2>Mountain Estate, Candler NC</h2>
-    <p class="cs-section-intro">A 6-bedroom, 5,000 sq ft mountain retreat 20 minutes from Asheville with a heated saltwater pool, private theater, game room, sauna, hot tub, fire pit, and hidden speakeasy. A 5.0-star Guest Favourite with 88 amenities&mdash;but the listing was underperforming on revenue due to pricing gaps and low search visibility for group bookings.</p>
+<div id="dead-months">
+  <div class="group-head r">
+    <div class="cs-eyebrow">02 &middot; The Dead Months Pay Now</div>
+    <h2>Peak mostly takes care of itself. <em>The lift lives in the months owners write off.</em></h2>
+    <p>Shoulder weeks, orphan gaps, off-season &mdash; the parts of the calendar most hosts have stopped expecting anything from. That is where the new money shows up.</p>
+  </div>
+  <div class="case-wrap">
 
-    <div class="property-card">
-      <div class="property-header">
-        <div class="property-photo">
-          <img src="/images/properties/case-study-3.png" alt="Mountain Estate, Candler NC" loading="lazy">
+    <!-- Card: Gulfstream Villa -->
+    <article class="case-card r">
+      <div class="cc-top">
+        <span class="cc-tag">The dead months pay now</span>
+        <span class="cc-badge cc-badge--est">Established &middot; vs same period last year</span>
+      </div>
+      <h3 class="cc-name">Gulfstream Villa</h3>
+      <p class="cc-meta">3 BR<span class="dot">&middot;</span>Gulf Coast, FL<span class="dot">&middot;</span>Heated pool<span class="dot">&middot;</span>Dog friendly</p>
+      <div class="cc-context">On the books since takeover, as of July &middot; vs the same months last year</div>
+      <div class="cc-stats">
+        <div class="cc-stat">
+          <div class="cc-stat-label">Revenue</div>
+          <div class="cc-stat-value">$40.7K</div>
+          <div class="cc-stat-delta">+31% vs this time last year</div>
         </div>
-        <div class="property-summary">
-          <div class="property-tag">6 BR &middot; Sleeps 20 &middot; Pool &middot; Theater &middot; Sauna</div>
-          <h3 class="property-name">From Page 4 to Rank 1</h3>
-          <p class="property-location">Candler, North Carolina</p>
-          <p class="property-desc">This property had every amenity a group could want but was invisible to the guests searching for them. The listing wasn&rsquo;t optimized for group-stay queries, the pricing model left peak weekends undervalued by $200+/night, and the 88 amenities weren&rsquo;t translating into filtered search visibility.</p>
-          <div class="mini-stats">
-            <div class="mini-stat">
-              <div class="mini-stat-label">Monthly Revenue</div>
-              <div class="mini-stat-before">$22,400</div>
-              <div class="mini-stat-after">$31,800</div>
-              <div class="mini-stat-delta">+42%</div>
-            </div>
-            <div class="mini-stat">
-              <div class="mini-stat-label">Occupancy</div>
-              <div class="mini-stat-before">64%</div>
-              <div class="mini-stat-after">86%</div>
-              <div class="mini-stat-delta">+22 pts</div>
-            </div>
-            <div class="mini-stat">
-              <div class="mini-stat-label">Search Rank</div>
-              <div class="mini-stat-before">Page 4</div>
-              <div class="mini-stat-after">Rank 1</div>
-              <div class="mini-stat-delta">Top 1</div>
-            </div>
-          </div>
+        <div class="cc-stat">
+          <div class="cc-stat-label">Occupancy</div>
+          <div class="cc-stat-value">87%</div>
+          <div class="cc-stat-delta">+10% &middot; months on the system</div>
+        </div>
+        <div class="cc-stat">
+          <div class="cc-stat-label">Nightly rate</div>
+          <div class="cc-stat-value">$219</div>
+          <div class="cc-stat-delta">+4% &middot; months on the system</div>
         </div>
       </div>
-
-      <div class="improvements">
-        <div class="improvements-title">What We Changed</div>
-        <div class="improvements-grid">
-          <div class="improvement-item">
-            <div class="improvement-pillar">1 &mdash; Photo Tour Optimization</div>
-            <div class="improvement-heading">Resequenced 40+ photos to lead with the pool, theater, and speakeasy</div>
+      <p class="cc-story">The lift here concentrates in the months most Gulf Coast owners write off. Early summer closed at 93% (+26%). The deepest off-season month is <strong>up 73%</strong> on last year. And September &mdash; a month that barely existed on last year&rsquo;s calendar &mdash; already sits at 83% booked. This is what orphan-season strategy looks like when it works.</p>
+      <div class="cc-receipt">
+        <div class="cc-receipt-caption">Revenue &middot; on the books since takeover</div>
+        <div class="cc-receipt-note">Everything booked for February through December as of this July, next to what those same months held a year ago.</div>
+        <div class="bars" role="img" aria-label="Revenue on the books for February through December, vs what the same months held at this time last year: last year $31.0K, this year $40.7K">
+          <div class="bar-row">
+            <div class="bar-label">Last year</div>
+            <div class="bar-track"><div class="bar-fill" style="width:76%"></div></div>
+            <div class="bar-value">$31.0K</div>
           </div>
-          <div class="improvement-item">
-            <div class="improvement-pillar">2 &mdash; Amenity &amp; Filter Audit</div>
-            <div class="improvement-heading">Verified all 88 amenities were checked and tagged for filtered search visibility</div>
-          </div>
-          <div class="improvement-item">
-            <div class="improvement-pillar">3 &mdash; Group-Stay Positioning</div>
-            <div class="improvement-heading">Rewrote all four description fields targeting reunions, celebrations, and retreats</div>
-          </div>
-          <div class="improvement-item">
-            <div class="improvement-pillar">4 &mdash; Total Price Restructure</div>
-            <div class="improvement-heading">Baked pool heating and cleaning fees into nightly rate for better pre-click pricing</div>
-          </div>
-          <div class="improvement-item">
-            <div class="improvement-pillar">5 &mdash; Event-Tier Pricing Model</div>
-            <div class="improvement-heading">Peak weekend rates up $200+/night with dynamic orphan-night and monthly discounts</div>
-          </div>
-          <div class="improvement-item">
-            <div class="improvement-pillar">6 &mdash; Guest Favorites Maintenance</div>
-            <div class="improvement-heading">Protected the 5.0 rating with category-score monitoring and sub-15-min response times</div>
+          <div class="bar-row now">
+            <div class="bar-label">This year</div>
+            <div class="bar-track"><div class="bar-fill" style="width:100%"></div></div>
+            <div class="bar-value">$40.7K</div>
           </div>
         </div>
+        <div class="cc-source">Source: PriceLabs &middot; Booking Insights</div>
       </div>
-
-      <div class="timeline">
-        <div class="timeline-title">90-Day Timeline</div>
-        <div class="timeline-row">
-          <div class="timeline-phase">
-            <div class="timeline-phase-label">Days 1-14 / Deep Audit</div>
-            <div class="timeline-phase-text">Competitive mapping of 12 large-group properties near Asheville. Photo resequence deployed. Full listing rewrite with group-event positioning. Event-tier pricing model activated on Day 5.</div>
-          </div>
-          <div class="timeline-phase">
-            <div class="timeline-phase-label">Days 15-45 / Momentum Build</div>
-            <div class="timeline-phase-text">Rank climbed from page 4 to page 1 in 21 days. Four group bookings at the new peak rate within the first two weeks. Monthly discount unlocked two 30+ night corporate retreat bookings.</div>
-          </div>
-          <div class="timeline-phase">
-            <div class="timeline-phase-label">Days 46-90 / Compounding</div>
-            <div class="timeline-phase-text">Stabilized at Rank 1 for group-stay queries. Revenue hit $31,800/month with 86% occupancy. The 5.0 Guest Favorites badge drove 52% higher CTR than comparable listings. Owner reported their highest-grossing quarter since launching on Airbnb.</div>
-          </div>
+      <div class="cc-photos">
+        <div class="gal-head">
+          <span class="gal-badge gal-badge--before">Photo tour &middot; Before</span>
+          <span class="gal-note">The first five, as guests found them</span>
+        </div>
+        <div class="gal" aria-label="Gulfstream Villa photo tour before, first five photos">
+          <img src="images/properties/tours/gulfstream-villa/before-1.webp" alt="Front exterior with dried-out lawn" loading="lazy" decoding="async">
+          <img src="images/properties/tours/gulfstream-villa/before-2.webp" alt="Screened lanai pool, browning lawn beyond" loading="lazy" decoding="async">
+          <img src="images/properties/tours/gulfstream-villa/before-3.webp" alt="Lanai seating area" loading="lazy" decoding="async">
+          <img src="images/properties/tours/gulfstream-villa/before-4.webp" alt="Entry and living room" loading="lazy" decoding="async">
+          <img src="images/properties/tours/gulfstream-villa/before-5.webp" alt="Backyard with screened pool enclosure" loading="lazy" decoding="async">
+        </div>
+        <div class="gal-head">
+          <span class="gal-badge gal-badge--after">Photo tour &middot; After</span>
+          <span class="gal-note">The first five &mdash; no reshoots, just editing and resequencing</span>
+        </div>
+        <div class="gal gal--after" aria-label="Gulfstream Villa photo tour after, first five photos">
+          <img src="images/properties/tours/gulfstream-villa/after-1.webp" alt="Lanai pool in golden evening light" loading="lazy" decoding="async">
+          <img src="images/properties/tours/gulfstream-villa/after-2.webp" alt="Front exterior at golden hour" loading="lazy" decoding="async">
+          <img src="images/properties/tours/gulfstream-villa/after-3.webp" alt="Living room seating" loading="lazy" decoding="async">
+          <img src="images/properties/tours/gulfstream-villa/after-4.webp" alt="Poolside lounge under the lanai" loading="lazy" decoding="async">
+          <img src="images/properties/tours/gulfstream-villa/after-5.webp" alt="Backyard and screened pool enclosure" loading="lazy" decoding="async">
         </div>
       </div>
-    </div>
+    </article>
+
+    <!-- Card: Waters Edge Hideaway -->
+    <article class="case-card r">
+      <div class="cc-top">
+        <span class="cc-tag">The dead months pay now</span>
+        <span class="cc-badge cc-badge--est">Established &middot; vs same period last year</span>
+      </div>
+      <h3 class="cc-name">Waters Edge Hideaway</h3>
+      <p class="cc-meta">5 BR<span class="dot">&middot;</span>Pocono Mountains, PA</p>
+      <div class="cc-context">On the books for 2026, as of July &middot; vs the same time last year</div>
+      <div class="cc-stats">
+        <div class="cc-stat">
+          <div class="cc-stat-label">Revenue</div>
+          <div class="cc-stat-value">$103.3K</div>
+          <div class="cc-stat-delta">+38% vs this time last year</div>
+        </div>
+        <div class="cc-stat">
+          <div class="cc-stat-label">Occupancy</div>
+          <div class="cc-stat-value">50%</div>
+          <div class="cc-stat-delta">+15% &middot; 2026 so far</div>
+        </div>
+        <div class="cc-stat">
+          <div class="cc-stat-label">Nightly rate</div>
+          <div class="cc-stat-value">$684</div>
+          <div class="cc-stat-delta">+7% &middot; 2026 so far</div>
+        </div>
+      </div>
+      <p class="cc-story">Peak closed $4.6K up on last year &mdash; and the far end of summer is carrying the bigger move: August is pacing 23% ahead of where it stood this time last year, at a <strong>$1,052 average rate &mdash; $275 above where last August finished</strong>. The compounding shows up furthest out first.</p>
+      <div class="cc-receipt">
+        <div class="cc-receipt-caption">Revenue &middot; on the books for 2026</div>
+        <div class="cc-receipt-note">Every 2026 stay on the calendar as of this July, next to what the 2025 calendar held in July a year ago.</div>
+        <div class="bars" role="img" aria-label="Revenue on the books for the year, vs what was on the books at the same time last year: last year $75.1K, this year $103.3K">
+          <div class="bar-row">
+            <div class="bar-label">Last year</div>
+            <div class="bar-track"><div class="bar-fill" style="width:73%"></div></div>
+            <div class="bar-value">$75.1K</div>
+          </div>
+          <div class="bar-row now">
+            <div class="bar-label">This year</div>
+            <div class="bar-track"><div class="bar-fill" style="width:100%"></div></div>
+            <div class="bar-value">$103.3K</div>
+          </div>
+        </div>
+        <div class="cc-source">Source: PriceLabs &middot; Booking Insights</div>
+      </div>
+      <div class="cc-photos">
+        <div class="gal-head">
+          <span class="gal-badge gal-badge--before">Photo tour &middot; Before</span>
+          <span class="gal-note">The first five, as guests found them</span>
+        </div>
+        <div class="gal" aria-label="Waters Edge Hideaway photo tour before, first five photos">
+          <img src="images/properties/tours/waters-edge/before-1.webp" alt="Backyard fire pit seating at dusk" loading="lazy" decoding="async">
+          <img src="images/properties/tours/waters-edge/before-2.webp" alt="Hot tub on the covered deck in winter" loading="lazy" decoding="async">
+          <img src="images/properties/tours/waters-edge/before-3.webp" alt="Living room with mural and fireplace" loading="lazy" decoding="async">
+          <img src="images/properties/tours/waters-edge/before-4.webp" alt="Bedroom with blue accent pillows" loading="lazy" decoding="async">
+          <img src="images/properties/tours/waters-edge/before-5.webp" alt="Bedroom with chevron accent wall" loading="lazy" decoding="async">
+        </div>
+        <div class="gal-head">
+          <span class="gal-badge gal-badge--after">Photo tour &middot; After</span>
+          <span class="gal-note">The first five &mdash; no reshoots, just editing and resequencing</span>
+        </div>
+        <div class="gal gal--after" aria-label="Waters Edge Hideaway photo tour after, first five photos">
+          <img src="images/properties/tours/waters-edge/after-1.webp" alt="Chalet exterior on a winter evening" loading="lazy" decoding="async">
+          <img src="images/properties/tours/waters-edge/after-2.webp" alt="Hot tub with lake view" loading="lazy" decoding="async">
+          <img src="images/properties/tours/waters-edge/after-3.webp" alt="Fire pit circle under string lights at dusk" loading="lazy" decoding="async">
+          <img src="images/properties/tours/waters-edge/after-4.webp" alt="Game room with arcade and foosball" loading="lazy" decoding="async">
+          <img src="images/properties/tours/waters-edge/after-5.webp" alt="Living room with mural, fireplace and TV" loading="lazy" decoding="async">
+        </div>
+      </div>
+    </article>
+
+    <!-- Card: A Bear's Tale -->
+    <article class="case-card r">
+      <div class="cc-top">
+        <span class="cc-tag">The dead months pay now</span>
+        <span class="cc-badge cc-badge--est">Established &middot; vs same period last year</span>
+      </div>
+      <h3 class="cc-name">A Bear&rsquo;s Tale</h3>
+      <p class="cc-meta">2 BR<span class="dot">&middot;</span>Pigeon Forge, TN<span class="dot">&middot;</span>One of the most saturated cabin markets in the country</p>
+      <div class="cc-context">On the books for 2026, as of July &middot; vs the same time last year</div>
+      <div class="cc-stats">
+        <div class="cc-stat">
+          <div class="cc-stat-label">Revenue</div>
+          <div class="cc-stat-value">$43.3K</div>
+          <div class="cc-stat-delta">+33% vs this date last year</div>
+        </div>
+        <div class="cc-stat">
+          <div class="cc-stat-label">Occupancy</div>
+          <div class="cc-stat-value">93%</div>
+          <div class="cc-stat-delta">full months on the system</div>
+        </div>
+        <div class="cc-stat">
+          <div class="cc-stat-label">Nightly rate</div>
+          <div class="cc-stat-value">$260</div>
+          <div class="cc-stat-delta">full months on the system</div>
+        </div>
+      </div>
+      <p class="cc-story">Thousands of near-identical cabins, thin margins for error &mdash; and rank still separates. Since we took this one over in mid-May, <strong>every full month has closed ahead of last year</strong> &mdash; July is 100% booked, finishing 39% up on last July. And August, the soft month behind peak, has already moved from 19% occupancy to 81% &mdash; a $4.3K swing on a two-bedroom in a saturated market.</p>
+      <div class="cc-receipt">
+        <div class="cc-receipt-caption">Revenue &middot; on the books for 2026</div>
+        <div class="cc-receipt-note">Every 2026 stay on the calendar as of this July, next to what the 2025 calendar held in July a year ago.</div>
+        <div class="bars" role="img" aria-label="Revenue on the books for the year, vs what was on the books at the same date last year: last year $32.6K, this year $43.3K">
+          <div class="bar-row">
+            <div class="bar-label">Last year</div>
+            <div class="bar-track"><div class="bar-fill" style="width:75%"></div></div>
+            <div class="bar-value">$32.6K</div>
+          </div>
+          <div class="bar-row now">
+            <div class="bar-label">This year</div>
+            <div class="bar-track"><div class="bar-fill" style="width:100%"></div></div>
+            <div class="bar-value">$43.3K</div>
+          </div>
+        </div>
+        <div class="cc-source">Source: PriceLabs &middot; Booking Insights</div>
+      </div>
+      <div class="cc-photos">
+        <div class="gal-head">
+          <span class="gal-badge gal-badge--before">Photo tour &middot; Before</span>
+          <span class="gal-note">The first five, as guests found them</span>
+        </div>
+        <div class="gal" aria-label="A Bear's Tale photo tour before, first five photos">
+          <img src="images/properties/tours/bears-tale/before-1.webp" alt="Cabin exterior with green metal roof" loading="lazy" decoding="async">
+          <img src="images/properties/tours/bears-tale/before-2.webp" alt="Living room with big view windows" loading="lazy" decoding="async">
+          <img src="images/properties/tours/bears-tale/before-3.webp" alt="Snowy Smoky Mountain view" loading="lazy" decoding="async">
+          <img src="images/properties/tours/bears-tale/before-4.webp" alt="Stone fireplace and loft interior" loading="lazy" decoding="async">
+          <img src="images/properties/tours/bears-tale/before-5.webp" alt="Covered deck with mountain view" loading="lazy" decoding="async">
+        </div>
+        <div class="gal-head">
+          <span class="gal-badge gal-badge--after">Photo tour &middot; After</span>
+          <span class="gal-note">The first five &mdash; no reshoots, just editing and resequencing</span>
+        </div>
+        <div class="gal gal--after" aria-label="A Bear's Tale photo tour after, first five photos">
+          <img src="images/properties/tours/bears-tale/after-1.webp" alt="Aerial of the cabin at sunset" loading="lazy" decoding="async">
+          <img src="images/properties/tours/bears-tale/after-2.webp" alt="Great room with wall of windows" loading="lazy" decoding="async">
+          <img src="images/properties/tours/bears-tale/after-3.webp" alt="Loft with pool table" loading="lazy" decoding="async">
+          <img src="images/properties/tours/bears-tale/after-4.webp" alt="Hot tub on the deck at sunset" loading="lazy" decoding="async">
+          <img src="images/properties/tours/bears-tale/after-5.webp" alt="Smoky Mountains valley view at dusk" loading="lazy" decoding="async">
+        </div>
+      </div>
+    </article>
+
+    <!-- Card: 1820 House -->
+    <article class="case-card r">
+      <div class="cc-top">
+        <span class="cc-tag">The dead months pay now</span>
+        <span class="cc-badge cc-badge--est">Established &middot; vs same period last year</span>
+      </div>
+      <h3 class="cc-name">1820 House, Steps to Ski Shuttle</h3>
+      <p class="cc-meta">4 BR<span class="dot">&middot;</span>Stowe, VT<span class="dot">&middot;</span>Ski market</p>
+      <div class="cc-context">On the books for 2026, as of July &middot; vs the same time last year</div>
+      <div class="cc-stats">
+        <div class="cc-stat">
+          <div class="cc-stat-label">Revenue</div>
+          <div class="cc-stat-value">$103.1K</div>
+          <div class="cc-stat-delta">+13% vs this time last year</div>
+        </div>
+        <div class="cc-stat">
+          <div class="cc-stat-label">Occupancy</div>
+          <div class="cc-stat-value">54%</div>
+          <div class="cc-stat-delta">+5% &middot; 2026 so far</div>
+        </div>
+        <div class="cc-stat">
+          <div class="cc-stat-label">Nightly rate</div>
+          <div class="cc-stat-value">$709</div>
+          <div class="cc-stat-delta">+7% &middot; 2026 so far</div>
+        </div>
+      </div>
+      <p class="cc-story">Midsummer is the hardest sell a Vermont ski cabin has. It&rsquo;s at <strong>81% occupancy with revenue up 56%</strong> on last year, and the two shoulder months behind it are up a combined $9.7K. One quiet month stayed quiet &mdash; we show it anyway. Off-season lift concentrates where demand actually exists, and where it exists, this calendar takes more than its share.</p>
+      <div class="cc-receipt">
+        <div class="cc-receipt-caption">Revenue &middot; on the books for 2026</div>
+        <div class="cc-receipt-note">Every 2026 stay on the calendar as of this July, next to what the 2025 calendar held in July a year ago.</div>
+        <div class="bars" role="img" aria-label="Revenue on the books for the year, vs what was on the books at the same time last year: last year $91.4K, this year $103.1K">
+          <div class="bar-row">
+            <div class="bar-label">Last year</div>
+            <div class="bar-track"><div class="bar-fill" style="width:89%"></div></div>
+            <div class="bar-value">$91.4K</div>
+          </div>
+          <div class="bar-row now">
+            <div class="bar-label">This year</div>
+            <div class="bar-track"><div class="bar-fill" style="width:100%"></div></div>
+            <div class="bar-value">$103.1K</div>
+          </div>
+        </div>
+        <div class="cc-source">Source: PriceLabs &middot; Booking Insights</div>
+      </div>
+      <div class="cc-photos">
+        <div class="gal-head">
+          <span class="gal-badge gal-badge--before">Photo tour &middot; Before</span>
+          <span class="gal-note">The first five, as guests found them</span>
+        </div>
+        <div class="gal" aria-label="1820 House photo tour before, first five photos">
+          <img src="images/properties/tours/1820-house/before-1.webp" alt="Farmhouse exterior behind overgrown shrubs" loading="lazy" decoding="async">
+          <img src="images/properties/tours/1820-house/before-2.webp" alt="Hot tub with cover propped open on the patio" loading="lazy" decoding="async">
+          <img src="images/properties/tours/1820-house/before-3.webp" alt="Green-paneled sitting room with fireplace" loading="lazy" decoding="async">
+          <img src="images/properties/tours/1820-house/before-4.webp" alt="Fire pit circle with Adirondack chairs and ski-lift bench" loading="lazy" decoding="async">
+          <img src="images/properties/tours/1820-house/before-5.webp" alt="Living room" loading="lazy" decoding="async">
+        </div>
+        <div class="gal-head">
+          <span class="gal-badge gal-badge--after">Photo tour &middot; After</span>
+          <span class="gal-note">The first five &mdash; no reshoots, just editing and resequencing</span>
+        </div>
+        <div class="gal gal--after" aria-label="1820 House photo tour after, first five photos">
+          <img src="images/properties/tours/1820-house/after-1.webp" alt="Farmhouse exterior in spring" loading="lazy" decoding="async">
+          <img src="images/properties/tours/1820-house/after-2.webp" alt="Hot tub with cover open on the stone patio" loading="lazy" decoding="async">
+          <img src="images/properties/tours/1820-house/after-3.webp" alt="Sitting room with roaring brick fireplace" loading="lazy" decoding="async">
+          <img src="images/properties/tours/1820-house/after-4.webp" alt="Fire pit gathering at night" loading="lazy" decoding="async">
+          <img src="images/properties/tours/1820-house/after-5.webp" alt="Bright living room with TV" loading="lazy" decoding="async">
+        </div>
+      </div>
+    </article>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════
+     GROUP C — LAUNCHED AT FULL RATE
+     ════════════════════════════════════════════════ -->
+<div class="cs-section-alt" id="launches">
+  <div class="group-head r">
+    <div class="cs-eyebrow">03 &middot; Launched at Full Rate</div>
+    <h2>New listings, no history, <em>no discount phase.</em></h2>
+    <p>These went live this year with no prior-year comparison &mdash; so none is shown. What they prove is what the playbook produces from a standing start, including at the top of the rate card.</p>
+  </div>
+  <div class="case-wrap">
+
+    <!-- Card: The 20-Guest Villa -->
+    <article class="case-card r">
+      <div class="cc-top">
+        <span class="cc-tag">Launched at full rate</span>
+        <span class="cc-badge cc-badge--new">New launch &middot; first season</span>
+      </div>
+      <h3 class="cc-name">The 20-Guest Villa</h3>
+      <p class="cc-meta">6 BR<span class="dot">&middot;</span>Sleeps 20<span class="dot">&middot;</span>Tampa Bay, FL<span class="dot">&middot;</span>Heated pool</p>
+      <div class="cc-context">First season &middot; from a standing start, no prior year</div>
+      <div class="cc-stats">
+        <div class="cc-stat">
+          <div class="cc-stat-label">Revenue</div>
+          <div class="cc-stat-value">$329.5K</div>
+          <div class="cc-stat-delta muted">booked to date &middot; first season</div>
+        </div>
+        <div class="cc-stat">
+          <div class="cc-stat-label">Occupancy</div>
+          <div class="cc-stat-value">83%</div>
+          <div class="cc-stat-delta muted">season avg &middot; best month 100%</div>
+        </div>
+        <div class="cc-stat">
+          <div class="cc-stat-label">Nightly rate</div>
+          <div class="cc-stat-value">$1,345</div>
+          <div class="cc-stat-delta muted">season avg &middot; peak $1,700</div>
+        </div>
+      </div>
+      <p class="cc-story">The largest build on this page. <strong>$198.5K in its first six-plus months</strong> at a $1,310 average rate, with back-to-back $30K+ months through peak &mdash; and one spring month fully booked at $1,700 a night. Premium positioning only works if the price ceiling is defended every week. It is.</p>
+      <div class="cc-receipt">
+        <div class="cc-receipt-caption">Revenue &middot; booked to date</div>
+        <div class="cc-receipt-note">Everything booked since the November launch, counted as of July &mdash; no prior year exists.</div>
+        <div class="bars" role="img" aria-label="Revenue booked to date, first season: $329.5K; launched in November, no prior year">
+          <div class="bar-row">
+            <div class="bar-label">Last year</div>
+            <div class="bar-track"><div class="bar-fill" style="width:0"></div></div>
+            <div class="bar-value">&mdash;</div>
+          </div>
+          <div class="bar-row now">
+            <div class="bar-label">This year</div>
+            <div class="bar-track"><div class="bar-fill" style="width:100%"></div></div>
+            <div class="bar-value">$329.5K</div>
+          </div>
+        </div>
+        <div class="cc-source">Source: PriceLabs &middot; Booking Insights</div>
+      </div>
+      <div class="cc-photos">
+        <div class="gal-head">
+          <span class="gal-badge gal-badge--before">Photo tour &middot; Before</span>
+          <span class="gal-note">The first five, as guests found them</span>
+        </div>
+        <div class="gal" aria-label="The 20-Guest Villa photo tour before, first five photos">
+          <img src="images/properties/tours/20-guest-villa/before-1.webp" alt="Aerial of the villa, pool and sport courts" loading="lazy" decoding="async">
+          <img src="images/properties/tours/20-guest-villa/before-2.webp" alt="Backyard with giant chess and putting green" loading="lazy" decoding="async">
+          <img src="images/properties/tours/20-guest-villa/before-3.webp" alt="Dining area" loading="lazy" decoding="async">
+          <img src="images/properties/tours/20-guest-villa/before-4.webp" alt="Home gym" loading="lazy" decoding="async">
+          <img src="images/properties/tours/20-guest-villa/before-5.webp" alt="Open living room" loading="lazy" decoding="async">
+        </div>
+        <div class="gal-head">
+          <span class="gal-badge gal-badge--after">Photo tour &middot; After</span>
+          <span class="gal-note">The first five &mdash; no reshoots, just editing and resequencing</span>
+        </div>
+        <div class="gal gal--after" aria-label="The 20-Guest Villa photo tour after, first five photos">
+          <img src="images/properties/tours/20-guest-villa/after-1.webp" alt="Aerial of the resort-style backyard, pool and courts" loading="lazy" decoding="async">
+          <img src="images/properties/tours/20-guest-villa/after-2.webp" alt="Game room with pool table and sauna" loading="lazy" decoding="async">
+          <img src="images/properties/tours/20-guest-villa/after-3.webp" alt="Living room with large white sectional" loading="lazy" decoding="async">
+          <img src="images/properties/tours/20-guest-villa/after-4.webp" alt="Gym opening onto the giant chess lawn" loading="lazy" decoding="async">
+          <img src="images/properties/tours/20-guest-villa/after-5.webp" alt="Dining room and kitchen" loading="lazy" decoding="async">
+        </div>
+      </div>
+    </article>
+
+    <!-- Card: Soluna Haus -->
+    <article class="case-card r">
+      <div class="cc-top">
+        <span class="cc-tag">Launched at full rate</span>
+        <span class="cc-badge cc-badge--new">New launch &middot; first season</span>
+      </div>
+      <h3 class="cc-name">Soluna Haus</h3>
+      <p class="cc-meta">5 BR<span class="dot">&middot;</span>Asheville, NC</p>
+      <div class="cc-context">First season &middot; from a standing start, no prior year</div>
+      <div class="cc-stats">
+        <div class="cc-stat">
+          <div class="cc-stat-label">Revenue</div>
+          <div class="cc-stat-value">$62.1K</div>
+          <div class="cc-stat-delta muted">booked to date &middot; first season</div>
+        </div>
+        <div class="cc-stat">
+          <div class="cc-stat-label">Occupancy</div>
+          <div class="cc-stat-value">97%</div>
+          <div class="cc-stat-delta muted">best month so far</div>
+        </div>
+        <div class="cc-stat">
+          <div class="cc-stat-label">Nightly rate</div>
+          <div class="cc-stat-value">$708</div>
+          <div class="cc-stat-delta muted">best month &middot; still climbing</div>
+        </div>
+      </div>
+      <p class="cc-story">The owner listed it herself in April and hit a wall &mdash; $742 and single-digit occupancy in month one, buried in search. We took it over in May and spent the ramp fighting for rank. Three months later it holds <strong>$21.2K at 97% occupancy &mdash; its biggest month yet</strong> &mdash; with the rate still climbing and no discount phase to crawl out of later.</p>
+      <div class="cc-receipt">
+        <div class="cc-receipt-caption">Revenue &middot; booked to date</div>
+        <div class="cc-receipt-note">Everything booked as of July, from a launch earlier this year &mdash; no prior year exists.</div>
+        <div class="bars" role="img" aria-label="Revenue booked to date, first season: $62.1K; launched this year, no prior year">
+          <div class="bar-row">
+            <div class="bar-label">Last year</div>
+            <div class="bar-track"><div class="bar-fill" style="width:0"></div></div>
+            <div class="bar-value">&mdash;</div>
+          </div>
+          <div class="bar-row now">
+            <div class="bar-label">This year</div>
+            <div class="bar-track"><div class="bar-fill" style="width:100%"></div></div>
+            <div class="bar-value">$62.1K</div>
+          </div>
+        </div>
+        <div class="cc-source">Source: PriceLabs &middot; Booking Insights</div>
+      </div>
+      <div class="cc-photos">
+        <div class="gal-head">
+          <span class="gal-badge gal-badge--before">Photo tour &middot; Before</span>
+          <span class="gal-note">The first five, as guests found them</span>
+        </div>
+        <div class="gal" aria-label="Soluna Haus photo tour before, first five photos">
+          <img src="images/properties/tours/soluna-haus/before-1.webp" alt="Exterior at dusk with back deck" loading="lazy" decoding="async">
+          <img src="images/properties/tours/soluna-haus/before-2.webp" alt="Hot tub with sunset mountain view" loading="lazy" decoding="async">
+          <img src="images/properties/tours/soluna-haus/before-3.webp" alt="Gym with plant wall" loading="lazy" decoding="async">
+          <img src="images/properties/tours/soluna-haus/before-4.webp" alt="Putting green and outdoor movie screen" loading="lazy" decoding="async">
+          <img src="images/properties/tours/soluna-haus/before-5.webp" alt="Arcade corner" loading="lazy" decoding="async">
+        </div>
+        <div class="gal-head">
+          <span class="gal-badge gal-badge--after">Photo tour &middot; After</span>
+          <span class="gal-note">The first five &mdash; no reshoots, just editing and resequencing</span>
+        </div>
+        <div class="gal gal--after" aria-label="Soluna Haus photo tour after, first five photos">
+          <img src="images/properties/tours/soluna-haus/after-1.webp" alt="Exterior at dusk with glowing outdoor screen" loading="lazy" decoding="async">
+          <img src="images/properties/tours/soluna-haus/after-2.webp" alt="Hot tub overlooking the ridge at sunset" loading="lazy" decoding="async">
+          <img src="images/properties/tours/soluna-haus/after-3.webp" alt="Wellness gym with neon sign" loading="lazy" decoding="async">
+          <img src="images/properties/tours/soluna-haus/after-4.webp" alt="Putting green and outdoor cinema" loading="lazy" decoding="async">
+          <img src="images/properties/tours/soluna-haus/after-5.webp" alt="Retro arcade machines" loading="lazy" decoding="async">
+        </div>
+      </div>
+    </article>
+
   </div>
 </div>
 
@@ -730,9 +1213,10 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
      CTA
      ════════════════════════════════════════════════ -->
 <section class="cs-cta">
-  <h2>Stop guessing. Start whispering.</h2>
-  <p>See what the Whisper Wheel can do for your property.</p>
-  <a href="https://revwhisper.com/get-started" class="cs-cta-btn">Book Your Free Strategy Call</a>
+  <h2>One of these calendars looks like yours.</h2>
+  <p>Mountain, beach, lake, urban &mdash; two-bedroom cabins to twenty-guest estates. The playbook that moved them is the same one. Don&rsquo;t take our word for any of it: see your own baseline first.</p>
+  <a href="/audit" class="cs-cta-btn">Get your free audit</a>
+  <div class="cs-cta-note">A live read of your search rank, listing health, and pricing against your comp set. No account access required.</div>
 </section>
 
 <!-- ════════════════════════════════════════════════
@@ -754,6 +1238,7 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
           <span class="footer-logo-name">RevWhisper</span>
         </div>
         <p class="footer-tag">A revenue intelligence team that layers into your Airbnb listing to accelerate performance and maximize earnings.</p>
+        <p class="footer-tag footer-address">501 East Kennedy Boulevard, Tampa, FL 33602 (Space 15&ndash;144)</p>
         <div class="footer-socials">
           <a href="https://x.com/RevWhisper" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
@@ -798,6 +1283,32 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
      ════════════════════════════════════════════════ -->
 <script>
 (function() {
+  /* ── Placeholder filler: builds the 5-slot Airbnb-style gallery into any
+     empty .gal. Paste five real <img> tags inside a .gal (cover first) and
+     it will be left alone. ── */
+  var slotIcon='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>';
+  var slotLabels=['Cover photo','Photo 2','Photo 3','Photo 4','Photo 5'];
+  document.querySelectorAll('.gal').forEach(function(g){
+    if(g.children.length) return;
+    slotLabels.forEach(function(label){
+      var d=document.createElement('div');
+      d.className='gal-slot';
+      d.style.color=g.classList.contains('gal--after')?'#4A6741':'#a39e9b';
+      d.innerHTML=slotIcon+'<span class="gal-slot-label">'+label+'</span>';
+      g.appendChild(d);
+    });
+  });
+
+  /* ── Before→after arrows: one per photo tour, alternating sides down the page ── */
+  var arrowSVG='<div class="tour-arrow" aria-hidden="true"><svg viewBox="0 0 80 420" fill="none">'+
+    '<path d="M-8 30 C 32 48, 60 115, 62 205 C 63 290, 44 358, 5 390" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>'+
+    '<path d="M5 390l15 -3M5 390l7 -17" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>'+
+    '</svg></div>';
+  document.querySelectorAll('.cc-photos').forEach(function(p,i){
+    p.classList.add(i%2===0?'cc-photos--right':'cc-photos--left');
+    p.insertAdjacentHTML('beforeend',arrowSVG);
+  });
+
   /* ── Scroll-reveal observer ── */
   var revealIO = new IntersectionObserver(function(entries) {
     entries.forEach(function(entry) {
