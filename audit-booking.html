@@ -200,6 +200,13 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 .vsl-note{font-size:13px;line-height:1.65;color:var(--g500);font-weight:300;margin-top:14px}
 .vsl-note strong{color:var(--g700);font-weight:600}
 
+/* ── Pre-booking VSL + education (calendar view; hidden once booked) ── */
+.pre-vsl{margin:0 0 34px}
+.pre-vsl .booked-eyebrow{margin-bottom:9px}
+.pre-vsl-h{font-family:var(--heading);font-size:clamp(21px,3.4vw,25px);font-weight:400;letter-spacing:-.015em;line-height:1.22;color:var(--black);margin-bottom:14px}
+.pre-vsl-h em{font-style:italic;color:var(--accent)}
+.pre-edu{margin-top:38px}
+
 /* ── Post-booking "what to expect" ── */
 .booked-meta{display:flex;flex-wrap:wrap;justify-content:center;gap:18px;margin-top:14px;font-size:13px;color:var(--g500);font-weight:300}
 .booked-meta-item{display:inline-flex;align-items:center;gap:6px}
@@ -271,6 +278,25 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
   </div>
   <h1 class="reveal-h1">Now, let's walk through <em>your audit</em>, live.</h1>
   <p class="reveal-sub">Here's the part most "free audits" skip: <strong>we deliver yours live.</strong> Pick a time below and we'll walk through your listing together: what's working, what's costing you bookings, and exactly what to fix first. That's why it's worth far more than a PDF you'd never open.</p>
+
+  <!-- Pre-booking VSL — always Bryan's walkthrough (no host is assigned until the booking lands;
+       the confirmation screen swaps to the assigned host's video). Hidden once booked. -->
+  <section class="pre-vsl" id="pre-vsl">
+    <div class="booked-eyebrow">What's included in the call</div>
+    <h2 class="pre-vsl-h">First — see exactly what <em>you're booking</em>.</h2>
+    <div class="vsl-host">
+      <img class="vsl-host-avatar" src="/images/team/bryan.webp" alt="Bryan" width="46" height="46" loading="lazy">
+      <div class="vsl-host-copy">Recorded by <strong>Bryan</strong> — a fellow host, and one of the two people who run these audits.</div>
+    </div>
+    <div class="vsl-player">
+      <button class="vsl-facade" type="button" id="pre-vsl-facade" aria-label="Play the video">
+        <img class="vsl-thumb" src="https://i.ytimg.com/vi/Trovk73GTWc/maxresdefault.jpg" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/Trovk73GTWc/hqdefault.jpg'" alt="" loading="lazy">
+        <span class="vsl-play"><svg width="22" height="22" viewBox="0 0 24 24" fill="#fff"><path d="M8 5.5v13l11-6.5z"/></svg></span>
+        <span class="vsl-dur">4:45</span>
+      </button>
+    </div>
+    <p class="vsl-note">It's just under 5 minutes: what's inside your audit, how the 30 minutes run, and what you'll walk away with. <strong>Worth watching before you pick a time.</strong></p>
+  </section>
 
   <div class="book-card">
     <div class="steps-viewport">
@@ -359,7 +385,7 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
         <div class="booked-body">
           <section class="booked-sec">
             <div class="booked-eyebrow">Before your call</div>
-            <h3 class="booked-h">Watch this before we <em>meet</em>.</h3>
+            <h3 class="booked-h">Didn't watch the video? <em>Watch it before we meet.</em></h3>
             <div class="vsl-host" id="vsl-host" hidden>
               <img class="vsl-host-avatar" id="vsl-host-img" src="" alt="" width="46" height="46" loading="lazy">
               <div class="vsl-host-copy" id="vsl-host-copy"></div>
@@ -375,22 +401,6 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
           </section>
 
           <section class="booked-sec">
-            <div class="booked-eyebrow">What happens on the call</div>
-            <h3 class="booked-h">Here's how our 30 minutes go.</h3>
-            <ol class="booked-steps">
-              <li><span class="bs-num">1</span><div><strong>We get to know your <span data-one="property" data-many="portfolio">property</span>.</strong> Where it stands today, where you're trying to take it, and the number you believe it could hit. There's a lot we can't see from our side, so this is where you fill it in.</div></li>
-              <li><span class="bs-num">2</span><div><strong>We pull up your audit, live.</strong> We screen-share exactly where you're ranking right now across your real availability, and where your revenue opportunity is. This is the part most "free audits" skip.</div></li>
-              <li><span class="bs-num">3</span><div><strong>We show you what we'd do.</strong> A straight walk-through of RevWhisper and, if it's a fit, what working together looks like. If it's not, you still leave knowing exactly where you stand.</div></li>
-            </ol>
-          </section>
-
-          <section class="booked-sec">
-            <div class="booked-eyebrow">The part hosts remember</div>
-            <h3 class="booked-h">You'll see exactly <em>where you stand</em>.</h3>
-            <p class="booked-p">Where you rank decides what you earn, since about 75% of guests never scroll past the first page on Airbnb. On this call you'll see it live, across your real open dates: where your <span data-one="listing" data-many="listings">listing</span> actually <span data-one="stands" data-many="stand">stands</span> today, and where your biggest revenue opportunity is, whether that's climbing the rankings or charging what your <span data-one="spot" data-many="spots">spot</span> <span data-one="is" data-many="are">is</span> already worth. Most hosts tell us it's the clearest picture they've ever had of their <span data-one="listing" data-many="portfolio">listing</span>.</p>
-          </section>
-
-          <section class="booked-sec">
             <div class="booked-eyebrow">Come ready</div>
             <h3 class="booked-h">What's useful to have in mind.</h3>
             <p class="booked-p">Nothing to prepare or pull together. The call just goes deeper if you've already thought about:</p>
@@ -401,16 +411,6 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
             </ul>
           </section>
 
-          <section class="booked-sec booked-hosts">
-            <div class="host-avatars">
-              <img class="host-avatar" src="/images/team/bryan.webp" alt="Bryan" loading="lazy" width="40" height="40">
-              <img class="host-avatar" src="/images/team/nic.webp" alt="Nicolas" loading="lazy" width="40" height="40">
-            </div>
-            <div>
-              <h3 class="booked-h" style="margin-bottom:10px">You'll be talking to fellow hosts.</h3>
-              <p class="booked-p">We run our own portfolio of short-term rentals across the US. The same system we'll show you is the one we run on our own money.</p>
-            </div>
-          </section>
         </div>
       </div>
 
@@ -420,6 +420,37 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
   <div class="scarcity" id="scarcity">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
     We run a limited number of live audits each week. Grab a time while it's open.
+  </div>
+
+  <!-- Pre-booking education — shown with the calendar, hidden once booked (the confirmation
+       carries its own prep content). -->
+  <div class="pre-edu" id="pre-edu">
+    <section class="booked-sec">
+      <div class="booked-eyebrow">What happens on the call</div>
+      <h3 class="booked-h">Here's how our 30 minutes go.</h3>
+      <ol class="booked-steps">
+        <li><span class="bs-num">1</span><div><strong>We get to know your <span data-one="property" data-many="portfolio">property</span>.</strong> Where it stands today, where you're trying to take it, and the number you believe it could hit. There's a lot we can't see from our side, so this is where you fill it in.</div></li>
+        <li><span class="bs-num">2</span><div><strong>We pull up your audit, live.</strong> We screen-share exactly where you're ranking right now across your real availability, and where your revenue opportunity is. This is the part most "free audits" skip.</div></li>
+        <li><span class="bs-num">3</span><div><strong>We show you what we'd do.</strong> A straight walk-through of RevWhisper and, if it's a fit, what working together looks like. If it's not, you still leave knowing exactly where you stand.</div></li>
+      </ol>
+    </section>
+
+    <section class="booked-sec">
+      <div class="booked-eyebrow">The part hosts remember</div>
+      <h3 class="booked-h">You'll see exactly <em>where you stand</em>.</h3>
+      <p class="booked-p">Where you rank decides what you earn, since about 75% of guests never scroll past the first page on Airbnb. On this call you'll see it live, across your real open dates: where your <span data-one="listing" data-many="listings">listing</span> actually <span data-one="stands" data-many="stand">stands</span> today, and where your biggest revenue opportunity is, whether that's climbing the rankings or charging what your <span data-one="spot" data-many="spots">spot</span> <span data-one="is" data-many="are">is</span> already worth. Most hosts tell us it's the clearest picture they've ever had of their <span data-one="listing" data-many="portfolio">listing</span>.</p>
+    </section>
+
+    <section class="booked-sec booked-hosts">
+      <div class="host-avatars">
+        <img class="host-avatar" src="/images/team/bryan.webp" alt="Bryan" loading="lazy" width="40" height="40">
+        <img class="host-avatar" src="/images/team/nic.webp" alt="Nicolas" loading="lazy" width="40" height="40">
+      </div>
+      <div>
+        <h3 class="booked-h" style="margin-bottom:10px">You'll be talking to fellow hosts.</h3>
+        <p class="booked-p">We run our own portfolio of short-term rentals across the US. The same system we'll show you is the one we run on our own money.</p>
+      </div>
+    </section>
   </div>
 
 </div>
@@ -656,6 +687,8 @@ async function confirmBooking(){
     await new Promise(function(r){setTimeout(r,MIN_LOADER_MS);});
     renderSuccess({start:iso,host:{name:VSL_HOSTS.bryan.name,email:''}});
     const pvFrom=current;current++;transitionStep(pvFrom,current,'forward'); // loader → success
+    hideBookingChrome();
+    setTimeout(function(){var ss=document.getElementById('success-state');if(ss) ss.classList.add('revealed');},50);
     return;
   }
   // Meta Schedule event_id — generated up front and sent with the booking so /api/cal-booking
@@ -714,11 +747,13 @@ async function confirmBooking(){
   booking.bookingInFlight=false;
 }
 
-/* ── Per-host intro video (VSL) ──
-   The Discovery event is round-robin between Bryan and Nick; /api/cal-booking returns the assigned
-   host ({name,email}) so the confirmation can show THEIR photo and THEIR walkthrough video. If the
-   host can't be determined (shouldn't happen — the booking title carries it as a fallback), we show
-   the video with neutral copy and no photo rather than guessing at a face. */
+/* ── Intro video (VSL) — two placements ──
+   Pre-booking (#pre-vsl, next to the calendar): always Bryan's walkthrough — no host is assigned
+   until the booking lands. Post-booking (success screen): the Discovery event is round-robin
+   between Bryan and Nick; /api/cal-booking returns the assigned host ({name,email}) so the
+   confirmation shows THEIR photo and THEIR video, framed as "watch it if you didn't already".
+   If the host can't be determined (shouldn't happen — the booking title carries it as a
+   fallback), we show the video with neutral copy and no photo rather than guessing at a face. */
 var VSL_HOSTS={
   bryan:{key:'bryan',first:'Bryan',name:'Bryan Gamble',img:'/images/team/bryan.webp',videoId:'Trovk73GTWc',durBadge:'4:45',durText:'just under 5 minutes'},
   nick:{key:'nick',first:'Nicolas',name:'Nicolas Luna',img:'/images/team/nic.webp',videoId:'nS31JRQbJ04',durBadge:'1:31',durText:'90 seconds'}
@@ -756,22 +791,36 @@ function setupVsl(host){
     if(copy) copy.innerHTML='Recorded by <strong>'+host.first+'</strong> — exactly who you’ll be meeting on your call.';
   }
   var note=document.getElementById('vsl-note');
-  if(note) note.innerHTML='It’s '+v.durText+' and walks through what’s inside your audit and how the 30 minutes run — so your call starts at your numbers, not the intro. <strong>Please watch it before we talk.</strong>';
+  if(note){
+    // The pre-booking video is Bryan's, so when Bryan (or the neutral fallback, which plays his
+    // video) is the assigned host it's the SAME video they were shown next to the calendar —
+    // frame it as a catch-up. Nick's is a different video, so it keeps the plain ask.
+    note.innerHTML = v.key==='bryan'
+      ? 'It’s the same walkthrough from the booking page — '+v.durText+' on what’s inside your audit and how the 30 minutes run. <strong>Already watched it? You’re set. If not, please watch it before we talk.</strong>'
+      : 'It’s '+v.durText+' and walks through what’s inside your audit and how the 30 minutes run — so your call starts at your numbers, not the intro. <strong>Please watch it before we talk.</strong>';
+  }
   var facade=document.getElementById('vsl-facade');
   if(facade) facade.onclick=playVsl;
 }
 
-function playVsl(){
-  var v=vslActive||VSL_HOSTS.bryan;
-  var player=document.querySelector('.vsl-player'); if(!player) return;
+function playVslIn(container,v,placement){
+  var player=container&&container.querySelector('.vsl-player'); if(!player||player.querySelector('iframe')) return;
   var iframe=document.createElement('iframe');
   iframe.src='https://www.youtube-nocookie.com/embed/'+v.videoId+'?autoplay=1&rel=0&modestbranding=1&playsinline=1';
   iframe.title='What to expect on your RevWhisper audit call';
   iframe.allow='autoplay; encrypted-media; picture-in-picture; fullscreen';
   iframe.setAttribute('allowfullscreen','');
   player.innerHTML='';player.appendChild(iframe);
-  rwTrack('vsl_play',{host:v.key,page:'audit-booking'});
+  rwTrack('vsl_play',{host:v.key,page:'audit-booking',placement:placement});
 }
+
+function playVsl(){ // success-screen facade — the assigned host's video
+  playVslIn(document.querySelector('.step[data-step="4"]'),vslActive||VSL_HOSTS.bryan,'post_booking');
+}
+
+// Pre-booking facade — always Bryan's walkthrough
+var preFacade=document.getElementById('pre-vsl-facade');
+if(preFacade) preFacade.onclick=function(){ playVslIn(document.getElementById('pre-vsl'),VSL_HOSTS.bryan,'pre_booking'); };
 
 function renderSuccess(data){
   const desc=document.getElementById('success-desc');
@@ -782,8 +831,8 @@ function renderSuccess(data){
   if(nameEl) nameEl.textContent=first?(', '+first):'';
   if(desc){
     desc.textContent=start
-      ? `Your live audit is set for ${start.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})} at ${start.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'})}. A calendar invite is on its way to your inbox, and we'll text your Google Meet link before we meet. One ask before then: watch the short video below.`
-      : `Your live audit is confirmed. A calendar invite is on its way to your inbox, and we'll text your Google Meet link before we meet. One ask before then: watch the short video below.`;
+      ? `Your live audit is set for ${start.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})} at ${start.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'})}. A calendar invite is on its way to your inbox, and we'll text your Google Meet link before we meet. One ask before then: if you haven't watched the video yet, please watch it before our call.`
+      : `Your live audit is confirmed. A calendar invite is on its way to your inbox, and we'll text your Google Meet link before we meet. One ask before then: if you haven't watched the video yet, please watch it before our call.`;
   }
   if(when){
     when.textContent=start?(start.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'})+' · '+start.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'})+' ('+booking.timeZone+')'):'Confirmed';
@@ -794,13 +843,15 @@ function renderSuccess(data){
 
 /* Singular vs. portfolio wording — a host with more than one listing shouldn't read "your property".
    Driven by the listing-count captured on /audit (lead.listings: '1','2-5','6-10',…); anything other
-   than a single listing (or a missing value defaulting to single) uses the data-many wording. */
+   than a single listing (or a missing value defaulting to single) uses the data-many wording.
+   Covers both the pre-booking education (#pre-edu) and the confirmation (step 4). */
 function applyPropertyCopy(){
   const single=!(booking.lead&&booking.lead.listings)||String(booking.lead.listings).trim()==='1';
-  document.querySelectorAll('.step[data-step="4"] [data-one]').forEach(function(el){
+  document.querySelectorAll('#content [data-one]').forEach(function(el){
     el.textContent=single?el.getAttribute('data-one'):el.getAttribute('data-many');
   });
 }
+applyPropertyCopy(); // the pre-booking education is visible from page load
 
 /* ?preview=success entry point — fabricates a confirmed slot (3 days out, 2pm local) and
    reveals Step 4 directly. No /api/cal-booking call and no Pixel/CAPI/X events fire.
@@ -821,12 +872,16 @@ function previewSuccess(){
   setTimeout(launchConfetti,300);
 }
 
-/* Entering the booked view — hide the funnel chrome (request pill, hero, scarcity) so the
-   confirmation stands on its own. Shared by a real booking and ?preview=success. */
+/* Entering the booked view — hide the funnel chrome (request pill, hero, pre-booking VSL +
+   education, scarcity) so the confirmation stands on its own. Shared by a real booking and
+   ?preview=success. */
 function hideBookingChrome(){
-  ['.confirm-pill','.reveal-h1','.reveal-sub','#scarcity'].forEach(function(sel){
+  ['.confirm-pill','.reveal-h1','.reveal-sub','#pre-vsl','#pre-edu','#scarcity'].forEach(function(sel){
     const el=document.querySelector(sel); if(el) el.style.display='none';
   });
+  // display:none doesn't stop a playing YouTube embed — pull the pre-booking iframe so its
+  // audio can't keep running under the confirmation.
+  var pf=document.querySelector('#pre-vsl iframe'); if(pf) pf.remove();
 }
 
 function launchConfetti(){
