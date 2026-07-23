@@ -156,6 +156,48 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
 /* ── Four Levers (audit-page "what we look at" layout: head + list left, Airbnb card right) ── */
 .look-split{display:grid;grid-template-columns:1fr minmax(0,.92fr);grid-template-areas:"head media" "list media";column-gap:clamp(36px,5vw,68px);align-items:center}
 .look-media{grid-area:media;align-self:center}
+/* ── Report-card mockup (shared with /audit) — a stack of report sheets ── */
+.report-stage{position:relative;width:100%;max-width:412px;margin:0 auto}
+.report-stage::before{content:'';position:absolute;inset:-7% -5% -9% -5%;background:radial-gradient(58% 54% at 50% 42%,rgba(74,103,65,.08),transparent 72%);z-index:0}
+.rd-back{position:absolute;left:0;top:0;width:100%;height:100%;background:#fff;border:1px solid var(--g200);border-radius:16px;box-shadow:var(--sh)}
+.rd-back.b2{transform:rotate(-4deg) translate(-13px,15px);background:var(--g50)}
+.rd-back.b1{transform:rotate(2.4deg) translate(11px,7px)}
+.rd-front{position:relative;z-index:1;background:#fff;border:1px solid var(--g200);border-radius:16px;box-shadow:var(--sh-lg);padding:22px 22px 18px;transition:transform .45s cubic-bezier(.16,1,.3,1)}
+.report-stage:hover .rd-front{transform:translateY(-6px)}
+.rd-top{display:flex;align-items:center;justify-content:space-between}
+.rd-brand{display:flex;align-items:center;gap:7px;font-family:var(--heading);font-size:14.5px;color:var(--black);letter-spacing:-.01em}
+.rd-brand .rd-mark{width:18px;height:18px;flex-shrink:0;color:var(--accent)}
+.rd-brand b{color:var(--accent);font-weight:400}
+.rd-stamp{font-size:8.5px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--g400);border:1px solid var(--g200);border-radius:100px;padding:4px 9px}
+.rd-titlewrap{margin-top:15px;padding-bottom:13px;border-bottom:1px solid var(--g200)}
+.rd-title{font-family:var(--heading);font-size:17px;font-weight:400;color:var(--black);letter-spacing:-.01em}
+.rd-sub{font-family:var(--mono);font-size:10.5px;color:var(--g400);margin-top:5px;letter-spacing:.01em}
+.rd-block{padding:13px 0;border-bottom:1px solid var(--g100)}
+.rd-block:last-of-type{border-bottom:none;padding-bottom:2px}
+.rd-bhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.rd-blabel{display:flex;align-items:center;gap:8px;font-size:10.5px;font-weight:600;letter-spacing:.05em;color:var(--g600);text-transform:uppercase}
+.rd-bdot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0}
+.rd-bnum{font-family:var(--mono);font-size:9px;color:var(--g300);font-weight:500}
+.rd-rank{display:flex;align-items:center;gap:13px}
+.rd-spark{flex:1;height:44px;display:block;overflow:visible}
+.rd-ranknow{text-align:right;flex-shrink:0;line-height:1}
+.rd-ranknow .rn-v{font-family:var(--mono);font-size:20px;font-weight:500;color:var(--accent)}
+.rd-ranknow .rn-l{font-size:8.5px;color:var(--g400);letter-spacing:.04em;margin-top:4px;text-transform:uppercase}
+.rd-rows{display:flex;flex-direction:column;gap:9px}
+.rd-row{display:flex;align-items:center;gap:11px}
+.rd-row .rr-k{font-size:10.5px;color:var(--g500);width:104px;flex-shrink:0}
+.rd-row .rr-track{flex:1;height:8px;border-radius:100px;background:var(--g100);overflow:hidden}
+.rd-row .rr-track i{display:block;height:100%;border-radius:100px;background:var(--g300)}
+.rd-row .rr-track i.up{background:var(--gold)}
+.rd-row .rr-v{font-family:var(--mono);font-size:11px;color:var(--g500);width:42px;text-align:right;flex-shrink:0}
+.rd-row .rr-v.hi{color:var(--gold);font-weight:500}
+.rd-pricenote{font-size:9.5px;color:var(--g400);margin-top:9px;letter-spacing:.01em}
+.rd-pricenote b{color:var(--gold);font-weight:500}
+.rd-checks{display:flex;flex-direction:column;gap:8px}
+.rd-check{display:flex;align-items:center;gap:9px;font-size:11px;color:var(--g600)}
+.rd-cico{width:16px;height:16px;border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700}
+.rd-cico.flag{background:var(--terra-bg);color:var(--terra)}
+.rd-cico.ok{background:var(--accent-light);color:var(--accent)}
 .look-head{grid-area:head;align-self:end}
 .look-list{grid-area:list;align-self:start;margin-top:28px;display:flex;flex-direction:column;gap:2px}
 .lk-h2{font-family:var(--heading);font-size:clamp(30px,4vw,44px);font-weight:400;letter-spacing:-.02em;line-height:1.14;color:var(--black)}
@@ -535,16 +577,65 @@ a.pillar-q:hover{text-decoration:underline;text-underline-offset:3px}
       <h2 class="lk-h2">The lift comes from four levers, <em>running daily.</em></h2>
       <p class="lk-lead">Same operating system on every listing on this page &mdash; no renovations, no new furniture. Every number below is pulled from the same PriceLabs view a host sees.</p>
     </div>
-    <!-- Airbnb-style listing card: Candler Estate, featured below -->
+    <!-- Report-card mockup (same element as /audit) -->
     <div class="look-media">
-      <div class="bnb-card">
-        <div class="bnb-photo">
-          <img src="/images/properties/ash2-estate.webp" alt="Candler Estate as it appears on Airbnb &mdash; six-bedroom mountain estate with heated pool near Asheville, NC" loading="lazy" width="430" height="430">
-          <span class="bnb-heart" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M16 28c7.3-4.6 12-9.7 12-15.2 0-3.6-2.7-6.3-6-6.3-2.4 0-4.4 1.3-6 3.6-1.6-2.3-3.6-3.6-6-3.6-3.3 0-6 2.7-6 6.3C4 18.3 8.7 23.4 16 28z"/></svg></span>
-        </div>
-        <div class="bnb-info">
-          <div class="bnb-title">Entire home in Candler, North Carolina</div>
-          <div class="bnb-meta">18 guests &middot; 6 bedrooms &middot; Heated pool &middot; Theater</div>
+      <div class="report-stage">
+        <div class="rd-back b2" aria-hidden="true"></div>
+        <div class="rd-back b1" aria-hidden="true"></div>
+        <div class="rd-front" role="img" aria-label="Sample RevWhisper listing performance report showing search ranking, a conversion breakdown, and a pricing audit.">
+          <div class="rd-top">
+            <div class="rd-brand">
+              <svg class="rd-mark" viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span><b>Rev</b>Whisper</span>
+            </div>
+            <span class="rd-stamp">Listing Report</span>
+          </div>
+          <div class="rd-titlewrap">
+            <div class="rd-title">Performance audit</div>
+            <div class="rd-sub">Clearwater, FL</div>
+          </div>
+
+          <!-- Section 1 — Search ranking -->
+          <div class="rd-block">
+            <div class="rd-bhead">
+              <span class="rd-blabel"><span class="rd-bdot"></span>Search ranking</span>
+              <span class="rd-bnum">01</span>
+            </div>
+            <div class="rd-rank">
+              <svg class="rd-spark" viewBox="0 0 240 44" preserveAspectRatio="none" aria-hidden="true">
+                <polyline points="0,38 40,34 80,36 120,26 160,18 200,11 240,6" fill="none" stroke="#4A6741" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+                <polygon points="0,38 40,34 80,36 120,26 160,18 200,11 240,6 240,44 0,44" fill="#4A6741" fill-opacity="0.08"/>
+                <circle cx="240" cy="6" r="3.4" fill="#4A6741"/>
+              </svg>
+              <div class="rd-ranknow"><div class="rn-v">#3</div><div class="rn-l">Now</div></div>
+            </div>
+          </div>
+
+          <!-- Section 2 — Conversion -->
+          <div class="rd-block">
+            <div class="rd-bhead">
+              <span class="rd-blabel"><span class="rd-bdot"></span>Conversion</span>
+              <span class="rd-bnum">02</span>
+            </div>
+            <div class="rd-checks">
+              <div class="rd-check"><span class="rd-cico flag">!</span>Lead photo buried at position 4</div>
+              <div class="rd-check"><span class="rd-cico flag">!</span>Title missing your top search term</div>
+              <div class="rd-check"><span class="rd-cico ok">&check;</span>First three lines &mdash; strong</div>
+            </div>
+          </div>
+
+          <!-- Section 3 — Pricing audit -->
+          <div class="rd-block">
+            <div class="rd-bhead">
+              <span class="rd-blabel"><span class="rd-bdot"></span>Pricing audit</span>
+              <span class="rd-bnum">03</span>
+            </div>
+            <div class="rd-rows">
+              <div class="rd-row"><span class="rr-k">Your avg nightly</span><span class="rr-track"><i style="width:62%"></i></span><span class="rr-v">$248</span></div>
+              <div class="rd-row"><span class="rr-k">Market potential</span><span class="rr-track"><i class="up" style="width:88%"></i></span><span class="rr-v hi">$352</span></div>
+            </div>
+            <div class="rd-pricenote"><b>14 peak nights</b> priced below market demand</div>
+          </div>
         </div>
       </div>
     </div>
