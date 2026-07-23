@@ -434,11 +434,12 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 /* ───────────── Lead context (from /audit) ───────────── */
 var lead=null;
 try{ lead=JSON.parse(sessionStorage.getItem('rw_audit_lead')); }catch(e){}
-// Preview hook: /audit-booking?preview=success opens the post-booking screen directly so
-// it can be edited/previewed in isolation — no funnel context, no real booking, no tracking.
-// Seeds a dummy lead so the gate passes; previewSuccess() (on load) jumps to Step 4.
+// Preview hooks — no funnel context, no real booking, no tracking:
+//   ?preview=success  opens the post-booking screen directly (previewSuccess() jumps to Step 4).
+//   ?preview=calendar opens the normal booking flow (real slots via /api/cal-slots) with a
+//   dummy lead; the confirm step is stubbed in confirmBooking() so no booking is created.
 var PREVIEW=(new URLSearchParams(location.search)).get('preview');
-if(PREVIEW==='success' && (!lead||!lead.email||!lead.name)){
+if((PREVIEW==='success'||PREVIEW==='calendar') && (!lead||!lead.email||!lead.name)){
   // ?props=multi previews the portfolio wording; default previews the single-property wording.
   var pvProps=(new URLSearchParams(location.search)).get('props');
   lead={name:'Jordan Avery',email:'jordan@example.com',phone:'+15125550199',listings:pvProps==='multi'?'2-5':'1'};
@@ -650,6 +651,13 @@ async function confirmBooking(){
   const iso=booking.selectedSlot;
   const from=current;current++;transitionStep(from,current,'forward'); // confirm → loader
   const startedAt=Date.now();const MIN_LOADER_MS=1100;
+  if(PREVIEW==='calendar'){
+    // Preview stub: no /api/cal-booking call and no Pixel/CAPI/X events — show the success screen.
+    await new Promise(function(r){setTimeout(r,MIN_LOADER_MS);});
+    renderSuccess({start:iso,host:{name:VSL_HOSTS.bryan.name,email:''}});
+    const pvFrom=current;current++;transitionStep(pvFrom,current,'forward'); // loader → success
+    return;
+  }
   // Meta Schedule event_id — generated up front and sent with the booking so /api/cal-booking
   // can fire a server-side Schedule (CAPI) with the SAME id, deduped against the browser event
   // below. _fbp/_fbc raise match quality for that server event.
