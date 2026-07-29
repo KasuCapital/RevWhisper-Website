@@ -322,8 +322,8 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 
       <section class="booked-sec booked-hosts">
         <div class="host-avatars">
-          <img class="host-avatar" src="/images/team/bryan.webp" alt="Bryan" loading="lazy" width="40" height="40">
-          <img class="host-avatar" src="/images/team/nic.webp" alt="Nicolas" loading="lazy" width="40" height="40">
+          <img class="host-avatar" src="/images/team/bryan.webp?v=2" alt="Bryan" loading="lazy" width="40" height="40">
+          <img class="host-avatar" src="/images/team/nic.webp?v=2" alt="Nicolas" loading="lazy" width="40" height="40">
         </div>
         <div>
           <h3 class="booked-h" style="margin-bottom:10px">You'll be talking to fellow hosts.</h3>
@@ -448,8 +448,8 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 
 /* ───────────── Intro video (VSL) ───────────── */
 var VSL_HOSTS={
-  bryan:{key:'bryan',first:'Bryan',img:'/images/team/bryan.webp',videoId:'Trovk73GTWc',durBadge:'4:45',durText:'just under 5 minutes'},
-  nick:{key:'nick',first:'Nicolas',img:'/images/team/nic.webp',videoId:'nS31JRQbJ04',durBadge:'1:31',durText:'90 seconds'}
+  bryan:{key:'bryan',first:'Bryan',img:'/images/team/bryan.webp?v=2',videoId:'Trovk73GTWc',durBadge:'4:45',durText:'just under 5 minutes'},
+  nick:{key:'nick',first:'Nicolas',img:'/images/team/nic.webp?v=2',videoId:'nS31JRQbJ04',durBadge:'1:31',durText:'90 seconds'}
 };
 var qsHost=(new URLSearchParams(location.search)).get('host');
 var vslHost=qsHost==='none'?null:(VSL_HOSTS[qsHost]||VSL_HOSTS.bryan);

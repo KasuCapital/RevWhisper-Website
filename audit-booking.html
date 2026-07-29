@@ -285,7 +285,7 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
     <div class="booked-eyebrow">What's included in the call</div>
     <h2 class="pre-vsl-h">First — see exactly what <em>you're booking</em>.</h2>
     <div class="vsl-host">
-      <img class="vsl-host-avatar" src="/images/team/bryan.webp" alt="Bryan" width="46" height="46" loading="lazy">
+      <img class="vsl-host-avatar" src="/images/team/bryan.webp?v=2" alt="Bryan" width="46" height="46" loading="lazy">
       <div class="vsl-host-copy">Recorded by <strong>Bryan</strong> — a fellow host, and one of the two people who run these audits.</div>
     </div>
     <div class="vsl-player">
@@ -305,8 +305,8 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
       <div class="step active" data-step="0">
         <div class="host-strip">
           <div class="host-avatars">
-            <img class="host-avatar" src="/images/team/bryan.webp" alt="Bryan" loading="lazy" width="40" height="40">
-            <img class="host-avatar" src="/images/team/nic.webp" alt="Nicolas" loading="lazy" width="40" height="40">
+            <img class="host-avatar" src="/images/team/bryan.webp?v=2" alt="Bryan" loading="lazy" width="40" height="40">
+            <img class="host-avatar" src="/images/team/nic.webp?v=2" alt="Nicolas" loading="lazy" width="40" height="40">
           </div>
           <div class="host-meta">
             <span class="host-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>30 min</span>
@@ -443,8 +443,8 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 
     <section class="booked-sec booked-hosts">
       <div class="host-avatars">
-        <img class="host-avatar" src="/images/team/bryan.webp" alt="Bryan" loading="lazy" width="40" height="40">
-        <img class="host-avatar" src="/images/team/nic.webp" alt="Nicolas" loading="lazy" width="40" height="40">
+        <img class="host-avatar" src="/images/team/bryan.webp?v=2" alt="Bryan" loading="lazy" width="40" height="40">
+        <img class="host-avatar" src="/images/team/nic.webp?v=2" alt="Nicolas" loading="lazy" width="40" height="40">
       </div>
       <div>
         <h3 class="booked-h" style="margin-bottom:10px">You'll be talking to fellow hosts.</h3>
@@ -755,8 +755,8 @@ async function confirmBooking(){
    If the host can't be determined (shouldn't happen — the booking title carries it as a
    fallback), we show the video with neutral copy and no photo rather than guessing at a face. */
 var VSL_HOSTS={
-  bryan:{key:'bryan',first:'Bryan',name:'Bryan Gamble',img:'/images/team/bryan.webp',videoId:'Trovk73GTWc',durBadge:'4:45',durText:'just under 5 minutes'},
-  nick:{key:'nick',first:'Nicolas',name:'Nicolas Luna',img:'/images/team/nic.webp',videoId:'nS31JRQbJ04',durBadge:'1:31',durText:'90 seconds'}
+  bryan:{key:'bryan',first:'Bryan',name:'Bryan Gamble',img:'/images/team/bryan.webp?v=2',videoId:'Trovk73GTWc',durBadge:'4:45',durText:'just under 5 minutes'},
+  nick:{key:'nick',first:'Nicolas',name:'Nicolas Luna',img:'/images/team/nic.webp?v=2',videoId:'nS31JRQbJ04',durBadge:'1:31',durText:'90 seconds'}
 };
 var vslActive=null; // host whose video is loaded in the facade (set by setupVsl)
 
