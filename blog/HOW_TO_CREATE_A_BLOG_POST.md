@@ -121,10 +121,43 @@ var BLOG_POSTS = [
 
 ---
 
+## Step 4: Rebuild the blog index (required)
+
+The gallery cards are baked into `blog/index.html` at build time so search engines
+and AI crawlers can see the posts (client-side rendering left every post invisible
+to crawlers). After editing `posts.js`, run:
+
+```bash
+node scripts/build-blog-index.mjs
+```
+
+Then add the new post's URL to `sitemap.xml` with today's date as `<lastmod>`.
+
+---
+
+## SEO Requirements (every post, non-negotiable)
+
+These exist because an audit found all posts were link islands with no freshness signals:
+
+- [ ] **2–4 contextual internal links in the article body** — at least one to the most
+      relevant service page (`/revenue-management`, `/airbnb-listing-optimization`,
+      `/photoediting`, or `/case-study`) and at least one to a related post. Put them
+      on natural anchor text mid-sentence, not "click here".
+- [ ] **`<title>` under ~60 characters** (it truncates in search results) and
+      **meta description under ~155 characters**.
+- [ ] **`dateModified` in the Article JSON-LD** — set it equal to `datePublished` on
+      day one, and update it whenever the post meaningfully changes.
+- [ ] **og:image must be a raster file** (`.jpg`/`.png`/`.webp`) that actually exists —
+      social platforms reject SVG previews. Verify the path.
+- [ ] **Named author where possible** — a real person with `"@type": "Person"` in the
+      Article schema beats "RevWhisper Team" for E-E-A-T.
+
+---
+
 ## How It All Works
 
-- **`blog/index.html`** (the gallery at `/blog`) loads `posts.js` and auto-renders a card for each entry
-- **Individual posts** are standalone HTML files — no build step, no framework
+- **`blog/index.html`** (the gallery at `/blog`) ships static cards baked in by `scripts/build-blog-index.mjs` from `posts.js`
+- **Individual posts** are standalone HTML files — no framework; the only build steps are the index bake and `scripts/sync-partials.mjs` for nav/footer
 - **Vercel's `cleanUrls: true`** means `blog/my-post.html` is served at `/blog/my-post`
 - The nav bar on blog pages links to Home, Blog, Solution, and Pricing
 - Each post has a "Back to Blog" link and a bottom CTA banner
@@ -142,6 +175,11 @@ var BLOG_POSTS = [
 - [ ] Article content written
 - [ ] Entry added to top of `posts.js` array
 - [ ] Image files added to `/images/`
+- [ ] 2–4 internal body links added (service page + sibling post)
+- [ ] `dateModified` present in Article JSON-LD
+- [ ] Title ≤60 chars, meta description ≤155 chars, og:image is a real raster file
+- [ ] `node scripts/build-blog-index.mjs` run
+- [ ] `sitemap.xml` entry added with today's `<lastmod>`
 
 ---
 
