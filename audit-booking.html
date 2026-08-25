@@ -10,12 +10,25 @@ function rwCookie(n){try{var m=document.cookie.match(new RegExp('(?:^|; )'+n.rep
 <script>
 window.dataLayer=window.dataLayer||[];
 function gtag(){dataLayer.push(arguments);}
-gtag('consent','default',{'analytics_storage':'denied','ad_storage':'denied'});
+gtag('consent','default',{'analytics_storage':'denied','ad_storage':'denied','ad_user_data':'denied','ad_personalization':'denied'});
 gtag('js',new Date());
 gtag('config','G-Y1FYZ5849B');
 (function(){var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-Y1FYZ5849B';document.head.appendChild(s);})();
 function rwTrack(e,p){gtag('event',e,p||{});}
-(function(){if(localStorage.getItem('rw_cookie_consent')==='accepted'){gtag('consent','update',{'analytics_storage':'granted','ad_storage':'granted'});}})();
+/* Google Ads tag — deliberately conditional. This page is shared between /audit
+   (Meta traffic) and the Google landing pages, so the tag is only configured when
+   the lead actually arrived from a Google ad click. No gclid, no Google tag, no
+   conversion. rwHasGclid is reused below to gate the Call Booked conversion. */
+function rwHasGclid(){
+  try{
+    var l=JSON.parse(sessionStorage.getItem('rw_audit_lead')||'null');
+    if(l&&l.attribution&&l.attribution.gclid) return true;
+    var a=JSON.parse(localStorage.getItem('rw_attribution')||sessionStorage.getItem('rw_attribution')||'null');
+    return !!(a&&a.gclid);
+  }catch(e){ return false; }
+}
+if(rwHasGclid()) gtag('config','AW-18384012854');
+(function(){if(localStorage.getItem('rw_cookie_consent')==='accepted'){gtag('consent','update',{'analytics_storage':'granted','ad_storage':'granted','ad_user_data':'granted','ad_personalization':'granted'});}})();
 </script>
 <!-- Meta Pixel — PageView only; Schedule (Call Booked) fires on confirmed booking -->
 <script>
@@ -727,6 +740,16 @@ async function confirmBooking(){
   // Success → fire Call Booked (Schedule). /api/cal-booking fires the same event server-side
   // (CAPI) with this same event_id, so Meta dedupes the browser + server pair into one.
   try{ fbq('track','Schedule',{content_name:'Audit Call Booked',content_category:'Audit'},{eventID:evId}); }catch(e){}
+  // Google Ads "Audit Call Booked" — Google-sourced bookings only (see rwHasGclid).
+  // No redirect follows renderSuccess(), so no event_callback race to guard against here.
+  if(rwHasGclid()){
+    try{
+      var gud={email:l.email};
+      if(phoneFull&&typeof rwXNormalizePhone==='function') gud.phone_number=rwXNormalizePhone(phoneFull);
+      gtag('set','user_data',gud);
+      gtag('event','conversion',{send_to:'AW-18384012854/7WsKCMij2-ccELaMl75E',value:400.0,currency:'USD'});
+    }catch(e){}
+  }
   function fireXCallBooked(){
     var xParams={conversion_id:xConversionId,email_address:l.email};
     if(phoneFull&&typeof rwXNormalizePhone==='function') xParams.phone_number=rwXNormalizePhone(phoneFull);

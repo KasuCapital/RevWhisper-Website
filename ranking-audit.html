@@ -31,14 +31,16 @@ function rwAttribution(){try{return JSON.parse(localStorage.getItem('rw_attribut
 <script>
 window.dataLayer=window.dataLayer||[];
 function gtag(){dataLayer.push(arguments);}
-gtag('consent','default',{'analytics_storage':'denied','ad_storage':'denied'});
+gtag('consent','default',{'analytics_storage':'denied','ad_storage':'denied','ad_user_data':'denied','ad_personalization':'denied'});
 gtag('js',new Date());
 gtag('config','G-Y1FYZ5849B');
+// Google Ads tag. The conversion itself fires in submitForm(), qualified branch only.
+gtag('config','AW-18384012854');
 (function(){var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-Y1FYZ5849B';document.head.appendChild(s);})();
 function rwTrack(e,p){gtag('event',e,p||{});}
 (function(){
   if(localStorage.getItem('rw_cookie_consent')==='accepted'){
-    gtag('consent','update',{'analytics_storage':'granted','ad_storage':'granted'});
+    gtag('consent','update',{'analytics_storage':'granted','ad_storage':'granted','ad_user_data':'granted','ad_personalization':'granted'});
   }
 })();
 </script>
@@ -1321,10 +1323,32 @@ function submitForm(){
   try{ sessionStorage.setItem('rw_lead_event_id', eventId); }catch(e){}
   try{ fbq('track','Lead',{content_name:'Free Audit',content_category:'Audit Lead'},{eventID:eventId}); }catch(e){}
   rwTrack('generate_lead',{page:'ranking-audit',listings:data.listings,issue:data.issue});
-  // Google Ads "Report Requested" conversion — fill in the AW send_to once the account +
-  // conversion action exist. QUALIFIED BRANCH ONLY: the revenue gate must hold for Google
-  // exactly like it does for Meta, or Smart Bidding learns to find sub-threshold hosts.
-  // try{ gtag('event','conversion',{send_to:'AW-XXXXXXXXXX/XXXXXXXXXXX'}); }catch(e){}
+  // ── Google Ads "Audit Requested" conversion ────────────────────────────
+  // QUALIFIED BRANCH ONLY: the revenue gate must hold for Google exactly as it
+  // does for Meta, so the optimizer never learns to chase sub-threshold leads.
+  // Enhanced conversions: gtag hashes these client-side before they leave the
+  // browser. Requires the account-level setting, enabled 2026-08-25.
+  try{
+    // rwXNormalizePhone (assets/x-tracking.js) strips to digits and prefixes '+',
+    // which is the E.164 form Google wants: '+1 (555) 123-4567' -> '+15551234567'
+    var ud={email:data.email};
+    if(typeof rwXNormalizePhone==='function'&&data.phone) ud.phone_number=rwXNormalizePhone(data.phone);
+    gtag('set','user_data',ud);
+  }catch(e){}
+  // gAdsFired resolves once Google acknowledges the beacon (or 700ms elapses).
+  // Without this the redirect below kills the request in flight — see the
+  // UnqualifiedLead event, which lost 28/28 to exactly this race.
+  var gAdsFired=new Promise(function(resolve){
+    var done=false, finish=function(){ if(done) return; done=true; resolve(); };
+    setTimeout(finish,700);
+    try{
+      gtag('event','conversion',{
+        send_to:'AW-18384012854/Su5YCMWj2-ccELaMl75E',
+        value:100.0, currency:'USD',
+        event_callback:finish
+      });
+    }catch(e){ finish(); }
+  });
   // Hand the event_id + content name to the server so its CAPI Lead dedupes with the above.
   data.fbEventId=eventId; data.fbContentName='Free Audit';
   // X uses conversion_id for Pixel/CAPI dedupe; event IDs are loaded from /api/x-config.
@@ -1344,15 +1368,17 @@ function submitForm(){
     keepalive:true
   }).catch(function(){});
 
-  // straight to the live-audit booking page
+  // straight to the live-audit booking page — but only once the Google Ads
+  // beacon has been acknowledged, so the conversion survives the navigation.
   var redirect=function(){window.location.href='/audit-booking';};
+  var goAfterGoogle=function(){ gAdsFired.then(redirect).catch(redirect); };
   if(window.rwXReady&&typeof window.rwXReady.then==='function'){
     Promise.race([window.rwXReady,new Promise(function(resolve){setTimeout(resolve,120);})])
-      .then(function(){fireXLead();redirect();})
-      .catch(redirect);
+      .then(function(){fireXLead();goAfterGoogle();})
+      .catch(goAfterGoogle);
   }else{
     fireXLead();
-    redirect();
+    goAfterGoogle();
   }
 }
 
