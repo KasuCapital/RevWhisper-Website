@@ -1,0 +1,153 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   Audit widget — the 5-step lead form, ported verbatim from /audit (audit.html).
+   Keep this block in sync with the matching CSS in audit.html; the two pages
+   run the same form and should look and behave identically.
+
+   Tokens: every colour/shadow/font var below already exists in home.css with
+   identical values. Only these three are unique to the form.
+   ══════════════════════════════════════════════════════════════════════════ */
+:root{
+  --radius-lg:16px;
+  --ease-out-expo:cubic-bezier(.16,1,.3,1);
+  --ease-out-back:cubic-bezier(.34,1.56,.64,1);
+}
+
+/* ───────────────────────── Form card ───────────────────────── */
+.form-card{background:#fff;border:1px solid var(--g200);border-radius:var(--radius-lg);box-shadow:var(--sh-lg);padding:28px 28px 24px;position:relative;max-width:560px;width:100%;margin:0 auto}
+.fc-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:20px}
+.fc-progress{display:flex;gap:6px;flex:1;max-width:180px}
+.fc-seg{height:5px;flex:1;border-radius:100px;background:var(--g200);overflow:hidden;position:relative}
+.fc-seg::after{content:'';position:absolute;inset:0;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .45s var(--ease-out-expo)}
+.fc-seg.on::after{transform:scaleX(1)}
+.fc-count{font-size:12px;font-weight:500;color:var(--g400);letter-spacing:.02em;white-space:nowrap}
+.fc-secure{display:flex;align-items:center;justify-content:center;gap:7px;margin-top:16px;font-size:12px;color:var(--g400);font-weight:300;line-height:1.4;text-align:center}
+.fc-secure svg{flex-shrink:0;color:var(--accent);opacity:.7}
+
+/* steps machinery — height-animated viewport for smooth, non-jumpy transitions */
+.steps-viewport{position:relative;transition:height .42s var(--ease-out-expo)}
+.step{position:absolute;top:0;left:0;right:0;opacity:0;visibility:hidden;transform:translateY(14px);transition:none;pointer-events:none}
+.step.active{position:relative;opacity:1;visibility:visible;transform:translateY(0);pointer-events:auto}
+.step.exit-up{position:absolute;opacity:0;visibility:visible;transform:translateY(-14px);transition:opacity .28s var(--ease-out-expo),transform .28s var(--ease-out-expo),visibility 0s .28s;pointer-events:none}
+.step.exit-down{position:absolute;opacity:0;visibility:visible;transform:translateY(14px);transition:opacity .28s var(--ease-out-expo),transform .28s var(--ease-out-expo),visibility 0s .28s;pointer-events:none}
+.step.enter-from-below,.step.enter-from-above{position:relative;opacity:1;visibility:visible;transform:translateY(0);transition:opacity .4s var(--ease-out-expo) .06s,transform .4s var(--ease-out-expo) .06s;pointer-events:auto}
+.step.active .step-eyebrow,.step.enter-from-below .step-eyebrow,.step.enter-from-above .step-eyebrow{animation:fadeSlideUp .4s var(--ease-out-expo) .05s both}
+.step.active .step-title,.step.enter-from-below .step-title,.step.enter-from-above .step-title{animation:fadeSlideUp .42s var(--ease-out-expo) .11s both}
+.step.active .step-desc,.step.enter-from-below .step-desc,.step.enter-from-above .step-desc{animation:fadeSlideUp .42s var(--ease-out-expo) .17s both}
+.step.active .radio-group,.step.active .option-cards,.step.active .field,.step.enter-from-below .radio-group,.step.enter-from-below .option-cards,.step.enter-from-below .field,.step.enter-from-above .radio-group,.step.enter-from-above .option-cards,.step.enter-from-above .field{animation:fadeSlideUp .4s var(--ease-out-expo) .21s both}
+.step.active .field ~ .field,.step.enter-from-below .field ~ .field,.step.enter-from-above .field ~ .field{animation-delay:.27s}
+.step.active .field ~ .field ~ .field,.step.enter-from-below .field ~ .field ~ .field,.step.enter-from-above .field ~ .field ~ .field{animation-delay:.32s}
+.step.active .field ~ .field ~ .field ~ .field{animation-delay:.37s}
+.step.active .form-actions,.step.enter-from-below .form-actions,.step.enter-from-above .form-actions{animation:fadeSlideUp .4s var(--ease-out-expo) .3s both}
+@keyframes fadeSlideUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+.step-eyebrow{font-size:11px;font-weight:600;color:var(--accent);letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px}
+.step-title{font-family:var(--heading);font-size:clamp(24px,3vw,30px);font-weight:400;letter-spacing:-.02em;line-height:1.15;color:var(--black);margin-bottom:8px}
+.step-title em{font-style:italic;color:var(--accent)}
+.step-desc{font-size:14px;color:var(--g500);line-height:1.6;font-weight:300;margin-bottom:26px;max-width:440px}
+
+/* radio cards */
+.radio-group{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:8px}
+.radio-card{position:relative;cursor:pointer}
+.radio-card input{position:absolute;opacity:0;width:0;height:0}
+.radio-card .rc-label{display:flex;align-items:center;justify-content:center;padding:16px 8px;border:1.5px solid var(--g200);border-radius:var(--radius);background:#fff;font-size:15px;font-weight:500;color:var(--g700);text-align:center;cursor:pointer;position:relative;overflow:hidden;transition:border-color .25s,color .25s,box-shadow .25s,transform .2s var(--ease-out-back)}
+.radio-card .rc-label::before{content:'';position:absolute;inset:0;background:var(--accent-light);border-radius:var(--radius);opacity:0;transform:scale(.8);transition:opacity .3s,transform .35s var(--ease-out-expo)}
+.radio-card .rc-label:hover{border-color:var(--g300);transform:translateY(-2px);box-shadow:var(--sh)}
+.radio-card input:checked + .rc-label{border-color:var(--accent);color:var(--accent);font-weight:600;box-shadow:0 0 0 1.5px var(--accent)}
+.radio-card input:checked + .rc-label::before{opacity:1;transform:scale(1)}
+.radio-card .rc-label span{position:relative;z-index:1}
+/* revenue band cards (rendered dynamically, wider money labels) */
+.revenue-group{grid-template-columns:repeat(3,1fr)}
+.revenue-group .rc-label{font-size:14px;padding:14px 6px;line-height:1.25}
+
+/* option cards */
+.option-cards{display:flex;flex-direction:column;gap:10px;margin-bottom:8px}
+.option-card{position:relative;cursor:pointer}
+.option-card input{position:absolute;opacity:0;width:0;height:0}
+.option-card .oc-label{display:flex;align-items:center;gap:13px;padding:15px 18px;border:1.5px solid var(--g200);border-radius:var(--radius);background:#fff;font-size:14.5px;font-weight:400;color:var(--black);cursor:pointer;position:relative;overflow:hidden;transition:border-color .3s,color .3s,box-shadow .3s,transform .25s var(--ease-out-back)}
+.option-card .oc-label::before{content:'';position:absolute;inset:0;background:var(--accent-light);opacity:0;transform:scaleX(0);transform-origin:left;transition:opacity .35s,transform .4s var(--ease-out-expo)}
+.option-card .oc-label:hover{border-color:var(--g300);transform:translateY(-2px);box-shadow:var(--sh)}
+.option-card input:checked + .oc-label{border-color:var(--accent);color:var(--accent);font-weight:500;box-shadow:0 0 0 1.5px var(--accent)}
+.option-card input:checked + .oc-label::before{opacity:1;transform:scaleX(1)}
+.oc-radio{width:20px;height:20px;border-radius:50%;border:2px solid var(--g300);flex-shrink:0;display:flex;align-items:center;justify-content:center;position:relative;z-index:1;transition:all .3s var(--ease-out-back)}
+.option-card input:checked + .oc-label .oc-radio{border-color:var(--accent);background:var(--accent)}
+.oc-radio::after{content:'';width:8px;height:8px;border-radius:50%;background:#fff;opacity:0;transform:scale(0);transition:opacity .25s,transform .3s var(--ease-out-back)}
+.option-card input:checked + .oc-label .oc-radio::after{opacity:1;transform:scale(1)}
+.oc-label > span:last-child{position:relative;z-index:1}
+
+/* fields */
+.field{margin-bottom:16px}
+.field-label{display:block;font-size:13px;font-weight:500;color:var(--black);margin-bottom:7px;transition:color .2s}
+.field-label .opt{color:var(--g400);font-weight:400}
+.field-input{width:100%;padding:13px 16px;border:1.5px solid var(--g200);border-radius:var(--radius);font-size:15px;font-family:var(--body);color:var(--black);background:#fff;outline:none;transition:border-color .3s,box-shadow .3s var(--ease-out-expo),transform .2s var(--ease-out-expo)}
+.field-input::placeholder{color:var(--g400);font-weight:300}
+.field-input:hover{border-color:var(--g300)}
+.field-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(74,103,65,.1)}
+.field:focus-within .field-label{color:var(--accent)}
+.field-input.error{border-color:var(--red);box-shadow:0 0 0 3px rgba(184,82,82,.08);animation:inputShake .4s var(--ease-out-expo)}
+@keyframes inputShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(2px)}}
+.field-hint{font-size:12px;color:var(--g400);margin-top:5px;font-weight:300}
+.field-error{font-size:12px;color:var(--red);margin-top:5px;font-weight:400;display:none}
+.field-input.error ~ .field-error{display:block;animation:fadeSlideUp .3s var(--ease-out-expo)}
+.field-input.error ~ .field-hint{display:none}
+/* ── Open Airbnb helper (mirrors get-started / checkout-form) ── */
+.open-airbnb-wrap{margin-top:16px;margin-bottom:18px}
+.open-airbnb-divider{display:block;font-size:12px;color:var(--g400);font-weight:400;text-align:center;margin-bottom:12px;position:relative}
+.open-airbnb-divider::before,.open-airbnb-divider::after{content:'';position:absolute;top:50%;width:calc(50% - 80px);height:1px;background:var(--g200)}
+.open-airbnb-divider::before{left:0}
+.open-airbnb-divider::after{right:0}
+.open-airbnb-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px 16px;border-radius:var(--radius);border:1.5px solid var(--g200);background:var(--g50);font-size:13px;font-weight:400;color:var(--g500);font-family:var(--body);text-decoration:none;cursor:pointer;transition:border-color .25s,color .25s,background .25s,transform .2s var(--ease-out-back),box-shadow .25s}
+.open-airbnb-btn:hover{border-color:var(--g300);color:var(--black);background:#fff;transform:translateY(-1px);box-shadow:var(--sh-sm)}
+.open-airbnb-btn:active{transform:scale(.98)}
+.open-airbnb-btn svg{flex-shrink:0;opacity:.6;transition:opacity .25s}
+.open-airbnb-btn:hover svg{opacity:1}
+.step.active .open-airbnb-wrap,.step.enter-from-below .open-airbnb-wrap,.step.enter-from-above .open-airbnb-wrap{animation:fadeSlideUp .42s var(--ease-out-expo) .25s both}
+.input-icon-wrap{position:relative}
+.input-icon-wrap .field-input{padding-left:42px}
+.input-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--g400);display:flex;align-items:center;transition:color .3s;z-index:2;pointer-events:none}
+.field:focus-within .input-icon{color:var(--accent)}
+.phone-wrap{display:flex;gap:8px}
+.phone-code{width:92px;padding:13px 12px;border:1.5px solid var(--g200);border-radius:var(--radius);font-size:14px;font-family:var(--body);color:var(--black);background:#fff;outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23a39e9b' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;transition:border-color .3s,box-shadow .3s}
+.phone-code:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(74,103,65,.1)}
+.phone-input{flex:1}
+
+/* form buttons */
+.form-actions{display:flex;align-items:center;gap:12px;margin-top:18px}
+.btn-next{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--accent);color:#fff;font-size:15px;font-weight:500;padding:15px 28px;border-radius:var(--radius);border:none;cursor:pointer;font-family:var(--body);flex:1;transition:transform .25s var(--ease-out-back),box-shadow .3s,opacity .3s}
+.btn-next:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 22px rgba(74,103,65,.26)}
+.btn-next:active:not(:disabled){transform:translateY(0) scale(.98)}
+.btn-next:disabled{opacity:.35;cursor:not-allowed}
+.btn-next .arrow{transition:transform .25s var(--ease-out-expo)}
+.btn-next:hover:not(:disabled) .arrow{transform:translateX(3px)}
+.btn-back{display:inline-flex;align-items:center;gap:6px;background:transparent;color:var(--g500);font-size:13px;font-weight:400;padding:15px 16px;border-radius:var(--radius);border:1.5px solid var(--g200);cursor:pointer;font-family:var(--body);transition:border-color .25s,color .25s,transform .2s}
+.btn-back:hover{border-color:var(--g300);color:var(--black)}
+
+
+/* ── Homepage-only adjustments ─────────────────────────────────────────────
+   #hero is centre-aligned; the card's own copy is left-aligned on /audit, so
+   reset it here. The wrapper replaces the old .calc-widget button block.
+   ────────────────────────────────────────────────────────────────────────── */
+.audit-widget-wrap{margin-top:32px;text-align:left}
+.audit-widget-wrap .form-card{text-align:left}
+/* scroll-margin gives the centring scroll a stable anchor under the fixed header */
+#audit-form{scroll-margin-top:96px}
+
+/* ── Hero headline measure ─────────────────────────────────────────────────
+   The ONLY hero change: a slightly smaller size on a wider measure, so the
+   headline sets on two lines instead of three. Every spacing value in
+   home.css is left alone — the original 160px top padding and 28px headline
+   margin still apply, so the hero breathes exactly like it always did.
+   Dropping a line is what makes room for the form underneath, rather than
+   squeezing whitespace out of the hero to do it.
+   ────────────────────────────────────────────────────────────────────────── */
+.hero-h1{font-size:clamp(40px,6vw,72px);max-width:980px}
+/* this file loads after home.css, so the rule above would also beat home.css's
+   own mobile sizes — restate them verbatim so phones keep the original type */
+@media(max-width:900px){ .hero-h1{font-size:42px} }
+@media(max-width:480px){ .hero-h1{font-size:36px} }
+@media(max-width:640px){
+  .form-card{padding:20px 18px 18px;border-radius:14px}
+  .radio-group{grid-template-columns:repeat(3,1fr)}
+  .revenue-group{grid-template-columns:repeat(2,1fr)}
+  /* 16px inputs prevent iOS zoom-on-focus */
+  .field-input{font-size:16px}.phone-input{font-size:16px}
+}

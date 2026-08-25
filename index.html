@@ -75,8 +75,6 @@ document.addEventListener('DOMContentLoaded',function(){
     var txt=(el.textContent||'').replace(/\s+/g,' ').trim().toLowerCase();
     if(txt.indexOf('book your free strategy call')!==-1||txt.indexOf('book a call')!==-1){
       fbq('track','Lead',{content_name:'Book Strategy Call'});
-    }else if(txt.indexOf('check my search ranking')!==-1){
-      fbq('track','Lead',{content_name:'Check Search Ranking'});
     }
   });
 });
@@ -137,13 +135,18 @@ document.addEventListener('DOMContentLoaded',function(){
 <link rel="stylesheet" href="/assets/header.css">
 <link rel="preload" href="assets/home.css?v=4" as="style">
 <link rel="stylesheet" href="assets/home.css?v=4">
+<link rel="preload" href="/assets/audit-widget.css" as="style">
+<link rel="stylesheet" href="/assets/audit-widget.css">
 <script defer src="/assets/header.js"></script>
 <link rel="preload" href="/assets/footer.css" as="style">
 <link rel="stylesheet" href="/assets/footer.css" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="/assets/footer.css"></noscript>
-<!-- X Pixel base code -->
+<!-- X Pixel base code + audit conversion helper -->
 <script defer src="/assets/x-pixel-base.js"></script>
+<script defer src="/assets/x-tracking.js"></script>
 <!-- End X Pixel base code -->
+<!-- Hero audit widget — the /audit 5-step form, embedded here -->
+<script defer src="/assets/audit-widget.js"></script>
 </head>
 <body>
 
@@ -266,8 +269,8 @@ document.addEventListener('DOMContentLoaded',function(){
           </span>
         </a>
 
-        <!-- Search Ranking Tool: clean magnifying glass -->
-        <a href="https://app.revwhisper.com/search-ranking" class="fb-menu-item" target="_blank" rel="noopener">
+        <!-- Free Listing Audit: clean magnifying glass -->
+        <a href="/#audit-form" class="fb-menu-item js-to-audit">
           <span class="fb-menu-icon">
             <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <circle cx="10.5" cy="10.5" r="6.5"/>
@@ -276,10 +279,9 @@ document.addEventListener('DOMContentLoaded',function(){
           </span>
           <span class="fb-menu-content">
             <span class="fb-menu-row">
-              <span class="fb-menu-label">Search Ranking Tool</span>
-              <svg class="fb-menu-ext" viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M4 2h6v6M10 2L4 8M5 4H2v6h6V7" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="fb-menu-label">Free Listing Audit</span>
             </span>
-            <span class="fb-menu-desc">Free Airbnb ranking checker</span>
+            <span class="fb-menu-desc">Ranking, pricing and conversion, walked through live</span>
           </span>
         </a>
       </div>
@@ -306,10 +308,147 @@ document.addEventListener('DOMContentLoaded',function(){
   <div class="hero-glow"></div>
   <div class="w">
     <h1 class="hero-h1 r d1"><em class="em-mark">Fully Managed</em> Airbnb Revenue &amp; Listing Optimization</h1>
-    <p class="hero-sub r d2">Our team tracks your Airbnb search position daily, deploys algorithm-timed pricing, and optimizes every part of your listing so you earn more without lifting a finger.</p>
-    <!-- Calculator Widget -->
-    <div class="calc-widget r d2">
-      <a href="https://app.revwhisper.com/search-ranking" class="calc-btn" style="display:inline-block;border-radius:var(--radius);padding:16px 32px;font-size:15px;text-decoration:none;">Check My Search Ranking →</a>
+    <p class="hero-sub r d2">Our team tracks your Airbnb search position, daily deploys rank-based pricing, and optimizes every part of your listing so you maximize your earning potential without lifting a finger.</p>
+    <!-- ── Audit widget ─────────────────────────────────────────────────────
+         The same 5-step lead form that runs on /audit, embedded here as the
+         hero's focal point. Markup is copied verbatim from audit.html (minus
+         the inline onclicks) so the two stay in sync. Styles live in
+         /assets/audit-widget.css, behaviour in /assets/audit-widget.js —
+         source:'homepage', no report generated, a qualified lead goes
+         straight to /audit-booking to pick a time.
+         ──────────────────────────────────────────────────────────────────── -->
+    <div class="audit-widget-wrap r d2">
+    <div class="form-card" id="audit-form">
+        <div class="fc-head">
+          <div class="fc-progress" aria-hidden="true">
+            <span class="fc-seg on" data-seg="0"></span>
+            <span class="fc-seg" data-seg="1"></span>
+            <span class="fc-seg" data-seg="2"></span>
+            <span class="fc-seg" data-seg="3"></span>
+            <span class="fc-seg" data-seg="4"></span>
+          </div>
+          <div class="fc-count">Step <span id="fc-cur">1</span> of 5</div>
+        </div>
+
+        <div class="steps-viewport">
+          <!-- Step 0: portfolio size (zero-friction tap) -->
+          <div class="step active" data-step="0">
+            <div class="step-eyebrow">Your portfolio</div>
+            <h2 class="step-title">How many listings do you <em>have?</em></h2>
+            <p class="step-desc">Tap one to start. Your audit takes about 2 minutes to request.</p>
+            <div class="radio-group">
+              <label class="radio-card"><input type="radio" name="listings" value="1"><div class="rc-label"><span>1</span></div></label>
+              <label class="radio-card"><input type="radio" name="listings" value="2-5"><div class="rc-label"><span>2–5</span></div></label>
+              <label class="radio-card"><input type="radio" name="listings" value="6-10"><div class="rc-label"><span>6–10</span></div></label>
+              <label class="radio-card"><input type="radio" name="listings" value="11-25"><div class="rc-label"><span>11–25</span></div></label>
+              <label class="radio-card"><input type="radio" name="listings" value="26-100"><div class="rc-label"><span>26–100</span></div></label>
+              <label class="radio-card"><input type="radio" name="listings" value="100+"><div class="rc-label"><span>100+</span></div></label>
+            </div>
+          </div>
+
+          <!-- Step 1: biggest issue (light qualifier, maps to pillars) -->
+          <div class="step" data-step="1">
+            <div class="step-eyebrow">What's going on</div>
+            <h2 class="step-title">What's the biggest issue <em>right now?</em></h2>
+            <p class="step-desc">No wrong answer. It just tells us where to look first.</p>
+            <div class="option-cards">
+              <label class="option-card"><input type="radio" name="issue" value="views-no-bookings"><div class="oc-label"><span class="oc-radio"></span><span>I'm getting views but not enough bookings</span></div></label>
+              <label class="option-card"><input type="radio" name="issue" value="bookings-slowed"><div class="oc-label"><span class="oc-radio"></span><span>My bookings have slowed down</span></div></label>
+              <label class="option-card"><input type="radio" name="issue" value="pricing"><div class="oc-label"><span class="oc-radio"></span><span>I don't think my pricing is right</span></div></label>
+              <label class="option-card"><input type="radio" name="issue" value="not-sure"><div class="oc-label"><span class="oc-radio"></span><span>Not sure, that's what I want to find out</span></div></label>
+            </div>
+            <div class="form-actions">
+              <button class="btn-back" type="button"><span class="arrow">←</span> Back</button>
+            </div>
+          </div>
+
+          <!-- Step 2: pricing & revenue approach -->
+          <div class="step" data-step="2">
+            <div class="step-eyebrow">How you run it</div>
+            <h2 class="step-title">How do you handle pricing <em>right now?</em></h2>
+            <p class="step-desc">No judgement. It tells us where the quick wins are.</p>
+            <div class="option-cards">
+              <label class="option-card"><input type="radio" name="pricing" value="manual"><div class="oc-label"><span class="oc-radio"></span><span>Manually, or Airbnb Smart Pricing</span></div></label>
+              <label class="option-card"><input type="radio" name="pricing" value="tool"><div class="oc-label"><span class="oc-radio"></span><span>A pricing tool (PriceLabs, Wheelhouse, Beyond)</span></div></label>
+              <label class="option-card"><input type="radio" name="pricing" value="revenue-manager"><div class="oc-label"><span class="oc-radio"></span><span>A revenue manager or agency handles it</span></div></label>
+              <label class="option-card"><input type="radio" name="pricing" value="property-manager"><div class="oc-label"><span class="oc-radio"></span><span>My property manager handles it</span></div></label>
+              <label class="option-card"><input type="radio" name="pricing" value="none"><div class="oc-label"><span class="oc-radio"></span><span>Not really managing it yet</span></div></label>
+            </div>
+            <div class="form-actions">
+              <button class="btn-back" type="button"><span class="arrow">←</span> Back</button>
+            </div>
+          </div>
+
+          <!-- Step 3: revenue (bands rendered dynamically from the listing count) -->
+          <div class="step" data-step="3">
+            <div class="step-eyebrow">Your revenue</div>
+            <h2 class="step-title" id="revenue-title">Roughly what did your listings earn <em>last year?</em></h2>
+            <p class="step-desc">Newer to Airbnb? Estimate what you expect to bring in this year.</p>
+            <div class="field" id="doorcount-field" style="display:none">
+              <label class="field-label" for="door-count">Roughly how many listings? <span class="opt">(optional)</span></label>
+              <input type="number" class="field-input" id="door-count" placeholder="e.g. 60" min="1" inputmode="numeric">
+            </div>
+            <div class="radio-group revenue-group" id="revenue-options"></div>
+            <div class="form-actions">
+              <button class="btn-back" type="button"><span class="arrow">←</span> Back</button>
+            </div>
+          </div>
+
+          <!-- Step 4: the ask (listing + contact) -->
+          <div class="step" data-step="4">
+            <div class="step-eyebrow">Where to send it</div>
+            <h2 class="step-title">Last step: <em>your details.</em></h2>
+            <p class="step-desc">We'll start preparing your audit and show you how to get your findings, walked through with you.</p>
+            <div class="field">
+              <label class="field-label" for="airbnb-url">Your Airbnb listing URL or host profile</label>
+              <div class="input-icon-wrap">
+                <div class="input-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg></div>
+                <input type="url" class="field-input" id="airbnb-url" placeholder="airbnb.com/rooms/… or /users/show/…" autocomplete="off" inputmode="url">
+              </div>
+              <div class="field-error">Please add your Airbnb listing URL or host profile</div>
+            </div>
+            <div class="open-airbnb-wrap">
+              <span class="open-airbnb-divider">Don't have it handy?</span>
+              <a href="https://www.airbnb.com" target="_blank" rel="noopener" class="open-airbnb-btn" id="open-airbnb-btn">
+                Open Airbnb — copy your listing URL, then come back
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6m4-3h6m0 0v6m0-6L10 14"/></svg>
+              </a>
+            </div>
+            <div class="field">
+              <label class="field-label" for="full-name">Full name</label>
+              <input type="text" class="field-input" id="full-name" placeholder="Jane Doe" autocomplete="name">
+              <div class="field-error">Please enter your name</div>
+            </div>
+            <div class="field">
+              <label class="field-label" for="email">Email</label>
+              <div class="input-icon-wrap">
+                <div class="input-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div>
+                <input type="email" class="field-input" id="email" placeholder="jane@example.com" autocomplete="email" inputmode="email">
+              </div>
+              <div class="field-error">Please enter a valid email</div>
+            </div>
+            <div class="field">
+              <label class="field-label" for="phone">Phone number</label>
+              <div class="phone-wrap">
+                <select class="phone-code" id="phone-code" aria-label="Country code">
+                  <option value="+1">🇺🇸 +1</option><option value="+44">🇬🇧 +44</option><option value="+61">🇦🇺 +61</option><option value="+33">🇫🇷 +33</option><option value="+49">🇩🇪 +49</option><option value="+52">🇲🇽 +52</option><option value="+34">🇪🇸 +34</option><option value="+39">🇮🇹 +39</option><option value="+55">🇧🇷 +55</option>
+                </select>
+                <input type="tel" class="field-input phone-input" id="phone" placeholder="(555) 123-4567" autocomplete="tel" inputmode="tel" maxlength="16">
+              </div>
+              <div class="field-error">Please enter a valid phone number</div>
+              <div class="field-hint">We'll text your Google Meet link and a reminder before your audit. Nothing else.</div>
+            </div>
+            <div class="form-actions">
+              <button class="btn-back" type="button"><span class="arrow">←</span></button>
+              <button class="btn-next" type="button" id="btn-submit">Get my free audit <span class="arrow">→</span></button>
+            </div>
+            <div class="fc-secure">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Your info stays private. We only use it to prepare your audit. Next, you'll pick a time to get it walked through, live.
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="hero-trust r d3" style="margin-top:16px">
       <span class="ht-item">✓ No CapEx required</span>
@@ -388,8 +527,8 @@ document.addEventListener('DOMContentLoaded',function(){
     <div class="rg-closing r d3">
       <p class="rg-closing-line">You don't need to work harder.</p>
       <p class="rg-closing-em">You need to see what you're missing.</p>
-      <a href="https://app.revwhisper.com/search-ranking" class="rg-cta">
-        Check My Search Ranking <span class="rg-cta-arrow">→</span>
+      <a href="#audit-form" class="rg-cta js-to-audit">
+        Get My Free Audit <span class="rg-cta-arrow">→</span>
       </a>
     </div>
 
@@ -766,7 +905,7 @@ document.addEventListener('DOMContentLoaded',function(){
     <div class="eyebrow r">Why trust us</div>
     <h2 class="h2 r d1">We use <em class="em-mark" style="font-style:italic;color:var(--accent)">RevWhisper</em> on our own portfolio</h2>
     <p class="sub r d2">We're not just building tools. We're hosts who depend on them. Our team manages properties, competes in real markets, and stakes our own revenue on every feature we ship.</p>
-    <div class="r d3" style="text-align:center"><a href="https://app.revwhisper.com/search-ranking" class="btn-accent">Check My Search Ranking →</a></div>
+    <div class="r d3" style="text-align:center"><a href="#audit-form" class="btn-accent js-to-audit">Get My Free Audit →</a></div>
 
     <div class="cred-carousel-shell r d3" aria-label="RevWhisper team divisions">
       <div class="cred-carousel-head">Meet the Faces Behind RevWhisper</div>
@@ -1242,7 +1381,7 @@ document.addEventListener('DOMContentLoaded',function(){
       </div>
       <div class="footer-col">
         <p class="footer-col-title">Resources</p>
-        <a href="https://app.revwhisper.com/search-ranking" class="footer-link">Search Ranking Tool</a>
+        <a href="/#audit-form" class="footer-link js-to-audit">Free Listing Audit</a>
       </div>
     </div>
     <div class="footer-bottom">
@@ -1263,13 +1402,11 @@ document.addEventListener('DOMContentLoaded',function(){
 <script defer src="assets/home.js"></script>
 <!-- GA4 Custom Events -->
 <script>
-function normalizeAirbnbUrl(raw){var s=raw.trim().replace(/^["'<]+|["'>]+$/g,'');if(!/^https?:\/\//i.test(s))s='https://'+s.replace(/^\/\//,'');var url;try{url=new URL(s)}catch(e){return null}var host=url.hostname.replace(/^www\./,'');if(!/^airbnb\.[a-z.]+$/i.test(host))return null;var path=url.pathname.replace(/\/+$/,'');if(/^\/rooms\/\d+/.test(path))return url.href;if(/^\/h\/[a-zA-Z0-9_-]+/.test(path))return url.href;if(/^\/users\/show\/\d+/.test(path))return url.href;if(/^\/p\/[a-zA-Z0-9_-]+/.test(path))return url.href;var sys=['hosting','login','signup','help','account','settings','experiences','s','luxury','wishlists','messages','trips','notifications','manage-listing','resources'];var seg=path.split('/')[1];if(seg&&sys.indexOf(seg)===-1&&/^[a-zA-Z0-9_-]+$/.test(seg))return url.href;return null}
 document.addEventListener('click',function(e){
   var link=e.target.closest('a,button');
   if(!link)return;
   var text=(link.textContent||'').trim().substring(0,60);
   var href=link.getAttribute('href')||'';
-  if(link.classList.contains('calc-btn')){rwTrack('calculator_click',{page:'homepage'});var u=document.querySelector('.calc-input');var v=u?u.value.trim():'';if(v){var nv=normalizeAirbnbUrl(v);window.location.href='https://app.revwhisper.com/search-ranking?url='+encodeURIComponent(nv||v);}else{window.location.href='https://app.revwhisper.com/search-ranking';}return;}
   if(href.indexOf('checkout-form.html?plan=monthly')!==-1){rwTrack('select_plan',{plan:'monthly',page:'homepage',cta_text:text});return;}
   if(href.indexOf('checkout-form.html?plan=annual')!==-1){rwTrack('select_plan',{plan:'annual',page:'homepage',cta_text:text});return;}
   if(href==='/get-started'){rwTrack('cta_click',{destination:'get-started',cta_text:text,page:'homepage'});return;}
