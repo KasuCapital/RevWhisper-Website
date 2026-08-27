@@ -42,37 +42,60 @@ function updateProgress(){
 }
 
 /* ── Scrolling ─────────────────────────────────────────────────────────────
-   Two different jobs:
-   • centreCard()  — what the page's CTAs call. Puts the card dead centre in
-     the viewport (or just under the header if the card is taller than the
-     viewport, so the top of the form is always visible).
-   • scrollFormToTop() — what step transitions call when the incoming step
-     won't fit. Same behaviour as /audit.
+   One job, two callers: the page's CTAs call centreCard() bare, and step
+   transitions pass the card's post-transition height so centring is measured
+   against the incoming step, not the outgoing one. Puts the card dead centre
+   in the viewport; the top gap never shrinks below the sticky header, and a
+   card taller than the viewport pins just below it so the top of the form is
+   always visible.
    ────────────────────────────────────────────────────────────────────────── */
 function prefersReducedMotion(){
   return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches);
 }
 
-function centreCard(){
+function centreCard(heightOverride){
   var HEADER=96;
   var vpH=window.innerHeight||document.documentElement.clientHeight;
   var rect=card.getBoundingClientRect();
-  var cardTop=window.pageYOffset+rect.top;
-  var top;
-  if(rect.height+HEADER>=vpH){
-    top=cardTop-HEADER;              // taller than the viewport — pin below the header
-  }else{
-    top=cardTop-((vpH-rect.height)/2); // shorter — true vertical centre
-  }
-  top=Math.max(0,top);
-  window.scrollTo({top:top, behavior:prefersReducedMotion()?'auto':'smooth'});
+  var cardTop=window.pageYOffset+rect.top; // stable while steps swap
+  var h=heightOverride||rect.height;
+  var gap=Math.max((vpH-h)/2,HEADER);
+  var top=Math.max(0,cardTop-gap);
+  if(Math.abs(top-window.pageYOffset)<2) return; // already there — don't nudge
+  glideTo(top);
 }
 
-function scrollFormToTop(){
-  var OFFSET=16;
-  var top=Math.max(0, window.pageYOffset + card.getBoundingClientRect().top - OFFSET);
-  if(Math.abs(top-window.pageYOffset)<2) return; // already aligned — don't nudge
-  window.scrollTo({top:top, behavior:prefersReducedMotion()?'auto':'smooth'});
+/* Drive the glide with rAF instead of scrollTo({behavior:'smooth'}) — the
+   browser cancels a smooth scroll whenever scroll anchoring adjusts for the
+   card's animating height (or lazy images shifting layout), which stranded
+   the card off-centre. Re-asserting the eased position every frame can't be
+   cancelled, and the last frame lands exactly on target. User input (wheel /
+   touch) still cancels it, so we never fight a real scroll gesture. */
+function glideTo(targetY){
+  if(prefersReducedMotion()){ window.scrollTo({top:targetY,behavior:'instant'}); return; }
+  glideTo._id=(glideTo._id||0)+1;
+  var id=glideTo._id, startY=window.pageYOffset, dist=targetY-startY, t0=null, DUR=420;
+  var stop=function(){ if(id===glideTo._id) glideTo._id++; cleanup(); };
+  var cleanup=function(){ window.removeEventListener('wheel',stop); window.removeEventListener('touchmove',stop); };
+  window.addEventListener('wheel',stop,{passive:true});
+  window.addEventListener('touchmove',stop,{passive:true});
+  // guaranteed landing: rAF is throttled to zero in occluded/background windows,
+  // so a timer double-checks the end state and snaps if the glide never ran.
+  // A user cancel (wheel/touch) bumps _id first, so it never fights the user.
+  setTimeout(function(){
+    if(id!==glideTo._id) return;
+    if(Math.abs(window.pageYOffset-targetY)>8) window.scrollTo({top:targetY,behavior:'instant'});
+  },DUR+140);
+  function frame(ts){
+    if(id!==glideTo._id){ cleanup(); return; }
+    if(t0===null) t0=ts;
+    var p=Math.min((ts-t0)/DUR,1);
+    // behavior must be 'instant': 'auto' defers to the page's html{scroll-behavior:smooth},
+    // which would turn every frame's write into a new competing smooth animation
+    window.scrollTo({top:startY+dist*(1-Math.pow(1-p,3)),behavior:'instant'});
+    if(p<1) requestAnimationFrame(frame); else cleanup();
+  }
+  requestAnimationFrame(frame);
 }
 
 function transitionStep(from,to,direction){
@@ -97,9 +120,10 @@ function transitionStep(from,to,direction){
   toEl.style.pointerEvents='auto';
   void toEl.offsetHeight;
   var endH=toEl.offsetHeight;
-  // if the incoming step won't fully fit (common on phones), glide its title to the top of the viewport
+  // if the incoming step won't fully fit as-is, glide the card to dead centre of the viewport
   var vpH=window.innerHeight||document.documentElement.clientHeight;
-  if(!(cardTopBefore>=0 && (cardTopBefore+chromeH+endH)<=vpH)) scrollFormToTop();
+  var recentre=!(cardTopBefore>=0 && (cardTopBefore+chromeH+endH)<=vpH);
+  if(recentre) centreCard(chromeH+endH);
   // animate the card height from old → new
   vp.style.height=startH+'px';
   void vp.offsetHeight;
@@ -112,6 +136,11 @@ function transitionStep(from,to,direction){
     fromEl.classList.remove('exit-up','exit-down');fromEl.style.position='';
     vp.style.height='';            // release to auto so inline errors can expand the step
     isTransitioning=false;
+    // settle pass: the browser's scroll anchoring can interrupt the smooth
+    // glide while the card height animates, and again on the height release
+    // above — so re-centre a beat later, on a fully stable layout (the <2px
+    // guard makes this a no-op when the first glide already landed)
+    if(recentre) setTimeout(function(){centreCard();},60);
   },480);
   updateProgress();
 }
@@ -183,12 +212,48 @@ var REVENUE_BANDS={
   '26-100':['Under $400k','$400k–$900k','$900k–$1.5M','$1.5M–$3M','$3M–$6M','$6M+'],
   '100+':['Under $1M','$1M–$3M','$3M–$6M','$6M–$12M','$12M–$25M','$25M+']
 };
+/* CAD ladder — the same qualification floors as the USD ladder at ~1.38 FX,
+   rounded to clean numbers, so the gate means the same thing in both countries.
+   The CA$ prefix travels with the submitted value, so CRM entries self-label.
+   Keep ladder + detection in sync across: audit.html, assets/audit-widget.js,
+   airbnb-revenue-management.html, pricing-tool-audit.html, ranking-audit.html,
+   listing-audit.html. */
+var REVENUE_BANDS_CAD={
+  '1':['Under CA$55k','CA$55k–85k','CA$85k–120k','CA$120k–165k','CA$165k–240k','CA$240k+'],
+  '2-5':['Under CA$85k','CA$85k–150k','CA$150k–240k','CA$240k–380k','CA$380k–620k','CA$620k+'],
+  '6-10':['Under CA$200k','CA$200k–400k','CA$400k–650k','CA$650k–950k','CA$950k–1.4M','CA$1.4M+'],
+  '11-25':['Under CA$275k','CA$275k–620k','CA$620k–1M','CA$1M–1.7M','CA$1.7M–3.4M','CA$3.4M+'],
+  '26-100':['Under CA$550k','CA$550k–1.25M','CA$1.25M–2M','CA$2M–4M','CA$4M–8M','CA$8M+'],
+  '100+':['Under CA$1.4M','CA$1.4M–4M','CA$4M–8M','CA$8M–16M','CA$16M–35M','CA$35M+']
+};
+/* Canada detection — zero-request, resolved once at load:
+   1) explicit ?geo=ca|us on the URL (tag Canada campaign links with ?geo=ca),
+   2) a *-CA browser language,
+   3) a Canadian IANA timezone (city-named, never shared with US cities, and it
+      reflects the OS clock — VPN-proof, and it still catches the many Canadians
+      whose browsers report en-US).
+   Anything ambiguous falls back to USD. */
+function detectCanada(){
+  try{
+    var q=(new URLSearchParams(window.location.search).get('geo')||'').toLowerCase();
+    if(q) return q==='ca';
+    var langs=(navigator.languages&&navigator.languages.length)?navigator.languages:[navigator.language||''];
+    for(var i=0;i<langs.length;i++){ if(/-ca$/i.test(String(langs[i]))) return true; }
+    var tz=(Intl.DateTimeFormat().resolvedOptions().timeZone)||'';
+    return /^America\/(St_Johns|Halifax|Glace_Bay|Moncton|Goose_Bay|Blanc-Sablon|Toronto|Nipigon|Thunder_Bay|Iqaluit|Pangnirtung|Atikokan|Winnipeg|Rainy_River|Resolute|Rankin_Inlet|Regina|Swift_Current|Edmonton|Cambridge_Bay|Yellowknife|Inuvik|Creston|Dawson_Creek|Fort_Nelson|Vancouver|Whitehorse|Dawson)$/.test(tz);
+  }catch(e){ return false; }
+}
+var IS_CA=detectCanada();
+function bandsFor(listingVal){
+  var t=IS_CA?REVENUE_BANDS_CAD:REVENUE_BANDS;
+  return t[listingVal]||t['1'];
+}
 function renderRevenueOptions(listingVal){
   var single=(listingVal==='1');
   // revenue bands sized to the chosen portfolio
   var wrap=document.getElementById('revenue-options');
   if(wrap){
-    var bands=REVENUE_BANDS[listingVal]||REVENUE_BANDS['1'];
+    var bands=bandsFor(listingVal);
     var html='';
     bands.forEach(function(b){
       html+='<label class="radio-card"><input type="radio" name="revenue" value="'+b+'"><div class="rc-label"><span>'+b+'</span></div></label>';
@@ -213,7 +278,7 @@ function submitForm(){
   var revenueVal=(card.querySelector('input[name="revenue"]:checked')||{}).value||'';
   // Qualification gate: the first band in each ladder is the disqualifying floor.
   // Selecting it (and only it) means the portfolio is below threshold for the service.
-  var bandsForListings=REVENUE_BANDS[listingsVal]||REVENUE_BANDS['1'];
+  var bandsForListings=bandsFor(listingsVal);
   var qualified=!(revenueVal && revenueVal===bandsForListings[0]);
 
   var data={
@@ -221,6 +286,7 @@ function submitForm(){
     issue:(card.querySelector('input[name="issue"]:checked')||{}).value||'',
     pricing:(card.querySelector('input[name="pricing"]:checked')||{}).value||'',
     revenue:revenueVal,
+    currency:IS_CA?'CAD':'USD',
     doorCount:((document.getElementById('door-count')||{}).value||'').trim(),
     airbnbUrl:document.getElementById('airbnb-url').value.trim(),
     name:document.getElementById('full-name').value.trim(),
@@ -325,6 +391,8 @@ if(submitBtn) submitBtn.addEventListener('click',submitForm);
   var p=document.getElementById('phone'),c=document.getElementById('phone-code');
   if(p) p.addEventListener('input',applyPhoneMask);
   if(c) c.addEventListener('change',applyPhoneMask);
+  // Canadians see the maple leaf on the +1 option (value stays '+1' — same NANP mask/validation)
+  if(IS_CA&&c){var o=c.querySelector('option[value="+1"]');if(o)o.textContent='🇨🇦 +1';}
 })();
 
 /* Clear field error as the user types */
