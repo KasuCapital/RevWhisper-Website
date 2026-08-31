@@ -79,16 +79,16 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
   --heading:'Lora','Georgia',serif;--body:'DM Sans','system-ui','Helvetica Neue',sans-serif;
   --ease-out-expo:cubic-bezier(.16,1,.3,1);--ease-out-back:cubic-bezier(.34,1.56,.64,1);
 }
-.wrap{max-width:620px;margin:0 auto;padding:clamp(34px,6vw,64px) 22px 64px;position:relative;z-index:1}
+.wrap{max-width:620px;margin:0 auto;padding:clamp(24px,4.5vw,44px) 22px 64px;position:relative;z-index:1}
 /* ambient bg */
 body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(ellipse at 30% 18%,rgba(74,103,65,.05) 0%,transparent 50%),radial-gradient(ellipse at 70% 82%,rgba(74,103,65,.03) 0%,transparent 50%);pointer-events:none;z-index:0}
 
 /* ── Reveal header ── */
-.confirm-pill{display:inline-flex;align-items:center;gap:8px;background:var(--accent-light);border:1px solid var(--accent-border);color:var(--accent);font-size:12.5px;font-weight:600;padding:7px 15px;border-radius:100px;margin-bottom:22px}
+.confirm-pill{display:inline-flex;align-items:center;gap:8px;background:var(--accent-light);border:1px solid var(--accent-border);color:var(--accent);font-size:12.5px;font-weight:600;padding:7px 15px;border-radius:100px;margin-bottom:18px}
 .confirm-pill svg{flex-shrink:0}
-.reveal-h1{font-family:var(--heading);font-size:clamp(30px,5.2vw,44px);font-weight:400;letter-spacing:-.025em;line-height:1.1;color:var(--black);margin-bottom:18px}
+.reveal-h1{font-family:var(--heading);font-size:clamp(30px,5.2vw,44px);font-weight:400;letter-spacing:-.025em;line-height:1.1;color:var(--black);margin-bottom:14px}
 .reveal-h1 em{font-style:italic;color:var(--accent);margin-left:-.12em}
-.reveal-sub{font-size:clamp(15px,1.9vw,17px);color:var(--g500);line-height:1.7;font-weight:300;margin-bottom:34px}
+.reveal-sub{font-size:clamp(15px,1.9vw,17px);color:var(--g500);line-height:1.65;font-weight:300;margin-bottom:26px}
 .reveal-sub strong{color:var(--black);font-weight:500}
 
 /* ── Booking card ── */
@@ -140,7 +140,7 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 .host-meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;font-size:12px;font-weight:500;color:var(--g500);letter-spacing:.01em;line-height:1.4}
 .host-meta-item{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
 .host-meta-item svg{flex-shrink:0;display:block;color:var(--g400)}
-.host-blurb{font-size:14px;color:var(--g500);line-height:1.65;font-weight:300;margin:0 0 28px;max-width:480px}
+.host-blurb{font-size:14px;color:var(--g500);line-height:1.65;font-weight:300;margin:0 0 20px;max-width:480px}
 .host-blurb em{font-style:italic;color:var(--accent);font-weight:400}
 
 /* ── Calendar ── */
@@ -214,7 +214,7 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 .vsl-note strong{color:var(--g700);font-weight:600}
 
 /* ── Pre-booking VSL + education (calendar view; hidden once booked) ── */
-.pre-vsl{margin:0 0 34px}
+.pre-vsl{margin:38px 0 0}
 .pre-vsl .booked-eyebrow{margin-bottom:9px}
 .pre-vsl-h{font-family:var(--heading);font-size:clamp(21px,3.4vw,25px);font-weight:400;letter-spacing:-.015em;line-height:1.22;color:var(--black);margin-bottom:14px}
 .pre-vsl-h em{font-style:italic;color:var(--accent)}
@@ -290,26 +290,7 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
     <span id="confirm-text">Your audit request is in</span>
   </div>
   <h1 class="reveal-h1">Now, let's walk through <em>your audit</em>, live.</h1>
-  <p class="reveal-sub">Here's the part most "free audits" skip: <strong>we deliver yours live.</strong> Pick a time below and we'll walk through your listing together: what's working, what's costing you bookings, and exactly what to fix first. That's why it's worth far more than a PDF you'd never open.</p>
-
-  <!-- Pre-booking VSL — always Bryan's walkthrough (no host is assigned until the booking lands;
-       the confirmation screen swaps to the assigned host's video). Hidden once booked. -->
-  <section class="pre-vsl" id="pre-vsl">
-    <div class="booked-eyebrow">What's included in the call</div>
-    <h2 class="pre-vsl-h">First — see exactly what <em>you're booking</em>.</h2>
-    <div class="vsl-host">
-      <img class="vsl-host-avatar" src="/images/team/bryan.webp?v=2" alt="Bryan" width="46" height="46" loading="lazy">
-      <div class="vsl-host-copy">Recorded by <strong>Bryan</strong> — a fellow host, and one of the two people who run these audits.</div>
-    </div>
-    <div class="vsl-player">
-      <button class="vsl-facade" type="button" id="pre-vsl-facade" aria-label="Play the video">
-        <img class="vsl-thumb" src="https://i.ytimg.com/vi/Trovk73GTWc/maxresdefault.jpg" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/Trovk73GTWc/hqdefault.jpg'" alt="" loading="lazy">
-        <span class="vsl-play"><svg width="22" height="22" viewBox="0 0 24 24" fill="#fff"><path d="M8 5.5v13l11-6.5z"/></svg></span>
-        <span class="vsl-dur">4:45</span>
-      </button>
-    </div>
-    <p class="vsl-note">It's just under 5 minutes: what's inside your audit, how the 30 minutes run, and what you'll walk away with. <strong>Worth watching before you pick a time.</strong></p>
-  </section>
+  <p class="reveal-sub">Here's the part most "free audits" skip: <strong>we deliver yours live.</strong> Pick a time below and we'll walk your listing together: what's working, what's costing you bookings, and what to fix first.</p>
 
   <div class="book-card">
     <div class="steps-viewport">
@@ -329,7 +310,7 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
         </div>
         <div class="step-eyebrow">Pick a date</div>
         <h2 class="step-title">When works <em>for you?</em></h2>
-        <p class="host-blurb"><em>30 min, no fluff.</em> A clear look at the revenue you're leaving on the table and exactly what we'd fix first.</p>
+        <p class="host-blurb"><em>30 min, no fluff.</em> A clear look at the revenue you're leaving on the table.</p>
         <div id="cal-error-slot"></div>
         <div class="cal-shell">
           <div class="cal-nav">
@@ -435,6 +416,26 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
     We run a limited number of live audits each week. Grab a time while it's open.
   </div>
 
+  <!-- Pre-booking VSL — sits BELOW the calendar so picking a time is the first thing on screen.
+       Always Bryan's walkthrough (no host is assigned until the booking lands; the confirmation screen
+       swaps to the assigned host's video). Hidden once booked. -->
+  <section class="pre-vsl" id="pre-vsl">
+    <div class="booked-eyebrow">What's included in the call</div>
+    <h2 class="pre-vsl-h">See exactly what <em>you're booking</em>.</h2>
+    <div class="vsl-host">
+      <img class="vsl-host-avatar" src="/images/team/bryan.webp?v=2" alt="Bryan" width="46" height="46" loading="lazy">
+      <div class="vsl-host-copy">Recorded by <strong>Bryan</strong> — a fellow host, and one of the two people who run these audits.</div>
+    </div>
+    <div class="vsl-player">
+      <button class="vsl-facade" type="button" id="pre-vsl-facade" aria-label="Play the video">
+        <img class="vsl-thumb" src="https://i.ytimg.com/vi/Trovk73GTWc/maxresdefault.jpg" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/Trovk73GTWc/hqdefault.jpg'" alt="" loading="lazy">
+        <span class="vsl-play"><svg width="22" height="22" viewBox="0 0 24 24" fill="#fff"><path d="M8 5.5v13l11-6.5z"/></svg></span>
+        <span class="vsl-dur">4:45</span>
+      </button>
+    </div>
+    <p class="vsl-note">It's just under 5 minutes: what's inside your audit, how the 30 minutes run, and what you'll walk away with. <strong>Worth watching before we meet.</strong></p>
+  </section>
+
   <!-- Pre-booking education — shown with the calendar, hidden once booked (the confirmation
        carries its own prep content). -->
   <div class="pre-edu" id="pre-edu">
@@ -516,14 +517,66 @@ document.addEventListener('DOMContentLoaded',function(){
   if(lead&&lead.email) loadSlots(); // prefetch immediately
 });
 
+/* ── Keeping the card in view as steps swap (ported from the /audit widget) ──
+   Each step is a different height, so without this the card grows or shrinks under a
+   fixed scroll position and the host ends up looking at the wrong part of the page. */
+function prefersReducedMotion(){
+  return window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+function centreCard(heightOverride){
+  const card=document.querySelector('.book-card'); if(!card) return;
+  const HEADER=96;
+  const vpH=window.innerHeight||document.documentElement.clientHeight;
+  const rect=card.getBoundingClientRect();
+  const cardTop=window.pageYOffset+rect.top; // stable while steps swap
+  const h=heightOverride||rect.height;
+  const gap=Math.max((vpH-h)/2,HEADER);
+  const top=Math.max(0,cardTop-gap);
+  if(Math.abs(top-window.pageYOffset)<2) return; // already there — don't nudge
+  glideTo(top);
+}
+/* rAF-driven instead of scrollTo({behavior:'smooth'}): the browser cancels a smooth scroll
+   whenever scroll anchoring adjusts for the card's animating height, which strands the card
+   off-centre. Re-asserting the eased position every frame can't be cancelled. Real user input
+   (wheel/touch) does cancel it, so we never fight a deliberate scroll. */
+function glideTo(targetY){
+  if(prefersReducedMotion()){ window.scrollTo({top:targetY,behavior:'instant'}); return; }
+  glideTo._id=(glideTo._id||0)+1;
+  const id=glideTo._id, startY=window.pageYOffset, dist=targetY-startY, DUR=420;
+  let t0=null;
+  const cleanup=function(){ window.removeEventListener('wheel',stop); window.removeEventListener('touchmove',stop); };
+  function stop(){ if(id===glideTo._id) glideTo._id++; cleanup(); }
+  window.addEventListener('wheel',stop,{passive:true});
+  window.addEventListener('touchmove',stop,{passive:true});
+  // rAF is throttled to zero in a backgrounded tab, so a timer double-checks the landing
+  setTimeout(function(){
+    if(id!==glideTo._id) return;
+    if(Math.abs(window.pageYOffset-targetY)>8) window.scrollTo({top:targetY,behavior:'instant'});
+  },DUR+140);
+  function frame(ts){
+    if(id!==glideTo._id){ cleanup(); return; }
+    if(t0===null) t0=ts;
+    const p=Math.min((ts-t0)/DUR,1);
+    // 'instant', not 'auto': 'auto' would defer to any page-level smooth scrolling and turn
+    // every frame's write into a competing animation
+    window.scrollTo({top:startY+dist*(1-Math.pow(1-p,3)),behavior:'instant'});
+    if(p<1) requestAnimationFrame(frame); else cleanup();
+  }
+  requestAnimationFrame(frame);
+}
+
 function transitionStep(from,to,direction){
   if(isTransitioning) return;
   isTransitioning=true;
+  const card=document.querySelector('.book-card');
   const vp=document.querySelector('.steps-viewport');
   const fromEl=document.querySelector(`.step[data-step="${from}"]`);
   const toEl=document.querySelector(`.step[data-step="${to}"]`);
   if(!fromEl||!toEl){isTransitioning=false;return;}
   const startH=vp.offsetHeight;
+  // stable geometry: the card's top doesn't move as steps swap — only its height changes below it
+  const cardTopBefore=card?card.getBoundingClientRect().top:0;
+  const chromeH=card?card.offsetHeight-startH:0;
   fromEl.classList.remove('active','enter-from-below','enter-from-above');
   fromEl.classList.add(direction==='forward'?'exit-up':'exit-down');
   toEl.classList.remove('active','exit-up','exit-down');
@@ -533,13 +586,23 @@ function transitionStep(from,to,direction){
   toEl.style.pointerEvents='auto';
   void toEl.offsetHeight;
   const endH=toEl.offsetHeight;
+  // only move the page when the incoming step wouldn't sit fully in view as-is
+  const vpH=window.innerHeight||document.documentElement.clientHeight;
+  const recentre=!!card&&!(cardTopBefore>=0&&(cardTopBefore+chromeH+endH)<=vpH);
+  if(recentre) centreCard(chromeH+endH);
   vp.style.height=startH+'px';
   void vp.offsetHeight;
   vp.style.height=endH+'px';
   toEl.style.transition='';
   toEl.classList.add(direction==='forward'?'enter-from-below':'enter-from-above');
   toEl.style.position='';toEl.style.opacity='';toEl.style.visibility='';toEl.style.transform='';toEl.style.pointerEvents='';
-  setTimeout(function(){fromEl.classList.remove('exit-up','exit-down');fromEl.style.position='';vp.style.height='';isTransitioning=false;},480);
+  setTimeout(function(){
+    fromEl.classList.remove('exit-up','exit-down');fromEl.style.position='';vp.style.height='';isTransitioning=false;
+    // settle pass: scroll anchoring can interrupt the glide while the height animates, and
+    // again when the height is released above, so re-centre on a stable layout (the <2px
+    // guard makes this a no-op when the first glide already landed)
+    if(recentre) setTimeout(function(){centreCard();},60);
+  },480);
 }
 function prevStep(){ if(current>0){const from=current;current--;transitionStep(from,current,'backward');} }
 
@@ -579,6 +642,11 @@ async function loadSlots(){
       const arr=data[k];
       if(Array.isArray(arr)&&arr.length>0){booking.slotsByDate[k]=arr.map(function(it){return typeof it==='string'?it:(it&&it.start)||null;}).filter(Boolean);}
     });
+    // Open on the first month that actually has openings. On the 29th-31st the current
+    // month is usually empty, and landing there reads as "nothing available" unless the
+    // host thinks to hit next.
+    const firstOpen=firstMonthWithSlots();
+    if(firstOpen&&(!booking.visibleMonth||!monthHasSlots(booking.visibleMonth))) booking.visibleMonth=firstOpen;
     booking.loaded=true;renderCalendar();
     if(Object.keys(booking.slotsByDate).length===0){
       showCalError("We don't have open times in the next 60 days right now. Please try again shortly.",{retry:true});
@@ -588,6 +656,29 @@ async function loadSlots(){
     showCalError(err&&err.message?`We couldn't load availability: ${err.message}`:"We couldn't load availability.",{retry:true,fallback:true});
     if(grid) grid.innerHTML='';
   }finally{booking.loading=false;}
+}
+
+/* ── Month availability helpers ──
+   slotsByDate is keyed YYYY-MM-DD, so a month is "open" if any key falls in it. The nav
+   buttons hop between open months only, so a host can never land on a dead month. */
+function openMonths(){
+  const seen={};
+  Object.keys(booking.slotsByDate).forEach(function(k){
+    const p=k.split('-'); seen[p[0]+'-'+p[1]]=new Date(Number(p[0]),Number(p[1])-1,1);
+  });
+  return Object.keys(seen).sort().map(function(k){return seen[k];});
+}
+function monthHasSlots(m){
+  return openMonths().some(function(o){return o.getFullYear()===m.getFullYear()&&o.getMonth()===m.getMonth();});
+}
+function firstMonthWithSlots(){ const l=openMonths(); return l.length?l[0]:null; }
+/* Next open month in `dir` (-1 back, +1 forward), or null if there isn't one. */
+function stepMonth(dir){
+  const list=openMonths(); if(!list.length||!booking.visibleMonth) return null;
+  const cur=booking.visibleMonth.getTime();
+  if(dir>0){ for(let i=0;i<list.length;i++) if(list[i].getTime()>cur) return list[i]; return null; }
+  for(let i=list.length-1;i>=0;i--) if(list[i].getTime()<cur) return list[i];
+  return null;
 }
 
 function ymdKey(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
@@ -604,10 +695,8 @@ function renderCalendar(){
   const monthEnd=new Date(month.getFullYear(),month.getMonth()+1,0);
   const today=new Date();today.setHours(0,0,0,0);
   label.textContent=monthStart.toLocaleDateString(undefined,{month:'long',year:'numeric'});
-  const rangeStartMonth=new Date(booking.rangeStart.getFullYear(),booking.rangeStart.getMonth(),1);
-  const rangeEndMonth=new Date(booking.rangeEnd.getFullYear(),booking.rangeEnd.getMonth(),1);
-  if(prevBtn) prevBtn.disabled=monthStart<=rangeStartMonth;
-  if(nextBtn) nextBtn.disabled=monthStart>=rangeEndMonth;
+  if(prevBtn) prevBtn.disabled=!stepMonth(-1);
+  if(nextBtn) nextBtn.disabled=!stepMonth(1);
   const cells=[];
   for(let i=0;i<monthStart.getDay();i++) cells.push(null);
   for(let d=1;d<=monthEnd.getDate();d++) cells.push(new Date(month.getFullYear(),month.getMonth(),d));
@@ -771,7 +860,7 @@ async function confirmBooking(){
 }
 
 /* ── Intro video (VSL) — two placements ──
-   Pre-booking (#pre-vsl, next to the calendar): always Bryan's walkthrough — no host is assigned
+   Pre-booking (#pre-vsl, below the calendar): always Bryan's walkthrough — no host is assigned
    until the booking lands. Post-booking (success screen): the Discovery event is round-robin
    between Bryan and Nick; /api/cal-booking returns the assigned host ({name,email}) so the
    confirmation shows THEIR photo and THEIR video, framed as "watch it if you didn't already".
@@ -927,8 +1016,8 @@ function launchConfetti(){
 document.addEventListener('DOMContentLoaded',function(){
   const prev=document.getElementById('cal-prev');
   const next=document.getElementById('cal-next');
-  if(prev) prev.addEventListener('click',function(){const m=booking.visibleMonth;booking.visibleMonth=new Date(m.getFullYear(),m.getMonth()-1,1);renderCalendar();});
-  if(next) next.addEventListener('click',function(){const m=booking.visibleMonth;booking.visibleMonth=new Date(m.getFullYear(),m.getMonth()+1,1);renderCalendar();});
+  if(prev) prev.addEventListener('click',function(){const m=stepMonth(-1); if(!m) return; booking.visibleMonth=m; renderCalendar();});
+  if(next) next.addEventListener('click',function(){const m=stepMonth(1); if(!m) return; booking.visibleMonth=m; renderCalendar();});
 });
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
