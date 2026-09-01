@@ -136,7 +136,11 @@
 /* ── Mobile ────────────────────────────────────────────── */
 
 @media(max-width:900px){
-  .float-bar{position:static;top:auto;left:auto;transform:none;margin:14px auto 0;width:calc(100% - 32px);padding:8px 8px 8px 16px}
+  /* relative, not static: the mobile drawer (.fb-links) is position:absolute and must
+     anchor to the bar — static made it anchor to the viewport-sized initial containing
+     block, opening the menu a full screen down, behind the hero widget. Relative also
+     activates the bar's z-index:200 so the drawer paints above page content. */
+  .float-bar{position:relative;top:auto;left:auto;transform:none;margin:14px auto 0;width:calc(100% - 32px);padding:8px 8px 8px 16px}
 
   .fb-links{display:none;position:absolute;top:calc(100% + 10px);left:0;right:0;background:var(--white,#fff);border-radius:16px;padding:8px;flex-direction:column;align-items:stretch;gap:0;box-shadow:0 8px 32px rgba(50,48,47,.12),0 0 0 1px rgba(50,48,47,.04)}
   .fb-links.open{display:flex}
