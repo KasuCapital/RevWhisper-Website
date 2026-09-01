@@ -224,6 +224,10 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 .booked-meta{display:flex;flex-wrap:wrap;justify-content:center;gap:18px;margin-top:14px;font-size:13px;color:var(--g500);font-weight:300}
 .booked-meta-item{display:inline-flex;align-items:center;gap:6px}
 .booked-meta-item svg{flex-shrink:0;color:var(--accent)}
+.addcal{margin-top:16px;font-size:13px;color:var(--g500);font-weight:300}
+.addcal a{color:var(--accent);font-weight:500;text-decoration:none;border-bottom:1px solid var(--accent-border);padding-bottom:1px;transition:border-color .2s;cursor:pointer}
+.addcal a:hover{border-bottom-color:var(--accent)}
+.addcal-sep{margin:0 4px;color:var(--g300)}
 
 .booked-body{margin-top:6px;text-align:left}
 .booked-sec{padding:26px 0;border-top:1px solid var(--g200)}
@@ -373,6 +377,10 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
           <div class="booked-meta">
             <span class="booked-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>30 min</span>
             <span class="booked-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>Google Meet</span>
+          </div>
+          <div class="addcal" id="addcal" hidden>
+            Put it on your calendar now:
+            <a id="addcal-g" target="_blank" rel="noopener">Google</a><span class="addcal-sep">·</span><a id="addcal-ics">Apple / Outlook</a>
           </div>
         </div>
 
@@ -604,7 +612,14 @@ function transitionStep(from,to,direction){
     if(recentre) setTimeout(function(){centreCard();},60);
   },480);
 }
-function prevStep(){ if(current>0){const from=current;current--;transitionStep(from,current,'backward');} }
+/* User-tap guards: never move `current` while a step is animating — transitionStep
+   would no-op on its isTransitioning check and the counter would desync from the visible
+   step. Worst case before this guard: date-tap + fast slot-tap desynced the machine, and
+   the next slot-tap showed the "Locking in your time…" loader with no booking ever sent.
+   Dropping the tap is safe here — every control (day cell, slot button, Back, Confirm)
+   stays on screen for an immediate re-tap. The post-fetch transitions in confirmBooking
+   need no guard: the 1100ms minimum loader outlasts the 480ms lock. */
+function prevStep(){ if(isTransitioning) return; if(current>0){const from=current;current--;transitionStep(from,current,'backward');} }
 
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function showCalError(message,options){
@@ -721,6 +736,7 @@ function renderCalendar(){
   });
 }
 function selectDate(dateKey){
+  if(isTransitioning) return;
   booking.selectedDate=dateKey;
   rwTrack('select_booking_date',{date:dateKey,page:'audit-booking'});
   renderSlots();
@@ -755,7 +771,7 @@ function showSlotError(message){
 
 /* Tap a time → go to the confirm + phone step (does NOT book yet) */
 function selectSlot(iso,btn){
-  if(booking.bookingInFlight) return;
+  if(isTransitioning||booking.bookingInFlight) return;
   booking.selectedSlot=iso;
   rwTrack('select_booking_time',{time:iso,page:'audit-booking'});
   const t=new Date(iso);
@@ -775,7 +791,7 @@ function showConfirmError(message){
 /* Confirm step → book the selected slot. Phone was captured on the /audit form and
    travels here via the rw_audit_lead context — it is no longer collected on this page. */
 async function confirmBooking(){
-  if(booking.bookingInFlight) return;
+  if(isTransitioning||booking.bookingInFlight) return;
   const ce=document.getElementById('confirm-error-slot'); if(ce) ce.innerHTML='';
   booking.bookingInFlight=true;
   const cbtn=document.getElementById('confirm-btn'); if(cbtn) cbtn.disabled=true;
@@ -948,6 +964,29 @@ function renderSuccess(data){
   }
   if(when){
     when.textContent=start?(start.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'})+' · '+start.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'})+' ('+booking.timeZone+')'):'Confirmed';
+  }
+  // Add-to-calendar links: insurance for hosts whose invite email lands in spam or whose
+  // calendar doesn't auto-add invitations (Google's newer anti-spam defaults often don't).
+  // Google gets a prefilled template link; Apple/Outlook get /api/booking-ics, which serves
+  // text/calendar so the OS opens it straight into the calendar app.
+  const addcal=document.getElementById('addcal');
+  if(addcal&&start){
+    const calEnd=new Date(start.getTime()+30*60000);
+    const z=function(d){return d.toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'');};
+    const meet=(data&&typeof data.meetingUrl==='string'&&/^https:\/\/meet\.google\.com\/[A-Za-z0-9-]+$/.test(data.meetingUrl))?data.meetingUrl:'';
+    const calTitle=encodeURIComponent('Your RevWhisper live audit');
+    const calDetails=encodeURIComponent('Your live Airbnb performance audit with RevWhisper, 30 minutes over Google Meet.'+(meet?'\n\nJoin: '+meet:''));
+    const g=document.getElementById('addcal-g');
+    if(g){
+      g.href='https://calendar.google.com/calendar/render?action=TEMPLATE&text='+calTitle+'&dates='+z(start)+'/'+z(calEnd)+'&details='+calDetails+(meet?'&location='+encodeURIComponent(meet):'');
+      g.onclick=function(){rwTrack('add_to_calendar',{kind:'google',page:'audit-booking'});};
+    }
+    const ics=document.getElementById('addcal-ics');
+    if(ics){
+      ics.href='/api/booking-ics?start='+encodeURIComponent(start.toISOString())+(meet?'&meet='+encodeURIComponent(meet):'');
+      ics.onclick=function(){rwTrack('add_to_calendar',{kind:'ics',page:'audit-booking'});};
+    }
+    addcal.hidden=false;
   }
   setupVsl(resolveVslHost(data));
   applyPropertyCopy();

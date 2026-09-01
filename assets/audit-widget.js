@@ -175,8 +175,10 @@ function validateStep(step){
   if(step===4){
     var url=document.getElementById('airbnb-url');
     var val=url.value.trim();
-    // Airbnb URL (listing or host profile) is required
-    if(!val || !val.toLowerCase().includes('airbnb.')){url.classList.add('error');valid=false;}else{url.classList.remove('error');}
+    // Airbnb URL (listing or host profile) is required. airbnb. covers every country
+    // domain; abnb.me is what the Airbnb app's share sheet puts on the clipboard.
+    var valLower=val.toLowerCase();
+    if(!val || !(valLower.includes('airbnb.')||valLower.includes('abnb.me'))){url.classList.add('error');valid=false;}else{url.classList.remove('error');}
     var name=document.getElementById('full-name');
     var email=document.getElementById('email');
     if(!name.value.trim()){name.classList.add('error');valid=false;}else{name.classList.remove('error');}
@@ -190,12 +192,23 @@ function validateStep(step){
 
 function nextStep(){
   if(current>=totalSteps-1) return;
+  // Never advance `current` while a step is animating: transitionStep would no-op on its
+  // isTransitioning guard and the counter would desync from the visible step (stacked
+  // cards, silently skipped questions). A checked radio can't re-fire change, so a
+  // swallowed tap has no retry path — queue the advance instead of dropping it. The
+  // current===from check makes a queued call a no-op if another already advanced.
+  if(isTransitioning){
+    var queuedFrom=current;
+    setTimeout(function(){ if(current===queuedFrom) nextStep(); },140);
+    return;
+  }
   if(!validateStep(current)) return;
   var from=current;current++;
   track('form_step',{step:current,page:'homepage'});
   transitionStep(from,current,'forward');
 }
 function prevStep(){
+  if(isTransitioning) return; // safe to drop: the Back button stays put for a re-tap
   if(current>0){var from=current;current--;transitionStep(from,current,'backward');}
 }
 

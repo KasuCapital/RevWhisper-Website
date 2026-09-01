@@ -335,10 +335,13 @@ module.exports = async function handler(req, res) {
     });
   }
 
+  // Resolved once, used twice: the confirmation email's Meet button and the success
+  // screen's add-to-calendar links (returned on the booking below).
+  const meetingUrl = await resolveMeetingUrl(data, apiKey);
+
   // Post-booking "what to expect" email, sent immediately via Resend. Never throws and is skipped
   // for the synthetic canary.
   if (!isCanary) {
-    const meetingUrl = await resolveMeetingUrl(data, apiKey);
     await sendAuditConfirmationEmail({
       name: body.name,
       email: body.email,
@@ -360,7 +363,8 @@ module.exports = async function handler(req, res) {
           location: data.location,
           duration: data.duration,
           title: data.title,
-          host: extractHost(data)
+          host: extractHost(data),
+          meetingUrl
         }
       : null
   });

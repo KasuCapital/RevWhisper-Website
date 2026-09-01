@@ -231,7 +231,7 @@ a{color:inherit}
 .input-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--g400);display:flex;align-items:center;transition:color .3s;z-index:2;pointer-events:none}
 .field:focus-within .input-icon{color:var(--accent)}
 .phone-wrap{display:flex;gap:8px}
-.phone-code{width:92px;padding:13px 12px;border:1.5px solid var(--g200);border-radius:var(--radius);font-size:14px;font-family:var(--body);color:var(--black);background:#fff;outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23a39e9b' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;transition:border-color .3s,box-shadow .3s}
+.phone-code{width:92px;padding:13px 12px;border:1.5px solid var(--g200);border-radius:var(--radius);font-size:16px;font-family:var(--body);color:var(--black);background:#fff;outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23a39e9b' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;transition:border-color .3s,box-shadow .3s}
 .phone-code:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(74,103,65,.1)}
 .phone-input{flex:1}
 
@@ -534,7 +534,10 @@ a{color:inherit}
           'occupancy':{h1:'Empty nights you <span class="em-mark">can’t get back</span>.',sub:'A free audit of your ranking, pricing, and conversion. We show you exactly what to fix first.'}
         };
         try{
-          var a=(JSON.parse(sessionStorage.getItem('rw_attribution'))||{});
+          // rwAttribution reads localStorage first — that's where the head script stores
+          // the touch (sessionStorage is only its fallback), so reading sessionStorage
+          // directly left these variants dead for nearly every visitor.
+          var a=rwAttribution();
           var key=(a.utm_content||a.utm_term||'').toLowerCase();
           if(MAP[key]){
             document.getElementById('hero-h1').innerHTML=MAP[key].h1;
@@ -1131,7 +1134,7 @@ a{color:inherit}
       </details>
       <details class="faq">
         <summary>How much time does this take?<span class="fq-ico"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
-        <div class="faq-a">About two minutes to request, and around 20 minutes to walk through your audit together. We keep it tight and useful, no fluff.</div>
+        <div class="faq-a">About two minutes to request, and around 30 minutes to walk through your audit together. We keep it tight and useful, no fluff.</div>
       </details>
     </div>
   </div>
@@ -1285,8 +1288,10 @@ function validateStep(step){
   if(step===4){
     const url=document.getElementById('airbnb-url');
     const val=url.value.trim();
-    // Airbnb URL (listing or host profile) is required
-    if(!val || !val.toLowerCase().includes('airbnb.')){url.classList.add('error');valid=false;}else{url.classList.remove('error');}
+    // Airbnb URL (listing or host profile) is required. airbnb. covers every country
+    // domain; abnb.me is what the Airbnb app's share sheet puts on the clipboard.
+    const valLower=val.toLowerCase();
+    if(!val || !(valLower.includes('airbnb.')||valLower.includes('abnb.me'))){url.classList.add('error');valid=false;}else{url.classList.remove('error');}
     const name=document.getElementById('full-name');
     const email=document.getElementById('email');
     if(!name.value.trim()){name.classList.add('error');valid=false;}else{name.classList.remove('error');}
@@ -1300,12 +1305,23 @@ function validateStep(step){
 
 function nextStep(){
   if(current>=totalSteps-1) return;
+  // Never advance `current` while a step is animating: transitionStep would no-op on its
+  // isTransitioning guard and the counter would desync from the visible step (stacked
+  // cards, silently skipped questions). A checked radio can't re-fire change, so a
+  // swallowed tap has no retry path — queue the advance instead of dropping it. The
+  // current===from check makes a queued call a no-op if another already advanced.
+  if(isTransitioning){
+    const from=current;
+    setTimeout(function(){ if(current===from) nextStep(); },140);
+    return;
+  }
   if(!validateStep(current)) return;
   const from=current;current++;
   rwTrack('form_step',{step:current,page:'audit'});
   transitionStep(from,current,'forward');
 }
 function prevStep(){
+  if(isTransitioning) return; // safe to drop: the Back button stays put for a re-tap
   if(current>0){const from=current;current--;transitionStep(from,current,'backward');}
 }
 
