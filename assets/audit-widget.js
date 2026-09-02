@@ -381,19 +381,46 @@ function submitForm(){
    globals to a page that already runs home.js.
    ────────────────────────────────────────────────────────────────────────── */
 
-/* Auto-advance taps: listings, issue, pricing, and the dynamic revenue bands */
+/* Auto-advance taps: listings, issue, pricing, and the dynamic revenue bands.
+   scheduleAdvance captures the step at scheduling time so two answer taps inside one
+   delay window advance exactly once — a timer whose step already moved on is void. */
+function scheduleAdvance(){
+  var from=current;
+  setTimeout(function(){ if(current===from) nextStep(); },180);
+}
 card.querySelectorAll('input[name="listings"]').forEach(function(r){
-  r.addEventListener('change',function(){ track('select_portfolio_size',{size:r.value,page:'homepage'}); renderRevenueOptions(r.value); setTimeout(nextStep,180); });
+  r.addEventListener('change',function(){ track('select_portfolio_size',{size:r.value,page:'homepage'}); renderRevenueOptions(r.value); scheduleAdvance(); });
 });
 card.querySelectorAll('input[name="issue"]').forEach(function(r){
-  r.addEventListener('change',function(){ track('select_issue',{issue:r.value,page:'homepage'}); setTimeout(nextStep,180); });
+  r.addEventListener('change',function(){ track('select_issue',{issue:r.value,page:'homepage'}); scheduleAdvance(); });
 });
 card.querySelectorAll('input[name="pricing"]').forEach(function(r){
-  r.addEventListener('change',function(){ track('select_pricing',{pricing:r.value,page:'homepage'}); setTimeout(nextStep,180); });
+  r.addEventListener('change',function(){ track('select_pricing',{pricing:r.value,page:'homepage'}); scheduleAdvance(); });
 });
 /* revenue radios are rendered dynamically — delegate the change to auto-advance */
 card.addEventListener('change',function(e){
-  if(e.target&&e.target.name==='revenue'){ track('select_revenue',{revenue:e.target.value,page:'homepage'}); setTimeout(nextStep,180); }
+  if(e.target&&e.target.name==='revenue'){ track('select_revenue',{revenue:e.target.value,page:'homepage'}); scheduleAdvance(); }
+});
+/* Re-selecting the already-checked answer advances too. After Back, the previous answer
+   is still checked, and a checked radio can't fire change — without this, the only way
+   forward was changing the answer. Click runs before change (checkedness is set before
+   the click event dispatches; change fires after), so a click whose value matches the
+   group's last committed value is a confirm-tap, not a new selection: advance without
+   re-firing the select_* tracking. */
+var rwLastVal={};
+card.addEventListener('change',function(e){
+  var n=e.target&&e.target.name;
+  if(n==='listings'||n==='issue'||n==='pricing'||n==='revenue') rwLastVal[n]=e.target.value;
+});
+card.addEventListener('click',function(e){
+  var t=e.target;
+  if(!t||t.type!=='radio') return;
+  var n=t.name;
+  if(n!=='listings'&&n!=='issue'&&n!=='pricing'&&n!=='revenue') return;
+  // only the visible step's radios count — never advance off a hidden step's control
+  var stepEl=t.closest('.step');
+  if(!stepEl||!/(?:^|\s)(?:active|enter-from-below|enter-from-above)(?:\s|$)/.test(stepEl.className)) return;
+  if(rwLastVal[n]===t.value) scheduleAdvance();
 });
 
 card.querySelectorAll('.btn-back').forEach(function(b){ b.addEventListener('click',prevStep); });

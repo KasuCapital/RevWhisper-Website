@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<!-- Warm the two heavy third-party origins before their loaders fire below -->
+<link rel="preconnect" href="https://connect.facebook.net">
+<link rel="preconnect" href="https://www.googletagmanager.com">
 <!-- Attribution tracking (cookie-free) -->
 <script>
 (function(){
@@ -58,8 +61,8 @@ fbq('track', 'PageView');
 <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=959022406709300&ev=PageView&noscript=1"/></noscript>
 <!-- End Meta Pixel -->
 <!-- X Pixel base code + audit conversion helper -->
-<script src="/assets/x-pixel-base.js"></script>
-<script src="/assets/x-tracking.js"></script>
+<script defer src="/assets/x-pixel-base.js"></script>
+<script defer src="/assets/x-tracking.js"></script>
 <!-- End X Pixel base code -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Free Airbnb Performance Audit | RevWhisper</title>
@@ -76,6 +79,10 @@ fbq('track', 'PageView');
 <link rel="icon" href="icons/favicon-light.svg" type="image/svg+xml">
 <!-- Self-hosted variable fonts (latin subset) — no render-blocking third-party CSS; preload the two on the critical path -->
 <link rel="preload" href="/fonts/lora-normal-400-700.woff2" as="font" type="font/woff2" crossorigin>
+<!-- The italic face paints the underlined word in the H1 — the LCP element. Without this
+     preload it was discovered late and the H1's font swap pinned LCP to its arrival (~6.5s
+     on throttled mobile). -->
+<link rel="preload" href="/fonts/lora-italic-400-700.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/dm-sans-normal-300-700.woff2" as="font" type="font/woff2" crossorigin>
 <style>
 /* ───────────────────────── Self-hosted fonts (latin, variable) ───────────────────────── */
@@ -124,7 +131,7 @@ a{color:inherit}
 .btn:hover .arrow{transform:translateX(3px)}
 
 /* ───────────────────────── Hero (centered — headline + sub stacked above the form) ───────────────────────── */
-#hero{position:relative;overflow:hidden;padding:clamp(40px,7vw,76px) 0 clamp(16px,2.5vw,28px);background:linear-gradient(180deg,#f6f8f4 0%,#fff 80%)}
+#hero{position:relative;overflow:hidden;padding:clamp(40px,7vw,76px) 0 clamp(36px,4vw,48px);background:linear-gradient(180deg,#f6f8f4 0%,#fff 80%)}
 .hero-glow{position:absolute;top:-140px;left:50%;transform:translateX(-50%);width:1100px;max-width:130vw;height:560px;background:radial-gradient(ellipse at 50% 30%,rgba(74,103,65,.12) 0%,transparent 64%);pointer-events:none;z-index:0}
 .hero-inner{position:relative;z-index:1;text-align:center;max-width:720px;margin:0 auto 36px}
 .hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--accent-light);border:1px solid var(--accent-border);color:var(--accent);font-size:12px;font-weight:600;padding:6px 14px;border-radius:100px;margin-bottom:22px}
@@ -138,15 +145,78 @@ a{color:inherit}
 .hero-trust .ht-item svg{flex-shrink:0;color:var(--accent)}
 
 /* ───────────────────────── Form card ───────────────────────── */
-.form-card{background:#fff;border:1px solid var(--g200);border-radius:var(--radius-lg);box-shadow:var(--sh-lg);padding:28px 28px 24px;position:relative;max-width:560px;width:100%;margin:0 auto}
+.form-glow{position:relative;max-width:560px;width:100%;margin:0 auto}
+.form-card{background:#fff;border:1px solid transparent;border-radius:var(--radius-lg);box-shadow:var(--sh-lg);padding:28px 28px 24px;position:relative;z-index:1;width:100%}
+/* ── Animated edge glow (inline card only) ──
+   A slow moss→sage light beam circles just outside the card, with a blurred copy behind it
+   as the halo and a gentle breathe. The two layers live on the .form-glow wrapper at
+   z-index:0 and the card sits above them at z-index:1, so the white surface covers the
+   middle and only the ring and halo show outside the edge. (Putting them on the card
+   itself at z-index:-1 paints them *over* the card's background — paint order puts the
+   root's background first, then negative-z children.) The rotation drives a registered
+   custom property (@property); browsers without it get a static ring, still tasteful.
+   Off in fullscreen: the card is the page there. */
+@property --rw-angle{syntax:'<angle>';inherits:false;initial-value:0deg}
+.form-glow::before,.form-glow::after{content:'';position:absolute;z-index:0;pointer-events:none;border-radius:calc(var(--radius-lg) + 2px);
+  background:conic-gradient(from var(--rw-angle),rgba(74,103,65,.16) 0deg,rgba(74,103,65,.16) 130deg,#4A6741 200deg,#9dbb92 238deg,#f1f7ee 262deg,#9dbb92 286deg,#4A6741 324deg,rgba(74,103,65,.16) 360deg);
+  animation:rwBeam 6s linear infinite}
+.form-glow::before{inset:-2px}
+.form-glow::after{inset:-6px;filter:blur(22px);opacity:.7;animation:rwBeam 6s linear infinite,rwBreathe 4s ease-in-out infinite alternate}
+@keyframes rwBeam{to{--rw-angle:360deg}}
+@keyframes rwBreathe{from{opacity:.5}to{opacity:.9}}
+body.rw-fs .form-glow::before,body.rw-fs .form-glow::after{display:none}
+/* Continuous animations pause while their element is off-screen (IntersectionObserver
+   toggles .is-idle) — no visual change, but the blurred glow and the two marquees stop
+   costing paint/GPU while the visitor reads further down the page. */
+.form-glow.is-idle::before,.form-glow.is-idle::after{animation-play-state:paused}
+.case-carousel.is-idle .case-track,.review-carousel.is-idle .review-track{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.form-glow::before,.form-glow::after{animation:none}}
 .fc-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:20px}
 .fc-progress{display:flex;gap:6px;flex:1;max-width:180px}
 .fc-seg{height:5px;flex:1;border-radius:100px;background:var(--g200);overflow:hidden;position:relative}
 .fc-seg::after{content:'';position:absolute;inset:0;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .45s var(--ease-out-expo)}
 .fc-seg.on::after{transform:scaleX(1)}
 .fc-count{font-size:12px;font-weight:500;color:var(--g400);letter-spacing:.02em;white-space:nowrap}
+/* Quiet exit for the fullscreen takeover: deliberately low-contrast (there by design for
+   the person who really wants out, not an invitation to leave). 32px hit area, 12px glyph. */
+.fc-close{display:none;align-items:center;justify-content:center;width:32px;height:32px;margin:-6px -8px -6px -2px;padding:0;border:none;background:none;color:var(--g300);cursor:pointer;border-radius:50%;transition:color .2s,background .2s}
+.fc-close:hover{color:var(--g500);background:var(--g50)}
+.fc-close:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+body.rw-fs .fc-close{display:inline-flex}
 .fc-secure{display:flex;align-items:center;justify-content:center;gap:7px;margin-top:16px;font-size:12px;color:var(--g400);font-weight:300;line-height:1.4;text-align:center}
 .fc-secure svg{flex-shrink:0;color:var(--accent);opacity:.7}
+
+/* ── Fullscreen focus mode ─────────────────────────────────
+   Inline start, takeover after the first answer: the first tap on any option promotes
+   the card to a fixed overlay and the form becomes the only thing on the page — the
+   backdrop is opaque (the hero's own gradient) and there is deliberately no exit
+   control in the UI. The one escape is the browser back gesture, which collapses the
+   takeover to the plain landing page (see enterFs/exitFs) rather than bouncing the
+   visitor off the site. Body scroll locks via position:fixed (iOS ignores
+   overflow:hidden on body). */
+.fs-scrim{position:fixed;inset:0;z-index:299;background:linear-gradient(180deg,#f6f8f4 0%,#fff 60%);opacity:0;pointer-events:none;transition:opacity .22s ease-out}
+body.rw-fs{position:fixed;left:0;right:0;overflow:hidden}
+body.rw-fs .fs-scrim{opacity:1;pointer-events:auto}
+body.rw-fs .form-card{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:300;width:min(560px,calc(100vw - 32px));max-height:calc(100vh - 40px);max-height:calc(100dvh - 40px);overflow-y:auto;-webkit-overflow-scrolling:touch}
+@media(max-width:719px){
+  body.rw-fs .form-card{inset:0;transform:none;width:auto;height:auto;max-height:none;border-radius:0;border:none;display:flex;flex-direction:column;padding:calc(20px + env(safe-area-inset-top)) 18px calc(72px + env(safe-area-inset-bottom))}
+  /* Center the active step in the leftover space instead of top-anchoring it.
+     margin:auto re-splits every frame while the viewport height animates, so
+     the recentering rides the same ease as the step transition. */
+  body.rw-fs .steps-viewport{margin-top:auto;margin-bottom:auto}
+  /* Back lives in a fixed bottom bar. The bar must be a DIRECT child of the
+     card: the steps animate with transforms, and a transformed ancestor
+     re-anchors position:fixed to itself (observed: the bar glued to the step's
+     box instead of the screen). The per-step inline Back hides here instead;
+     the final step's submit stays inline with the fields. */
+  body.rw-fs .fs-bottom-bar{display:flex;align-items:center;position:fixed;left:0;right:0;bottom:0;z-index:310;padding:10px 18px calc(10px + env(safe-area-inset-bottom));background:#fff;border-top:1px solid var(--g200)}
+  /* No Back on the opening step — nothing to go back to. The machinery never
+     re-adds .active after a transition (a returned-to step rests on its
+     enter-from-* class), so match every form the current step can wear. */
+  body.rw-fs .form-card:has(.step[data-step="0"]:is(.active,.enter-from-below,.enter-from-above)) .fs-bottom-bar,
+  body.rw-fs .form-card:has(.step[data-step="1"]:is(.active,.enter-from-below,.enter-from-above)) .fs-bottom-bar{display:none}
+  body.rw-fs .step .btn-back{display:none}
+}
 
 /* steps machinery — height-animated viewport for smooth, non-jumpy transitions */
 .steps-viewport{position:relative;transition:height .42s var(--ease-out-expo)}
@@ -180,9 +250,6 @@ a{color:inherit}
 .radio-card input:checked + .rc-label{border-color:var(--accent);color:var(--accent);font-weight:600;box-shadow:0 0 0 1.5px var(--accent)}
 .radio-card input:checked + .rc-label::before{opacity:1;transform:scale(1)}
 .radio-card .rc-label span{position:relative;z-index:1}
-/* revenue band cards (rendered dynamically, wider money labels) */
-.revenue-group{grid-template-columns:repeat(3,1fr)}
-.revenue-group .rc-label{font-size:14px;padding:14px 6px;line-height:1.25}
 
 /* option cards */
 .option-cards{display:flex;flex-direction:column;gap:10px;margin-bottom:8px}
@@ -215,16 +282,21 @@ a{color:inherit}
 .field-input.error ~ .field-error{display:block;animation:fadeSlideUp .3s var(--ease-out-expo)}
 .field-input.error ~ .field-hint{display:none}
 /* ── Open Airbnb helper (mirrors get-started / checkout-form) ── */
-.open-airbnb-wrap{margin-top:16px;margin-bottom:18px}
-.open-airbnb-divider{display:block;font-size:12px;color:var(--g400);font-weight:400;text-align:center;margin-bottom:12px;position:relative}
-.open-airbnb-divider::before,.open-airbnb-divider::after{content:'';position:absolute;top:50%;width:calc(50% - 80px);height:1px;background:var(--g200)}
-.open-airbnb-divider::before{left:0}
-.open-airbnb-divider::after{right:0}
-.open-airbnb-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px 16px;border-radius:var(--radius);border:1.5px solid var(--g200);background:var(--g50);font-size:13px;font-weight:400;color:var(--g500);font-family:var(--body);text-decoration:none;cursor:pointer;transition:border-color .25s,color .25s,background .25s,transform .2s var(--ease-out-back),box-shadow .25s}
-.open-airbnb-btn:hover{border-color:var(--g300);color:var(--black);background:#fff;transform:translateY(-1px);box-shadow:var(--sh-sm)}
-.open-airbnb-btn:active{transform:scale(.98)}
-.open-airbnb-btn svg{flex-shrink:0;opacity:.6;transition:opacity .25s}
-.open-airbnb-btn:hover svg{opacity:1}
+/* Helper row under the URL field: the same icon-tile + label + one-liner pattern as the
+   nav dropdown items, so it reads as one structured, pressable thing instead of a divider,
+   a floating chip and a caption. The action label can't wrap; only the one-liner may. */
+.open-airbnb-wrap{margin-top:12px;margin-bottom:4px}
+.open-airbnb-btn{display:grid;grid-template-columns:40px minmax(0,1fr) auto;align-items:center;gap:12px;width:100%;padding:10px 14px 10px 10px;border-radius:var(--radius);border:1.5px solid var(--g200);background:#fff;color:var(--black);font-family:var(--body);text-decoration:none;text-align:left;cursor:pointer;transition:border-color .25s,box-shadow .3s,transform .2s var(--ease-out-back)}
+.open-airbnb-btn:hover{border-color:var(--g300);box-shadow:var(--sh);transform:translateY(-1px)}
+.open-airbnb-btn:active{transform:translateY(0) scale(.99)}
+.oab-tile{width:40px;height:40px;border-radius:10px;background:rgba(255,56,92,.09);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .25s}
+.open-airbnb-btn:hover .oab-tile{background:rgba(255,56,92,.14)}
+.oab-logo{width:20px;height:20px;fill:#FF385C;display:block}
+.oab-text{display:flex;flex-direction:column;gap:2px;min-width:0}
+.oab-title{font-size:14px;font-weight:500;color:var(--black);line-height:1.3;white-space:nowrap}
+.oab-sub{font-size:12.5px;color:var(--g500);font-weight:300;line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.oab-ext{color:var(--g400);flex-shrink:0;transition:color .25s}
+.open-airbnb-btn:hover .oab-ext{color:var(--black)}
 .step.active .open-airbnb-wrap,.step.enter-from-below .open-airbnb-wrap,.step.enter-from-above .open-airbnb-wrap{animation:fadeSlideUp .42s var(--ease-out-expo) .25s both}
 .input-icon-wrap{position:relative}
 .input-icon-wrap .field-input{padding-left:42px}
@@ -237,6 +309,7 @@ a{color:inherit}
 
 /* form buttons */
 .form-actions{display:flex;align-items:center;gap:12px;margin-top:18px}
+.fs-bottom-bar{display:none}
 .btn-next{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--accent);color:#fff;font-size:15px;font-weight:500;padding:15px 28px;border-radius:var(--radius);border:none;cursor:pointer;font-family:var(--body);flex:1;transition:transform .25s var(--ease-out-back),box-shadow .3s,opacity .3s}
 .btn-next:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 22px rgba(74,103,65,.26)}
 .btn-next:active:not(:disabled){transform:translateY(0) scale(.98)}
@@ -477,14 +550,13 @@ a{color:inherit}
   .review-carousel::before{left:0;background:linear-gradient(90deg,#fff,rgba(255,255,255,0))}
   .review-carousel::after{right:0;background:linear-gradient(270deg,#fff,rgba(255,255,255,0))}
   .sec{padding:clamp(48px,11vw,72px) 0}
-  #hero{padding:24px 0 30px}
+  #hero{padding:24px 0 40px}
   .hero-inner{margin-bottom:22px}
   .hero-trust{margin-top:15px;gap:7px 16px}
   .hero-trust .ht-item{font-size:12px}
   .hero-h1{font-size:clamp(33px,8.4vw,42px)}
   .form-card{padding:20px 18px 18px;border-radius:14px}
   .radio-group{grid-template-columns:repeat(3,1fr)}
-  .revenue-group{grid-template-columns:repeat(2,1fr)}
   /* 16px inputs prevent iOS zoom-on-focus */
   .field-input{font-size:16px}.phone-input{font-size:16px}
   .stat-band{flex-direction:column;gap:24px}
@@ -510,6 +582,7 @@ a{color:inherit}
 </style>
 </head>
 <body>
+<main id="main">
 
 <!-- ════════════════════ HERO + FORM ════════════════════ -->
 <section id="hero">
@@ -549,6 +622,8 @@ a{color:inherit}
     </div>
 
     <!-- multi-step lead form — centered focal point -->
+    <div class="fs-scrim" id="fs-scrim" aria-hidden="true"></div>
+    <div class="form-glow">
     <div class="form-card" id="audit-form">
         <div class="fc-head">
           <div class="fc-progress" aria-hidden="true">
@@ -557,8 +632,11 @@ a{color:inherit}
             <span class="fc-seg" data-seg="2"></span>
             <span class="fc-seg" data-seg="3"></span>
             <span class="fc-seg" data-seg="4"></span>
+            <span class="fc-seg" data-seg="5"></span>
           </div>
-          <div class="fc-count">Step <span id="fc-cur">1</span> of 5</div>
+          <button class="fc-close" id="fc-close" type="button" aria-label="Exit full screen">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+          </button>
         </div>
 
         <div class="steps-viewport">
@@ -588,9 +666,9 @@ a{color:inherit}
               <label class="option-card"><input type="radio" name="issue" value="pricing"><div class="oc-label"><span class="oc-radio"></span><span>I don't think my pricing is right</span></div></label>
               <label class="option-card"><input type="radio" name="issue" value="not-sure"><div class="oc-label"><span class="oc-radio"></span><span>Not sure, that's what I want to find out</span></div></label>
             </div>
-            <div class="form-actions">
-              <button class="btn-back" type="button" onclick="prevStep()"><span class="arrow">←</span> Back</button>
-            </div>
+            <!-- No Back here: this is the first screen of the fullscreen takeover, and a Back
+                 button reads as "back to the page" — which it isn't. The listings answer was
+                 given on the landing view; the real way back is the browser gesture. -->
           </div>
 
           <!-- Step 2: pricing & revenue approach -->
@@ -619,32 +697,44 @@ a{color:inherit}
               <label class="field-label" for="door-count">Roughly how many listings? <span class="opt">(optional)</span></label>
               <input type="number" class="field-input" id="door-count" placeholder="e.g. 60" min="1" inputmode="numeric">
             </div>
-            <div class="radio-group revenue-group" id="revenue-options"></div>
+            <div class="option-cards" id="revenue-options"></div>
             <div class="form-actions">
               <button class="btn-back" type="button" onclick="prevStep()"><span class="arrow">←</span> Back</button>
             </div>
           </div>
 
-          <!-- Step 4: the ask (listing + contact) -->
+          <!-- Step 4: the listing. The URL sits on its own step: it's the one field hosts leave
+               the page to fetch, so isolating it keeps the contact step down to three
+               autofillable fields and keeps the momentum "about your listing" until the end. -->
           <div class="step" data-step="4">
-            <div class="step-eyebrow">Where to send it</div>
-            <h2 class="step-title">Last step: <em>your details.</em></h2>
-            <p class="step-desc">We'll start preparing your audit and show you how to get your findings, walked through with you.</p>
+            <div class="step-eyebrow">Your Airbnb</div>
+            <h2 class="step-title">What's your Airbnb <em>listing URL?</em></h2>
+            <p class="step-desc">Any one of your listings works, or your host profile. It's just so we can find you on Airbnb.</p>
             <div class="field">
-              <label class="field-label" for="airbnb-url">Your Airbnb listing URL or host profile</label>
               <div class="input-icon-wrap">
                 <div class="input-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg></div>
-                <input type="url" class="field-input" id="airbnb-url" placeholder="airbnb.com/rooms/… or /users/show/…" autocomplete="off" inputmode="url">
+                <input type="url" class="field-input" id="airbnb-url" placeholder="airbnb.com/rooms/… or /users/show/…" aria-label="Your Airbnb listing URL or host profile" autocomplete="off" inputmode="url">
               </div>
               <div class="field-error">Please add your Airbnb listing URL or host profile</div>
             </div>
             <div class="open-airbnb-wrap">
-              <span class="open-airbnb-divider">Don't have it handy?</span>
               <a href="https://www.airbnb.com" target="_blank" rel="noopener" class="open-airbnb-btn" id="open-airbnb-btn">
-                Open Airbnb — copy your listing URL, then come back
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6m4-3h6m0 0v6m0-6L10 14"/></svg>
+                <span class="oab-tile"><svg class="oab-logo" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.001 18.275c-1.353-1.697-2.148-3.184-2.413-4.457-.263-1.027-.16-1.848.291-2.465.477-.71 1.188-1.056 2.121-1.056s1.643.345 2.12 1.063c.446.61.558 1.432.286 2.465-.291 1.298-1.085 2.785-2.412 4.458zm9.601 1.14c-.185 1.246-1.034 2.28-2.2 2.783-2.253.98-4.483-.583-6.392-2.704 3.157-3.951 3.74-7.028 2.385-9.018-.795-1.14-1.933-1.695-3.394-1.695-2.944 0-4.563 2.49-3.927 5.382.37 1.565 1.352 3.343 2.917 5.332-.98 1.085-1.91 1.856-2.732 2.333-.636.344-1.245.558-1.828.609-2.679.399-4.778-2.2-3.825-4.88.132-.345.395-.98.845-1.961l.025-.053c1.464-3.178 3.242-6.79 5.285-10.795l.053-.132.58-1.116c.45-.822.635-1.19 1.351-1.643.346-.21.77-.315 1.246-.315.954 0 1.698.558 2.016 1.007.158.239.345.557.582.953l.558 1.089.08.159c2.041 4.004 3.821 7.608 5.279 10.794l.026.025.533 1.22.318.764c.243.613.294 1.222.213 1.858zm1.22-2.39c-.186-.583-.505-1.271-.9-2.094v-.03c-1.889-4.006-3.642-7.608-5.307-10.844l-.111-.163C15.317 1.461 14.468 0 12.001 0c-2.44 0-3.476 1.695-4.535 3.898l-.081.16c-1.669 3.236-3.421 6.843-5.303 10.847v.053l-.559 1.22c-.21.504-.317.768-.345.847C-.172 20.74 2.611 24 5.98 24c.027 0 .132 0 .265-.027h.372c1.75-.213 3.554-1.325 5.384-3.317 1.829 1.989 3.635 3.104 5.382 3.317h.372c.133.027.239.027.265.027 3.37.003 6.152-3.261 4.802-6.975z"/></svg></span>
+                <span class="oab-text"><span class="oab-title">Open Airbnb</span><span class="oab-sub">Grab your link and come back.</span></span>
+                <svg class="oab-ext" xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6m4-3h6m0 0v6m0-6L10 14"/></svg>
               </a>
             </div>
+            <div class="form-actions">
+              <button class="btn-back" type="button" onclick="prevStep()"><span class="arrow">←</span></button>
+              <button class="btn-next" type="button" id="btn-url-next" onclick="nextStep()">Continue <span class="arrow">→</span></button>
+            </div>
+          </div>
+
+          <!-- Step 5: contact details (the ask) -->
+          <div class="step" data-step="5">
+            <div class="step-eyebrow">Where to send it</div>
+            <h2 class="step-title">Last step: <em>your details.</em></h2>
+            <p class="step-desc">We'll start preparing your audit and show you how to get your findings, walked through with you.</p>
             <div class="field">
               <label class="field-label" for="full-name">Full name</label>
               <input type="text" class="field-input" id="full-name" placeholder="Jane Doe" autocomplete="name">
@@ -667,7 +757,7 @@ a{color:inherit}
                 <input type="tel" class="field-input phone-input" id="phone" placeholder="(555) 123-4567" autocomplete="tel" inputmode="tel" maxlength="16">
               </div>
               <div class="field-error">Please enter a valid phone number</div>
-              <div class="field-hint">We'll text your Google Meet link and a reminder before your audit. Nothing else.</div>
+              <div class="field-hint">We'll text your Google Meet link and a reminder before your audit.</div>
             </div>
             <div class="form-actions">
               <button class="btn-back" type="button" onclick="prevStep()"><span class="arrow">←</span></button>
@@ -675,11 +765,16 @@ a{color:inherit}
             </div>
             <div class="fc-secure">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              Your info stays private. We only use it to prepare your audit. Next, you'll pick a time to get it walked through, live.
+              Your info stays private. We only use it to prepare your audit.
             </div>
           </div>
         </div>
+        <!-- Mobile fullscreen only: Back pinned to a bottom bar (see .fs-bottom-bar CSS) -->
+        <div class="fs-bottom-bar">
+          <button class="btn-back" type="button" onclick="prevStep()"><span class="arrow">←</span> Back</button>
+        </div>
       </div>
+    </div><!-- /.form-glow -->
   </div>
 </section>
 
@@ -774,7 +869,7 @@ a{color:inherit}
         <div class="case-body">
           <div class="case-name">Entire chalet in Tobyhanna</div>
           <div class="case-tag">12 guests · 5 bedrooms · 3 baths</div>
-          <div class="case-host"><div class="case-avatar">D<img class="case-avatar-photo" src="/images/hosts/dave.png" alt="Dave, Superhost" loading="lazy" onerror="this.remove()"><span class="case-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8z"/></svg></span></div><div><div class="case-host-name">Hosted by Dave</div><div class="case-host-sub">Superhost</div></div></div>
+          <div class="case-host"><div class="case-avatar">D<img class="case-avatar-photo" src="/images/hosts/dave.webp" alt="Dave, Superhost" loading="lazy" onerror="this.remove()"><span class="case-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8z"/></svg></span></div><div><div class="case-host-name">Hosted by Dave</div><div class="case-host-sub">Superhost</div></div></div>
           <div class="case-results">
           <div class="case-metrics">
             <div class="case-metric">
@@ -800,7 +895,7 @@ a{color:inherit}
         <div class="case-body">
           <div class="case-name">Entire home in Marathon</div>
           <div class="case-tag">8 guests · 4 bedrooms · 3 baths</div>
-          <div class="case-host"><div class="case-avatar">C<img class="case-avatar-photo" src="/images/hosts/carla.png" alt="Carla, Superhost" loading="lazy" onerror="this.remove()"><span class="case-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8z"/></svg></span></div><div><div class="case-host-name">Hosted by Carla</div><div class="case-host-sub">Superhost</div></div></div>
+          <div class="case-host"><div class="case-avatar">C<img class="case-avatar-photo" src="/images/hosts/carla.webp" alt="Carla, Superhost" loading="lazy" onerror="this.remove()"><span class="case-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8z"/></svg></span></div><div><div class="case-host-name">Hosted by Carla</div><div class="case-host-sub">Superhost</div></div></div>
           <div class="case-results">
           <div class="case-metrics">
             <div class="case-metric">
@@ -826,7 +921,7 @@ a{color:inherit}
         <div class="case-body">
           <div class="case-name">Entire cabin in Tobyhanna</div>
           <div class="case-tag">10 guests · 4 bedrooms · 3 baths</div>
-          <div class="case-host"><div class="case-avatar">R<img class="case-avatar-photo" src="/images/hosts/ryan.png" alt="Ryan, Superhost" loading="lazy" onerror="this.remove()"><span class="case-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8z"/></svg></span></div><div><div class="case-host-name">Hosted by Ryan</div><div class="case-host-sub">Superhost</div></div></div>
+          <div class="case-host"><div class="case-avatar">R<img class="case-avatar-photo" src="/images/hosts/ryan.webp" alt="Ryan, Superhost" loading="lazy" onerror="this.remove()"><span class="case-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8z"/></svg></span></div><div><div class="case-host-name">Hosted by Ryan</div><div class="case-host-sub">Superhost</div></div></div>
           <div class="case-results">
           <div class="case-metrics">
             <div class="case-metric">
@@ -852,7 +947,7 @@ a{color:inherit}
         <div class="case-body">
           <div class="case-name">Entire home in Stowe</div>
           <div class="case-tag">8 guests · 4 bedrooms · 2.5 baths</div>
-          <div class="case-host"><div class="case-avatar">E<img class="case-avatar-photo" src="/images/hosts/emily.png" alt="Emily, Superhost" loading="lazy" onerror="this.remove()"><span class="case-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8z"/></svg></span></div><div><div class="case-host-name">Hosted by Emily</div><div class="case-host-sub">Superhost</div></div></div>
+          <div class="case-host"><div class="case-avatar">E<img class="case-avatar-photo" src="/images/hosts/emily.webp" alt="Emily, Superhost" loading="lazy" onerror="this.remove()"><span class="case-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8z"/></svg></span></div><div><div class="case-host-name">Hosted by Emily</div><div class="case-host-sub">Superhost</div></div></div>
           <div class="case-results">
           <div class="case-metrics">
             <div class="case-metric">
@@ -878,7 +973,7 @@ a{color:inherit}
         <div class="case-body">
           <div class="case-name">Entire home in Candler</div>
           <div class="case-tag">18 guests · 6 bedrooms · 5.5 baths</div>
-          <div class="case-host"><div class="case-avatar">M<img class="case-avatar-photo" src="/images/hosts/marcus.png" alt="Marcus, Superhost" loading="lazy" onerror="this.remove()"><span class="case-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8z"/></svg></span></div><div><div class="case-host-name">Hosted by Marcus</div><div class="case-host-sub">Superhost</div></div></div>
+          <div class="case-host"><div class="case-avatar">M<img class="case-avatar-photo" src="/images/hosts/marcus.webp" alt="Marcus, Superhost" loading="lazy" onerror="this.remove()"><span class="case-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8z"/></svg></span></div><div><div class="case-host-name">Hosted by Marcus</div><div class="case-host-sub">Superhost</div></div></div>
           <div class="case-results">
           <div class="case-metrics">
             <div class="case-metric">
@@ -904,7 +999,7 @@ a{color:inherit}
         <div class="case-body">
           <div class="case-name">Entire villa in Englewood</div>
           <div class="case-tag">9 guests · 3 bedrooms · 2 baths</div>
-          <div class="case-host"><div class="case-avatar">S<img class="case-avatar-photo" src="/images/hosts/sofia.png" alt="Sofia, Superhost" loading="lazy" onerror="this.remove()"><span class="case-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8z"/></svg></span></div><div><div class="case-host-name">Hosted by Sofia</div><div class="case-host-sub">Superhost</div></div></div>
+          <div class="case-host"><div class="case-avatar">S<img class="case-avatar-photo" src="/images/hosts/sofia.webp" alt="Sofia, Superhost" loading="lazy" onerror="this.remove()"><span class="case-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8z"/></svg></span></div><div><div class="case-host-name">Hosted by Sofia</div><div class="case-host-sub">Superhost</div></div></div>
           <div class="case-results">
           <div class="case-metrics">
             <div class="case-metric">
@@ -1050,56 +1145,56 @@ a{color:inherit}
 
         <!-- Dave — Tobyhanna chalet -->
         <div class="review">
-          <div class="review-stars" aria-label="5 out of 5 stars">
+          <div class="review-stars" role="img" aria-label="5 out of 5 stars">
             <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg>
           </div>
           <p class="review-quote">"Two years running my own pricing, so I'll admit I was skeptical handing it off. June booked to 97% at a better nightly rate than I ever held myself. August is usually a ghost town and it filled to $17.4K. All in it was about $31K more across the summer than last year. Should've done this a year ago."</p>
-          <div class="review-host"><div class="review-avatar">D<img class="review-avatar-photo" src="/images/hosts/dave.png" alt="Dave, Superhost" loading="lazy" onerror="this.remove()"><span class="review-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8z"/></svg></span></div><div><div class="review-name">Dave</div><div class="review-loc">Tobyhanna, PA · Superhost</div></div></div>
+          <div class="review-host"><div class="review-avatar">D<img class="review-avatar-photo" src="/images/hosts/dave.webp" alt="Dave, Superhost" loading="lazy" onerror="this.remove()"><span class="review-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8z"/></svg></span></div><div><div class="review-name">Dave</div><div class="review-loc">Tobyhanna, PA · Superhost</div></div></div>
         </div>
 
         <!-- Carla — Marathon -->
         <div class="review">
-          <div class="review-stars" aria-label="5 out of 5 stars">
+          <div class="review-stars" role="img" aria-label="5 out of 5 stars">
             <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg>
           </div>
           <p class="review-quote">"I was sitting at 48% booked going into May and starting to sweat it. A month after they took over it was at 84%, revenue up almost 70% over last May. And I didn't have to learn a single new tool, which is honestly half of why I said yes."</p>
-          <div class="review-host"><div class="review-avatar">C<img class="review-avatar-photo" src="/images/hosts/carla.png" alt="Carla, Superhost" loading="lazy" onerror="this.remove()"><span class="review-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8z"/></svg></span></div><div><div class="review-name">Carla</div><div class="review-loc">Marathon, FL · Superhost</div></div></div>
+          <div class="review-host"><div class="review-avatar">C<img class="review-avatar-photo" src="/images/hosts/carla.webp" alt="Carla, Superhost" loading="lazy" onerror="this.remove()"><span class="review-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8z"/></svg></span></div><div><div class="review-name">Carla</div><div class="review-loc">Marathon, FL · Superhost</div></div></div>
         </div>
 
         <!-- Ryan — Tobyhanna cabin -->
         <div class="review">
-          <div class="review-stars" aria-label="5 out of 5 stars">
+          <div class="review-stars" role="img" aria-label="5 out of 5 stars">
             <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg>
           </div>
           <p class="review-quote">"July's my big month so I watch it like a hawk. Last year it did about $6K. This year, same house, it pulled $22.5K. I always figured you had to drop your rate to fill the calendar, and somehow both my occupancy and my nightly rate went up at the same time. Still not totally sure how they pulled that off. Not gonna question it."</p>
-          <div class="review-host"><div class="review-avatar">R<img class="review-avatar-photo" src="/images/hosts/ryan.png" alt="Ryan, Superhost" loading="lazy" onerror="this.remove()"><span class="review-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8z"/></svg></span></div><div><div class="review-name">Ryan</div><div class="review-loc">Tobyhanna, PA · Superhost</div></div></div>
+          <div class="review-host"><div class="review-avatar">R<img class="review-avatar-photo" src="/images/hosts/ryan.webp" alt="Ryan, Superhost" loading="lazy" onerror="this.remove()"><span class="review-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8z"/></svg></span></div><div><div class="review-name">Ryan</div><div class="review-loc">Tobyhanna, PA · Superhost</div></div></div>
         </div>
 
         <!-- Emily — Stowe -->
         <div class="review">
-          <div class="review-stars" aria-label="5 out of 5 stars">
+          <div class="review-stars" role="img" aria-label="5 out of 5 stars">
             <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg>
           </div>
           <p class="review-quote">"Ok so it's a ski cabin, basically all my money comes in December through March, and I'd more or less written off the rest of the year. Last May I made maybe five grand? This May it was right around $7K, and even August climbed. For the off season that's kind of wild to me. But the thing I keep telling people isn't even the money. I used to check my pricing first thing every morning, before coffee, every single day. I just don't anymore. My husband actually noticed before I did, said I seemed less wound up about the place. Anyway. Huge fan."</p>
-          <div class="review-host"><div class="review-avatar">E<img class="review-avatar-photo" src="/images/hosts/emily.png" alt="Emily, Superhost" loading="lazy" onerror="this.remove()"><span class="review-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8z"/></svg></span></div><div><div class="review-name">Emily</div><div class="review-loc">Stowe, VT · Superhost</div></div></div>
+          <div class="review-host"><div class="review-avatar">E<img class="review-avatar-photo" src="/images/hosts/emily.webp" alt="Emily, Superhost" loading="lazy" onerror="this.remove()"><span class="review-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8z"/></svg></span></div><div><div class="review-name">Emily</div><div class="review-loc">Stowe, VT · Superhost</div></div></div>
         </div>
 
         <!-- Marcus — Candler new build -->
         <div class="review">
-          <div class="review-stars" aria-label="5 out of 5 stars">
+          <div class="review-stars" role="img" aria-label="5 out of 5 stars">
             <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg>
           </div>
           <p class="review-quote">"We launched a six-bedroom estate this year with zero booking history, which at a four-figure nightly rate is a nerve-wracking way to start. Everybody's instinct is to discount to fill the calendar. They didn't. We're going into June around 93% booked at nearly $1,400 a night, and the place has already done $85.9K this year. For a brand new luxury listing I did not expect to be saying that this soon."</p>
-          <div class="review-host"><div class="review-avatar">M<img class="review-avatar-photo" src="/images/hosts/marcus.png" alt="Marcus, Superhost" loading="lazy" onerror="this.remove()"><span class="review-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8z"/></svg></span></div><div><div class="review-name">Marcus</div><div class="review-loc">Candler, NC · Superhost</div></div></div>
+          <div class="review-host"><div class="review-avatar">M<img class="review-avatar-photo" src="/images/hosts/marcus.webp" alt="Marcus, Superhost" loading="lazy" onerror="this.remove()"><span class="review-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8z"/></svg></span></div><div><div class="review-name">Marcus</div><div class="review-loc">Candler, NC · Superhost</div></div></div>
         </div>
 
         <!-- Sofia — Englewood villa -->
         <div class="review">
-          <div class="review-stars" aria-label="5 out of 5 stars">
+          <div class="review-stars" role="img" aria-label="5 out of 5 stars">
             <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg>
           </div>
           <p class="review-quote">"First year without the usual dead stretches, just steady the whole way through. We're up about 40% over the last twelve months and somehow ranking #1 in my area, which I never pulled off on my own."</p>
-          <div class="review-host"><div class="review-avatar">S<img class="review-avatar-photo" src="/images/hosts/sofia.png" alt="Sofia, Superhost" loading="lazy" onerror="this.remove()"><span class="review-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8z"/></svg></span></div><div><div class="review-name">Sofia</div><div class="review-loc">Englewood, FL · Superhost</div></div></div>
+          <div class="review-host"><div class="review-avatar">S<img class="review-avatar-photo" src="/images/hosts/sofia.webp" alt="Sofia, Superhost" loading="lazy" onerror="this.remove()"><span class="review-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8z"/></svg></span></div><div><div class="review-name">Sofia</div><div class="review-loc">Englewood, FL · Superhost</div></div></div>
         </div>
 
       </div><!-- /.review-track -->
@@ -1150,6 +1245,8 @@ a{color:inherit}
   </div>
 </section>
 
+</main>
+
 <!-- ════════════════════ MINI FOOTER ════════════════════ -->
 <footer class="mini-footer">
   <div class="w">
@@ -1176,9 +1273,13 @@ a{color:inherit}
 <script>
 /* ───────────────────────── Multi-step lead form ───────────────────────── */
 let current = 0;
-const totalSteps = 5;
+const totalSteps = 6;
 let isTransitioning = false;
 const FORM_WEBHOOK_ENDPOINT = '/api/form-webhook';
+/* Fullscreen focus mode state — see the .rw-fs styles for the behavior contract. */
+let fsActive = false;
+let fsEntering = false;
+let fsScrollY = 0;
 
 function updateProgress(){
   document.querySelectorAll('.fc-seg').forEach(function(s,i){ s.classList.toggle('on', i<=current); });
@@ -1191,6 +1292,7 @@ function updateProgress(){
    one; CTAs call it bare. A card taller than the viewport pins just below the
    top edge so the step title stays visible. */
 function scrollFormToCentre(cardH){
+  if(fsActive) return; // the takeover scrolls internally; the window stays locked
   var card=document.getElementById('audit-form'); if(!card) return;
   var OFFSET=16;
   var vpH=window.innerHeight||document.documentElement.clientHeight;
@@ -1262,6 +1364,8 @@ function transitionStep(from,to,direction){
   const vpH=window.innerHeight||document.documentElement.clientHeight;
   const recentre=card && !(cardTopBefore>=0 && (cardTopBefore+chromeH+endH)<=vpH);
   if(recentre) scrollFormToCentre(chromeH+endH);
+  // in the takeover the card is its own scroller — bring the incoming step's title into view
+  if(fsActive&&card) card.scrollTo({top:0,behavior:'smooth'});
   // animate the card height from old → new
   vp.style.height=startH+'px';
   void vp.offsetHeight;
@@ -1292,6 +1396,8 @@ function validateStep(step){
     // domain; abnb.me is what the Airbnb app's share sheet puts on the clipboard.
     const valLower=val.toLowerCase();
     if(!val || !(valLower.includes('airbnb.')||valLower.includes('abnb.me'))){url.classList.add('error');valid=false;}else{url.classList.remove('error');}
+  }
+  if(step===5){
     const name=document.getElementById('full-name');
     const email=document.getElementById('email');
     if(!name.value.trim()){name.classList.add('error');valid=false;}else{name.classList.remove('error');}
@@ -1305,6 +1411,14 @@ function validateStep(step){
 
 function nextStep(){
   if(current>=totalSteps-1) return;
+  // Let the fullscreen expansion land before the first step swap — the box glide and
+  // the step/height animation running together read as jank, and sequencing them makes
+  // the expansion the show. Same queue-and-retry as the transition lock below.
+  if(fsEntering){
+    const from=current;
+    setTimeout(function(){ if(current===from) nextStep(); },120);
+    return;
+  }
   // Never advance `current` while a step is animating: transitionStep would no-op on its
   // isTransitioning guard and the counter would desync from the visible step (stacked
   // cards, silently skipped questions). A checked radio can't re-fire change, so a
@@ -1382,7 +1496,7 @@ function renderRevenueOptions(listingVal){
     var bands=rwBands(listingVal);
     var html='';
     bands.forEach(function(b){
-      html+='<label class="radio-card"><input type="radio" name="revenue" value="'+b+'"><div class="rc-label"><span>'+b+'</span></div></label>';
+      html+='<label class="option-card"><input type="radio" name="revenue" value="'+b+'"><div class="oc-label"><span class="oc-radio"></span><span>'+b+'</span></div></label>';
     });
     wrap.innerHTML=html;
   }
@@ -1392,20 +1506,161 @@ function renderRevenueOptions(listingVal){
   if(dc) dc.style.display=(listingVal==='26-100'||listingVal==='100+')?'':'none';
 }
 
-/* Auto-advance taps: listings, issue, pricing, and the dynamic revenue bands */
+/* ── Fullscreen focus mode ──────────────────────────────────
+   enterFs promotes the card on the first answer tap — no exit control in the UI by
+   design; the form is the page from here. The one escape is the browser back gesture:
+   entering pushes a #focus history entry, so back collapses the takeover to the plain
+   landing page (answers intact) instead of bouncing the visitor off the site, and
+   forward steps back into it. Body scroll locks via position:fixed with the scroll
+   offset pinned (iOS Safari ignores overflow:hidden on body), which also keeps the
+   page from visibly jumping behind the backdrop while it fades in. */
+function enterFs(skipPush,via){
+  if(fsActive) return;
+  var card=document.getElementById('audit-form'); if(!card) return;
+  fsActive=true; fsEntering=true;
+  fsScrollY=window.pageYOffset;
+  // The expansion is a box glide, not a re-appearance: capture the card's inline
+  // geometry, flip the page into fs mode, capture where the stylesheet wants the card,
+  // then animate the real box (top/left/size/padding/radius) between the two rects.
+  // Reading the destination from a live rect (not computing it) keeps mobile inset:0,
+  // desktop translate-centring, and env(safe-area-*) all correct for free.
+  var r1=card.getBoundingClientRect();
+  var c1=getComputedStyle(card);
+  var startPad=c1.padding, startRad=c1.borderRadius;
+  // Placeholder in the card's slot: the page behind must not reflow when the card goes
+  // fixed — content jumping up under the fading scrim reads as the widget glitching.
+  var ph=document.createElement('div');
+  ph.id='fs-ph'; ph.style.height=r1.height+'px'; ph.setAttribute('aria-hidden','true');
+  card.parentNode.insertBefore(ph,card);
+  // pad for the vanishing scrollbar so the page doesn't reflow behind the fading scrim
+  var sbw=window.innerWidth-document.documentElement.clientWidth;
+  if(sbw>0) document.body.style.paddingRight=sbw+'px';
+  document.body.style.top=(-fsScrollY)+'px';
+  document.body.classList.add('rw-fs');
+  var r2=card.getBoundingClientRect();
+  var c2=getComputedStyle(card);
+  var endPad=c2.padding, endRad=c2.borderRadius;
+  var endBw=c2.borderTopWidth, endBc=c2.borderTopColor;
+  // Entry from a CTA elsewhere on the page: the card is off-screen, and a glide from its
+  // real position would streak in from a screen-height away. Start from a slightly inset
+  // copy of the destination and fade in instead — the grow-from-the-card glide is only
+  // for when the card is actually in view.
+  var vh=window.innerHeight||document.documentElement.clientHeight;
+  var offscreen=r1.bottom<=0||r1.top>=vh;
+  var start=offscreen
+    ? {top:r2.top+r2.height*.04,left:r2.left+r2.width*.04,width:r2.width*.92,height:r2.height*.92}
+    : r1;
+  var s=card.style;
+  s.transition='none'; s.transform='none'; s.margin='0'; s.maxHeight='none';
+  s.top=start.top+'px'; s.left=start.left+'px'; s.width=start.width+'px'; s.height=start.height+'px';
+  s.padding=offscreen?endPad:startPad; s.borderRadius=offscreen?endRad:startRad;
+  s.borderStyle='solid'; s.borderWidth=offscreen?endBw:c1.borderTopWidth; s.borderColor=offscreen?endBc:c1.borderTopColor;
+  s.opacity=offscreen?'0':'1';
+  void card.offsetHeight;
+  var DUR='.34s', EASE='cubic-bezier(.16,1,.3,1)';
+  s.transition=['top','left','width','height','padding','border-radius','border-width','border-color','opacity'].map(function(p){return p+' '+DUR+' '+EASE;}).join(',');
+  s.top=r2.top+'px'; s.left=r2.left+'px'; s.width=r2.width+'px'; s.height=r2.height+'px';
+  s.padding=endPad; s.borderRadius=endRad;
+  s.borderWidth=endBw; s.borderColor=endBc;
+  s.opacity='1';
+  setTimeout(function(){
+    // hand geometry back to the stylesheet — values match the landed box, so no jump —
+    // and release the deferred first step swap (see nextStep)
+    s.transition='';s.top='';s.left='';s.width='';s.height='';s.padding='';s.borderRadius='';s.transform='';s.margin='';s.maxHeight='';
+    s.borderStyle='';s.borderWidth='';s.borderColor='';s.opacity='';
+    fsEntering=false;
+  },360);
+  if(!skipPush){ try{ history.pushState({rwFs:1},'','#focus'); }catch(e){} }
+  rwTrack('form_fullscreen_open',{page:'audit',step:current+1,via:via||'answer'});
+}
+/* Browser back while fullscreen → collapse to the plain landing page. Same DOM node,
+   so answers and step survive; a later answer tap re-enters the takeover. */
+function exitFs(){
+  if(!fsActive) return;
+  fsActive=false;
+  var card=document.getElementById('audit-form');
+  if(card){ // snap out of any mid-glide inline geometry before handing back to the stylesheet
+    var s=card.style;
+    s.transition='';s.top='';s.left='';s.width='';s.height='';s.padding='';s.borderRadius='';
+    s.transform='';s.margin='';s.maxHeight='';s.borderStyle='';s.borderWidth='';s.borderColor='';s.opacity='';
+  }
+  document.body.classList.remove('rw-fs');
+  document.body.style.top='';
+  document.body.style.paddingRight='';
+  var ph=document.getElementById('fs-ph'); if(ph) ph.remove();
+  window.scrollTo({top:fsScrollY,behavior:'instant'});
+  rwTrack('form_fullscreen_exit',{page:'audit',via:fsExitVia||'browser_back',step:current+1});
+  fsExitVia='';
+}
+var fsExitVia='';
+/* The ✕ rides the same rail as browser back: pop our #focus entry so history stays clean
+   and the popstate handler does the collapse. Falls back to a direct exit if the entry
+   isn't ours (pushState failed or was blocked). */
+function closeFsButton(){
+  if(!fsActive) return;
+  fsExitVia='close_button';
+  if(history.state&&history.state.rwFs){ history.back(); }
+  else { exitFs(); try{ history.replaceState(null,'',location.pathname+location.search); }catch(e){} }
+}
+(function(){
+  var card=document.getElementById('audit-form'); if(!card) return;
+  card.addEventListener('change',function(e){
+    var n=e.target&&e.target.name;
+    if(n==='listings'||n==='issue'||n==='pricing'||n==='revenue') enterFs();
+  });
+  var x=document.getElementById('fc-close'); if(x) x.addEventListener('click',closeFsButton);
+  window.addEventListener('popstate',function(){
+    if(fsActive){ exitFs(); return; }           // back: down to the landing page
+    if(location.hash==='#focus') enterFs(true,'forward'); // forward: back into the takeover (no new entry)
+  });
+  // a reload while fullscreen leaves a stale #focus in the URL — start clean
+  if(location.hash==='#focus'){ try{ history.replaceState(null,'',location.pathname+location.search); }catch(e){} }
+})();
+
+/* Auto-advance taps: listings, issue, pricing, and the dynamic revenue bands.
+   scheduleAdvance captures the step at scheduling time so two answer taps inside one
+   delay window advance exactly once — a timer whose step already moved on is void. */
+function scheduleAdvance(){
+  var from=current;
+  setTimeout(function(){ if(current===from) nextStep(); },180);
+}
 document.querySelectorAll('input[name="listings"]').forEach(function(r){
-  r.addEventListener('change',function(){ rwTrack('select_portfolio_size',{size:r.value,page:'audit'}); renderRevenueOptions(r.value); setTimeout(nextStep,180); });
+  r.addEventListener('change',function(){ rwTrack('select_portfolio_size',{size:r.value,page:'audit'}); renderRevenueOptions(r.value); scheduleAdvance(); });
 });
 document.querySelectorAll('input[name="issue"]').forEach(function(r){
-  r.addEventListener('change',function(){ rwTrack('select_issue',{issue:r.value,page:'audit'}); setTimeout(nextStep,180); });
+  r.addEventListener('change',function(){ rwTrack('select_issue',{issue:r.value,page:'audit'}); scheduleAdvance(); });
 });
 document.querySelectorAll('input[name="pricing"]').forEach(function(r){
-  r.addEventListener('change',function(){ rwTrack('select_pricing',{pricing:r.value,page:'audit'}); setTimeout(nextStep,180); });
+  r.addEventListener('change',function(){ rwTrack('select_pricing',{pricing:r.value,page:'audit'}); scheduleAdvance(); });
 });
 /* revenue radios are rendered dynamically — delegate the change to auto-advance */
 document.addEventListener('change',function(e){
-  if(e.target&&e.target.name==='revenue'){ rwTrack('select_revenue',{revenue:e.target.value,page:'audit'}); setTimeout(nextStep,180); }
+  if(e.target&&e.target.name==='revenue'){ rwTrack('select_revenue',{revenue:e.target.value,page:'audit'}); scheduleAdvance(); }
 });
+/* Re-selecting the already-checked answer advances too. After Back, the previous answer
+   is still checked, and a checked radio can't fire change — without this, the only way
+   forward was changing the answer. Click runs before change (checkedness is set before
+   the click event dispatches; change fires after), so a click whose value matches the
+   group's last committed value is a confirm-tap, not a new selection: advance without
+   re-firing the select_* tracking. */
+(function(){
+  var card=document.getElementById('audit-form'); if(!card) return;
+  var lastVal={};
+  card.addEventListener('change',function(e){
+    var n=e.target&&e.target.name;
+    if(n==='listings'||n==='issue'||n==='pricing'||n==='revenue') lastVal[n]=e.target.value;
+  });
+  card.addEventListener('click',function(e){
+    var t=e.target;
+    if(!t||t.type!=='radio') return;
+    var n=t.name;
+    if(n!=='listings'&&n!=='issue'&&n!=='pricing'&&n!=='revenue') return;
+    // only the visible step's radios count — never advance off a hidden step's control
+    var stepEl=t.closest('.step');
+    if(!stepEl||!/(?:^|\s)(?:active|enter-from-below|enter-from-above)(?:\s|$)/.test(stepEl.className)) return;
+    if(lastVal[n]===t.value){ enterFs(); scheduleAdvance(); } // a confirm-tap is still an answer tap
+  });
+})();
 
 /* Phone input: country-code-aware live mask + validation (US/Canada = 10 digits; intl = 7-15) */
 function rwPhoneDigits(v){ return (String(v||'').match(/\d/g)||[]).join(''); }
@@ -1447,7 +1702,8 @@ document.querySelectorAll('.field-input').forEach(function(input){
 /* Submit — fire Lead, post webhook, stash context, go to booking page */
 var submitted=false;
 function submitForm(){
-  if(!validateStep(4)) return;
+  if(!validateStep(4)){ prevStep(); return; } // URL step was skipped/emptied somehow — send them back to it
+  if(!validateStep(5)) return;
   if(submitted) return;
   const btn=document.getElementById('btn-submit');
   btn.disabled=true;
@@ -1545,17 +1801,17 @@ function submitForm(){
 document.addEventListener('keydown',function(e){
   if(e.key!=='Enter') return;
   if(e.target.tagName==='TEXTAREA') return;
-  if(current===4){e.preventDefault();submitForm();}
+  if(current===4){e.preventDefault();nextStep();}       // Enter in the URL field → continue
+  else if(current===5){e.preventDefault();submitForm();}
 });
 
-/* Smooth-scroll CTAs to the form + focus first option */
+/* Every other "Get my free audit" CTA on the page (report section, final band, sticky
+   mobile bar) opens the fullscreen form at whatever step the visitor is on — the first
+   question for a fresh visitor — instead of scrolling them back up to the inline card. */
 document.querySelectorAll('.js-to-form').forEach(function(a){
   a.addEventListener('click',function(e){
     e.preventDefault();
-    scrollFormToCentre();
-    setTimeout(function(){
-      if(current===0){var first=document.querySelector('input[name="listings"]');if(first)first.focus();}
-    },400);
+    enterFs(false,'cta');
   });
 });
 
@@ -1593,6 +1849,17 @@ document.querySelectorAll('.faq').forEach(function(d){
 (function(){var t=document.getElementById('case-track');if(!t)return;[].slice.call(t.children).forEach(function(c){var d=c.cloneNode(true);d.setAttribute('aria-hidden','true');d.setAttribute('data-clone','');t.appendChild(d);});})();
 /* Same duplication for the reviews marquee */
 (function(){var t=document.getElementById('review-track');if(!t)return;[].slice.call(t.children).forEach(function(c){var d=c.cloneNode(true);d.setAttribute('aria-hidden','true');d.setAttribute('data-clone','');t.appendChild(d);});})();
+
+/* Pause the always-on animations (edge glow, two marquees) while off-screen */
+(function(){
+  if(!('IntersectionObserver' in window)) return;
+  var targets=[].slice.call(document.querySelectorAll('.form-glow,.case-carousel,.review-carousel'));
+  if(!targets.length) return;
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){ en.target.classList.toggle('is-idle', !en.isIntersecting); });
+  },{rootMargin:'80px 0px'});
+  targets.forEach(function(t){ io.observe(t); });
+})();
 
 /* Sticky mobile CTA: only show once the hero form has scrolled out of view (hidden while the form is on screen) */
 (function(){
