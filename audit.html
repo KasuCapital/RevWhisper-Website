@@ -158,12 +158,12 @@ a{color:inherit}
    Off in fullscreen: the card is the page there. */
 @property --rw-angle{syntax:'<angle>';inherits:false;initial-value:0deg}
 .form-glow::before,.form-glow::after{content:'';position:absolute;z-index:0;pointer-events:none;border-radius:calc(var(--radius-lg) + 2px);
-  background:conic-gradient(from var(--rw-angle),rgba(74,103,65,.16) 0deg,rgba(74,103,65,.16) 130deg,#4A6741 200deg,#9dbb92 238deg,#f1f7ee 262deg,#9dbb92 286deg,#4A6741 324deg,rgba(74,103,65,.16) 360deg);
-  animation:rwBeam 6s linear infinite}
-.form-glow::before{inset:-2px}
-.form-glow::after{inset:-6px;filter:blur(22px);opacity:.7;animation:rwBeam 6s linear infinite,rwBreathe 4s ease-in-out infinite alternate}
+  background:conic-gradient(from var(--rw-angle),rgba(74,103,65,.12) 0deg,rgba(74,103,65,.12) 130deg,#5f7d56 200deg,#a9c49f 238deg,#e6efe2 262deg,#a9c49f 286deg,#5f7d56 324deg,rgba(74,103,65,.12) 360deg);
+  animation:rwBeam 8s linear infinite}
+.form-glow::before{inset:-1.5px}
+.form-glow::after{inset:-4px;filter:blur(18px);opacity:.4;animation:rwBeam 8s linear infinite,rwBreathe 5s ease-in-out infinite alternate}
 @keyframes rwBeam{to{--rw-angle:360deg}}
-@keyframes rwBreathe{from{opacity:.5}to{opacity:.9}}
+@keyframes rwBreathe{from{opacity:.28}to{opacity:.5}}
 body.rw-fs .form-glow::before,body.rw-fs .form-glow::after{display:none}
 /* Continuous animations pause while their element is off-screen (IntersectionObserver
    toggles .is-idle) — no visual change, but the blurred glow and the two marquees stop
