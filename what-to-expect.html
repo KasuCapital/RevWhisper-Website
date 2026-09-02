@@ -538,8 +538,33 @@ function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){retur
 function showCalError(message,options){
   const slot=document.getElementById('cal-error-slot'); if(!slot) return;
   const showRetry=options&&options.retry!==false;
-  slot.innerHTML=`<div class="cal-error"><div>${esc(message)}</div>${showRetry?'<div style="margin-top:8px"><a href="#" id="cal-retry">Try again</a></div>':''}</div>`;
+  const showFallback=options&&options.fallback;
+  const links=(showRetry?'<a href="#" id="cal-retry">Try again</a>':'')+(showFallback?(showRetry?' &nbsp;·&nbsp; ':'')+'<a href="#" id="cal-fallback">Pick a time on Cal.com instead</a>':'');
+  slot.innerHTML=`<div class="cal-error"><div>${esc(message)}</div>${links?`<div style="margin-top:8px">${links}</div>`:''}</div>`;
   const r=document.getElementById('cal-retry'); if(r) r.addEventListener('click',function(e){e.preventDefault();slot.innerHTML='';booking.loaded=false;booking.loading=false;loadSlots();});
+  const f=document.getElementById('cal-fallback'); if(f) f.addEventListener('click',function(e){e.preventDefault();fallbackToCalRedirect('user_chose_fallback');});
+}
+/* Emergency exit when OUR calendar can't load: Cal.com's hosted page for the same event type,
+   prefilled with what we know. Only ever shown on failure — the widget is the normal path. */
+const CAL_FALLBACK_BASE='https://cal.com/team/revwhisper/discovery';
+function fallbackToCalRedirect(reason){
+  const l=booking.lead||{};
+  try{ rwTrack('booking_fallback',{reason:reason||'unknown',page:'what-to-expect'}); }catch(e){}
+  const params=new URLSearchParams({name:l.name||'',email:l.email||'',phone:l.phone||''});
+  window.location.href=`${CAL_FALLBACK_BASE}?${params.toString()}`;
+}
+/* Tell ops about failures only this browser saw. The API emails ops itself when IT fails and marks
+   the response `alerted:true`, so this covers the rest: the request never left the browser, a 200
+   the page couldn't use, or a function that crashed before its own alerting ran. Never throws. */
+function reportClientError(stage,err,serverBody){
+  try{
+    const body=serverBody||(err&&err.serverBody)||null;
+    if(body&&body.alerted) return;
+    const payload={page:'what-to-expect',stage:stage,status:(err&&err.status)||undefined,
+      message:String((err&&err.message)||err||'unknown error').slice(0,500),
+      detail:{url:location.pathname+location.search,tz:booking.timeZone,server:body?JSON.stringify(body).slice(0,400):null}};
+    fetch('/api/client-error',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),keepalive:true}).catch(function(){});
+  }catch(e){}
 }
 function recoverStaleSlot(){
   booking.bookingInFlight=false;
@@ -556,13 +581,16 @@ async function loadSlots(){
   const grid=document.getElementById('cal-grid');
   if(grid) grid.innerHTML='<div class="cal-loading" style="grid-column:1/-1"><div class="cal-spinner"></div><span>Loading availability…</span></div>';
   const start=new Date();start.setHours(0,0,0,0);
-  const end=new Date(start.getTime());end.setDate(end.getDate()+60);
+  // Absolute 60×24h window, NOT setDate(+60): calendar-day math comes out at 60 days + 1 hour when a
+  // fall-back DST change sits inside the window (Europe from late Aug, US from early Sep), and the
+  // API refused that as "may not exceed 60 days" — every visitor in those zones got a dead calendar.
+  const end=new Date(start.getTime()+60*24*60*60*1000);
   booking.rangeStart=start;booking.rangeEnd=end;
   booking.visibleMonth=booking.visibleMonth||new Date(start.getFullYear(),start.getMonth(),1);
   const params=new URLSearchParams({start:start.toISOString(),end:end.toISOString(),timeZone:booking.timeZone});
   try{
     const res=await fetch(`${CAL_SLOTS_ENDPOINT}?${params.toString()}`);
-    if(!res.ok){const b=await res.json().catch(()=>({}));throw new Error(b.error||`Cal.com returned ${res.status}`);}
+    if(!res.ok){const b=await res.json().catch(()=>({}));const e=new Error(b.error||`Cal.com returned ${res.status}`);e.serverBody=b;e.status=res.status;throw e;}
     const json=await res.json();
     const data=(json&&json.data)||{};
     booking.slotsByDate={};
@@ -576,7 +604,8 @@ async function loadSlots(){
     }
   }catch(err){
     console.error('loadSlots failed:',err);
-    showCalError(err&&err.message?`We couldn't load availability: ${err.message}`:"We couldn't load availability.",{retry:true});
+    reportClientError('availability',err);
+    showCalError(err&&err.message?`We couldn't load availability: ${err.message}`:"We couldn't load availability.",{retry:true,fallback:true});
     if(grid) grid.innerHTML='';
   }finally{booking.loading=false;}
 }
@@ -741,14 +770,14 @@ async function confirmBooking(){
   var xConversionId=typeof rwXConversionId==='function'?rwXConversionId('audit_call'):'audit_call_'+Date.now();
   var fbp=rwCookie('_fbp'), fbc=rwCookie('_fbc');
   const payload={start:iso,name:l.name,email:l.email,phone:l.phone,timeZone:booking.timeZone,source:'what-to-expect',attribution:l.attribution||{},fbEventId:evId,fbp:fbp,fbc:fbc,xConversionId:xConversionId,twclid:(l.attribution&&l.attribution.twclid)||''};
-  let bookingResult=null,bookingError=null,shouldFallback=false,slotUnavailable=false;
+  let bookingResult=null,bookingError=null,bookingBody=null,shouldFallback=false,slotUnavailable=false;
   try{
     const res=await fetch(CAL_BOOKING_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
     const body=await res.json().catch(()=>({}));
     if(!res.ok||!body.ok){
       if(body&&body.code==='slot_unavailable'){slotUnavailable=true;}
-      else if(body&&body.fallback){shouldFallback=true;}
-      else throw new Error((body&&body.error)||`Cal.com returned ${res.status}`);
+      else if(body&&body.fallback){shouldFallback=true;bookingBody=body;}
+      else{const e=new Error((body&&body.error)||`Cal.com returned ${res.status}`);e.serverBody=body;e.status=res.status;throw e;}
     }
     else{ bookingResult=body.booking; }
   }catch(err){ bookingError=err; }
@@ -759,6 +788,7 @@ async function confirmBooking(){
   // our page, re-enable the button, and let them retry. No off-site redirect.
   if(shouldFallback||bookingError){
     console.error('Booking failed:',bookingError||'scheduler_unavailable');
+    reportClientError('booking',bookingError||new Error('scheduler unavailable'),bookingBody);
     booking.bookingInFlight=false;
     const fromLoader=current;current--;transitionStep(fromLoader,current,'backward'); // loader → details
     setTimeout(function(){

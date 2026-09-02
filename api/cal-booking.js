@@ -263,8 +263,9 @@ module.exports = async function handler(req, res) {
 
   if (attempt.kind === 'network') {
     console.error('cal-booking upstream error:', attempt.err && attempt.err.name, attempt.err && attempt.err.message);
-    if (!isCanary) await sendBookingAlert({ source: 'live booking', reason: 'Could not reach Cal.com (network/timeout)', detail: (attempt.err && attempt.err.message) || 'network error' });
-    return sendJson(res, 502, { error: 'Unable to reach Cal.com right now.', fallback: true });
+    // `alerted` tells the widget ops already got an email, so it skips its own /api/client-error report.
+    const alertResult = isCanary ? null : await sendBookingAlert({ source: 'live booking', reason: 'Could not reach Cal.com (network/timeout)', detail: (attempt.err && attempt.err.message) || 'network error' });
+    return sendJson(res, 502, { error: 'Unable to reach Cal.com right now.', fallback: true, alerted: !!(alertResult && alertResult.ok) });
   }
 
   const { status, body: upstreamBody } = attempt;
@@ -283,13 +284,16 @@ module.exports = async function handler(req, res) {
     // a malformed/synthetic request (the UI never sends a past slot) — neither means an outage.
     // Everything else (config/parse errors like 4.required, 5xx, broken auth, throttling) does.
     const benign = slotGone || /in the past/i.test(lower);
+    let alerted = false;
     if (!isCanary && !benign) {
-      await sendBookingAlert({ source: 'live booking', status, reason: 'Cal.com rejected the booking', detail: message });
+      const r = await sendBookingAlert({ source: 'live booking', status, reason: 'Cal.com rejected the booking', detail: message });
+      alerted = !!(r && r.ok);
     }
     return sendJson(res, status, {
       error: message,
       code: slotGone ? 'slot_unavailable' : undefined,
-      fallback
+      fallback,
+      alerted
     });
   }
 

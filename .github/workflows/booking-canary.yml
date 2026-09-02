@@ -1,7 +1,14 @@
 name: Booking canary
 
-# Synthetic monitor for the /audit + /get-started booking flow.
-# Every ~10 minutes it sends a DELIBERATELY-PAST-DATE booking probe to production. A past date can
+# Synthetic monitor for the /audit + /get-started booking flow. Two probes, every ~10 minutes:
+#
+# 1) AVAILABILITY — GET /api/cal-slots with exactly the windows the calendar pages request, from the
+#    two time zones that exposed the Sept-2026 DST bug (a 60-calendar-day window across a fall-back
+#    change is 60 days + 1 hour, which the API used to reject as "may not exceed 60 days" — the
+#    calendar was dead for every European visitor for six days while this canary stayed green, because
+#    it only probed bookings). Healthy = HTTP 200 with a `data` object for every shape.
+#
+# 2) BOOKING — it sends a DELIBERATELY-PAST-DATE booking probe to production. A past date can
 # never create a real booking, but it still exercises the full path (our handler → Cal.com → the
 # event-type config parse). The ONLY healthy outcome is Cal replying "Attempting to book a meeting
 # in the past." — that proves validation passed. Anything else (e.g. the "4.required" config-parse
@@ -28,7 +35,64 @@ jobs:
   probe:
     runs-on: ubuntu-latest
     steps:
+      - name: Probe production availability endpoint (what the calendar pages request)
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          ENDPOINT: https://revwhisper.com/api/cal-slots
+        run: |
+          set -uo pipefail
+          FAILS=""
+          for ZONE in Europe/Amsterdam America/New_York; do
+            # Local midnight in ZONE, then both window shapes: absolute 60×24h (what the widgets send
+            # now) and 60 calendar days (what they used to send — must ALSO succeed, the API is
+            # supposed to tolerate it so this exact bug cannot come back).
+            read -r START END_ABS END_CAL < <(TZ="$ZONE" node -e '
+              const s=new Date(); s.setHours(0,0,0,0);
+              const abs=new Date(s.getTime()+60*24*60*60*1000);
+              const cal=new Date(s.getTime()); cal.setDate(cal.getDate()+60);
+              console.log(s.toISOString(), abs.toISOString(), cal.toISOString());')
+            for END in "$END_ABS" "$END_CAL"; do
+              URL="$ENDPOINT?start=$START&end=$END&timeZone=${ZONE/\//%2F}"
+              RESP=$(curl -sS -m 30 -w $'\n%{http_code}' "$URL" || printf '\n000')
+              CODE=$(printf '%s' "$RESP" | tail -n1)
+              JSON=$(printf '%s' "$RESP" | sed '$d')
+              if [ "$CODE" = "200" ] && printf '%s' "$JSON" | jq -e '.data|type=="object"' >/dev/null 2>&1; then
+                echo "✅ $ZONE  $START → $END  HTTP 200 ($(printf '%s' "$JSON" | jq '.data|keys|length') days with openings)"
+              else
+                echo "❌ $ZONE  $START → $END  HTTP $CODE  $(printf '%s' "$JSON" | head -c 300)"
+                FAILS="$FAILS<li><code>$ZONE</code> $START → $END: HTTP $CODE <pre style=\"background:#f5f5f5;padding:8px;border-radius:6px;white-space:pre-wrap;word-break:break-word;font-size:12px\">$(printf '%s' "$JSON" | head -c 400 | sed 's/</\&lt;/g')</pre></li>"
+              fi
+            done
+          done
+          [ -z "$FAILS" ] && { echo "✅ Availability healthy in every window shape."; exit 0; }
+
+          echo "❌ Availability UNHEALTHY — sending urgent alert."
+          if [ -n "${RESEND_API_KEY:-}" ]; then
+            PAYLOAD=$(jq -n --arg fails "$FAILS" '{
+              from: "RevWhisper <team@hello.revwhisper.com>",
+              to: ["bgamble@revwhisper.com"],
+              subject: "🚨 URGENT: RevWhisper booking calendar canary FAILED — visitors cannot see availability",
+              html: ("<div style=\"font-family:system-ui,Arial,sans-serif;max-width:560px;margin:0 auto\">"
+                + "<div style=\"background:#b3261e;color:#fff;padding:18px 22px;border-radius:10px 10px 0 0\">"
+                + "<div style=\"font-size:12px;letter-spacing:.09em;text-transform:uppercase;opacity:.85\">RevWhisper · Booking Monitor</div>"
+                + "<div style=\"font-size:22px;font-weight:800;margin-top:4px\">🚨 Availability canary FAILED</div></div>"
+                + "<div style=\"border:1px solid #eee;border-top:none;border-radius:0 0 10px 10px;padding:22px;color:#1a1a1a\">"
+                + "<p style=\"font-size:16px\"><strong>The scheduled health check could not load availability the way the calendar pages request it. Visitors on /audit-booking, /get-started and /what-to-expect are likely seeing an error instead of the calendar.</strong></p>"
+                + "<ul style=\"font-size:13px;padding-left:18px\">" + $fails + "</ul>"
+                + "<p style=\"font-size:13px;color:#555\">Open <code>revwhisper.com/audit-booking?preview=calendar</code> to see what visitors see, then the <code>/api/cal-slots</code> Vercel logs and Cal.com status.</p>"
+                + "</div></div>")
+            }')
+            curl -sS -m 30 -X POST https://api.resend.com/emails \
+              -H "Authorization: Bearer $RESEND_API_KEY" \
+              -H 'Content-Type: application/json' \
+              -d "$PAYLOAD" || echo "(alert email send failed)"
+          else
+            echo "(RESEND_API_KEY not set — skipping email; this red job is itself the alert)"
+          fi
+          exit 1
+
       - name: Probe production booking endpoint (past date — never books)
+        if: always()
         env:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           ENDPOINT: https://revwhisper.com/api/cal-booking

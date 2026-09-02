@@ -3,8 +3,16 @@
  * Run: node scripts/test-cal-endpoints.cjs
  */
 const path = require('node:path');
+// Capture ops alerts instead of emailing them — every alert path is asserted below.
+const alerts = [];
+require.cache[require.resolve(path.join(__dirname, '..', 'api', '_alert.js'))] = {
+  id: 'mock-alert', filename: 'mock-alert', loaded: true, children: [],
+  exports: { sendBookingAlert: async (a) => { alerts.push(a); return { ok: true }; } }
+};
 const booking = require(path.join(__dirname, '..', 'api', 'cal-booking.js'));
 const slots = require(path.join(__dirname, '..', 'api', 'cal-slots.js'));
+const clientError = require(path.join(__dirname, '..', 'api', 'client-error.js'));
+const DAY = 24 * 60 * 60 * 1000;
 
 let passed = 0, failed = 0;
 const fails = [];
@@ -201,29 +209,37 @@ async function run() {
   const slotsUrl = '/api/cal-slots?start=2026-07-01T00:00:00.000Z&end=2026-07-20T00:00:00.000Z&timeZone=America/New_York';
   const slotsData = { data: { '2026-07-01': [{ start: '2026-07-01T09:00:00.000-04:00' }] } };
 
-  // 13. Happy path → 200, body passthrough, cached
+  // 13. Happy path → 200, body passthrough, cached, no alert
   installFetch([fakeResponse(200, slotsData)]);
+  alerts.length = 0;
   r = mockRes();
   await slots({ method: 'GET', url: slotsUrl }, r);
   check('slots/happy: 200', r.statusCode === 200);
+  check('slots/happy: no alert', alerts.length === 0);
   check('slots/happy: passthrough data', r.json().data['2026-07-01'][0].start === slotsData.data['2026-07-01'][0].start);
   check('slots/happy: cached header', /max-age=60/.test(r.headers['cache-control']));
 
   // 14. Upstream non-OK with {error:{message}} → normalized string (NOT [object Object])
   installFetch([fakeResponse(404, { status: 'error', error: { code: 'NotFound', message: 'event type not found' } })]);
+  alerts.length = 0;
   r = mockRes();
   await slots({ method: 'GET', url: slotsUrl }, r);
   check('slots/err-normalize: status passthrough 404', r.statusCode === 404);
+  check('slots/err-normalize: ops alerted', alerts.length === 1 && alerts[0].source === 'availability' && alerts[0].status === 404, JSON.stringify(alerts));
+  check('slots/err-normalize: body says alerted', r.json().alerted === true);
   check('slots/err-normalize: error is string', typeof r.json().error === 'string' && r.json().error === 'event type not found', JSON.stringify(r.json().error));
   check('slots/err-normalize: not [object Object]', r.json().error !== '[object Object]');
   check('slots/err-normalize: no-store', r.headers['cache-control'] === 'no-store');
 
   // 15. Network error retried (2 calls) → 502
   installFetch(['NETWORK', 'NETWORK']);
+  alerts.length = 0;
   r = mockRes();
   await slots({ method: 'GET', url: slotsUrl }, r);
   check('slots/network: 502', r.statusCode === 502);
   check('slots/network: retried (2 calls)', fetchCalls.length === 2, `calls=${fetchCalls.length}`);
+  check('slots/network: ops alerted', alerts.length === 1 && /reach Cal.com/.test(alerts[0].reason), JSON.stringify(alerts));
+  check('slots/network: body says alerted', r.json().alerted === true);
 
   // 16. 5xx then 200 (retry recovers) → 200
   installFetch([fakeResponse(503, { error: { message: 'unavailable' } }), fakeResponse(200, slotsData)]);
@@ -232,23 +248,78 @@ async function run() {
   check('slots/retry-recover: 200 after 503', r.statusCode === 200, `got ${r.statusCode}`);
   check('slots/retry-recover: 2 calls', fetchCalls.length === 2);
 
-  // 17. end <= start → 400
+  // 17. end <= start → 400, and ops hear about it (only our widget builds these URLs)
   installFetch([]);
+  alerts.length = 0;
   r = mockRes();
   await slots({ method: 'GET', url: '/api/cal-slots?start=2026-07-20T00:00:00.000Z&end=2026-07-01T00:00:00.000Z&timeZone=UTC' }, r);
   check('slots/bad-range: 400', r.statusCode === 400 && fetchCalls.length === 0);
+  check('slots/bad-range: ops alerted', alerts.length === 1 && alerts[0].status === 400, JSON.stringify(alerts));
 
-  // 18. range > 60 days → 400
+  // 17b. no dates at all (scanner/bot) → 400 but NO alert
   installFetch([]);
+  alerts.length = 0;
+  r = mockRes();
+  await slots({ method: 'GET', url: '/api/cal-slots', headers: {} }, r);
+  check('slots/no-params: 400', r.statusCode === 400);
+  check('slots/no-params: no alert', alerts.length === 0 && r.json().alerted === false);
+
+  // 18. Sept-2026 incident: 60 calendar days across a fall-back DST change = 60d + 1h in absolute
+  //     time. Must be served as-is (NOT rejected, NOT clamped), no alert.
+  const dstStart = new Date('2026-09-01T22:00:00.000Z'); // Sept 2 00:00 Europe/Amsterdam (CEST)
+  const dstEnd = new Date(dstStart.getTime() + 60 * DAY + 60 * 60 * 1000); // Nov 1 00:00 CET
+  installFetch([fakeResponse(200, slotsData)]);
+  alerts.length = 0;
+  r = mockRes();
+  await slots({ method: 'GET', url: `/api/cal-slots?start=${dstStart.toISOString()}&end=${dstEnd.toISOString()}&timeZone=Europe/Amsterdam` }, r);
+  check('slots/dst-60d+1h: 200', r.statusCode === 200, `got ${r.statusCode} ${r._body}`);
+  check('slots/dst-60d+1h: end passed through unclamped', fetchCalls.length === 1 && new URL(fetchCalls[0].url).searchParams.get('end') === dstEnd.toISOString(), fetchCalls[0] && fetchCalls[0].url);
+  check('slots/dst-60d+1h: no alert', alerts.length === 0);
+
+  // 18b. US visitor on Sept 3 2026 (the day the US window first crosses Nov 1) — same shape
+  const usStart = new Date('2026-09-03T05:00:00.000Z');
+  const usEnd = new Date('2026-11-02T06:00:00.000Z');
+  installFetch([fakeResponse(200, slotsData)]);
+  r = mockRes();
+  await slots({ method: 'GET', url: `/api/cal-slots?start=${usStart.toISOString()}&end=${usEnd.toISOString()}&timeZone=America/Chicago` }, r);
+  check('slots/dst-us: 200', r.statusCode === 200, `got ${r.statusCode} ${r._body}`);
+
+  // 18c. Pathologically long range (92 days) → NOT a 400 any more: clamped to 60 days and served
+  installFetch([fakeResponse(200, slotsData)]);
+  alerts.length = 0;
   r = mockRes();
   await slots({ method: 'GET', url: '/api/cal-slots?start=2026-07-01T00:00:00.000Z&end=2026-10-01T00:00:00.000Z&timeZone=UTC' }, r);
-  check('slots/too-long: 400', r.statusCode === 400 && fetchCalls.length === 0);
+  check('slots/too-long: served (200)', r.statusCode === 200 && fetchCalls.length === 1, `got ${r.statusCode}`);
+  check('slots/too-long: clamped to 60d', fetchCalls.length === 1 && new URL(fetchCalls[0].url).searchParams.get('end') === new Date(new Date('2026-07-01T00:00:00.000Z').getTime() + 60 * DAY).toISOString(), fetchCalls[0] && fetchCalls[0].url);
+  check('slots/too-long: no alert (handled, not failed)', alerts.length === 0);
 
   // 19. non-JSON upstream → 502
   installFetch([fakeResponse(200, null, { nonJson: true }), fakeResponse(200, null, { nonJson: true })]);
   r = mockRes();
   await slots({ method: 'GET', url: slotsUrl }, r);
   check('slots/nonjson: 502', r.statusCode === 502, `got ${r.statusCode}`);
+
+  // ───────────────────── client-error ─────────────────────
+  // 20. Browser report from a known page → 200 + ops alert with that page as the source
+  alerts.length = 0;
+  r = mockRes();
+  await clientError({ method: 'POST', url: '/api/client-error', headers: { 'user-agent': 'test' },
+    body: { page: 'audit-booking', stage: 'availability', status: 500, message: 'Cal.com returned 500', detail: { url: '/audit-booking' } } }, r);
+  check('client-error/valid: 200 ok', r.statusCode === 200 && r.json().ok === true, r._body);
+  check('client-error/valid: alerted', alerts.length === 1 && alerts[0].source === 'browser · audit-booking' && /availability/.test(alerts[0].reason), JSON.stringify(alerts));
+  check('client-error/valid: detail carries message', /Cal.com returned 500/.test(alerts[0] && alerts[0].detail));
+
+  // 21. Unknown page → 400, no alert (not a spam vector for arbitrary pages)
+  alerts.length = 0;
+  r = mockRes();
+  await clientError({ method: 'POST', url: '/api/client-error', headers: {}, body: { page: 'evil', message: 'x' } }, r);
+  check('client-error/unknown-page: 400', r.statusCode === 400);
+  check('client-error/unknown-page: no alert', alerts.length === 0);
+
+  // 22. GET → 405
+  r = mockRes();
+  await clientError({ method: 'GET', url: '/api/client-error', headers: {} }, r);
+  check('client-error/get: 405', r.statusCode === 405);
 
   // ── Summary ──
   console.log(`\n${'='.repeat(56)}`);

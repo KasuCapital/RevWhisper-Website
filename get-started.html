@@ -1351,6 +1351,22 @@ function recoverStaleSlot() {
   loadSlots();
 }
 
+/* Tell ops about failures only this browser saw. The API emails ops itself when IT fails and marks
+   the response `alerted:true`, so this covers the rest: the request never left the browser, a 200
+   the page couldn't use, or a function that crashed before its own alerting ran. Never throws. */
+function reportClientError(stage, err, serverBody) {
+  try {
+    const body = serverBody || (err && err.serverBody) || null;
+    if (body && body.alerted) return;
+    const payload = {
+      page: 'get-started', stage: stage, status: (err && err.status) || undefined,
+      message: String((err && err.message) || err || 'unknown error').slice(0, 500),
+      detail: { url: location.pathname + location.search, tz: booking.timeZone, server: body ? JSON.stringify(body).slice(0, 400) : null }
+    };
+    fetch('/api/client-error', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload), keepalive: true }).catch(function(){});
+  } catch (e) {}
+}
+
 async function loadSlots() {
   if (booking.loading || booking.loaded) return;
   booking.loading = true;
@@ -1361,8 +1377,10 @@ async function loadSlots() {
 
   const start = new Date();
   start.setHours(0,0,0,0);
-  const end = new Date(start.getTime());
-  end.setDate(end.getDate() + 60);
+  // Absolute 60×24h window, NOT setDate(+60): calendar-day math comes out at 60 days + 1 hour when a
+  // fall-back DST change sits inside the window (Europe from late Aug, US from early Sep), and the
+  // API refused that as "may not exceed 60 days" — every visitor in those zones got a dead calendar.
+  const end = new Date(start.getTime() + 60 * 24 * 60 * 60 * 1000);
 
   booking.rangeStart = start;
   booking.rangeEnd = end;
@@ -1378,7 +1396,9 @@ async function loadSlots() {
     const res = await fetch(`${CAL_SLOTS_ENDPOINT}?${params.toString()}`);
     if (!res.ok) {
       const body = await res.json().catch(() => ({}));
-      throw new Error(body.error || `Cal.com returned ${res.status}`);
+      const e = new Error(body.error || `Cal.com returned ${res.status}`);
+      e.serverBody = body; e.status = res.status; // lets reportClientError skip failures the API already emailed about
+      throw e;
     }
     const json = await res.json();
     const data = (json && json.data) || {};
@@ -1398,6 +1418,7 @@ async function loadSlots() {
     }
   } catch (err) {
     console.error('loadSlots failed:', err);
+    reportClientError('availability', err);
     showCalError(err && err.message ? `We couldn't load availability: ${err.message}` : "We couldn't load availability.", { retry: true, fallback: true });
     if (grid) grid.innerHTML = '';
   } finally {
@@ -1561,6 +1582,7 @@ async function selectSlot(iso, btn) {
   let bookingResult = null;
   let bookingError = null;
   let shouldFallback = false;
+  let bookingBody = null;
   let slotUnavailable = false;
 
   try {
@@ -1572,8 +1594,12 @@ async function selectSlot(iso, btn) {
     const body = await res.json().catch(() => ({}));
     if (!res.ok || !body.ok) {
       if (body && body.code === 'slot_unavailable') { slotUnavailable = true; }
-      else if (body && body.fallback) { shouldFallback = true; }
-      else throw new Error((body && body.error) || `Cal.com returned ${res.status}`);
+      else if (body && body.fallback) { shouldFallback = true; bookingBody = body; }
+      else {
+        const e = new Error((body && body.error) || `Cal.com returned ${res.status}`);
+        e.serverBody = body; e.status = res.status;
+        throw e;
+      }
     } else {
       bookingResult = body.booking;
     }
@@ -1588,6 +1614,7 @@ async function selectSlot(iso, btn) {
   }
 
   if (shouldFallback) {
+    reportClientError('booking', new Error('scheduler unavailable — visitor redirected to Cal.com'), bookingBody);
     fallbackToCalRedirect('upstream_error');
     return;
   }
@@ -1599,6 +1626,7 @@ async function selectSlot(iso, btn) {
 
   if (bookingError) {
     console.error('Booking failed:', bookingError);
+    reportClientError('booking', bookingError);
     booking.bookingInFlight = false;
     // Slide back to the time picker and surface the error
     const fromLoader = current;
