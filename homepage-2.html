@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RevWhisper · Homepage 2 Concept</title>
+<meta name="description" content="Fully managed Airbnb revenue and listing optimization. Rank-based pricing that holds your listing at the top of search at the highest price the market will pay.">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="/icons/favicon-light.svg" type="image/svg+xml" media="(prefers-color-scheme: light)">
+<link rel="icon" href="/icons/favicon-dark.svg" type="image/svg+xml" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/icons/favicon-light.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/header.css">
+<link rel="stylesheet" href="assets/home.css?v=4">
+<link rel="stylesheet" href="/assets/footer.css">
+<script defer src="/assets/header.js"></script>
+<style>
+/* ════════════════════════════════════════════════════════
+   HOMEPAGE 2 · VSL-aligned sections
+   New styles only; everything else inherits home.css
+   ════════════════════════════════════════════════════════ */
+
+/* ── Hero CTA row ── */
+.hero-cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:8px}
+.btn-ghost2{display:inline-block;padding:15px 28px;border-radius:var(--radius);border:1.5px solid var(--g300);background:#fff;color:var(--black);font-family:var(--body);font-size:15px;font-weight:500;text-decoration:none;transition:border-color .2s,box-shadow .2s}
+.btn-ghost2:hover{border-color:var(--accent);box-shadow:0 0 0 4px rgba(74,103,65,.07)}
+
+/* ── Two sides of the spectrum ── */
+#sides{padding:100px 0;background:var(--g50)}
+.sides-header{text-align:center;max-width:640px;margin:0 auto 48px}
+.sides-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:920px;margin:0 auto}
+.side-card{background:#fff;border:1.5px solid var(--g200);border-radius:var(--radius);padding:32px 28px;transition:border-color .2s,box-shadow .2s}
+.side-card:hover{border-color:var(--accent);box-shadow:0 0 0 4px rgba(74,103,65,.07)}
+.side-kicker{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.side-title{font-family:var(--heading);font-size:20px;font-weight:400;letter-spacing:-.01em;color:var(--black);line-height:1.35;margin-bottom:12px}
+.side-copy{font-size:14px;color:var(--g500);line-height:1.75;font-weight:300}
+.side-copy strong{font-weight:500;color:var(--black)}
+.sides-bridge{max-width:720px;margin:64px auto 0;text-align:center}
+.sides-bridge-kicker{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--g400);margin-bottom:18px}
+.sides-bridge-line{font-family:var(--heading);font-size:clamp(1.4rem,2.6vw,1.9rem);font-weight:400;color:var(--black);line-height:1.45;letter-spacing:-.01em}
+.sides-bridge-line em{font-style:italic;color:var(--accent)}
+.sides-bridge-after{font-size:14px;color:var(--g500);font-weight:300;line-height:1.7;margin-top:18px;max-width:520px;margin-left:auto;margin-right:auto}
+
+/* ── Same problem (myth vs reality) ── */
+#sameproblem{padding:100px 0;background:#fff}
+.sp-header{text-align:center;max-width:660px;margin:0 auto 52px}
+.sp-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:920px;margin:0 auto}
+.sp-panel{border:1.5px solid var(--g200);border-radius:var(--radius);padding:28px;background:var(--g50)}
+.sp-panel.reality{background:#fff;border-color:var(--accent-border)}
+.sp-panel-kicker{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;color:var(--g400)}
+.sp-panel.reality .sp-panel-kicker{color:var(--accent)}
+.sp-panel-title{font-family:var(--heading);font-size:18px;font-weight:400;color:var(--black);margin-bottom:10px;line-height:1.4}
+.sp-panel-copy{font-size:13.5px;color:var(--g500);line-height:1.75;font-weight:300;margin-bottom:20px}
+.sp-rank-static{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;color:var(--g500);background:var(--g100);border:1px solid var(--g200);border-radius:999px;padding:8px 16px}
+.sp-rank-static b{font-weight:500;color:var(--g600)}
+.sp-days{display:flex;gap:6px;flex-wrap:wrap}
+.sp-day{display:flex;flex-direction:column;align-items:center;gap:4px;font-family:var(--mono);background:var(--g50);border:1px solid var(--g200);border-radius:var(--radius-sm);padding:7px 9px;min-width:44px}
+.sp-day-name{font-size:8.5px;color:var(--g400);letter-spacing:.06em}
+.sp-day-rank{font-size:13px;font-weight:500;color:var(--black)}
+.sp-day.hot .sp-day-rank{color:var(--accent)}
+.sp-day.cold .sp-day-rank{color:var(--red)}
+.sp-blackbox{max-width:720px;margin:52px auto 0;text-align:center}
+.sp-blackbox p{font-size:15px;color:var(--g600);line-height:1.8;font-weight:300}
+.sp-blackbox p strong{font-weight:500;color:var(--black)}
+.sp-source{font-family:var(--mono);font-size:11px;color:var(--g400);line-height:1.7;margin-top:22px;max-width:600px;margin-left:auto;margin-right:auto}
+
+/* ── Bento additions ── */
+.bt-chart-rank{font-family:var(--mono);font-size:7.5px;fill:var(--accent);font-weight:500}
+.cvf{flex:1;display:flex;flex-direction:column;justify-content:center;gap:12px;padding:6px 0}
+.cvf-row{display:flex;align-items:center;gap:12px}
+.cvf-label{font-family:var(--mono);font-size:9.5px;color:var(--g500);letter-spacing:.05em;text-transform:uppercase;width:96px;flex-shrink:0;text-align:right}
+.cvf-bar{flex:1;height:22px;background:var(--g100);border-radius:var(--radius-sm);overflow:hidden}
+.cvf-bar i{display:block;height:100%;width:var(--w);background:var(--g300);border-radius:var(--radius-sm)}
+.cvf-bar.accent i{background:var(--accent)}
+.cvf-note{font-family:var(--mono);font-size:9.5px;color:var(--g400);line-height:1.6;margin-top:4px;padding-left:108px}
+.wkwrap{flex:1;display:flex;flex-direction:column;justify-content:center;gap:14px;padding:6px 0}
+.wkgrid{display:grid;grid-template-columns:repeat(13,1fr);gap:7px;max-width:340px}
+.wkdot{width:9px;height:9px;border-radius:50%;background:var(--g200)}
+.wkdot.on{background:var(--accent)}
+.wk-caption{font-family:var(--mono);font-size:9.5px;color:var(--g400);letter-spacing:.06em}
+
+/* ── Credibility stats ── */
+.cred-stats{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin:36px 0 8px}
+.cred-stat{background:#fff;border:1.5px solid var(--g200);border-radius:var(--radius);padding:26px 34px;text-align:center;min-width:220px}
+.cred-stat-num{font-family:var(--mono);font-size:34px;font-weight:500;color:var(--accent);letter-spacing:-.02em}
+.cred-stat-label{font-size:13px;color:var(--g600);font-weight:400;margin-top:8px;line-height:1.5}
+.cred-stat-basis{font-family:var(--mono);font-size:10.5px;color:var(--g400);line-height:1.7;text-align:center;max-width:560px;margin:14px auto 0}
+
+/* ── Future pacing band ── */
+#future{padding:90px 0;background:var(--g50)}
+.future-inner{max-width:680px;margin:0 auto;text-align:center}
+.future-kicker{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:20px}
+.future-line{font-family:var(--heading);font-size:clamp(1.25rem,2.2vw,1.6rem);font-weight:400;font-style:italic;color:var(--black);line-height:1.65;letter-spacing:-.01em}
+.future-close{font-size:14px;color:var(--g500);font-weight:300;line-height:1.7;margin-top:22px}
+
+/* ── Responsive ── */
+@media(max-width:768px){
+  .sides-grid,.sp-grid{grid-template-columns:1fr}
+  .cvf-label{width:72px}
+  .cvf-note{padding-left:84px}
+  .cred-stat{min-width:0;flex:1 1 200px}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER:START -->
+<nav class="float-bar" id="float-bar" aria-label="Primary">
+  <a href="/" class="fb-logo">
+    <div class="lm"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24" fill="none" aria-hidden="true"><path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <span class="ln">RevWhisper</span>
+  </a>
+
+  <div class="fb-links" id="fb-links">
+
+    <!-- Services dropdown -->
+    <div class="fb-dropdown" data-dropdown>
+      <button class="fb-link fb-dropdown-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="fb-menu-services">
+        Services
+        <svg class="fb-chevron" viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="fb-menu" id="fb-menu-services">
+        <a href="/airbnb-listing-optimization" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M6.5 3.5h11a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1v-15a1 1 0 0 1 1-1Z"/>
+              <path d="M8.5 9c1.3-.7 2.7-.7 4 0s2.7.7 3 0"/>
+              <path d="M8.5 13c1.3-.7 2.7-.7 4 0s2.7.7 3 0"/>
+              <path d="M8.5 17q1.5-.7 3 0"/>
+              <path d="M16.5 5v2.5M15.3 6.2h2.4"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Listing Optimization</span>
+            </span>
+            <span class="fb-menu-desc">Title, description, and amenities tuned for conversion</span>
+          </span>
+        </a>
+        <a href="/revenue-management" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <ellipse cx="12" cy="6" rx="6" ry="2"/>
+              <path d="M6 6v12.5c0 1.1 2.7 2 6 2s6-.9 6-2V6"/>
+              <path d="M6 10c0 1.1 2.7 2 6 2s6-.9 6-2"/>
+              <path d="M6 14c0 1.1 2.7 2 6 2s6-.9 6-2"/>
+              <path d="M9.5 6q1.2-.7 2.5 0t2.5 0"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Revenue Management</span>
+            </span>
+            <span class="fb-menu-desc">Rank-based pricing, minimum stays, seasonal strategy</span>
+          </span>
+        </a>
+        <a href="/photoediting" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4.5 5h15a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-15a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z"/>
+              <circle cx="8.5" cy="9.5" r="1.4" fill="currentColor"/>
+              <path d="M5 15.5c2-1.5 4-3 6.5-2s5 .5 7.5-1"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Photo Optimization</span>
+            </span>
+            <span class="fb-menu-desc">Cover photos, photo order, professional editing</span>
+          </span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Resources dropdown -->
+    <div class="fb-dropdown" data-dropdown>
+      <button class="fb-link fb-dropdown-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="fb-menu-resources">
+        Resources
+        <svg class="fb-chevron" viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="fb-menu" id="fb-menu-resources">
+        <a href="/blog" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M6 3.5h12a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-15a1 1 0 0 1 1-1Z"/>
+              <path d="M8.5 3.5v3M12 3.5v3M15.5 3.5v3"/>
+              <path d="M8 12c1.3-.7 2.7-.7 4 0s2.7.7 4 0"/>
+              <path d="M8 16c1.3-.7 2.7-.7 4 0s2 .3 2.5 0"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Blog</span>
+            </span>
+            <span class="fb-menu-desc">Strategies, data, and host insights</span>
+          </span>
+        </a>
+        <a href="/case-study" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 6c2-1 4.5-1.5 7-1q1.5.4 2 2v13q-.5-1.5-2-2c-2.5-.5-5 0-7 1Z"/>
+              <path d="M21 6c-2-1-4.5-1.5-7-1q-1.5.4-2 2v13q.5-1.5 2-2c2.5-.5 5 0 7 1Z"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Case Studies</span>
+            </span>
+            <span class="fb-menu-desc">Real revenue lifts from real listings</span>
+          </span>
+        </a>
+        <a href="https://app.revwhisper.com/search-ranking" class="fb-menu-item" target="_blank" rel="noopener">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="10.5" cy="10.5" r="6.5"/>
+              <path d="m15.5 15.5 4 4"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Search Ranking Tool</span>
+              <svg class="fb-menu-ext" viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M4 2h6v6M10 2L4 8M5 4H2v6h6V7" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <span class="fb-menu-desc">Free Airbnb ranking checker</span>
+          </span>
+        </a>
+      </div>
+    </div>
+
+    <a href="/audit" class="fb-link fb-link--mobile-cta">Get a Free Audit</a>
+  </div>
+
+  <a href="/audit" class="fb-cta">Get a Free Audit</a>
+  <button class="fb-hamburger" id="fb-hamburger" aria-label="Toggle navigation" aria-expanded="false">
+    <span class="fb-ham-line"></span>
+    <span class="fb-ham-line"></span>
+    <span class="fb-ham-line"></span>
+  </button>
+</nav>
+<!-- HEADER:END -->
+
+<main id="main">
+
+<!-- ════════════════════════════════════════════════
+     HERO · heading and subheading unchanged, VSL video removed
+     ════════════════════════════════════════════════ -->
+<section id="hero">
+  <div class="hero-glow"></div>
+  <div class="w">
+    <h1 class="hero-h1 r d1"><em class="em-mark">Fully Managed</em> Airbnb Revenue &amp; Listing Optimization</h1>
+    <p class="hero-sub r d2">Our team tracks your Airbnb search position daily, deploys algorithm-timed pricing, and optimizes every part of your listing so you earn more without lifting a finger.</p>
+    <div class="hero-cta-row r d2">
+      <a href="/audit" class="calc-btn" style="display:inline-block;border-radius:var(--radius);padding:16px 32px;font-size:15px;text-decoration:none;">Get My Free Audit →</a>
+      <a href="https://app.revwhisper.com/search-ranking" class="btn-ghost2">Check My Search Ranking</a>
+    </div>
+    <div class="hero-trust r d3" style="margin-top:16px">
+      <span class="ht-item">✓ No CapEx required</span>
+      <div class="ht-sep"></div>
+      <span class="ht-item">✓ Fully managed</span>
+      <div class="ht-sep"></div>
+      <span class="ht-item">✓ Results in 30 days</span>
+    </div>
+    <div class="logo-carousel r d3">
+      <div class="logo-track">
+        <!-- Airbnb -->
+        <svg class="logo-lg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 60"><path d="M63.042 21.358a2.264 2.264 0 1 1-2.264-2.264 2.257 2.257 0 0 1 2.264 2.264zm-9.34 4.55v.56a4.353 4.353 0 0 0-3.369-1.395 6.671 6.671 0 0 0-6.739 6.9 6.671 6.671 0 0 0 6.732 6.907 4.232 4.232 0 0 0 3.369-1.429v.593a.478.478 0 0 0 .485.485h2.824V25.4h-2.8a.499.499 0 0 0-.485.485zm0 8.396a3.464 3.464 0 0 1-2.824 1.429c-2.23 0-3.935-1.395-3.935-3.76s1.705-3.76 3.935-3.76a3.558 3.558 0 0 1 2.824 1.429v4.67zm5.4-8.882h3.37v13.1h-3.37V25.4zm49.967-.35a4.353 4.353 0 0 0-3.369 1.395v-7.352h-3.37V38.52h2.823a.499.499 0 0 0 .485-.485v-.593A4.313 4.313 0 0 0 109 38.871a6.691 6.691 0 0 0 6.739-6.9 6.685 6.685 0 0 0-6.739-6.9zM108.5 35.7a3.41 3.41 0 0 1-2.824-1.429V29.6a3.78 3.78 0 0 1 2.824-1.429c2.23 0 3.935 1.395 3.935 3.76s-1.705 3.76-3.935 3.76zm-7.878-4.946v7.803h-3.37v-7.413c0-2.163-.674-3.032-2.58-3.032a3.74 3.74 0 0 0-2.695 1.287v9.124h-3.37V25.4h2.648a.499.499 0 0 1 .485.485v.56a4.798 4.798 0 0 1 3.551-1.395 5.391 5.391 0 0 1 3.659 1.253c1.186.977 1.637 2.23 1.637 4.427zm-20.1-5.68a4.353 4.353 0 0 0-3.369 1.395v-7.352h-3.37V38.52h2.824a.499.499 0 0 0 .485-.485v-.593a4.313 4.313 0 0 0 3.369 1.429 6.691 6.691 0 0 0 6.739-6.9 6.644 6.644 0 0 0-6.739-6.9zM79.96 35.7a3.41 3.41 0 0 1-2.824-1.429V29.6a3.78 3.78 0 0 1 2.824-1.429c2.23 0 3.935 1.395 3.935 3.76s-1.705 3.76-3.935 3.76zm-9.08-10.63a5.344 5.344 0 0 1 1.536.175v3.1s-2.8-.923-4.528 1.044v9.165h-3.37V25.4h2.824a.499.499 0 0 1 .485.485v.56a4.576 4.576 0 0 1 3.032-1.395zM36.14 37.335l-.526-1.253-.802-1.78-.034-.034a359.93 359.93 0 0 0-7.696-15.748l-.108-.2-.83-1.67a10.02 10.02 0 0 0-1.253-1.914 5.627 5.627 0 0 0-4.461-2.129 5.849 5.849 0 0 0-4.461 2.089 12.015 12.015 0 0 0-1.253 1.914l-.943 1.846c-2.695 5.23-5.297 10.52-7.702 15.748l-.034.067c-.2.573-.485 1.16-.768 1.786q-.263.573-.526 1.253a7.83 7.83 0 0 0-.418 3.76 7.413 7.413 0 0 0 4.528 5.782 7.156 7.156 0 0 0 2.824.559 7.911 7.911 0 0 0 .903-.067 9.205 9.205 0 0 0 3.484-1.186 17.642 17.642 0 0 0 4.319-3.625 18.302 18.302 0 0 0 4.319 3.625 9.198 9.198 0 0 0 3.484 1.186 7.925 7.925 0 0 0 .903.067 7.042 7.042 0 0 0 2.824-.559 7.413 7.413 0 0 0 4.528-5.782 6.584 6.584 0 0 0-.317-3.726zm-15.708 1.813c-1.88-2.372-3.1-4.596-3.518-6.483a5.62 5.62 0 0 1-.108-2.123 3.369 3.369 0 0 1 .559-1.462 3.7 3.7 0 0 1 3.066-1.536 3.565 3.565 0 0 1 3.066 1.53 3.369 3.369 0 0 1 .559 1.462 5.6 5.6 0 0 1-.108 2.123c-.418 1.846-1.637 4.043-3.518 6.483zm13.902 1.637a5.175 5.175 0 0 1-3.174 4.043 5.276 5.276 0 0 1-2.642.384 6.853 6.853 0 0 1-2.648-.903 16.274 16.274 0 0 1-3.969-3.369c2.298-2.824 3.693-5.4 4.218-7.702a8.76 8.76 0 0 0 .175-2.965 5.654 5.654 0 0 0-.943-2.372 5.869 5.869 0 0 0-4.919-2.5 5.964 5.964 0 0 0-4.912 2.473 5.654 5.654 0 0 0-.943 2.372 7.237 7.237 0 0 0 .175 2.965c.526 2.298 1.954 4.912 4.218 7.736a15.654 15.654 0 0 1-3.969 3.369 6.853 6.853 0 0 1-2.655.93 5.573 5.573 0 0 1-2.648-.35 5.175 5.175 0 0 1-3.174-4.043 5.768 5.768 0 0 1 .317-2.695c.108-.35.276-.674.45-1.112.243-.56.526-1.152.802-1.745l.034-.067c2.406-5.2 4.98-10.485 7.67-15.647l.1-.25.836-1.604a7.642 7.642 0 0 1 1.004-1.543 3.659 3.659 0 0 1 5.573 0 7.655 7.655 0 0 1 .95 1.53l.836 1.604.1.2c2.648 5.196 5.236 10.485 7.635 15.68v.034c.276.56.526 1.186.802 1.745.175.418.35.768.45 1.112a5.883 5.883 0 0 1 .243 2.695z" fill="#ff5a5f" fill-rule="evenodd"/></svg>
+        <!-- Guesty -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 445 117"><path d="M72.0215 103H9.57638C4.54742 103 0.470154 98.9639 0.470154 93.9856V38.7892C0.470154 35.5759 2.07844 32.5865 4.7712 30.7924L49.2129 1.15175C51.5122 -0.384322 54.4902 -0.384323 56.792 1.15419L101.234 30.7924C103.924 32.5889 105.53 35.5759 105.53 38.7868V102.925H94.2178V41.041C94.2178 40.15 93.7702 39.3175 93.0251 38.8209L54.5124 13.136C53.5976 12.5275 52.4024 12.5275 51.4901 13.136L12.9749 38.8233C12.2298 39.3199 11.7822 40.1524 11.7822 41.0434V89.1242C11.7822 90.6043 12.9921 91.802 14.4873 91.802H67.1106C68.6057 91.802 69.8156 90.6043 69.8156 89.1242V52.9182C69.8156 52.0272 69.3681 51.1946 68.623 50.698L54.5124 41.2868C53.5976 40.6783 52.4024 40.6783 51.4901 41.2868L37.3795 50.698C36.6344 51.1946 36.1868 52.0272 36.1868 52.9182V78.0504H24.8747V49.5442C24.8747 47.0295 26.1314 44.6925 28.2388 43.2903L49.5842 29.0542C51.6622 27.6959 54.3452 27.6959 56.4207 29.0542L56.4625 29.081L77.771 43.2927C79.876 44.6998 81.1302 47.0343 81.1302 49.5417V93.9832C81.1302 98.9614 77.0529 102.998 72.024 102.998L72.0215 103Z" fill="#14665F"/><path d="M163.558 95.1358C142.286 95.1358 128.234 81.0845 128.234 59.6172C128.234 38.7353 142.969 24.0985 164.339 24.0985C174.096 24.0985 182.976 27.7089 189.709 34.637L182.391 41.9554C177.804 37.3692 170.876 34.637 164.241 34.637C149.702 34.637 139.651 44.6876 139.651 59.6172C139.651 74.8395 149.019 84.5973 163.558 84.5973C170.389 84.5973 175.95 82.8409 180.829 79.0353V64.984H161.704V54.9334H191.368V83.9143C183.757 91.5254 174.78 95.1358 163.558 95.1358Z" fill="#14665F"/><path d="M219.398 94.7455C207.103 94.7455 199.102 85.9634 199.102 72.2048V45.5658H210.031V71.5218C210.031 80.0111 214.324 84.8901 221.35 84.8901C229.351 84.8901 234.718 79.0353 234.718 70.9363V45.5658H245.647V93.7697H235.889L235.791 87.5247C231.693 92.3061 226.034 94.7455 219.398 94.7455Z" fill="#14665F"/><path d="M277.881 95.1358C261.975 95.1358 251.73 85.0852 251.73 69.6678C251.73 54.7382 261.78 44.59 276.71 44.59C293.689 44.59 303.056 55.714 301.495 73.7661H262.951C263.829 80.7918 269.684 85.2804 278.174 85.2804C283.638 85.2804 289.102 83.3288 292.03 80.3039L298.665 86.7441C293.884 91.9157 286.175 95.1358 277.881 95.1358ZM263.049 65.2767H291.054C290.273 58.4462 285.004 54.0552 277.003 54.0552C269.391 54.0552 264.415 58.1535 263.049 65.2767Z" fill="#14665F"/><path d="M327.366 94.9407C319.267 94.9407 312.046 92.5988 305.606 87.8174L310.68 79.9136C314.974 83.3288 321.316 85.2804 327.659 85.2804C333.806 85.2804 337.319 83.3288 337.319 79.816C337.319 76.4007 334.197 74.7419 326.781 73.9612C314.193 72.7903 307.07 67.5211 307.07 59.1293C307.07 50.3472 315.461 44.3949 327.952 44.3949C335.27 44.3949 341.71 46.2489 347.077 49.9569L342.296 57.7632C338.002 55.031 333.416 53.6649 328.439 53.6649C321.511 53.6649 317.803 55.6164 317.803 59.1293C317.803 62.2518 320.633 63.9106 327.659 64.6913C341.905 66.2525 348.15 70.8387 348.15 79.9136C348.15 88.8908 339.856 94.9407 327.366 94.9407Z" fill="#14665F"/><path d="M377.83 94.4528C367.877 94.4528 362.022 88.6956 362.022 77.1813V54.8358H352.948V45.5658H362.022V32.9782L372.854 31.8072V45.5658H386.71V54.8358H372.854V77.1813C372.854 82.0603 375.098 84.7925 379.586 84.7925C381.538 84.7925 383.782 84.207 385.636 83.3288L388.661 92.1109C384.953 93.7697 381.831 94.4528 377.83 94.4528Z" fill="#14665F"/><path d="M402.179 116.018L411.937 93.477L392.909 45.5658H404.619L413.011 67.521L417.987 81.3772L423.549 67.521L432.624 45.5658H444.333L414.084 116.018H402.179Z" fill="#14665F"/></svg>
+        <!-- Hostaway -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 791.6 186.2"><path d="M770.1,45.1c-4.3,3.7-5.7,10.1-7.8,16.8c-1.2,3.9-2.7,7.9-3.9,11.9c-2.6,8.4-4.7,17.4-7.4,24.6c-2.3,6.1-6.5,12.5-10.1,18.1c-3.5,5.3-7.8,11.2-14.2,13c-7.8,2.2-11.1-2.5-10.6-9.8c0.5-6.9,2.7-14,4.6-20.6c5.5-19.2,12.8-37.5,18.5-55.9c-11.5-4.6-21.5-0.6-25.7,7.5c-2.2,4.2-3.4,9.6-5.2,14.7c-4.3,12.3-8.5,25.3-11.1,39c-0.6,3-0.6,6.3-1.4,9.1c-1.3,4.5-7.3,11.4-10.6,13.7c-2.7,1.8-8.2,4.4-12.4,2.6c-3.3-1.5-4.2-6.3-3.7-10.6c0.6-6.6,2.9-13.4,4.7-19.8c5.4-19.1,12.4-38.2,18-55.7c-8.5-3.6-18.8-1.7-22.9,3.4c-9.5-12.1-29.5-4.3-39,2.2c-14.3,9.8-25.3,25.1-33.2,42.3c-4.4,9.6-8,20-8.4,31.6c-0.4,11.2,4.2,21.5,17.9,21.2c9.8-0.2,18.4-7.7,24.6-13.1c7.2-6.3,12.8-13.7,18.2-20.8c-3,18-0.1,33.7,17.8,33.8c13.4,0.1,22-11,28.6-18.5c0.9,8.7,4.5,16,12.9,17.8c16.2,3.6,28.7-10.6,35.2-19.5c-6.3,17-15,42.5-28.8,50.2c-2.8,1.5-6.5,3.1-9.8,1.4c-3.5-7.2,6.5-15.3,4.6-23.2c-0.8-3.2-4.4-4.5-8.9-5.1c-5.7,6.5-16,24-8.6,33.7c2.5,3.4,7.6,5.1,13.7,5.3c15.1,0.4,27.9-7.9,36.6-17c9.5-9.8,15.5-23.2,20.6-37c11.2-30.2,18.9-61.2,29-89C783.9,39.7,775.2,40.7,770.1,45.1z M658.9,71.4c-1.9,5.9-3.2,12.2-5.5,18.1c-1.5,4-4.9,8.1-7.5,11.6c-5.5,7.5-10.2,14-17.8,19.7c-5.3,3.9-16.4,9.6-16.4-2.7c0-7.4,2.7-14.3,4.8-20.1c5.9-16,16.3-34.5,28-42.8c4.8-3.5,14.7-7.8,20.5-1.2C662.9,59.7,660.8,65.5,658.9,71.4z M597.7,38.8c-0.9-1.8-3.5-2.8-6.2-2.8c-5,0.3-9.7,2.5-13.2,6.1c1.5,18-3.4,38.8-9.2,53.5c-4.4,11.1-9.6,22.4-17.2,29.9c-2.2,2.2-6.7,5.9-10,5c-4.6-1.2-4.6-13.7-4.4-18.1c1.2-25.2,9.4-44,14.8-62.4c-9.7-3.9-18.8,0.1-22.2,6.1c-2.7,4.8-4.5,12.1-6.3,18.9s-2.8,14.5-4.8,20.8c-1,3.1-3,6.6-4.7,9.9c-4.5,9-10.5,20.3-18.7,23.9c-12.6,5.6-7.3-15.3-5.4-22.3c6.6-24.4,16-44.4,24.3-65.5c-10.3-3.6-19.5-0.8-24.3,5.4c-3.1,4.1-4.6,9.5-6.7,15c-4.9,13.3-10.1,27.3-13.4,42.2c-0.7,3.2-0.6,6.9-1.5,10c-0.8,2.5-3.6,6.1-5.7,8.6c-2.1,2.6-4.7,4.7-7.7,6.2c-2.3,1.1-6,2.1-8.8,1.2c-8.5-2.5-2.3-21.7,0-29.5c5.5-19.4,12.8-38.4,18.3-56.9c-8.6-3.6-18.5-1.5-22.9,3.4c-3.3-3.9-7.5-6.3-15.1-6.4c-10.1-0.2-19.9,5.5-26.5,10.8C386,63,374.4,79,366.8,98.1c-2.3,5.8-4,11.8-4.9,18c-0.3,0.7-0.7,1.3-1,1.9c-3,4.7-6.1,8.4-10.8,10.7c-2.4,1.2-6.1,2.8-9.8,1.1c-7.4-3.3-1.9-19.8,0.3-27.8c4.7-17.7,11.8-36.1,16.9-51.6h11.7c2.6,0.1,4.9-1.9,5-4.6c0.1-2.6-1.9-4.9-4.6-5c-0.1,0-0.3,0-0.4,0h-8.6c4.3-12.9,8.8-25.5,12.8-38.7c-9.9-4.7-20.4-1.4-24.8,5.6c-1.4,2.2-2,5.4-3.1,8.4c-2.7,8-5.8,17.2-8.6,24.7H325c-2.6-0.1-4.9,1.9-5,4.6c-0.1,2.6,1.9,4.9,4.6,5c0.1,0,0.3,0,0.4,0h8.7c-4.2,13-9.2,26.1-13.2,41.1c-5.2,19.5-11.7,50.1,11,52.5c13.3,1.4,23.4-7.8,29.8-16.7c0.3,5,1.6,9.4,4.3,12.5c6.6,7.8,18.3,4.8,25.3,1c12.7-6.8,22.9-19,30.7-29.5c-2.1,15.7-0.9,29.8,12.1,32.7c17.2,3.9,26.4-9.2,34.3-17.7c-0.4,11.2,9.1,21.3,21.9,17.6s20.3-20.5,27-30.8c-1.1,13.2,1.3,25.4,10.2,29.6c12.5,6,25.2-4.2,32.2-11.4c6.6-6.8,12.3-15.2,17.9-25.2c7.3-13.3,14.9-30,18.8-47.9C597,53.1,599.3,42.2,597.7,38.8z M428.9,81.1c-1,3-1.2,6.5-2.5,9.4c-1.5,3.6-5.2,7.9-7.7,11.3c-5.7,7.8-10.4,13.3-18,19.4c-2.8,2.2-8.1,6.5-12.6,5c-2.7-0.9-3.6-5.5-3.3-9.8c0.4-6.2,2.4-12.5,4.6-18.2c5.6-14.6,14.9-31,25-40c5-4.5,16.4-11.7,23.4-3.6C435,63.5,431.8,71.9,428.9,81.1z M285.5,62.8c-2.6-7.5,0.8-15.5,6.2-17.7c2-0.9,8.5-0.6,7.8-5.2c-0.4-2.7-5.8-2.5-9.7-2c-11.6,1.6-25.6,7.9-26.5,21.9c-0.1,2,0.7,4.2,0.3,6.3c-0.3,1.7-2.2,4-3.5,5.9c-5.9,8.4-12.1,15.7-23.3,16.7c5.2-15.7,5.8-32.6-2.5-40.9c-9.6-9.7-27.6-7.5-38.6-1.6c-18.4,9.8-32.3,29.1-37.6,53.9c-0.8,3.8-0.4,8.1-1.6,12.7c-0.9,3.3-4.1,7.9-6.7,10.9c-3,3.5-6.2,5.9-9.9,6.9c-10.2,3-12-5.5-10-15.1c1.2-5.7,2.9-11.6,4.4-16.7c9.6-32.6,20.4-63.5,30.4-95.6c-6.5-4.4-15.8-2.8-20.9,0.7c-5.6,3.8-7.4,11-10,19c-4.3,13.3-9.6,30.8-13.6,41.9c-12.5,0.1-25.1,0.2-37.7,0.1c2-6.4,4-12.7,5.9-19c3-8.4,6.1-16.9,8.8-25.4c1.5-4.5,3.9-11.9,1.9-16c-2.5-5.3-10.6-4.2-16.5-3.7C58.4,2.9,39.1,11.9,25.3,26.3c-5.7,5.9-11.4,13.3-12.4,23.4c-0.1,1.1-0.1,2.1-0.1,3.2c0.7,6.8,6.8,11.9,13.6,11.2c1.8-0.2,3.5-0.7,5-1.6c0,0,0,0,0.1,0c3.9-2.2,6.2-6.4,6.2-10.8c0-0.9-0.1-1.8-0.3-2.6c-0.4-2.5-0.4-5.1,0.1-7.6c2.2-11.8,13.2-21.5,21.9-26c3.2-1.7,9-4.1,11.9-2.6c3.8,1.9-1.5,13-2.7,16.4C62.7,46,54.2,79.6,49.1,96.3c-5.8,14.9-13.3,31.1-23.8,37c-2.8,1.6-6.5,3.1-9.8,1.4c-3.5-7.2,6.5-15.3,4.6-23.2c-0.8-3.2-4.4-4.5-8.9-5c-5.7,6.5-16,24-8.6,33.7c2.5,3.4,7.6,5.1,13.7,5.3c15.1,0.4,27.9-7.9,36.7-17c9.5-9.8,15.4-23.2,20.6-37c0.6-1.7,1.2-3.4,1.8-5.1h0.1c0.2-0.6,0.3-1.1,0.5-1.7c1-2.7,1.9-5.4,2.8-8.1c0.2-0.7,0.5-1.3,0.8-2c12.7,0,25.4,0,38-0.1c-3.9,11.4-6.9,23-9,34.9c-3.2,18.5-0.6,35.9,19,35.4c14.4-0.4,23.1-12.4,30.1-22c2.7,12,10.3,21.7,26,21.9c6.7,0.1,12.5-2.9,17.6-5.9c15.1-9.1,26-25.2,33-42.3c16.1-0.5,24.5-10.6,32.5-21.3c5.2,12.5,15.3,19.9,14.7,35.2c-0.4,9.4-6,18.3-11,22.1c-7.3,5.6-23.6,3.5-22.6-8.4c0.6-6.8,5-7.9,6.2-13.2c0.8-3.1-0.2-6-2.4-7.3c-6.2-3.6-12.1,2.2-14.1,5.1c-4.3,6.3-5.6,16.6-2.4,23c5.2,10.4,19.4,14.3,33.4,11.5c11.5-2.3,22.3-8.5,29.3-16.5c8.4-9.9,10.5-23.7,5.7-35.7C299.2,80.3,289,73,285.5,62.8z M217.9,86.4c0.8,1.9,3.6,4.1,3.7,6c0.2,2.5-3.4,9.8-4.4,12.1c-4.7,10.8-12.4,22-22.1,25.5c-12.8,4.7-17.4-7.6-16-20.3c1.3-12.3,4.9-21.5,9.4-31.7c4.1-9.3,10-18.3,16.2-23.2c2.5-1.9,6.6-4.2,9.9-4.3c5.5-0.1,7.3,2.7,9.3,6.3C218.4,63.3,214.3,77.5,217.9,86.4z" fill="#FF6A0A"/></svg>
+        <!-- PriceLabs -->
+        <svg class="logo-pricelabs" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1667.11 466.79"><path d="M527.71,142.14h75.64c19.35,0,34.3,4.75,45.03,14.07,10.73,9.32,16.01,22.69,16.01,40.11s-5.28,30.43-16.01,40.11c-10.73,9.5-25.68,14.42-45.03,14.42h-48.9v72.3h-26.74v-181.01ZM600.36,229.39c25.51,0,38.35-11.08,38.35-33.07s-12.84-32.89-38.35-32.89h-46.09v65.97h46.09ZM770.28,216.55l-15.83,1.58c-12.49,1.23-21.28,4.93-26.74,11.26-5.45,6.33-8.09,14.42-8.09,24.1v69.48h-26.21v-125.25h25.33v21.81c6.68-14.78,20.41-22.87,41.16-24.45l8.62-.53,1.76,21.81v.18ZM788.05,197.9h26.21v125.25h-26.21v-125.25ZM816.19,141.96v26.91h-30.08v-26.91h30.08ZM906.08,324.91c-12.84,0-23.92-2.64-33.25-7.92s-16.71-12.84-21.81-22.52-7.56-20.93-7.56-33.95,2.64-24.45,7.92-34.3c5.28-9.85,12.67-17.59,22.34-23.04,9.5-5.45,20.76-8.27,33.6-8.27s17.24,1.41,25.51,4.4c8.27,2.99,14.95,6.86,20.05,11.79l-8.09,18.47c-11.43-9.32-23.22-13.9-35.36-13.9s-21.46,3.87-28.32,11.61c-6.86,7.74-10.2,18.82-10.2,32.89s3.34,24.8,10.03,32.37c6.68,7.56,16.18,11.43,28.5,11.43s24.1-4.57,35.36-13.9l8.09,18.65c-5.45,4.93-12.49,8.8-20.76,11.61-8.27,2.81-16.89,4.22-25.86,4.22l-.18.35ZM1083.92,264.92h-89.36c1.93,26.56,15.13,39.76,39.93,39.76s27.62-4.75,39.4-14.07l8.09,18.29c-5.8,4.93-13.19,8.97-21.81,11.79-8.62,2.99-17.41,4.4-26.39,4.4-20.23,0-36.06-5.8-47.67-17.24-11.61-11.43-17.41-27.27-17.41-47.49s2.64-24.28,7.56-34.13c5.1-9.85,12.31-17.59,21.46-23.04,9.15-5.45,19.7-8.27,31.49-8.27,17.06,0,30.43,5.45,40.28,16.36,9.67,10.91,14.6,26.03,14.6,45.38v8.27h-.18ZM1029.57,213.73c-10.03,0-17.94,3.17-23.92,9.32-5.98,6.16-9.5,15.13-10.73,26.74h66.49c-.53-11.61-3.52-20.58-8.97-26.74s-13.02-9.32-22.87-9.32h0Z" fill="#ff4646"/><path d="M1303.46,194.56c16.89,0,29.55,4.22,37.64,12.67,8.27,8.44,12.31,21.11,12.31,38.35v77.58h-25.15v-20.76c-3.34,7.39-8.09,13.02-14.6,16.89-6.51,3.87-14.07,5.8-22.69,5.8s-15.83-1.58-22.87-5.1c-6.86-3.34-12.31-7.92-16.18-14.07-3.87-5.98-5.8-12.67-5.8-20.05s2.46-16.18,7.21-21.46c4.75-5.28,12.67-8.97,23.57-11.26,10.91-2.29,26.03-3.34,45.21-3.34h5.98v-7.39c0-9.67-2.11-16.54-6.16-20.76s-10.73-6.51-19.88-6.51c-14.42,0-28.67,4.4-43.1,13.02l-7.74-18.29c6.68-4.57,14.95-8.27,24.45-11.26,9.5-2.81,18.82-4.22,27.62-4.22l.18.18ZM1415.51,141.96v76.34c3.87-7.56,9.32-13.37,16.54-17.41,7.21-4.05,15.66-6.16,25.15-6.16s20.76,2.64,29.2,7.92c8.44,5.28,15.13,12.84,19.88,22.69,4.75,9.85,7.04,21.11,7.04,34.13s-2.29,24.28-7.04,34.13c-4.75,9.85-11.43,17.59-19.88,23.04-8.62,5.45-18.29,8.27-29.2,8.27s-17.94-1.93-25.15-5.98c-7.21-4.05-12.84-9.85-16.54-17.41v21.64h-26.21v-181.18h26.21ZM1589.13,194.56c8.97,0,17.59,1.41,25.68,4.22,8.09,2.81,15.13,6.86,20.93,11.96l-8.09,18.29c-12.49-9.85-25.33-14.6-38.7-14.6s-14.25,1.58-18.82,4.57c-4.57,3.17-6.86,7.21-6.86,12.67s1.41,7.74,4.22,10.38c2.81,2.64,7.39,4.75,13.54,5.98l21.46,4.93c12.31,2.81,21.28,7.04,26.91,12.67,5.63,5.8,8.62,13.19,8.62,22.52s-4.57,20.23-13.9,26.91c-9.32,6.51-21.64,9.85-37.47,9.85s-39.4-5.28-52.6-16.01l8.09-18.82c13.02,9.85,28.15,14.95,45.38,14.95s14.95-1.41,19.53-4.22c4.57-2.81,6.68-6.86,6.68-11.96s-1.58-7.92-4.57-10.55c-2.99-2.64-8.27-4.75-15.66-6.51l-20.93-4.57c-11.26-2.64-19.7-6.68-25.33-12.67-5.63-5.8-8.62-13.19-8.62-22.16s4.57-20.41,13.9-27.44c9.32-7.04,21.46-10.55,36.41-10.55l.18.18ZM1138.63,141.96v159.02h88.66v22.16h-115.4v-181.18h26.74,0ZM1323.51,264.57c-13.54,0-23.92.53-31.14,1.76-7.21,1.23-12.49,3.17-15.48,5.98-3.17,2.81-4.75,6.86-4.75,12.14s2.29,11.08,6.68,14.95c4.4,4.05,10.03,5.98,16.89,5.98s17.24-3.17,23.4-9.67c5.98-6.51,9.15-14.6,9.15-24.8v-6.68h-4.75v.35ZM1451.04,215.49c-11.43,0-20.23,3.87-26.21,11.61-6.16,7.74-9.15,18.65-9.15,32.89s2.99,25.15,9.15,32.89c6.16,7.74,14.95,11.61,26.21,11.61s20.05-3.87,26.39-11.79c6.33-7.92,9.5-19,9.5-33.07s-3.17-24.8-9.32-32.54c-6.16-7.56-14.95-11.43-26.39-11.43l-.18-.18Z" fill="#ff4646"/><path d="M232.18,22.35C115.56,22.35,21.09,116.81,21.09,233.44s94.46,211.09,211.09,211.09,211.09-94.46,211.09-211.09S348.81,22.35,232.18,22.35ZM221.1,297.47l-29.9,29.9-94.46-94.46,94.46-94.46,29.9,29.9-64.56,64.56,64.56,64.56ZM272.64,327.37l-29.9-29.9,64.56-64.56-64.56-64.56,29.9-29.9,94.46,94.46-94.46,94.46Z" fill="#ff4646"/><polygon points="221.1 297.47 191.2 327.37 96.73 232.91 191.2 138.45 221.1 168.35 156.54 232.91 221.1 297.47" fill="#fff"/><polygon points="272.64 327.37 242.74 297.47 307.29 232.91 242.74 168.35 272.64 138.45 367.1 232.91 272.64 327.37" fill="#fff"/></svg>
+        <!-- Wheelhouse -->
+        <svg class="logo-wheelhouse" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 31"><path d="M16.9215 30.6867C16.547 31.3996 15.5263 31.4001 15.1513 30.6874L-0.228525 1.46575C-0.579005 0.79984 -0.0961247 1.00136e-05 0.656385 1.00136e-05L22 0L18.5 8L27 11.5L16.9215 30.6867Z" fill="#B31FAD"/><path d="M27.0779 30.6896C27.4529 31.4018 28.4728 31.4017 28.8477 30.6894L44.2285 1.46575C44.579 0.79984 44.0961 1.00136e-05 43.3436 1.00136e-05L22 0L25.5 8L17.5 12.5L27.0779 30.6896Z" fill="#D926D2"/><path d="M22 21.0405L16.1832 9.9885C13.8281 5.5139 16.9947 0.1518 22 0.00292969C27.0053 0.1518 30.1719 5.5139 27.8168 9.9885L22 21.0405Z" fill="#400B3E"/><path d="M59.9 27.4L53 4H56.6C60.2 16.5 60.9 19.3 61.7 22.6C62.6 19.4 63.4 16.8 67.6 4H70.4C74.7 16.8 75.5 19.4 76.4 22.6C77.1 19.6 77.8 16.9 81.4 4H84.9L77.9 27.4H74.9C70.4 13.5 69.7 11.4 68.9 8.4C68.1 11.3 67.5 13.4 63 27.4H59.9Z" fill="#241522"/><path d="M86.7 27.4V4H89.9V13.2C90.9 11.5 92.9 10.2 95.8 10.2C98.9 10.2 100.8 11.6 101.4 13.8C101.7 14.8 101.8 15.9 101.8 17.5V27.5H98.6V18.1C98.6 16.6 98.4 15.4 98.2 14.9C97.6 13.8 96.6 13.1 94.9 13.1C93 13.1 90.9 14.2 89.9 15.9V27.5H86.7V27.4Z" fill="#241522"/><path d="M143.2 27.4V4H146.4V27.4H143.2Z" fill="#241522"/><path d="M151 27.4V4H154.2V13.2C155.2 11.5 157.2 10.2 160.1 10.2C163.2 10.2 165.1 11.6 165.7 13.8C166 14.8 166.1 15.9 166.1 17.5V27.5H162.9V18.1C162.9 16.6 162.7 15.4 162.5 14.9C161.9 13.8 160.9 13.1 159.2 13.1C157.3 13.1 155.2 14.2 154.2 15.9V27.5H151V27.4Z" fill="#241522"/><path d="M177.9 27.9001C172.8 27.9001 169.1 24.1001 169.1 19.0001C169.1 13.9001 173 10.1001 178 10.1001C183 10.1001 186.8 13.8001 186.8 19.0001C186.8 24.2001 183 27.9001 177.9 27.9001ZM178 13.0001C174.7 13.0001 172.3 15.6001 172.3 19.0001C172.3 22.7001 174.8 25.0001 178 25.0001C181.4 25.0001 183.6 22.4001 183.6 19.0001C183.6 15.7001 181.4 13.0001 178 13.0001Z" fill="#241522"/><path d="M202.6 27.4L202.2 25.4C201 27 199.3 27.8 196.5 27.8C193.1 27.8 191.3 26.4 190.7 24.2C190.4 23.2 190.3 21.7 190.3 20.1V10.5H193.5V19.6C193.5 21.1 193.7 22.5 194 23.1C194.4 24.1 195.5 24.9 197.3 24.9C199.4 24.9 201.2 23.9 202.3 22.7V10.6H205.5V27.4H202.6Z" fill="#241522"/><path d="M120.7 18.1001C120.6 13.3001 118.1 10.1001 113.1 10.1001C108.7 10.1001 104.7 13.5001 104.7 19.1001C104.7 24.3001 108.3 27.9001 113.8 27.9001C116.1 27.9001 119 27.1001 120.4 25.9001L119.4 23.5001C119.4 23.5001 117.1 25.1001 114.1 25.1001C110.5 25.1001 108.3 23.0001 108 20.1001H120.7V18.1001ZM117.5 17.5001H107.9C108.4 14.0001 110.9 12.8001 112.9 12.8001C115.6 12.8001 117.5 14.4001 117.5 17.3001V17.5001Z" fill="#241522"/><path d="M139.4 18.1001C139.3 13.3001 136.8 10.1001 131.8 10.1001C127.4 10.1001 123.4 13.5001 123.4 19.1001C123.4 24.3001 127 27.9001 132.5 27.9001C134.8 27.9001 137.7 27.1001 139.1 25.9001L138.1 23.5001C138.1 23.5001 135.8 25.1001 132.8 25.1001C129.2 25.1001 127 23.0001 126.7 20.1001H139.4V18.1001ZM136.2 17.5001H126.6C127.1 14.0001 129.6 12.8001 131.6 12.8001C134.3 12.8001 136.2 14.4001 136.2 17.3001V17.5001Z" fill="#241522"/><path d="M239.7 18.1001C239.6 13.3001 237.1 10.1001 232.1 10.1001C227.7 10.1001 223.7 13.5001 223.7 19.1001C223.7 24.3001 227.3 27.9001 232.8 27.9001C235.1 27.9001 238 27.1001 239.4 25.9001L238.4 23.5001C238.4 23.5001 236.1 25.1001 233.1 25.1001C229.5 25.1001 227.3 23.0001 227 20.1001H239.7V18.1001ZM236.5 17.5001H226.9C227.4 14.0001 229.9 12.8001 231.9 12.8001C234.6 12.8001 236.5 14.4001 236.5 17.3001V17.5001Z" fill="#241522"/><path d="M217.3 17.9L214.8 17.2C212.8 16.6 212.3 15.9 212.3 14.9C212.3 13.7 213.2 12.8 215.5 12.8C216.8 12.8 218.5 13.1 219.9 13.9L221 11.3C221 11.3 219.3 10 215.9 10C211.6 10 209.2 12.2 209.2 15.2C209.2 17.4 210.3 19.1 213.2 19.9L215.4 20.5C218.1 21.2 218.5 21.9 218.5 23.1C218.5 24.3 217.7 25 215.1 25C213.5 25 211.5 24.5 209.9 23.5L208.8 26.1C208.8 26.1 211.1 27.9 215 27.9C219.7 27.9 221.6 25.5 221.6 22.7C221.6 20.4 220.5 18.8 217.3 17.9Z" fill="#241522"/></svg>
+        <!-- Lodgify -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 94 20"><polygon fill="#FF3B59" points="0 0 0 20 20 20 20 10 10 10 10 0"/><polygon fill="#03EBC3" points="14 6 20 6 20 0 14 0"/><g fill="#333333" fill-rule="nonzero" transform="translate(30, 4)"><path d="M0,1.19230769 L2.71000855,1.19230769 L2.71000855,8.6510989 L7.28143713,8.6510989 L7.28143713,10.8076923 L0,10.8076923 L0,1.19230769 Z M13.1804962,11 C12.1676596,11 11.2574891,10.7848007 10.4499572,10.3543956 C9.64242539,9.92399052 9.00827148,9.32875838 8.54747648,8.56868132 C8.08668147,7.80860426 7.85628743,6.95238571 7.85628743,6 C7.85628743,5.04761429 8.08668147,4.19139574 8.54747648,3.43131868 C9.00827148,2.67124162 9.64242539,2.07600948 10.4499572,1.6456044 C11.2574891,1.21519931 12.1676596,1 13.1804962,1 C14.1933327,1 15.1035032,1.21519931 15.9110351,1.6456044 C16.7185669,2.07600948 17.3527208,2.67124162 17.8135158,3.43131868 C18.2743108,4.19139574 18.5047049,5.04761429 18.5047049,6 C18.5047049,6.95238571 18.2743108,7.80860426 17.8135158,8.56868132 C17.3527208,9.32875838 16.7185669,9.92399052 15.9110351,10.3543956 C15.1035032,10.7848007 14.1933327,11 13.1804962,11 Z M13.1804962,8.74725275 C13.6641028,8.74725275 14.1020796,8.63278503 14.4944397,8.40384615 C14.8867998,8.17490728 15.1970334,7.85210831 15.4251497,7.43543956 C15.653266,7.01877081 15.7673225,6.54029574 15.7673225,6 C15.7673225,5.45970426 15.653266,4.98122919 15.4251497,4.56456044 C15.1970334,4.14789169 14.8867998,3.82509272 14.4944397,3.59615385 C14.1020796,3.36721497 13.6641028,3.25274725 13.1804962,3.25274725 C12.6968895,3.25274725 12.2589127,3.36721497 11.8665526,3.59615385 C11.4741925,3.82509272 11.1639589,4.14789169 10.9358426,4.56456044 C10.7077263,4.98122919 10.5936698,5.45970426 10.5936698,6 C10.5936698,6.54029574 10.7077263,7.01877081 10.9358426,7.43543956 C11.1639589,7.85210831 11.4741925,8.17490728 11.8665526,8.40384615 C12.2589127,8.63278503 12.6968895,8.74725275 13.1804962,8.74725275 Z M19.9281437,1.19230769 L24.4585115,1.19230769 C25.5078467,1.19230769 26.4385474,1.38919217 27.2506416,1.78296703 C28.0627357,2.1767419 28.6923274,2.73534437 29.1394354,3.45879121 C29.5865434,4.18223805 29.8100941,5.02929918 29.8100941,6 C29.8100941,6.97070082 29.5865434,7.81776195 29.1394354,8.54120879 C28.6923274,9.26465563 28.0627357,9.8232581 27.2506416,10.217033 C26.4385474,10.6108078 25.5078467,10.8076923 24.4585115,10.8076923 L19.9281437,10.8076923 L19.9281437,1.19230769 Z M24.3490163,8.63736264 C25.1702351,8.63736264 25.8294814,8.40384849 26.326775,7.93681319 C26.8240686,7.46977788 27.0727117,6.82417995 27.0727117,6 C27.0727117,5.17582005 26.8240686,4.53022212 26.326775,4.06318681 C25.8294814,3.59615151 25.1702351,3.36263736 24.3490163,3.36263736 L22.6381523,3.36263736 L22.6381523,8.63736264 L24.3490163,8.63736264 Z M37.6526946,5.79395604 L40.0479042,5.79395604 L40.0479042,9.77747253 C39.500425,10.1712474 38.8708333,10.4734422 38.1591104,10.6840659 C37.4473874,10.8946897 36.7356751,11 36.0239521,11 C35.0202402,11 34.1169131,10.78709 33.3139435,10.3612637 C32.510974,9.93543743 31.8813824,9.34249464 31.4251497,8.58241758 C30.968917,7.82234052 30.7408041,6.96154327 30.7408041,6 C30.7408041,5.03845673 30.968917,4.17765948 31.4251497,3.41758242 C31.8813824,2.65750536 32.5155363,2.06456257 33.3276305,1.63873626 C34.1397246,1.21290996 35.0567385,1 36.0786997,1 C36.9729158,1 37.7758733,1.15109739 38.4875962,1.4532967 C39.1993192,1.75549602 39.7924128,2.19047335 40.2668948,2.75824176 L38.5423439,4.32417582 C37.8944935,3.60988654 37.1189096,3.25274725 36.2155689,3.25274725 C35.39435,3.25274725 34.7328226,3.50228688 34.2309666,4.00137363 C33.7291107,4.50046037 33.4781865,5.1666625 33.4781865,6 C33.4781865,6.53113819 33.5922429,7.00503455 33.8203593,7.4217033 C34.0484756,7.83837205 34.3678337,8.16346037 34.7784431,8.39697802 C35.1890525,8.63049567 35.6589651,8.74725275 36.188195,8.74725275 C36.7083003,8.74725275 37.1964619,8.64194245 37.6526946,8.43131868 L37.6526946,5.79395604 Z M41.7724551,1.19230769 L44.4824636,1.19230769 L44.4824636,10.8076923 L41.7724551,10.8076923 L41.7724551,1.19230769 Z M49.1223268,3.29395604 L49.1223268,5.40934066 L53.3515825,5.40934066 L53.3515825,7.51098901 L49.1223268,7.51098901 L49.1223268,10.8076923 L46.4123182,10.8076923 L46.4123182,1.19230769 L53.9264328,1.19230769 L53.9264328,3.29395604 L49.1223268,3.29395604 Z M60.3319076,7.35989011 L60.3319076,10.8076923 L57.6218991,10.8076923 L57.6218991,7.31868132 L53.9674936,1.19230769 L56.8280582,1.19230769 L59.1000855,5.01098901 L61.3721129,1.19230769 L64,1.19230769 L60.3319076,7.35989011 Z"/></g></svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     TWO SIDES OF THE SPECTRUM · VSL beat 2
+     ════════════════════════════════════════════════ -->
+<section id="sides">
+  <div class="w">
+    <div class="sides-header r">
+      <span class="eyebrow">Sound Familiar?</span>
+      <h2 class="h2">Almost every host is on one of two sides.</h2>
+    </div>
+    <div class="sides-grid r d1">
+      <div class="side-card">
+        <div class="side-kicker">Side One</div>
+        <h3 class="side-title">Booked, but quietly underpriced.</h3>
+        <p class="side-copy">The calendar looks okay. But you have this nagging feeling you might be too cheap. Maybe you're the most affordable decent place around, and that's the only reason you're full. <strong>Booked, and still leaving money on the table.</strong></p>
+      </div>
+      <div class="side-card">
+        <div class="side-kicker">Side Two</div>
+        <h3 class="side-title">Empty nights you can't explain.</h3>
+        <p class="side-copy">The bookings just aren't coming, and you can't figure out why. Here's what most hosts in that spot never realize: guests aren't looking at your listing and saying no. <strong>They never find you. You're buried in search.</strong></p>
+      </div>
+    </div>
+    <div class="sides-bridge r d2">
+      <div class="sides-bridge-kicker">The thing almost no host connects</div>
+      <p class="sides-bridge-line">How many bookings you get is tied to how <em>visible</em> you are. And how visible you are is tied to your <em>price</em>.</p>
+      <p class="sides-bridge-after">Maybe you've tried the usual advice. New photos, a new title, a pricing tool. If nothing really moved, this is why.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     THE THREE LEVERS · VSL beats 3 and 4
+     ════════════════════════════════════════════════ -->
+<section class="problem">
+  <div class="w">
+    <div class="sides-header r" style="margin-bottom:52px">
+      <span class="eyebrow">The Diagnosis</span>
+      <h2 class="h2">It's never just one thing. It's three, working together.</h2>
+      <p class="sub" style="margin-left:auto;margin-right:auto">Your ranking, your conversion, and your price. Hosts treat them like three separate problems, but they're one connected system. Fix one, ignore the other two, and you go nowhere.</p>
+    </div>
+    <div class="rg-cards r d2">
+      <div class="rg-card">
+        <div class="rg-card-num">01</div>
+        <h3>Ranking</h3>
+        <div class="rg-card-bar"></div>
+        <p>How visible you are. Where you show up when a guest searches your area. If you're not on the first page or two, you basically don't exist to them.</p>
+      </div>
+      <div class="rg-card">
+        <div class="rg-card-num">02</div>
+        <h3>Conversion</h3>
+        <div class="rg-card-bar"></div>
+        <p>Once a guest actually sees you, do they book? That comes down to your photos, your title, your reviews, and how your listing looks next to the others they're scrolling past.</p>
+      </div>
+      <div class="rg-card">
+        <div class="rg-card-num">03</div>
+        <h3>Price</h3>
+        <div class="rg-card-bar"></div>
+        <p>The number you charge per night. Too low and you're handing money away. Too high and guests skip right past you.</p>
+      </div>
+    </div>
+    <div class="rg-closing r d3">
+      <p class="rg-closing-line">It's not about working harder on your listing.</p>
+      <p class="rg-closing-em">It's about managing all three at once.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     PRICE AND RANKING ARE THE SAME PROBLEM · VSL beat 5
+     ════════════════════════════════════════════════ -->
+<section id="sameproblem">
+  <div class="w">
+    <div class="sp-header r">
+      <span class="eyebrow">Where Everyone Gets It Wrong</span>
+      <h2 class="h2">Your price and your ranking are not two problems.<br>They're the <em class="em-mark" style="font-style:italic;color:var(--accent)">same problem.</em></h2>
+    </div>
+    <div class="sp-grid r d1">
+      <div class="sp-panel">
+        <div class="sp-panel-kicker">What most hosts think</div>
+        <h3 class="sp-panel-title">Ranking works like Google.</h3>
+        <p class="sp-panel-copy">A fixed score based on your keywords and photos. Set your listing up once, and your spot in search stays put.</p>
+        <span class="sp-rank-static">YOUR RANK &nbsp;<b>#7, forever</b></span>
+      </div>
+      <div class="sp-panel reality">
+        <div class="sp-panel-kicker">How it actually works</div>
+        <h3 class="sp-panel-title">Your ranking changes day to day. And it's extremely sensitive to your price.</h3>
+        <p class="sp-panel-copy">Airbnb is constantly deciding which listings to show first, and it leans heavily toward the ones priced to sell. Change your price, and you change whether Airbnb even shows you.</p>
+        <div class="sp-days" aria-label="Example of search rank changing each day">
+          <div class="sp-day"><span class="sp-day-name">MON</span><span class="sp-day-rank">#7</span></div>
+          <div class="sp-day hot"><span class="sp-day-name">TUE</span><span class="sp-day-rank">#3</span></div>
+          <div class="sp-day cold"><span class="sp-day-name">WED</span><span class="sp-day-rank">#14</span></div>
+          <div class="sp-day"><span class="sp-day-name">THU</span><span class="sp-day-rank">#8</span></div>
+          <div class="sp-day cold"><span class="sp-day-name">FRI</span><span class="sp-day-rank">#19</span></div>
+          <div class="sp-day hot"><span class="sp-day-name">SAT</span><span class="sp-day-rank">#4</span></div>
+          <div class="sp-day"><span class="sp-day-name">SUN</span><span class="sp-day-rank">#9</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="sp-blackbox r d2">
+      <p>That's why dropping your price and picking up a couple bookings can feel like it worked, when you actually have no idea what it did to your visibility. <strong>You're making changes inside a black box. And without seeing how those changes move you in search, you're guessing.</strong></p>
+      <p class="sp-source">Airbnb's April 2026 Terms of Service update disclosed its recommendation system for the first time: a model of more than 800 signals, recomputed per search and per day, with conversion at the top of the ranking hierarchy.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     SOLUTION · RANK-BASED PRICING · VSL beat 6
+     ════════════════════════════════════════════════ -->
+<section id="solution">
+  <div class="w">
+    <div class="solution-header r">
+      <span class="eyebrow">What We Built</span>
+      <h2 class="h2">Rank-based <em class="em-mark" style="font-style:italic;color:var(--accent)">pricing.</em></h2>
+      <p class="sub">Every revenue manager prices the same way: look at the market, look at the comps, set you somewhere in the middle. We price to your position in search instead, and we can see what no one else can.</p>
+    </div>
+    <div class="bento-grid r d1">
+      <div class="bento-tile bento-revenue">
+        <div class="bt-eyebrow">The Mechanism</div>
+        <div class="bt-title">Priced to the Top of Search</div>
+        <p class="bt-desc">We find the exact spot where your price is as high as it can go while you still hold a top position in search, then hold you there all year as demand shifts. That's the point where the property earns the most.</p>
+        <div class="bt-chart">
+          <svg viewBox="0 0 260 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="fern-fade" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="var(--accent)"/>
+                <stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <line class="bt-chart-grid" x1="30" y1="15" x2="250" y2="15"/>
+            <line class="bt-chart-grid" x1="30" y1="40" x2="250" y2="40"/>
+            <line class="bt-chart-grid" x1="30" y1="65" x2="250" y2="65"/>
+            <line class="bt-chart-grid" x1="30" y1="90" x2="250" y2="90"/>
+            <line class="bt-chart-grid" x1="30" y1="115" x2="250" y2="115"/>
+            <text class="bt-chart-axis" x="26" y="18" text-anchor="end">$260</text>
+            <text class="bt-chart-axis" x="26" y="43" text-anchor="end">$230</text>
+            <text class="bt-chart-axis" x="26" y="68" text-anchor="end">$200</text>
+            <text class="bt-chart-axis" x="26" y="93" text-anchor="end">$170</text>
+            <text class="bt-chart-axis" x="26" y="118" text-anchor="end">$140</text>
+            <text class="bt-chart-axis" x="40" y="130" text-anchor="middle">Jan</text>
+            <text class="bt-chart-axis" x="75" y="130" text-anchor="middle">Feb</text>
+            <text class="bt-chart-axis" x="110" y="130" text-anchor="middle">Mar</text>
+            <text class="bt-chart-axis" x="145" y="130" text-anchor="middle">Apr</text>
+            <text class="bt-chart-axis" x="180" y="130" text-anchor="middle">May</text>
+            <text class="bt-chart-axis" x="215" y="130" text-anchor="middle">Jun</text>
+            <text class="bt-chart-axis" x="250" y="130" text-anchor="middle">Jul</text>
+            <path class="bt-chart-area" d="M40,100 75,85 110,90 145,65 180,55 215,35 250,18 250,115 40,115Z"/>
+            <polyline class="bt-chart-line" points="40,100 75,85 110,90 145,65 180,55 215,35 250,18"/>
+            <circle class="bt-chart-dot" cx="40" cy="100" r="3"/>
+            <circle class="bt-chart-dot" cx="75" cy="85" r="3"/>
+            <circle class="bt-chart-dot" cx="110" cy="90" r="3"/>
+            <circle class="bt-chart-dot" cx="145" cy="65" r="3"/>
+            <circle class="bt-chart-dot" cx="180" cy="55" r="3"/>
+            <circle class="bt-chart-dot" cx="215" cy="35" r="3"/>
+            <circle class="bt-chart-dot" cx="250" cy="18" r="3"/>
+            <text class="bt-chart-rank" x="40" y="91" text-anchor="middle">#3</text>
+            <text class="bt-chart-rank" x="75" y="76" text-anchor="middle">#2</text>
+            <text class="bt-chart-rank" x="110" y="81" text-anchor="middle">#2</text>
+            <text class="bt-chart-rank" x="145" y="56" text-anchor="middle">#1</text>
+            <text class="bt-chart-rank" x="180" y="46" text-anchor="middle">#1</text>
+            <text class="bt-chart-rank" x="215" y="26" text-anchor="middle">#2</text>
+            <text class="bt-chart-rank" x="250" y="9" text-anchor="middle">#1</text>
+          </svg>
+        </div>
+      </div>
+
+      <div class="bento-tile bento-listing r d2">
+        <div class="bt-eyebrow">The Feedback Loop</div>
+        <div class="bt-title">Every Change, Measured in Search</div>
+        <p class="bt-desc">We track how every pricing and listing change actually moves you in search, in real time. Almost no host or revenue manager can see this. Most people are flying blind. We're not.</p>
+        <div class="bt-rank-wrap">
+          <div class="bt-rank-card">
+            <div class="bt-rank-header">
+              <span>Search Results</span>
+              <span class="bt-rank-header-dot"></span>
+            </div>
+            <div class="bt-rank-list">
+              <div class="bt-rank-row" data-start="1" data-end="2">
+                <div class="bt-rank-badge"><span class="bt-rank-num-old">1</span><span class="bt-rank-num-new">2</span></div>
+                <img class="bt-rank-thumb" src="/images/properties/kitchen-after.webp" alt="Mountain View Lodge" width="32" height="32" loading="lazy" decoding="async">
+                <div class="bt-rank-info">
+                  <div class="bt-rank-name">Mountain View Lodge</div>
+                  <div class="bt-rank-score-line">
+                    <span class="bt-rank-score" data-target="91.3">0.0</span>
+                    <div class="bt-rank-bar"><div class="bt-rank-bar-fill" data-width="74"></div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="bt-rank-row" data-start="2" data-end="3">
+                <div class="bt-rank-badge"><span class="bt-rank-num-old">2</span><span class="bt-rank-num-new">3</span></div>
+                <img class="bt-rank-thumb" src="/images/properties/backyardbbq-after-thumb.webp" alt="Lakeside Retreat" width="32" height="32" loading="lazy" decoding="async">
+                <div class="bt-rank-info">
+                  <div class="bt-rank-name">Lakeside Retreat</div>
+                  <div class="bt-rank-score-line">
+                    <span class="bt-rank-score" data-target="87.2">0.0</span>
+                    <div class="bt-rank-bar"><div class="bt-rank-bar-fill" data-width="68"></div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="bt-rank-row" data-start="3" data-end="4">
+                <div class="bt-rank-badge"><span class="bt-rank-num-old">3</span><span class="bt-rank-num-new">4</span></div>
+                <img class="bt-rank-thumb" src="/images/properties/bunkroom-after.webp" alt="Sunset Ridge Cabin" width="32" height="32" loading="lazy" decoding="async">
+                <div class="bt-rank-info">
+                  <div class="bt-rank-name">Sunset Ridge Cabin</div>
+                  <div class="bt-rank-score-line">
+                    <span class="bt-rank-score" data-target="84.1">0.0</span>
+                    <div class="bt-rank-bar"><div class="bt-rank-bar-fill" data-width="62"></div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="bt-rank-row yours" data-start="4" data-end="1">
+                <div class="bt-rank-badge"><span class="bt-rank-num-old">4</span><span class="bt-rank-num-new">1</span></div>
+                <img class="bt-rank-thumb" src="/images/properties/livingroom-after-thumb.webp" alt="Your Property" width="32" height="32" loading="lazy" decoding="async">
+                <div class="bt-rank-info">
+                  <div class="bt-rank-name">
+                    Your Property
+                    <span class="bt-rank-arrow"><svg viewBox="0 0 12 12" fill="none"><path d="M6 10V3M6 3L3 6M6 3l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  </div>
+                  <div class="bt-rank-score-line">
+                    <span class="bt-rank-score" data-target="96.4" data-initial="68.5">0.0</span>
+                    <div class="bt-rank-bar"><div class="bt-rank-bar-fill" data-width="52" data-width2="92"></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bento-tile bento-intel r d2">
+        <div class="bt-eyebrow">Comp Monitoring</div>
+        <div class="bt-title">Your Comp Set, Watched Nightly</div>
+        <p class="bt-desc">Holding the top spot means knowing exactly who you're up against. We monitor your comps every night and reprice as demand shifts, so your position holds through every season.</p>
+        <div class="bt-radar-wrap">
+          <svg class="bt-radar-svg" viewBox="0 0 300 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <polygon class="bt-radar-ring" points="150,107 178.6,123.5 178.6,156.5 150,173 121.4,156.5 121.4,123.5"/>
+            <polygon class="bt-radar-ring" points="150,74 207.2,107 207.2,173 150,206 92.8,173 92.8,107"/>
+            <polygon class="bt-radar-ring" points="150,40 236.6,90 236.6,190 150,240 63.4,190 63.4,90"/>
+            <line class="bt-radar-axis" x1="150" y1="140" x2="150" y2="40"/>
+            <line class="bt-radar-axis" x1="150" y1="140" x2="236.6" y2="90"/>
+            <line class="bt-radar-axis" x1="150" y1="140" x2="236.6" y2="190"/>
+            <line class="bt-radar-axis" x1="150" y1="140" x2="150" y2="240"/>
+            <line class="bt-radar-axis" x1="150" y1="140" x2="63.4" y2="190"/>
+            <line class="bt-radar-axis" x1="150" y1="140" x2="63.4" y2="90"/>
+            <polygon class="bt-radar-poly bt-radar-c3" points="150,62 189,117.5 206.3,172.5 150,190 102.4,167.5 87.6,104"/>
+            <polygon class="bt-radar-poly bt-radar-c2" points="150,80 212.4,104 193.3,165 150,215 91.1,174 99.8,111"/>
+            <polygon class="bt-radar-poly bt-radar-c1" points="150,70 197.6,112.5 219.3,180 150,200 79,181 93.7,107.5"/>
+            <polygon class="bt-radar-poly bt-radar-you" points="150,48 226.2,96 232.3,187.5 150,230 85,177.5 76.4,97.5"/>
+            <text class="bt-radar-label" x="150" y="28">PRICE</text>
+            <text class="bt-radar-label" x="250" y="87" text-anchor="start">PHOTOS</text>
+            <text class="bt-radar-label" x="250" y="197" text-anchor="start">REVIEWS</text>
+            <text class="bt-radar-label" x="150" y="262">RESPONSE</text>
+            <text class="bt-radar-label" x="50" y="197" text-anchor="end">LOCATION</text>
+            <text class="bt-radar-label" x="50" y="87" text-anchor="end">AMENITIES</text>
+          </svg>
+        </div>
+        <div class="bt-legend">
+          <span class="bt-legend-item"><span class="bt-radar-dot" style="background:var(--accent)"></span>You</span>
+          <span class="bt-legend-item"><span class="bt-radar-dot" style="background:rgba(184,82,82,.6)"></span>A</span>
+          <span class="bt-legend-item"><span class="bt-radar-dot" style="background:rgba(155,123,58,.6)"></span>B</span>
+          <span class="bt-legend-item"><span class="bt-radar-dot" style="background:rgba(139,74,62,.6)"></span>C</span>
+        </div>
+      </div>
+
+      <div class="bento-tile bento-ranking r d2">
+        <div class="bt-eyebrow">Conversion</div>
+        <div class="bt-title">Views That Turn Into Bookings</div>
+        <p class="bt-desc">Once a guest finds you, do they book? We refine your photos, title, and copy so more views convert. Conversion is the exact signal Airbnb ranks you on, so every improvement here compounds your visibility too.</p>
+        <div class="cvf" aria-label="Search views converting to bookings">
+          <div class="cvf-row"><span class="cvf-label">Seen in search</span><div class="cvf-bar"><i style="--w:100%"></i></div></div>
+          <div class="cvf-row"><span class="cvf-label">Clicked</span><div class="cvf-bar"><i style="--w:52%"></i></div></div>
+          <div class="cvf-row"><span class="cvf-label">Booked</span><div class="cvf-bar accent"><i style="--w:22%"></i></div></div>
+          <div class="cvf-note">BOOKED &divide; SEEN IS YOUR CONVERSION. AIRBNB'S TOP RANKING SIGNAL.</div>
+        </div>
+      </div>
+
+      <div class="bento-tile bento-photo r d3">
+        <div class="bt-eyebrow">Ongoing Management</div>
+        <div class="bt-title">Managed Every Week, All Year</div>
+        <p class="bt-desc">There's no magic button. This works because someone manages all three levers together every week as demand shifts. You stop second-guessing your price, because someone is watching that number for you.</p>
+        <div class="wkwrap">
+          <div class="wkgrid" aria-hidden="true">
+            <span class="wkdot on"></span><span class="wkdot"></span><span class="wkdot"></span><span class="wkdot"></span><span class="wkdot on"></span><span class="wkdot"></span><span class="wkdot"></span><span class="wkdot"></span><span class="wkdot on"></span><span class="wkdot"></span><span class="wkdot"></span><span class="wkdot"></span><span class="wkdot on"></span>
+            <span class="wkdot"></span><span class="wkdot"></span><span class="wkdot on"></span><span class="wkdot"></span><span class="wkdot"></span><span class="wkdot"></span><span class="wkdot on"></span><span class="wkdot"></span><span class="wkdot"></span><span class="wkdot"></span><span class="wkdot on"></span><span class="wkdot"></span><span class="wkdot"></span>
+            <span class="wkdot"></span><span class="wkdot on"></span><span class="wkdot"></span><span class="wkdot"></span><span class="wkdot"></span><span class="wkdot on"></span><span class="wkdot"></span><span class="wkdot"></span><span class="wkdot"></span><span class="wkdot on"></span><span class="wkdot"></span><span class="wkdot"></span><span class="wkdot"></span>
+            <span class="wkdot on"></span><span class="wkdot"></span><span class="wkdot"></span><span class="wkdot"></span><span class="wkdot on"></span><span class="wkdot"></span><span class="wkdot"></span><span class="wkdot"></span><span class="wkdot on"></span><span class="wkdot"></span><span class="wkdot"></span><span class="wkdot"></span><span class="wkdot on"></span>
+          </div>
+          <div class="wk-caption">52 WEEKS &middot; 3 LEVERS &middot; ONE SYSTEM</div>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:36px" class="r d2">
+      <div><a href="/audit" class="btn-accent">Get my free audit →</a></div>
+      <p style="font-size:13px;color:var(--g500);font-weight:300;margin-top:14px">The simplest way to put it: it's the difference between pricing on what we think is the right number, and pricing on what actually, mathematically, drives the most revenue.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     HOW IT WORKS · merged process, VSL beats 9 and 10
+     ════════════════════════════════════════════════ -->
+<section class="hiw" id="how-it-works">
+  <div class="w">
+
+    <div class="hiw-header r">
+      <p class="hiw-eyebrow">The Process</p>
+      <h2 class="hiw-title">How It Works</h2>
+    </div>
+
+    <div class="hiw-layout">
+
+      <div class="hiw-visual r">
+        <div class="hiw-img-wrap">
+          <img src="/images/properties/livingroom-after-900.webp" srcset="/images/properties/livingroom-after-900.webp 900w, /images/properties/livingroom-after.webp 1200w" sizes="(max-width:768px) 90vw, 520px" alt="Beautiful vacation rental living room managed by RevWhisper" width="800" height="600" loading="lazy" decoding="async">
+        </div>
+        <div class="hiw-ba-wrap">
+          <div class="onboard-ba-card before hiw-ba-float">
+            <div class="onboard-ba-label">Before</div>
+            <div class="ba-header">
+              <span class="ba-month"></span>
+              <span class="ba-badge before"><span class="ba-count">0</span> nights</span>
+            </div>
+            <div class="ba-grid">
+              <span class="ba-dh">S</span><span class="ba-dh">M</span><span class="ba-dh">T</span><span class="ba-dh">W</span><span class="ba-dh">T</span><span class="ba-dh">F</span><span class="ba-dh">S</span>
+            </div>
+          </div>
+          <div class="onboard-ba-card after hiw-ba-float">
+            <div class="onboard-ba-label">After</div>
+            <div class="ba-header">
+              <span class="ba-month"></span>
+              <span class="ba-badge after"><span class="ba-count">0</span> nights</span>
+            </div>
+            <div class="ba-grid">
+              <span class="ba-dh">S</span><span class="ba-dh">M</span><span class="ba-dh">T</span><span class="ba-dh">W</span><span class="ba-dh">T</span><span class="ba-dh">F</span><span class="ba-dh">S</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hiw-steps-col">
+        <div class="hiw-vline"></div>
+
+        <div class="hiw-vstep r">
+          <div class="hiw-vstep-icon">
+            <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="16" cy="16" r="9"/>
+              <line x1="23" y1="23" x2="32" y2="32"/>
+              <line x1="16" y1="11" x2="16" y2="21"/>
+              <line x1="11" y1="16" x2="21" y2="16"/>
+            </svg>
+          </div>
+          <div class="hiw-vstep-body">
+            <span class="hiw-vstep-n">STEP 01</span>
+            <h3 class="hiw-vstep-title">Free Audit</h3>
+            <p class="hiw-vstep-desc">We pull your ranking report and walk you through it live: where you actually rank, what your price is costing you, and a real number for what the property should be earning. That's yours to keep either way.</p>
+          </div>
+        </div>
+
+        <div class="hiw-vstep r">
+          <div class="hiw-vstep-icon">
+            <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="16" cy="14" r="5"/>
+              <path d="M6 32c0-5.523 4.477-10 10-10s10 4.477 10 10"/>
+              <line x1="30" y1="14" x2="30" y2="22"/>
+              <line x1="26" y1="18" x2="34" y2="18"/>
+            </svg>
+          </div>
+          <div class="hiw-vstep-body">
+            <span class="hiw-vstep-n">STEP 02</span>
+            <h3 class="hiw-vstep-title">Onboarding &amp; Optimization</h3>
+            <p class="hiw-vstep-desc">A short call locks in your per-listing rate, then we set your conversion baseline: photos, title, copy, and pricing structure, all without disrupting a single booking.</p>
+          </div>
+        </div>
+
+        <div class="hiw-vstep r">
+          <div class="hiw-vstep-icon">
+            <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="4,24 10,24 14,12 18,30 22,18 26,26 30,20 36,20"/>
+            </svg>
+          </div>
+          <div class="hiw-vstep-body">
+            <span class="hiw-vstep-n">STEP 03</span>
+            <h3 class="hiw-vstep-title">Rank-Based Pricing Goes Live</h3>
+            <p class="hiw-vstep-desc">Your price moves to the highest point that holds a top position in search. From there, every change is measured against your actual rank, not a guess.</p>
+          </div>
+        </div>
+
+        <div class="hiw-vstep r">
+          <div class="hiw-vstep-icon">
+            <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="6" y="6" width="12" height="12" rx="2"/>
+              <rect x="22" y="6" width="12" height="12" rx="2"/>
+              <rect x="6" y="22" width="12" height="12" rx="2"/>
+              <rect x="22" y="22" width="12" height="12" rx="2"/>
+            </svg>
+          </div>
+          <div class="hiw-vstep-body">
+            <span class="hiw-vstep-n">STEP 04</span>
+            <h3 class="hiw-vstep-title">Managed Weekly, All Year</h3>
+            <p class="hiw-vstep-desc">Demand shifts, seasons turn, comps reprice. We manage ranking, conversion, and price together every week, with measurable results inside the first 30 days.</p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     CREDIBILITY · VSL beat 7
+     ════════════════════════════════════════════════ -->
+<section id="credibility" class="cred">
+  <div class="w cred-inner">
+
+    <div class="eyebrow r">Why Trust Us</div>
+    <h2 class="h2 r d1">We run it on <em class="em-mark" style="font-style:italic;color:var(--accent)">our own</em> properties first</h2>
+    <p class="sub r d2" style="margin-left:auto;margin-right:auto">This isn't theory for us. We manage our own portfolio across the US, so rank-based pricing is the exact strategy we run on our own money before we ever run it for anyone else.</p>
+
+    <div class="cred-stats r d2">
+      <div class="cred-stat">
+        <div class="cred-stat-num">10</div>
+        <div class="cred-stat-label">properties of our own,<br>across the US</div>
+      </div>
+      <div class="cred-stat">
+        <div class="cred-stat-num">~25%</div>
+        <div class="cred-stat-label">average client revenue lift<br>in the first 7 to 30 days</div>
+      </div>
+    </div>
+    <p class="cred-stat-basis r d2">Not a projection. Measured against what was already booked on the calendar at the same time the year before.</p>
+
+    <div class="r d3" style="text-align:center;margin-top:28px"><a href="/audit" class="btn-accent">Get my free audit →</a></div>
+
+    <div class="cred-carousel-shell r d3" aria-label="RevWhisper team divisions">
+      <div class="cred-carousel-head">Meet the Faces Behind RevWhisper</div>
+      <div class="cred-carousel-wrap">
+        <div class="cred-carousel-track">
+          <div class="cred-team-card">
+            <div class="cred-team-photo"><img src="/images/team/marisa.webp" alt="Marisa - Graphic Design" width="322" height="400" loading="lazy" decoding="async"></div>
+            <div class="cred-team-name">Marisa</div>
+            <div class="cred-team-division">Graphic Design</div>
+          </div>
+          <div class="cred-team-card">
+            <div class="cred-team-photo"><img src="/images/team/david.webp" alt="David - Revenue Optimization" width="322" height="400" loading="lazy" decoding="async"></div>
+            <div class="cred-team-name">David</div>
+            <div class="cred-team-division">Revenue Optimization</div>
+          </div>
+          <div class="cred-team-card">
+            <div class="cred-team-photo"><img src="/images/team/bryan.webp" alt="Bryan - AI Integrations" width="322" height="400" loading="lazy" decoding="async"></div>
+            <div class="cred-team-name">Bryan</div>
+            <div class="cred-team-division">AI Integrations</div>
+          </div>
+          <div class="cred-team-card">
+            <div class="cred-team-photo"><img src="/images/team/spencer.webp" alt="Spencer - Vision" width="322" height="400" loading="lazy" decoding="async"></div>
+            <div class="cred-team-name">Spencer</div>
+            <div class="cred-team-division">Vision</div>
+          </div>
+          <div class="cred-team-card">
+            <div class="cred-team-photo"><img src="/images/team/alex.webp" alt="Alex - Strategist" width="322" height="400" loading="lazy" decoding="async"></div>
+            <div class="cred-team-name">Alex</div>
+            <div class="cred-team-division">Strategist</div>
+          </div>
+          <div class="cred-team-card">
+            <div class="cred-team-photo"><img src="/images/team/nic.webp" alt="Nicolas - Customer Relations" width="322" height="400" loading="lazy" decoding="async"></div>
+            <div class="cred-team-name">Nicolas</div>
+            <div class="cred-team-division">Customer Relations</div>
+          </div>
+          <div class="cred-team-card">
+            <div class="cred-team-photo"><img src="/images/team/soliana.webp" alt="Soliana - Revenue Optimization" width="322" height="400" loading="lazy" decoding="async"></div>
+            <div class="cred-team-name">Soliana</div>
+            <div class="cred-team-division">Revenue Optimization</div>
+          </div>
+
+          <div class="cred-team-card" aria-hidden="true">
+            <div class="cred-team-photo"><img src="/images/team/marisa.webp" alt="Marisa - Graphic Design" width="322" height="400" loading="lazy" decoding="async"></div>
+            <div class="cred-team-name">Marisa</div>
+            <div class="cred-team-division">Graphic Design</div>
+          </div>
+          <div class="cred-team-card" aria-hidden="true">
+            <div class="cred-team-photo"><img src="/images/team/david.webp" alt="David - Revenue Optimization" width="322" height="400" loading="lazy" decoding="async"></div>
+            <div class="cred-team-name">David</div>
+            <div class="cred-team-division">Revenue Optimization</div>
+          </div>
+          <div class="cred-team-card" aria-hidden="true">
+            <div class="cred-team-photo"><img src="/images/team/bryan.webp" alt="Bryan - AI Integrations" width="322" height="400" loading="lazy" decoding="async"></div>
+            <div class="cred-team-name">Bryan</div>
+            <div class="cred-team-division">AI Integrations</div>
+          </div>
+          <div class="cred-team-card" aria-hidden="true">
+            <div class="cred-team-photo"><img src="/images/team/spencer.webp" alt="Spencer - Vision" width="322" height="400" loading="lazy" decoding="async"></div>
+            <div class="cred-team-name">Spencer</div>
+            <div class="cred-team-division">Vision</div>
+          </div>
+          <div class="cred-team-card" aria-hidden="true">
+            <div class="cred-team-photo"><img src="/images/team/alex.webp" alt="Alex - Strategist" width="322" height="400" loading="lazy" decoding="async"></div>
+            <div class="cred-team-name">Alex</div>
+            <div class="cred-team-division">Strategist</div>
+          </div>
+          <div class="cred-team-card" aria-hidden="true">
+            <div class="cred-team-photo"><img src="/images/team/nic.webp" alt="Nicolas - Customer Relations" width="322" height="400" loading="lazy" decoding="async"></div>
+            <div class="cred-team-name">Nicolas</div>
+            <div class="cred-team-division">Customer Relations</div>
+          </div>
+          <div class="cred-team-card" aria-hidden="true">
+            <div class="cred-team-photo"><img src="/images/team/soliana.webp" alt="Soliana - Revenue Optimization" width="322" height="400" loading="lazy" decoding="async"></div>
+            <div class="cred-team-name">Soliana</div>
+            <div class="cred-team-division">Revenue Optimization</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     FUTURE PACING · VSL beat 8
+     ════════════════════════════════════════════════ -->
+<section id="future">
+  <div class="w">
+    <div class="future-inner r">
+      <div class="future-kicker">Picture the Other Version of This</div>
+      <p class="future-line">You're not second-guessing your price every week, because it's already sitting right where it should be. Your visibility stays high, so guests are actually finding you. The calendar fills at rates you didn't think you could get.</p>
+      <p class="future-close">And the question of whether you're leaving money on the table? You don't have to wonder anymore. Someone is watching that number for you, every week.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     PRICING
+     ════════════════════════════════════════════════ -->
+<section id="pricing">
+  <div class="w">
+    <div class="pricing-header r">
+      <span class="eyebrow">Pricing</span>
+      <h2 class="h2">Priced per listing.<br>Discounted at <em class="em-mark" style="font-style:italic;color:var(--accent)">scale.</em></h2>
+      <p class="sub">A flat rate per listing, never a percentage of your revenue, with discounts that grow with your portfolio. Tell us what you run and we'll quote it.</p>
+    </div>
+    <div class="pricing-grid pricing-grid--inquiry r d1">
+      <div class="price-card price-inquiry">
+        <div class="pi-main">
+          <div class="pi-kicker">How pricing works</div>
+          <h3 class="pi-title">One flat rate, per listing</h3>
+          <p class="pi-copy">We price by the listing, not by a cut of what you earn. Bring more listings and your per-listing rate drops, quoted upfront, before you commit to anything.</p>
+          <div class="pi-ladder">
+            <div class="pi-ladder-head"><span>Portfolio size</span><span>Rate per listing</span></div>
+            <div class="pi-tier"><span class="pi-tier-range">1</span><span class="pi-tier-label">Single listing</span><span class="pi-tier-bar"><i style="--w:100%"></i></span></div>
+            <div class="pi-tier"><span class="pi-tier-range">2&ndash;9</span><span class="pi-tier-label">Portfolio discount</span><span class="pi-tier-bar"><i style="--w:72%"></i></span></div>
+            <div class="pi-tier"><span class="pi-tier-range">10+</span><span class="pi-tier-label">Custom partnership rate</span><span class="pi-tier-bar"><i style="--w:46%"></i></span></div>
+          </div>
+          <a href="/checkout-form" class="btn-primary">Get started &rarr;</a>
+          <div class="pi-note">One short call &middot; exact per-listing rate &middot; no obligation</div>
+        </div>
+        <div class="pi-side">
+          <div class="pi-side-kicker">Every listing includes</div>
+          <div class="price-features">
+            <div class="price-feat">Dedicated account manager</div>
+            <div class="price-feat">Rank-based pricing, managed weekly</div>
+            <div class="price-feat">Professional photo direction &amp; edits</div>
+            <div class="price-feat">Listing copy &amp; SEO rewrites</div>
+            <div class="price-feat">Daily search rank tracking</div>
+            <div class="price-feat">Monthly performance report</div>
+          </div>
+          <div class="pi-side-note">Same scope at every portfolio size. Discounts change the rate, not the service.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     HONEST EXPECTATIONS + COST OF WAITING · VSL beat 11
+     ════════════════════════════════════════════════ -->
+<section id="stakes" class="stakes">
+  <div class="stakes-fill">
+    <svg class="stakes-fill-wave" viewBox="0 0 1200 14" preserveAspectRatio="none"><path d="M0,7 C150,2 300,12 450,7 C600,2 750,12 900,7 C1050,2 1200,12 1200,7 L1200,14 L0,14 Z" fill="#f5f4f1"/></svg>
+  </div>
+  <svg class="stakes-bg" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <pattern id="stakes-topo" x="0" y="0" width="240" height="240" patternUnits="userSpaceOnUse">
+        <circle cx="120" cy="120" r="40" fill="none" stroke="rgba(255,255,255,.025)" stroke-width=".6"/>
+        <circle cx="120" cy="120" r="70" fill="none" stroke="rgba(255,255,255,.018)" stroke-width=".5"/>
+        <circle cx="120" cy="120" r="100" fill="none" stroke="rgba(255,255,255,.012)" stroke-width=".4"/>
+        <circle cx="0" cy="0" r="50" fill="none" stroke="rgba(255,255,255,.018)" stroke-width=".5"/>
+        <circle cx="240" cy="240" r="55" fill="none" stroke="rgba(255,255,255,.018)" stroke-width=".5"/>
+        <circle cx="240" cy="0" r="45" fill="none" stroke="rgba(255,255,255,.015)" stroke-width=".4"/>
+        <circle cx="0" cy="240" r="60" fill="none" stroke="rgba(255,255,255,.015)" stroke-width=".4"/>
+      </pattern>
+    </defs>
+    <rect width="100%" height="100%" fill="url(#stakes-topo)"/>
+  </svg>
+
+  <div class="w stakes-inner">
+    <div class="stakes-layout">
+
+      <!-- Narrative -->
+      <div class="stakes-content">
+        <span class="stakes-eyebrow r">Honest Expectations</span>
+        <h2 class="stakes-h2 r d1">No magic button.<br><span class="stakes-red">And a real cost to waiting.</span></h2>
+        <div class="stakes-body r d2">
+          <div class="stakes-block">
+            <h3 class="stakes-block-label">This is an ongoing system</h3>
+            <p>Not a one-time fix. It works because someone manages your ranking, conversion, and price together <span class="stakes-highlight">every week, all year</span>. We'd rather you know that up front.</p>
+          </div>
+          <div class="stakes-block">
+            <h3 class="stakes-block-label">Running it yourself is fine</h3>
+            <p>Plenty of hosts do. Just know what it's costing you, because this compounds. Airbnb gives the listings that are already winning <span class="stakes-highlight">even more visibility</span>, which makes them win even more. Every month you're out of position, the gap between you and the listing above you gets a little wider.</p>
+          </div>
+          <div class="stakes-block stakes-block--red">
+            <h3 class="stakes-block-label">Peak season is the worst time to be priced wrong</h3>
+            <p>That's when the money you're leaving behind is <span class="stakes-highlight">the biggest</span>. The time to fix your position is before the demand arrives, not after it's gone.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ranking Decay Visualization -->
+      <div class="stakes-viz r d2">
+        <div class="stakes-callout">
+          <p>Nothing changed. <span>Everything around you did.</span></p>
+        </div>
+        <div class="stakes-card">
+          <div class="stakes-card-header">
+            <span>Search Results · Poconos, PA</span>
+            <span class="stakes-live"><span class="stakes-live-dot"></span>Live</span>
+          </div>
+          <div class="stakes-list" id="stakesRankList">
+            <div class="stakes-row managed" data-drift="-0.09">
+              <div class="stakes-pos">1</div>
+              <div class="stakes-thumb">
+                <img src="images/airbnbs/creekstone-lodge.webp" alt="Creekstone Lodge" width="96" height="96" loading="lazy" decoding="async">
+              </div>
+              <div class="stakes-info">
+                <div class="stakes-name">Creekstone Lodge</div>
+                <div class="stakes-meta"><span class="stakes-tag">Managed</span><span class="stakes-score" data-revenue="214">$214k/yr</span></div>
+              </div>
+            </div>
+            <div class="stakes-row managed" data-drift="-0.06">
+              <div class="stakes-pos">2</div>
+              <div class="stakes-thumb">
+                <img src="images/airbnbs/timber-ridge-retreat.webp" alt="Timber Ridge Retreat" width="96" height="96" loading="lazy" decoding="async">
+              </div>
+              <div class="stakes-info">
+                <div class="stakes-name">Timber Ridge Retreat</div>
+                <div class="stakes-meta"><span class="stakes-tag">Managed</span><span class="stakes-score" data-revenue="206">$206k/yr</span></div>
+              </div>
+            </div>
+            <div class="stakes-row" data-drift="0.025">
+              <div class="stakes-pos">3</div>
+              <div class="stakes-thumb">
+                <img src="images/airbnbs/pine-valley-cabin.webp" alt="Pine Valley Cabin" width="96" height="96" loading="lazy" decoding="async">
+              </div>
+              <div class="stakes-info">
+                <div class="stakes-name">Pine Valley Cabin</div>
+                <div class="stakes-meta"><span class="stakes-score" data-revenue="189">$189k/yr</span></div>
+              </div>
+            </div>
+            <div class="stakes-row yours" data-drift="0.14">
+              <div class="stakes-pos">4</div>
+              <div class="stakes-thumb">
+                <img src="images/airbnbs/your-listing.webp" alt="Your Listing" width="96" height="96" loading="lazy" decoding="async">
+              </div>
+              <div class="stakes-info">
+                <div class="stakes-name">Your Listing</div>
+                <div class="stakes-meta"><span class="stakes-score" data-revenue="182">$182k/yr</span></div>
+              </div>
+            </div>
+            <div class="stakes-row managed" data-drift="-0.08">
+              <div class="stakes-pos">5</div>
+              <div class="stakes-thumb">
+                <img src="images/airbnbs/summit-view-chalet.webp" alt="Summit View Chalet" width="96" height="96" loading="lazy" decoding="async">
+              </div>
+              <div class="stakes-info">
+                <div class="stakes-name">Summit View Chalet</div>
+                <div class="stakes-meta"><span class="stakes-tag">Managed</span><span class="stakes-score" data-revenue="175">$175k/yr</span></div>
+              </div>
+            </div>
+            <div class="stakes-row" data-drift="0.04">
+              <div class="stakes-pos">6</div>
+              <div class="stakes-thumb">
+                <img src="images/airbnbs/lakeview-hideaway.webp" alt="Lakeview Hideaway" width="96" height="96" loading="lazy" decoding="async">
+              </div>
+              <div class="stakes-info">
+                <div class="stakes-name">Lakeview Hideaway</div>
+                <div class="stakes-meta"><span class="stakes-score" data-revenue="169">$169k/yr</span></div>
+              </div>
+            </div>
+            <div class="stakes-row managed" data-drift="-0.11">
+              <div class="stakes-pos">7</div>
+              <div class="stakes-thumb">
+                <img src="images/airbnbs/birchwood-estate.webp" alt="Birchwood Estate" width="96" height="96" loading="lazy" decoding="async">
+              </div>
+              <div class="stakes-info">
+                <div class="stakes-name">Birchwood Estate</div>
+                <div class="stakes-meta"><span class="stakes-tag">Managed</span><span class="stakes-score" data-revenue="163">$163k/yr</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="stakes-caption">Simulated annual revenue (USD). Drift is illustrative.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     COMPARISON · anti-positioning
+     ════════════════════════════════════════════════ -->
+<section id="compare">
+  <div class="w">
+    <div class="compare-header r">
+      <span class="eyebrow">Why RevWhisper</span>
+      <h2 class="h2">Everyone else prices to the market.<br>We price to your rank.</h2>
+      <p class="sub">Pricing tools look at your comps and set you somewhere in the middle. Ranking tools show you data and leave the work to you. RevWhisper connects the two and executes for you, every week.</p>
+    </div>
+    <div class="compare-table r d1">
+      <div class="compare-row compare-head">
+        <div class="compare-feat"></div>
+        <div class="compare-col">PriceLabs</div>
+        <div class="compare-col">RankBreeze</div>
+        <div class="compare-col compare-ours">RevWhisper</div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-feat">Dynamic pricing</div>
+        <div class="compare-col"><span class="compare-yes">&#10003;</span></div>
+        <div class="compare-col"><span class="compare-no">&mdash;</span></div>
+        <div class="compare-col compare-ours"><span class="compare-yes">&#10003;</span></div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-feat">Rank-based pricing</div>
+        <div class="compare-col"><span class="compare-no">&mdash;</span></div>
+        <div class="compare-col"><span class="compare-no">&mdash;</span></div>
+        <div class="compare-col compare-ours"><span class="compare-yes">&#10003;</span></div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-feat">Daily search rank tracking</div>
+        <div class="compare-col"><span class="compare-no">&mdash;</span></div>
+        <div class="compare-col"><span class="compare-yes">&#10003;</span></div>
+        <div class="compare-col compare-ours"><span class="compare-yes">&#10003;</span></div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-feat">Listing copy optimization</div>
+        <div class="compare-col"><span class="compare-no">&mdash;</span></div>
+        <div class="compare-col"><span class="compare-no">&mdash;</span></div>
+        <div class="compare-col compare-ours"><span class="compare-yes">&#10003;</span></div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-feat">Professional image editing</div>
+        <div class="compare-col"><span class="compare-no">&mdash;</span></div>
+        <div class="compare-col"><span class="compare-no">&mdash;</span></div>
+        <div class="compare-col compare-ours"><span class="compare-yes">&#10003;</span></div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-feat">Competitor intelligence</div>
+        <div class="compare-col"><span class="compare-partial">Limited</span></div>
+        <div class="compare-col"><span class="compare-partial">Limited</span></div>
+        <div class="compare-col compare-ours"><span class="compare-yes">&#10003;</span></div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-feat">Fully managed (done for you)</div>
+        <div class="compare-col"><span class="compare-no">&mdash;</span></div>
+        <div class="compare-col"><span class="compare-no">&mdash;</span></div>
+        <div class="compare-col compare-ours"><span class="compare-yes">&#10003;</span></div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-feat">Ranking by unbooked dates</div>
+        <div class="compare-col"><span class="compare-no">&mdash;</span></div>
+        <div class="compare-col"><span class="compare-no">&mdash;</span></div>
+        <div class="compare-col compare-ours"><span class="compare-yes">&#10003;</span></div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-feat">View volume insights for unbooked dates</div>
+        <div class="compare-col"><span class="compare-no">&mdash;</span></div>
+        <div class="compare-col"><span class="compare-no">&mdash;</span></div>
+        <div class="compare-col compare-ours"><span class="compare-yes">&#10003;</span></div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-feat">Optimal guest insights</div>
+        <div class="compare-col"><span class="compare-no">&mdash;</span></div>
+        <div class="compare-col"><span class="compare-no">&mdash;</span></div>
+        <div class="compare-col compare-ours"><span class="compare-yes">&#10003;</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     WEBINAR BANNER
+     ════════════════════════════════════════════════ -->
+<section class="webinar-banner r" id="webinar">
+  <div class="wb-particle"></div>
+  <div class="wb-particle"></div>
+  <div class="wb-particle"></div>
+  <div class="wb-particle"></div>
+  <div class="wb-particle"></div>
+  <div class="wb-particle"></div>
+  <div class="w">
+    <div class="wb-eyebrow"><span class="wb-live-dot"></span> Live Every Wednesday at 12pm EST</div>
+    <h2 class="wb-headline">Learn How Top Hosts<br><em>Maximize Revenue</em></h2>
+    <p class="wb-sub">Join our free live webinar where we break down proven strategies, share exactly what we do for clients, and give you actionable advice you can implement today.</p>
+    <div class="wb-countdown">
+      <div class="wb-countdown-label">Next webinar starts in</div>
+      <div class="wb-timer" id="wb-timer">
+        <div class="wb-time-unit"><span class="wb-num" id="wb-days">0</span><span class="wb-unit">days</span></div>
+        <span class="wb-sep">:</span>
+        <div class="wb-time-unit"><span class="wb-num" id="wb-hours">0</span><span class="wb-unit">hrs</span></div>
+        <span class="wb-sep">:</span>
+        <div class="wb-time-unit"><span class="wb-num" id="wb-mins">0</span><span class="wb-unit">min</span></div>
+        <span class="wb-sep">:</span>
+        <div class="wb-time-unit"><span class="wb-num" id="wb-secs">0</span><span class="wb-unit">sec</span></div>
+      </div>
+    </div>
+    <div class="wb-spots"><span class="wb-spots-dot"></span> Select listings audited live each session</div>
+    <br>
+    <a href="/webinar" class="wb-cta">Reserve Your Spot <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     FINAL CTA · VSL beat 10, what you keep either way
+     ════════════════════════════════════════════════ -->
+<section id="cta">
+  <div class="w">
+    <div class="cta-card r">
+      <div class="cta-ripple-wrap"><div class="cta-ripple"></div><div class="cta-ripple"></div><div class="cta-ripple"></div></div>
+      <div class="cta-ey">Start now</div>
+      <h2 class="cta-h2">Stop Guessing. Start <em class="em-mark-w">Whispering.</em></h2>
+      <p class="cta-sub">Get a free audit of your listing. You'll walk away knowing where you actually rank, what your price is costing you, and a real number for what your property should be earning. Even if we never work together, that's yours to keep.</p>
+      <a href="/audit" class="btn-white">Get my free audit &rarr;</a>
+      <p class="cta-note">No obligation. No pressure. Just data.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- FOOTER:START -->
+<footer class="site-footer">
+  <div class="w">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">
+          <div class="lm">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24" fill="none" aria-hidden="true">
+              <path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="#32302F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="#32302F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="footer-logo-name">RevWhisper</span>
+        </div>
+        <p class="footer-tag">A revenue intelligence team that layers into your Airbnb listing to accelerate performance and maximize earnings.</p>
+        <div class="footer-socials">
+          <a href="https://x.com/RevWhisper" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+          <a href="https://www.instagram.com/rev.whisper/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          </a>
+          <a href="https://www.facebook.com/groups/airbnblistingoptimization" target="_blank" rel="noopener noreferrer" aria-label="Facebook Group">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <p class="footer-col-title">Explore</p>
+        <a href="/" class="footer-link">Home</a>
+        <a href="/airbnb-listing-optimization" class="footer-link">Listing Optimization</a>
+        <a href="/revenue-management" class="footer-link">Revenue Management</a>
+        <a href="/photoediting" class="footer-link">Photo Editing</a>
+        <a href="/case-study" class="footer-link">Case Study</a>
+        <a href="/blog" class="footer-link">Blog</a>
+        <a href="/audit" class="footer-link">Get a Free Audit</a>
+      </div>
+      <div class="footer-col">
+        <p class="footer-col-title">Resources</p>
+        <a href="https://app.revwhisper.com/search-ranking" class="footer-link">Search Ranking Tool</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 MCO CORP d/b/a RevWhisper. All rights reserved.</span>
+      <nav class="footer-legal" aria-label="Legal">
+        <a href="/privacy">Privacy Policy</a>
+        <a href="/terms">Terms of Service</a>
+      </nav>
+      <span>Stop Guessing. Start Whispering.</span>
+    </div>
+  </div>
+</footer>
+<!-- FOOTER:END -->
+
+<script defer src="assets/home.js"></script>
+</body>
+</html>

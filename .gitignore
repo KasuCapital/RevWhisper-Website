@@ -8,3 +8,8 @@ New Website Elements/
 # Photo-tour source drop folders (local working files; site serves images/properties/tours/)
 images/properties/photo-tours/*
 !images/properties/photo-tours/README.md
+
+# Local working files, never site content
+Headshots/
+Headshots-*.zip
+.make-backups/

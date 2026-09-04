@@ -81,6 +81,32 @@ module.exports = async function handler(req, res) {
     return sendJson(res, 400, { error: 'Webhook payload is missing required fields.' });
   }
 
+  if (event.type === 'checkout.session.completed') {
+    const object = event.data.object;
+    const email =
+      object.customer_details?.email || object.customer_email || object.metadata?.email || null;
+    const checkoutSecret = process.env.ONBOARDING_CHECKOUT_SECRET;
+
+    if (email && checkoutSecret) {
+      try {
+        await fetch('https://app.revwhisper.com/api/public/onboarding/checkout', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${checkoutSecret}`
+          },
+          body: JSON.stringify({ email }),
+          signal: AbortSignal.timeout(5000)
+        });
+      } catch (error) {
+        // Fire-and-forget: the Growth Hub call is idempotent and must never block the webhook.
+        console.error('[checkout] Growth Hub notify failed:', error);
+      }
+    } else if (!checkoutSecret) {
+      console.error('[checkout] ONBOARDING_CHECKOUT_SECRET is not set; skipping Growth Hub notify.');
+    }
+  }
+
   const makeWebhookUrl = process.env.MAKE_STRIPE_WEBHOOK_URL;
   if (makeWebhookUrl && RELEVANT_EVENTS.has(event.type)) {
     const object = event.data.object;

@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RevWhisper — Homepage 1 Concept</title>
+<meta name="description" content="Fully managed Airbnb revenue and listing optimization. Dynamic pricing, professional photos, copy, and daily search-rank tracking, done for you.">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="/icons/favicon-light.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ════════════════════════════════════════════════════════
+   REVWHISPER · HOMEPAGE 1 · ground-up concept
+   White 70 · Dune 15 · Fern 10 · Stone 5
+   ════════════════════════════════════════════════════════ */
+:root{
+  --dune:#32302F;
+  --white:#FFFFFF;
+  --stone:#E0DCDA;
+  --fern:#4A6741;
+  --terracotta:#8B4A3E;
+  --gold:#9B7B3A;
+  --bg-subtle:#F8F7F6;
+  --heading:'Lora',Georgia,serif;
+  --body:'DM Sans',system-ui,sans-serif;
+  --mono:'DM Mono','Courier New',monospace;
+  --shadow-sm:0 1px 2px rgba(50,48,47,.04),0 1px 3px rgba(50,48,47,.06);
+  --shadow-md:0 2px 4px rgba(50,48,47,.03),0 4px 12px rgba(50,48,47,.06);
+  --shadow-lg:0 4px 8px rgba(50,48,47,.04),0 8px 24px rgba(50,48,47,.08);
+  --shadow-xl:0 8px 16px rgba(50,48,47,.05),0 16px 48px rgba(50,48,47,.1);
+  --r-sm:6px;--r-md:8px;--r-lg:12px;--r-xl:16px;
+  --expo:cubic-bezier(.16,1,.3,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--body);font-size:18px;line-height:1.6;font-weight:400;
+  color:var(--dune);background:var(--white);
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+.w{max-width:1200px;margin:0 auto;padding:0 32px}
+@media(max-width:768px){.w{padding:0 20px}}
+
+/* ── Reveal system: opacity + translateY(8px), 400ms expo ── */
+.rv{opacity:0;transform:translateY(8px);transition:opacity .4s var(--expo),transform .4s var(--expo)}
+.rv.in{opacity:1;transform:none}
+.rv.d1{transition-delay:.08s}.rv.d2{transition-delay:.16s}.rv.d3{transition-delay:.24s}.rv.d4{transition-delay:.32s}
+@media(prefers-reduced-motion:reduce){
+  .rv{opacity:1;transform:none;transition:none}
+  *{animation-duration:.01ms!important;animation-iteration-count:1!important}
+  html{scroll-behavior:auto}
+}
+
+/* ════════ NAV ════════ */
+.nav{
+  position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:100;
+  width:min(1100px,calc(100% - 32px));
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 20px;border-radius:100px;
+  background:rgba(255,255,255,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border:1px solid transparent;
+  transition:box-shadow .25s var(--expo),border-color .25s var(--expo);
+}
+.nav.scrolled{box-shadow:var(--shadow-md);border-color:var(--stone)}
+.nav-logo{display:flex;align-items:center;gap:9px;font-family:var(--body);font-weight:500;font-size:17px;letter-spacing:-.01em}
+.nav-logo .rev{color:var(--fern)}
+.nav-links{display:flex;align-items:center;gap:28px;font-size:15px;font-weight:500}
+.nav-links a{position:relative;opacity:.85;transition:opacity .15s var(--expo)}
+.nav-links a:hover{opacity:1}
+.nav-links a::after{content:'';position:absolute;left:0;bottom:-4px;width:100%;height:1.5px;background:var(--fern);transform:scaleX(0);transform-origin:left;transition:transform .25s var(--expo)}
+.nav-links a:hover::after{transform:scaleX(1)}
+.nav-cta{
+  background:var(--fern);color:var(--white);font-weight:500;font-size:15px;
+  padding:10px 22px;border-radius:100px;
+  transition:opacity .25s var(--expo),transform .25s var(--expo);
+}
+.nav-cta:hover{opacity:.9;transform:translateY(-1px)}
+@media(max-width:860px){.nav-links{display:none}}
+
+/* ════════ HERO ════════ */
+.hero{position:relative;min-height:100svh;display:flex;align-items:center;padding:140px 0 80px;overflow:hidden}
+.hero-glow{
+  position:absolute;top:-25%;left:50%;transform:translateX(-50%);
+  width:1100px;height:1100px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,rgba(74,103,65,.07) 0%,rgba(74,103,65,.03) 38%,transparent 65%);
+}
+/* drifting topo rings — barely-there texture */
+.hero-rings{position:absolute;inset:0;pointer-events:none;opacity:.5}
+.hero-rings circle{fill:none;stroke:var(--stone);stroke-width:1}
+.hero-grid{position:relative;display:grid;grid-template-columns:1.1fr .9fr;gap:64px;align-items:center}
+@media(max-width:980px){.hero-grid{grid-template-columns:1fr;gap:48px}}
+
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:var(--mono);font-size:13px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--fern);margin-bottom:24px;
+}
+.hero-eyebrow .pulse{width:8px;height:8px;border-radius:50%;background:var(--fern);position:relative}
+.hero-eyebrow .pulse::after{
+  content:'';position:absolute;inset:-5px;border-radius:50%;border:1.5px solid var(--fern);
+  animation:ringPulse 2.4s var(--expo) infinite;
+}
+@keyframes ringPulse{0%{transform:scale(.4);opacity:.9}70%,100%{transform:scale(1.15);opacity:0}}
+
+.hero-h1{
+  font-family:var(--heading);font-weight:400;
+  font-size:clamp(42px,5.4vw,68px);line-height:1.1;letter-spacing:-.02em;
+  margin-bottom:26px;
+}
+/* word-by-word rise */
+.hero-h1 .wd{display:inline-block;overflow:hidden;vertical-align:bottom}
+.hero-h1 .wd>span{display:inline-block;transform:translateY(110%);transition:transform .5s var(--expo)}
+.hero-h1.live .wd>span{transform:none}
+.hero-h1 em{font-style:italic;color:var(--fern)}
+/* hand-drawn wavy underline that draws itself — the single emphasis mark on this view */
+.hero-underline{position:relative;white-space:nowrap}
+.hero-underline svg{position:absolute;left:0;bottom:-.12em;width:100%;height:.32em;overflow:visible}
+.hero-underline path{
+  fill:none;stroke:var(--fern);stroke-width:1.8;stroke-linecap:round;
+  stroke-dasharray:320;stroke-dashoffset:320;transition:stroke-dashoffset .5s var(--expo) .45s;
+}
+.hero-h1.live .hero-underline path{stroke-dashoffset:0}
+
+.hero-sub{font-size:20px;line-height:1.6;color:rgba(50,48,47,.72);max-width:520px;margin-bottom:36px}
+.hero-ctas{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:40px}
+.btn{
+  display:inline-flex;align-items:center;gap:10px;font-family:var(--body);font-weight:500;font-size:16px;
+  padding:16px 30px;border-radius:var(--r-md);cursor:pointer;border:none;
+  transition:opacity .25s var(--expo),transform .25s var(--expo),box-shadow .25s var(--expo),border-color .25s var(--expo);
+}
+.btn-fern{background:var(--fern);color:var(--white);box-shadow:var(--shadow-sm)}
+.btn-fern:hover{opacity:.92;transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.btn-fern .arr{transition:transform .25s var(--expo)}
+.btn-fern:hover .arr{transform:translateX(3px)}
+.btn-ghost{background:transparent;color:var(--dune);border:1px solid var(--stone)}
+.btn-ghost:hover{border-color:var(--dune);transform:translateY(-2px)}
+
+.hero-proof{display:flex;align-items:center;gap:18px;font-size:14px;color:rgba(50,48,47,.65)}
+.hero-proof .faces{display:flex}
+.hero-proof .faces img{
+  width:34px;height:34px;border-radius:50%;border:2px solid var(--white);object-fit:cover;
+  margin-left:-9px;box-shadow:var(--shadow-sm);
+}
+.hero-proof .faces img:first-child{margin-left:0}
+.hero-proof .stars{color:var(--gold);letter-spacing:2px;font-size:13px}
+
+/* hero visual: live ranking card */
+.hero-visual{position:relative;will-change:transform}
+.rank-card{
+  background:var(--white);border:1px solid var(--stone);border-radius:var(--r-xl);
+  box-shadow:var(--shadow-xl);overflow:hidden;
+}
+.rank-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 20px;border-bottom:1px solid var(--stone);
+  font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:rgba(50,48,47,.6);
+}
+.rank-live{display:inline-flex;align-items:center;gap:7px;color:var(--fern)}
+.rank-live i{width:7px;height:7px;border-radius:50%;background:var(--fern);animation:blink 2s var(--expo) infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+.rank-rows{position:relative;padding:10px 12px 12px;display:flex;flex-direction:column;gap:8px}
+.rank-row{
+  display:flex;align-items:center;gap:13px;padding:10px 12px;border-radius:var(--r-lg);
+  background:var(--white);border:1px solid transparent;
+  transition:transform .5s var(--expo),background .5s var(--expo),border-color .5s var(--expo);
+}
+.rank-row .pos{font-family:var(--mono);font-size:15px;width:18px;text-align:center;color:rgba(50,48,47,.5);transition:color .4s var(--expo)}
+.rank-row img{width:52px;height:52px;border-radius:var(--r-md);object-fit:cover}
+.rank-row .nm{font-size:15px;font-weight:500;line-height:1.3}
+.rank-row .mt{font-family:var(--mono);font-size:12px;color:rgba(50,48,47,.55)}
+.rank-row.yours{border-color:var(--stone)}
+.rank-row.yours.top{background:rgba(74,103,65,.06);border-color:rgba(74,103,65,.35)}
+.rank-row.yours.top .pos{color:var(--fern);font-weight:500}
+.rank-row .tag{
+  margin-left:auto;font-family:var(--mono);font-size:11px;letter-spacing:.05em;
+  padding:3px 9px;border-radius:100px;background:rgba(74,103,65,.08);color:var(--fern);
+  opacity:0;transform:translateY(4px);transition:opacity .4s var(--expo),transform .4s var(--expo);
+}
+.rank-row.yours.top .tag{opacity:1;transform:none}
+/* floating chips around the card */
+.float-chip{
+  position:absolute;background:var(--white);border:1px solid var(--stone);border-radius:var(--r-lg);
+  box-shadow:var(--shadow-lg);padding:12px 16px;display:flex;align-items:center;gap:10px;
+  animation:floaty 7s ease-in-out infinite;
+}
+.float-chip .num{font-family:var(--mono);font-size:19px;color:var(--fern)}
+.float-chip .lbl{font-size:12px;font-weight:500;letter-spacing:.02em;color:rgba(50,48,47,.6);text-transform:uppercase}
+.chip-a{top:-22px;right:-14px}
+.chip-b{bottom:-20px;left:-22px;animation-delay:-3.5s}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+@media(max-width:980px){.chip-a{right:4px}.chip-b{left:4px}}
+
+/* ════════ MARQUEE STRIP ════════ */
+.strip{border-top:1px solid var(--stone);border-bottom:1px solid var(--stone);background:var(--bg-subtle);padding:18px 0;overflow:hidden}
+.strip-track{display:flex;gap:64px;width:max-content;animation:marquee 36s linear infinite}
+.strip:hover .strip-track{animation-play-state:paused}
+.strip-item{
+  display:flex;align-items:center;gap:12px;white-space:nowrap;
+  font-family:var(--mono);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:rgba(50,48,47,.55);
+}
+.strip-item b{font-weight:500;color:var(--dune)}
+.strip-item .dot{width:5px;height:5px;border-radius:50%;background:var(--fern);opacity:.6}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ════════ GAP COUNTER ════════ */
+.gap{padding:130px 0 110px;text-align:center;position:relative}
+.gap-eyebrow{font-family:var(--mono);font-size:13px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--terracotta);margin-bottom:22px}
+.gap-h2{font-family:var(--heading);font-weight:400;font-size:clamp(32px,4vw,48px);line-height:1.2;letter-spacing:-.02em;max-width:760px;margin:0 auto 56px}
+.gap-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;text-align:left;max-width:1060px;margin:0 auto}
+@media(max-width:860px){.gap-cards{grid-template-columns:1fr}}
+.gap-card{
+  background:var(--white);border:1px solid var(--stone);border-radius:var(--r-lg);
+  padding:32px 28px;box-shadow:var(--shadow-sm);position:relative;overflow:hidden;
+  transition:box-shadow .25s var(--expo),transform .25s var(--expo);
+}
+.gap-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px)}
+.gap-card .n{font-family:var(--mono);font-size:13px;color:var(--fern);margin-bottom:14px}
+.gap-card h3{font-family:var(--heading);font-weight:400;font-size:22px;line-height:1.3;letter-spacing:-.01em;margin-bottom:12px}
+.gap-card p{font-size:16px;line-height:1.6;color:rgba(50,48,47,.7)}
+.gap-card .bar{height:2px;width:36px;background:var(--fern);border-radius:2px;margin-bottom:16px;transform-origin:left;transform:scaleX(0);transition:transform .5s var(--expo) .2s}
+.gap-card.rv.in .bar{transform:scaleX(1)}
+
+/* ════════ PILLARS — sticky stacked panels ════════ */
+.pillars{background:var(--bg-subtle);border-top:1px solid var(--stone);border-bottom:1px solid var(--stone);padding:120px 0}
+.pillars-head{text-align:center;max-width:720px;margin:0 auto 70px}
+.eyebrow{font-family:var(--mono);font-size:13px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--fern);margin-bottom:18px;display:block}
+.h2{font-family:var(--heading);font-weight:400;font-size:clamp(32px,4.2vw,50px);line-height:1.2;letter-spacing:-.02em}
+.h2 em{font-style:italic;color:var(--fern)}
+.sub{font-size:19px;line-height:1.6;color:rgba(50,48,47,.7);margin-top:18px}
+
+.stack{position:relative}
+.panel{
+  position:sticky;top:96px;
+  display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:stretch;
+  background:var(--white);border:1px solid var(--stone);border-radius:20px;
+  box-shadow:var(--shadow-lg);overflow:hidden;
+  margin-bottom:36px;min-height:440px;
+  transform-origin:center top;
+  transition:transform .4s var(--expo),filter .4s var(--expo);
+}
+.panel:nth-child(2){top:112px}
+.panel:nth-child(3){top:128px}
+.panel:nth-child(4){top:144px}
+@media(max-width:880px){.panel{grid-template-columns:1fr;position:relative;top:0!important}}
+.panel-copy{padding:56px 52px;display:flex;flex-direction:column;justify-content:center}
+@media(max-width:880px){.panel-copy{padding:36px 28px}}
+.panel-copy .k{font-family:var(--mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--fern);margin-bottom:16px}
+.panel-copy h3{font-family:var(--heading);font-weight:400;font-size:clamp(26px,2.8vw,36px);line-height:1.25;letter-spacing:-.02em;margin-bottom:16px}
+.panel-copy p{font-size:17px;line-height:1.65;color:rgba(50,48,47,.72);max-width:420px}
+.panel-copy .pts{margin-top:24px;display:flex;flex-direction:column;gap:11px}
+.panel-copy .pt{display:flex;gap:11px;align-items:flex-start;font-size:15.5px;color:rgba(50,48,47,.8)}
+.panel-copy .pt svg{flex:none;margin-top:4px}
+.panel-viz{background:var(--bg-subtle);border-left:1px solid var(--stone);display:flex;align-items:center;justify-content:center;padding:44px;position:relative;overflow:hidden}
+@media(max-width:880px){.panel-viz{border-left:none;border-top:1px solid var(--stone);min-height:320px}}
+
+/* viz 1 — pricing line chart, draws on enter */
+.viz-chart{width:100%;max-width:420px}
+.viz-chart .grid-l{stroke:var(--stone);stroke-width:1}
+.viz-chart .axis{font-family:var(--mono);font-size:9.5px;fill:rgba(50,48,47,.55)}
+.viz-chart .line{
+  fill:none;stroke:var(--fern);stroke-width:2;stroke-linecap:round;
+  stroke-dasharray:600;stroke-dashoffset:600;
+}
+.panel.in-view .viz-chart .line{transition:stroke-dashoffset .5s var(--expo) .1s;stroke-dashoffset:0}
+.viz-chart .fill{fill:url(#chartFade);opacity:0;transition:opacity .5s var(--expo) .4s}
+.panel.in-view .viz-chart .fill{opacity:1}
+.viz-chart .dt{fill:var(--white);stroke:var(--fern);stroke-width:2;opacity:0;transition:opacity .3s var(--expo)}
+.panel.in-view .viz-chart .dt{opacity:1}
+.panel.in-view .viz-chart .dt:nth-of-type(1){transition-delay:.15s}
+.panel.in-view .viz-chart .dt:nth-of-type(2){transition-delay:.22s}
+.panel.in-view .viz-chart .dt:nth-of-type(3){transition-delay:.29s}
+.panel.in-view .viz-chart .dt:nth-of-type(4){transition-delay:.36s}
+.panel.in-view .viz-chart .dt:nth-of-type(5){transition-delay:.43s}
+.panel.in-view .viz-chart .dt:nth-of-type(6){transition-delay:.5s}
+
+/* viz 2 — before/after photo wipe */
+.viz-ba{position:relative;width:100%;max-width:430px;border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--shadow-md);aspect-ratio:4/3}
+.viz-ba img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.viz-ba .after-wrap{position:absolute;inset:0;clip-path:inset(0 100% 0 0);transition:clip-path .5s var(--expo) .15s}
+.panel.in-view .viz-ba .after-wrap{clip-path:inset(0 0 0 0)}
+.viz-ba .ba-tag{
+  position:absolute;bottom:12px;font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+  padding:5px 11px;border-radius:100px;background:rgba(255,255,255,.92);color:var(--dune);box-shadow:var(--shadow-sm);
+}
+.viz-ba .ba-tag.b{left:12px}
+.viz-ba .ba-tag.a{right:12px;background:var(--fern);color:var(--white)}
+
+/* viz 3 — radar comp set */
+.viz-radar{width:100%;max-width:380px}
+.viz-radar .ring{fill:none;stroke:var(--stone);stroke-width:1}
+.viz-radar .lbl{font-family:var(--mono);font-size:9px;letter-spacing:.06em;fill:rgba(50,48,47,.55)}
+.viz-radar .poly{transform-origin:150px 140px;transform:scale(.6);opacity:0;transition:transform .5s var(--expo),opacity .5s var(--expo)}
+.panel.in-view .viz-radar .poly{transform:scale(1);opacity:1}
+.panel.in-view .viz-radar .poly.p2{transition-delay:.1s}
+.panel.in-view .viz-radar .poly.p3{transition-delay:.2s}
+.panel.in-view .viz-radar .poly.you{transition-delay:.3s}
+
+/* viz 4 — map pings */
+.viz-map{width:100%;max-width:440px}
+.viz-map .land{fill:var(--white);stroke:var(--stone);stroke-width:1}
+.viz-map .arc{fill:none;stroke:var(--fern);stroke-width:1.2;opacity:.45;stroke-dasharray:240;stroke-dashoffset:240}
+.panel.in-view .viz-map .arc{transition:stroke-dashoffset .5s var(--expo) .2s;stroke-dashoffset:0}
+.viz-map .pin-dot{fill:var(--fern)}
+.viz-map .pin-ring{fill:none;stroke:var(--fern);stroke-width:1;opacity:.5}
+.viz-map .city{font-family:var(--mono);font-size:9px;letter-spacing:.05em;fill:rgba(50,48,47,.6)}
+.viz-map .home-pulse{fill:none;stroke:var(--fern);stroke-width:1.4;transform-origin:268px 72px;animation:mapPulse 2.6s var(--expo) infinite}
+@keyframes mapPulse{0%{transform:scale(.4);opacity:.9}70%,100%{transform:scale(1.8);opacity:0}}
+
+/* ════════ NUMBERS STRIP ════════ */
+.nums{padding:110px 0}
+.nums-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;text-align:center}
+@media(max-width:860px){.nums-grid{grid-template-columns:repeat(2,1fr);gap:36px}}
+.num-v{font-family:var(--mono);font-weight:300;font-size:clamp(38px,4.6vw,58px);line-height:1.1;color:var(--dune)}
+.num-v .u{color:var(--fern)}
+.num-l{font-size:13px;font-weight:500;letter-spacing:.04em;text-transform:uppercase;color:rgba(50,48,47,.55);margin-top:10px}
+.nums-note{font-size:13px;color:rgba(50,48,47,.45);text-align:center;margin-top:44px;font-family:var(--mono)}
+
+/* ════════ PROCESS ════════ */
+.process{background:var(--bg-subtle);border-top:1px solid var(--stone);border-bottom:1px solid var(--stone);padding:120px 0}
+.proc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative;margin-top:64px}
+@media(max-width:880px){.proc-grid{grid-template-columns:1fr;gap:36px}}
+.proc-line{position:absolute;top:27px;left:8%;right:8%;height:1.5px;background:var(--stone);overflow:hidden}
+@media(max-width:880px){.proc-line{display:none}}
+.proc-line i{display:block;height:100%;background:var(--fern);width:100%;transform:scaleX(0);transform-origin:left;transition:transform .9s var(--expo)}
+.proc-grid.in .proc-line i{transform:scaleX(1)}
+.proc-step{padding:0 22px;text-align:center;position:relative}
+.proc-dot{
+  width:54px;height:54px;margin:0 auto 22px;border-radius:50%;
+  background:var(--white);border:1px solid var(--stone);box-shadow:var(--shadow-sm);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:16px;color:var(--fern);position:relative;z-index:1;
+  transition:border-color .3s var(--expo),transform .3s var(--expo);
+}
+.proc-step:hover .proc-dot{border-color:var(--fern);transform:translateY(-3px)}
+.proc-step h3{font-family:var(--heading);font-weight:400;font-size:21px;letter-spacing:-.01em;margin-bottom:10px}
+.proc-step p{font-size:15px;line-height:1.6;color:rgba(50,48,47,.68)}
+
+/* ════════ TESTIMONIALS ════════ */
+.voices{padding:120px 0;overflow:hidden}
+.voices-head{text-align:center;max-width:680px;margin:0 auto 64px}
+.t-marquee{display:flex;flex-direction:column;gap:22px}
+.t-row{display:flex;gap:22px;width:max-content}
+.t-row.r1{animation:marquee 64s linear infinite}
+.t-row.r2{animation:marquee 78s linear infinite reverse}
+.t-row:hover{animation-play-state:paused}
+.t-card{
+  width:430px;flex:none;background:var(--white);border:1px solid var(--stone);border-radius:var(--r-xl);
+  padding:28px 30px;box-shadow:var(--shadow-sm);
+  transition:box-shadow .25s var(--expo),transform .25s var(--expo);
+}
+.t-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px)}
+.t-stars{color:var(--gold);letter-spacing:3px;font-size:13px;margin-bottom:14px}
+.t-quote{font-family:var(--heading);font-style:italic;font-size:17px;line-height:1.55;color:var(--dune);margin-bottom:20px}
+.t-host{display:flex;align-items:center;gap:12px}
+.t-host img{width:42px;height:42px;border-radius:50%;object-fit:cover}
+.t-host .n{font-size:15px;font-weight:500}
+.t-host .l{font-size:13px;color:rgba(50,48,47,.55)}
+@media(max-width:560px){.t-card{width:320px}}
+
+/* ════════ TEAM ════════ */
+.team{padding:0 0 120px;text-align:center}
+.team .sub{max-width:640px;margin-left:auto;margin-right:auto}
+.team-row{display:flex;justify-content:center;gap:0;margin-top:48px;flex-wrap:wrap}
+.team-face{position:relative;margin:0 -7px;transition:transform .25s var(--expo),z-index 0s}
+.team-face img{
+  width:76px;height:76px;border-radius:50%;object-fit:cover;
+  border:3px solid var(--white);box-shadow:var(--shadow-md);
+  filter:grayscale(.25);transition:filter .25s var(--expo);
+}
+.team-face:hover{transform:translateY(-6px);z-index:5}
+.team-face:hover img{filter:none}
+.team-face .tip{
+  position:absolute;left:50%;bottom:calc(100% + 10px);transform:translateX(-50%) translateY(4px);
+  background:var(--dune);color:var(--white);font-size:12.5px;font-weight:500;
+  padding:7px 13px;border-radius:var(--r-md);white-space:nowrap;
+  opacity:0;pointer-events:none;transition:opacity .2s var(--expo),transform .2s var(--expo);
+}
+.team-face .tip span{display:block;font-weight:400;font-size:11px;opacity:.7;font-family:var(--mono)}
+.team-face:hover .tip{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ════════ PRICING ════════ */
+.pricing{background:var(--bg-subtle);border-top:1px solid var(--stone);padding:120px 0}
+.price-wrap{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:880px;margin:56px auto 0}
+@media(max-width:780px){.price-wrap{grid-template-columns:1fr}}
+.price-card{
+  background:var(--white);border:1px solid var(--stone);border-radius:var(--r-xl);
+  padding:42px 38px;box-shadow:var(--shadow-sm);position:relative;
+  transition:box-shadow .25s var(--expo),transform .25s var(--expo);
+}
+.price-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-3px)}
+.price-card.feat{border:2px solid var(--fern)}
+.price-badge{
+  position:absolute;top:-13px;left:38px;background:var(--fern);color:var(--white);
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;
+  padding:5px 14px;border-radius:100px;
+}
+.price-amt{font-family:var(--mono);font-weight:300;font-size:52px;line-height:1.1}
+.price-amt span{font-size:18px;color:rgba(50,48,47,.55)}
+.price-name{font-family:var(--heading);font-weight:400;font-size:26px;margin-bottom:6px}
+.price-term{font-size:14px;color:rgba(50,48,47,.6);margin-top:6px}
+.price-feats{margin:26px 0 30px;display:flex;flex-direction:column;gap:12px;border-top:1px solid var(--stone);padding-top:26px}
+.price-feat{display:flex;gap:11px;align-items:flex-start;font-size:15.5px;color:rgba(50,48,47,.82)}
+.price-feat svg{flex:none;margin-top:4px}
+
+/* ════════ FINAL CTA ════════ */
+.final{padding:120px 0}
+.final-card{
+  position:relative;background:var(--dune);color:var(--white);border-radius:24px;
+  padding:96px 40px;text-align:center;overflow:hidden;box-shadow:var(--shadow-xl);
+}
+.final-rings{position:absolute;inset:0;pointer-events:none;opacity:.5}
+.final-rings circle{fill:none;stroke:rgba(255,255,255,.06);stroke-width:1}
+.final .k{font-family:var(--mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:20px;display:block}
+.final h2{font-family:var(--heading);font-weight:400;font-size:clamp(34px,4.6vw,54px);line-height:1.15;letter-spacing:-.02em;margin-bottom:20px;position:relative}
+.final h2 em{font-style:italic}
+.final p{font-size:19px;line-height:1.6;color:rgba(255,255,255,.72);max-width:540px;margin:0 auto 38px;position:relative}
+.btn-white{background:var(--white);color:var(--dune)}
+.btn-white:hover{opacity:.92;transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+.final .note{font-size:13.5px;color:rgba(255,255,255,.5);margin-top:22px;font-family:var(--mono)}
+
+/* ════════ FOOTER ════════ */
+.foot{background:var(--dune);color:var(--white);padding:64px 0 36px;font-size:14px}
+.foot-grid{display:flex;justify-content:space-between;gap:48px;flex-wrap:wrap;padding-bottom:44px;border-bottom:1px solid rgba(255,255,255,.12)}
+.foot-logo{display:flex;align-items:center;gap:9px;font-weight:500;font-size:17px;margin-bottom:14px}
+.foot-tag{color:rgba(255,255,255,.6);max-width:320px;line-height:1.6}
+.foot-col-t{font-family:var(--mono);font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:16px}
+.foot-col a{display:block;color:rgba(255,255,255,.7);margin-bottom:10px;transition:color .15s var(--expo)}
+.foot-col a:hover{color:var(--white)}
+.foot-btm{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-top:30px;color:rgba(255,255,255,.5);font-size:13px}
+.foot-btm a{color:rgba(255,255,255,.5)}
+.foot-btm a:hover{color:var(--white)}
+</style>
+<!-- X Pixel base code -->
+<script src="/assets/x-pixel-base.js"></script>
+<!-- End X Pixel base code -->
+</head>
+<body>
+
+<!-- ════════ NAV ════════ -->
+<nav class="nav" id="nav" aria-label="Primary">
+  <a href="/" class="nav-logo">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24" fill="none" aria-hidden="true"><path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="#32302F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="#4A6741" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span><span class="rev">Rev</span>Whisper</span>
+  </a>
+  <div class="nav-links">
+    <a href="#pillars">What we do</a>
+    <a href="#process">How it works</a>
+    <a href="#voices">Hosts</a>
+    <a href="#pricing">Pricing</a>
+  </div>
+  <a href="/audit" class="nav-cta">Get your free audit</a>
+</nav>
+
+<!-- ════════ HERO ════════ -->
+<header class="hero">
+  <div class="hero-glow"></div>
+  <svg class="hero-rings" width="100%" height="100%" aria-hidden="true">
+    <circle cx="8%" cy="20%" r="180"/>
+    <circle cx="8%" cy="20%" r="260"/>
+    <circle cx="96%" cy="85%" r="200"/>
+    <circle cx="96%" cy="85%" r="290"/>
+  </svg>
+  <div class="w hero-grid">
+    <div>
+      <div class="hero-eyebrow rv"><span class="pulse"></span>Fully managed · Built by hosts</div>
+      <h1 class="hero-h1" id="heroH1">
+        <span class="wd"><span>Your</span></span>
+        <span class="wd"><span>listing,</span></span>
+        <span class="wd"><span class="hero-underline"><em>optimized</em><svg viewBox="0 0 300 14" preserveAspectRatio="none" aria-hidden="true"><path d="M4,9 C40,3 70,12 105,8 C140,4 170,12 205,8 C240,4 270,11 296,7"/></svg></span></span>
+        <span class="wd"><span>daily.</span></span>
+        <span class="wd"><span>By</span></span>
+        <span class="wd"><span>people,</span></span>
+        <span class="wd"><span>not</span></span>
+        <span class="wd"><span>dashboards.</span></span>
+      </h1>
+      <p class="hero-sub rv d2">We track your Airbnb search position every day, deploy algorithm-timed pricing, and refine every element of your listing — photos, copy, promotions — so you earn more without lifting a finger.</p>
+      <div class="hero-ctas rv d3">
+        <a href="/audit" class="btn btn-fern">Get your free listing audit <span class="arr">→</span></a>
+        <a href="https://app.revwhisper.com/search-ranking" class="btn btn-ghost">Check my search ranking</a>
+      </div>
+      <div class="hero-proof rv d4">
+        <div class="faces">
+          <img src="/images/hosts/dave.png" alt="Dave, Superhost">
+          <img src="/images/hosts/carla.png" alt="Carla, Superhost">
+          <img src="/images/hosts/emily.png" alt="Emily, Superhost">
+          <img src="/images/hosts/ryan.png" alt="Ryan, Superhost">
+        </div>
+        <div>
+          <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+          <div>Trusted by Superhosts across the U.S.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-visual rv d2" id="heroVisual">
+      <div class="rank-card" aria-label="Animated example of a listing climbing search results">
+        <div class="rank-head">
+          <span>Search results · Poconos, PA</span>
+          <span class="rank-live"><i></i>Tracked daily</span>
+        </div>
+        <div class="rank-rows" id="rankRows">
+          <div class="rank-row" data-key="a">
+            <span class="pos">1</span>
+            <img src="/images/properties/kitchen-after.webp" alt="">
+            <div><div class="nm">Mountain View Lodge</div><div class="mt">4.92 · Managed</div></div>
+          </div>
+          <div class="rank-row" data-key="b">
+            <span class="pos">2</span>
+            <img src="/images/properties/backyardbbq-after.webp" alt="">
+            <div><div class="nm">Lakeside Retreat</div><div class="mt">4.88 · Managed</div></div>
+          </div>
+          <div class="rank-row" data-key="c">
+            <span class="pos">3</span>
+            <img src="/images/properties/bunkroom-after.webp" alt="">
+            <div><div class="nm">Sunset Ridge Cabin</div><div class="mt">4.85</div></div>
+          </div>
+          <div class="rank-row yours" data-key="you">
+            <span class="pos">4</span>
+            <img src="/images/properties/livingroom-after.webp" alt="">
+            <div><div class="nm">Your Property</div><div class="mt">4.95</div></div>
+            <span class="tag">#1 · RevWhisper</span>
+          </div>
+        </div>
+      </div>
+      <div class="float-chip chip-a">
+        <span class="num" data-count="97" data-suffix="%">0%</span>
+        <span class="lbl">June occupancy<br>after onboarding</span>
+      </div>
+      <div class="float-chip chip-b">
+        <span class="num" data-count="30">0</span>
+        <span class="lbl">Days to first<br>measurable results</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ════════ TICKER STRIP ════════ -->
+<section class="strip" aria-label="What the service includes">
+  <div class="strip-track" id="stripTrack">
+    <span class="strip-item"><span class="dot"></span>Daily rank tracking</span>
+    <span class="strip-item"><span class="dot"></span>Dynamic pricing</span>
+    <span class="strip-item"><span class="dot"></span>Listing copy &amp; SEO rewrites</span>
+    <span class="strip-item"><span class="dot"></span>Professional photo direction</span>
+    <span class="strip-item"><span class="dot"></span>Competitor intelligence</span>
+    <span class="strip-item"><span class="dot"></span>Monthly performance report</span>
+    <span class="strip-item"><span class="dot"></span>Dedicated account manager</span>
+    <span class="strip-item"><span class="dot"></span>Multi-region search tracking</span>
+  </div>
+</section>
+
+<!-- ════════ THE GAP ════════ -->
+<section class="gap">
+  <div class="w">
+    <div class="gap-eyebrow rv">The problem</div>
+    <h2 class="gap-h2 rv d1">A well-priced listing on page three still loses.</h2>
+    <div class="gap-cards">
+      <div class="gap-card rv">
+        <div class="n">01</div>
+        <div class="bar"></div>
+        <h3>When did you last check your ranking?</h3>
+        <p>Most hosts obsess over nightly rates. Airbnb's algorithm weighs conversion velocity, response time, and booking momentum — position decides who gets seen.</p>
+      </div>
+      <div class="gap-card rv d1">
+        <div class="n">02</div>
+        <div class="bar"></div>
+        <h3>The algorithm changed. Did your listing?</h3>
+        <p>Airbnb overhauled its ranking system in 2025. The new-listing boost is gone; conversion-based weighting replaced it. Hosts who didn't adapt are being quietly buried.</p>
+      </div>
+      <div class="gap-card rv d2">
+        <div class="n">03</div>
+        <div class="bar"></div>
+        <h3>Your competition isn't other hosts anymore.</h3>
+        <p>Revenue management companies run dynamic pricing, automated messaging, and A/B-tested copy across thousands of properties. The bar moved. Your listing has to move with it.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ PILLARS ════════ -->
+<section class="pillars" id="pillars">
+  <div class="w">
+    <div class="pillars-head">
+      <span class="eyebrow rv">What we do</span>
+      <h2 class="h2 rv d1">We handle <em>everything.</em></h2>
+      <p class="sub rv d2">Pricing, photos, copy, promotions, and rank tracking — a fully managed engine behind your listing.</p>
+    </div>
+
+    <div class="stack">
+      <!-- Panel 1: Dynamic pricing -->
+      <article class="panel">
+        <div class="panel-copy">
+          <div class="k">01 · Revenue management</div>
+          <h3>Pricing that moves before the market does</h3>
+          <p>Rate optimization that adapts nightly to demand, competitors, and seasonality — tuned by an analyst who knows your market, not a one-size-fits-all average.</p>
+          <div class="pts">
+            <div class="pt"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5l3.5 3.5 7.5-8" stroke="#4A6741" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Nightly rate &amp; minimum-stay strategy</div>
+            <div class="pt"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5l3.5 3.5 7.5-8" stroke="#4A6741" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Seasonal and event-aware adjustments</div>
+            <div class="pt"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5l3.5 3.5 7.5-8" stroke="#4A6741" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Gap-night and orphan-day recovery</div>
+          </div>
+        </div>
+        <div class="panel-viz">
+          <svg class="viz-chart" viewBox="0 0 320 190" aria-label="Monthly revenue trending upward">
+            <defs>
+              <linearGradient id="chartFade" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#4A6741" stop-opacity=".18"/>
+                <stop offset="100%" stop-color="#4A6741" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <line class="grid-l" x1="40" y1="20" x2="310" y2="20"/>
+            <line class="grid-l" x1="40" y1="55" x2="310" y2="55"/>
+            <line class="grid-l" x1="40" y1="90" x2="310" y2="90"/>
+            <line class="grid-l" x1="40" y1="125" x2="310" y2="125"/>
+            <line class="grid-l" x1="40" y1="160" x2="310" y2="160"/>
+            <text class="axis" x="34" y="23" text-anchor="end">$18k</text>
+            <text class="axis" x="34" y="58" text-anchor="end">$16k</text>
+            <text class="axis" x="34" y="93" text-anchor="end">$14k</text>
+            <text class="axis" x="34" y="128" text-anchor="end">$12k</text>
+            <text class="axis" x="34" y="163" text-anchor="end">$10k</text>
+            <text class="axis" x="52" y="180" text-anchor="middle">Jan</text>
+            <text class="axis" x="103" y="180" text-anchor="middle">Feb</text>
+            <text class="axis" x="154" y="180" text-anchor="middle">Mar</text>
+            <text class="axis" x="205" y="180" text-anchor="middle">Apr</text>
+            <text class="axis" x="256" y="180" text-anchor="middle">May</text>
+            <text class="axis" x="307" y="180" text-anchor="middle">Jun</text>
+            <path class="fill" d="M52,140 103,118 154,124 205,88 256,62 307,28 307,160 52,160Z"/>
+            <polyline class="line" points="52,140 103,118 154,124 205,88 256,62 307,28"/>
+            <circle class="dt" cx="52" cy="140" r="3.5"/>
+            <circle class="dt" cx="103" cy="118" r="3.5"/>
+            <circle class="dt" cx="154" cy="124" r="3.5"/>
+            <circle class="dt" cx="205" cy="88" r="3.5"/>
+            <circle class="dt" cx="256" cy="62" r="3.5"/>
+            <circle class="dt" cx="307" cy="28" r="3.5"/>
+          </svg>
+        </div>
+      </article>
+
+      <!-- Panel 2: Photos -->
+      <article class="panel">
+        <div class="panel-copy">
+          <div class="k">02 · Visual optimization</div>
+          <h3>Photos that earn the click</h3>
+          <p>Cover photo selection, photo ordering, and professional editing — the visual sequence guests scroll before they decide to book.</p>
+          <div class="pts">
+            <div class="pt"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5l3.5 3.5 7.5-8" stroke="#4A6741" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Professional photo editing pipeline</div>
+            <div class="pt"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5l3.5 3.5 7.5-8" stroke="#4A6741" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Cover photo testing and ordering</div>
+            <div class="pt"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5l3.5 3.5 7.5-8" stroke="#4A6741" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Captions written to convert, not describe</div>
+          </div>
+        </div>
+        <div class="panel-viz">
+          <div class="viz-ba">
+            <img src="/images/properties/livingroom-before.webp" alt="Living room before editing" loading="lazy">
+            <div class="after-wrap"><img src="/images/properties/livingroom-after.webp" alt="Living room after professional editing" loading="lazy"></div>
+            <span class="ba-tag b">Before</span>
+            <span class="ba-tag a">After</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Panel 3: Comp set -->
+      <article class="panel">
+        <div class="panel-copy">
+          <div class="k">03 · Competitor intelligence</div>
+          <h3>We watch your comp set nightly</h3>
+          <p>Every listing competing for your guests, tracked across price, photos, reviews, and amenities — so you never leave money on the table.</p>
+          <div class="pts">
+            <div class="pt"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5l3.5 3.5 7.5-8" stroke="#4A6741" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Nightly comp-set monitoring</div>
+            <div class="pt"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5l3.5 3.5 7.5-8" stroke="#4A6741" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Pricing gaps surfaced before they cost you</div>
+            <div class="pt"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5l3.5 3.5 7.5-8" stroke="#4A6741" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Amenity and review-signal benchmarking</div>
+          </div>
+        </div>
+        <div class="panel-viz">
+          <svg class="viz-radar" viewBox="0 0 300 280" aria-label="Comp set radar comparing your property against competitors">
+            <polygon class="ring" points="150,107 178.6,123.5 178.6,156.5 150,173 121.4,156.5 121.4,123.5"/>
+            <polygon class="ring" points="150,74 207.2,107 207.2,173 150,206 92.8,173 92.8,107"/>
+            <polygon class="ring" points="150,40 236.6,90 236.6,190 150,240 63.4,190 63.4,90"/>
+            <polygon class="poly p1" points="150,62 189,117.5 206.3,172.5 150,190 102.4,167.5 87.6,104" fill="rgba(139,74,62,.10)" stroke="rgba(139,74,62,.45)" stroke-width="1.2"/>
+            <polygon class="poly p2" points="150,80 212.4,104 193.3,165 150,215 91.1,174 99.8,111" fill="rgba(155,123,58,.10)" stroke="rgba(155,123,58,.45)" stroke-width="1.2"/>
+            <polygon class="poly p3" points="150,70 197.6,112.5 219.3,180 150,200 79,181 93.7,107.5" fill="rgba(50,48,47,.06)" stroke="rgba(50,48,47,.3)" stroke-width="1.2"/>
+            <polygon class="poly you" points="150,48 226.2,96 232.3,187.5 150,230 85,177.5 76.4,97.5" fill="rgba(74,103,65,.14)" stroke="#4A6741" stroke-width="1.8"/>
+            <text class="lbl" x="150" y="28" text-anchor="middle">PRICE</text>
+            <text class="lbl" x="248" y="87" text-anchor="start">PHOTOS</text>
+            <text class="lbl" x="248" y="197" text-anchor="start">REVIEWS</text>
+            <text class="lbl" x="150" y="262" text-anchor="middle">RESPONSE</text>
+            <text class="lbl" x="52" y="197" text-anchor="end">LOCATION</text>
+            <text class="lbl" x="52" y="87" text-anchor="end">AMENITIES</text>
+          </svg>
+        </div>
+      </article>
+
+      <!-- Panel 4: Rank tracking -->
+      <article class="panel">
+        <div class="panel-copy">
+          <div class="k">04 · Ranking intelligence</div>
+          <h3>Your rank, checked from every market that books you</h3>
+          <p>We measure your search position daily from every major traveler origin, then optimize for the markets that actually fill your calendar.</p>
+          <div class="pts">
+            <div class="pt"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5l3.5 3.5 7.5-8" stroke="#4A6741" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Daily multi-region rank tracking</div>
+            <div class="pt"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5l3.5 3.5 7.5-8" stroke="#4A6741" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Ranking by unbooked dates</div>
+            <div class="pt"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5l3.5 3.5 7.5-8" stroke="#4A6741" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>View-volume insights for soft spots</div>
+          </div>
+        </div>
+        <div class="panel-viz">
+          <svg class="viz-map" viewBox="0 0 360 210" aria-label="Map of traveler origins converging on your property">
+            <path class="land" d="M28,42 C35,38 50,34 70,32 L110,30 C130,28 150,26 175,25 C200,24 220,25 245,27 C265,28 280,30 295,34 C305,36 312,40 318,46 C322,52 326,60 328,70 C330,80 328,92 325,102 C322,112 318,120 312,128 C306,136 298,144 288,150 C280,155 272,158 262,162 C252,166 244,168 235,166 C226,164 218,160 210,155 C202,150 196,148 188,150 C180,153 172,160 162,168 C152,175 142,178 130,176 C120,174 110,168 100,160 C92,154 84,148 76,150 C68,152 60,158 52,162 C44,165 36,165 30,160 C24,154 20,144 18,132 C16,120 16,108 18,95 C20,82 22,70 24,60 C26,52 28,46 28,42 Z"/>
+            <path class="arc" d="M85,58 Q180,20 268,72"/>
+            <path class="arc" d="M38,118 Q150,60 268,72"/>
+            <path class="arc" d="M200,62 Q240,40 268,72"/>
+            <path class="arc" d="M305,148 Q300,100 268,72"/>
+            <path class="arc" d="M175,135 Q220,90 268,72"/>
+            <g><circle class="pin-ring" cx="85" cy="58" r="6"/><circle class="pin-dot" cx="85" cy="58" r="2.5"/><text class="city" x="85" y="48" text-anchor="middle">CHICAGO</text></g>
+            <g><circle class="pin-ring" cx="38" cy="118" r="6"/><circle class="pin-dot" cx="38" cy="118" r="2.5"/><text class="city" x="48" y="126" text-anchor="start">LA</text></g>
+            <g><circle class="pin-ring" cx="200" cy="62" r="6"/><circle class="pin-dot" cx="200" cy="62" r="2.5"/><text class="city" x="200" y="52" text-anchor="middle">BOSTON</text></g>
+            <g><circle class="pin-ring" cx="305" cy="148" r="6"/><circle class="pin-dot" cx="305" cy="148" r="2.5"/><text class="city" x="295" y="158" text-anchor="end">MIAMI</text></g>
+            <g><circle class="pin-ring" cx="175" cy="135" r="6"/><circle class="pin-dot" cx="175" cy="135" r="2.5"/><text class="city" x="165" y="145" text-anchor="end">DALLAS</text></g>
+            <g>
+              <circle class="home-pulse" cx="268" cy="72" r="8"/>
+              <circle class="pin-dot" cx="268" cy="72" r="4"/>
+              <text class="city" x="268" y="60" text-anchor="middle" style="fill:#4A6741;font-weight:500">YOUR PROPERTY</text>
+            </g>
+          </svg>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ NUMBERS ════════ -->
+<section class="nums">
+  <div class="w">
+    <div class="nums-grid">
+      <div class="rv"><div class="num-v"><span class="u" data-count="31" data-prefix="+$" data-suffix="K">+$0K</span></div><div class="num-l">One summer's lift, one Poconos cabin</div></div>
+      <div class="rv d1"><div class="num-v"><span data-count="70" data-prefix="+" data-suffix="%">+0%</span></div><div class="num-l">May revenue vs. prior year, Marathon FL</div></div>
+      <div class="rv d2"><div class="num-v"><span data-count="97" data-suffix="%">0%</span></div><div class="num-l">June occupancy after onboarding</div></div>
+      <div class="rv d3"><div class="num-v"><span data-count="30"></span></div><div class="num-l">Days to measurable results</div></div>
+    </div>
+    <p class="nums-note rv">Source: client results reported by hosts on revwhisper.com/audit. Individual results vary.</p>
+  </div>
+</section>
+
+<!-- ════════ PROCESS ════════ -->
+<section class="process" id="process">
+  <div class="w">
+    <div style="text-align:center;max-width:680px;margin:0 auto">
+      <span class="eyebrow rv">How it works</span>
+      <h2 class="h2 rv d1">From signup to results in 30 days</h2>
+    </div>
+    <div class="proc-grid rv" id="procGrid">
+      <div class="proc-line"><i></i></div>
+      <div class="proc-step">
+        <div class="proc-dot">1</div>
+        <h3>Audit</h3>
+        <p>We analyze your listing performance, pricing gaps, and market positioning — a clear picture of where revenue is being left behind.</p>
+      </div>
+      <div class="proc-step">
+        <div class="proc-dot">2</div>
+        <h3>Onboarding</h3>
+        <p>Photos optimized, copy rewritten, pricing algorithms configured — without disrupting a single booking.</p>
+      </div>
+      <div class="proc-step">
+        <div class="proc-dot">3</div>
+        <h3>Optimization</h3>
+        <p>Every element guests and the algorithm evaluate gets refined: photos, copy, pricing, and search position.</p>
+      </div>
+      <div class="proc-step">
+        <div class="proc-dot">4</div>
+        <h3>Ongoing management</h3>
+        <p>Dynamic pricing, performance monitoring, and continuous adjustments that compound month after month.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ TESTIMONIALS ════════ -->
+<section class="voices" id="voices">
+  <div class="w voices-head">
+    <span class="eyebrow rv">From hosts</span>
+    <h2 class="h2 rv d1">In their words</h2>
+  </div>
+  <div class="t-marquee" id="tMarquee">
+    <div class="t-row r1" data-dupe>
+      <div class="t-card">
+        <div class="t-stars" aria-label="5 out of 5 stars">★★★★★</div>
+        <p class="t-quote">"Two years running my own pricing, so I'll admit I was skeptical handing it off. June booked to 97% at a better nightly rate than I ever held myself. All in it was about $31K more across the summer than last year."</p>
+        <div class="t-host"><img src="/images/hosts/dave.png" alt="Dave"><div><div class="n">Dave</div><div class="l">Tobyhanna, PA · Superhost</div></div></div>
+      </div>
+      <div class="t-card">
+        <div class="t-stars" aria-label="5 out of 5 stars">★★★★★</div>
+        <p class="t-quote">"I was sitting at 48% booked going into May and starting to sweat it. A month after they took over it was at 84%, revenue up almost 70% over last May. And I didn't have to learn a single new tool."</p>
+        <div class="t-host"><img src="/images/hosts/carla.png" alt="Carla"><div><div class="n">Carla</div><div class="l">Marathon, FL · Superhost</div></div></div>
+      </div>
+      <div class="t-card">
+        <div class="t-stars" aria-label="5 out of 5 stars">★★★★★</div>
+        <p class="t-quote">"July's my big month so I watch it like a hawk. Last year it did about $6K. This year, same house, it pulled $22.5K. Both my occupancy and my nightly rate went up at the same time. Not gonna question it."</p>
+        <div class="t-host"><img src="/images/hosts/ryan.png" alt="Ryan"><div><div class="n">Ryan</div><div class="l">Tobyhanna, PA · Superhost</div></div></div>
+      </div>
+    </div>
+    <div class="t-row r2" data-dupe>
+      <div class="t-card">
+        <div class="t-stars" aria-label="5 out of 5 stars">★★★★★</div>
+        <p class="t-quote">"It's a ski cabin — I'd more or less written off the rest of the year. This May beat last May, and even August climbed. I used to check my pricing before coffee, every single day. I just don't anymore."</p>
+        <div class="t-host"><img src="/images/hosts/emily.png" alt="Emily"><div><div class="n">Emily</div><div class="l">Stowe, VT · Superhost</div></div></div>
+      </div>
+      <div class="t-card">
+        <div class="t-stars" aria-label="5 out of 5 stars">★★★★★</div>
+        <p class="t-quote">"New build, zero reviews, competing against established listings. The audit showed exactly why we weren't ranking and the fixes were specific — not generic advice. Bookings followed."</p>
+        <div class="t-host"><img src="/images/hosts/marcus.png" alt="Marcus"><div><div class="n">Marcus</div><div class="l">Candler, NC · Superhost</div></div></div>
+      </div>
+      <div class="t-card">
+        <div class="t-stars" aria-label="5 out of 5 stars">★★★★★</div>
+        <p class="t-quote">"I'd tried the pricing tools. They priced my villa like the average, and it isn't average. Having actual people watch the comp set and adjust made the difference I couldn't get from software alone."</p>
+        <div class="t-host"><img src="/images/hosts/sofia.png" alt="Sofia"><div><div class="n">Sofia</div><div class="l">Englewood, FL · Superhost</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ TEAM ════════ -->
+<section class="team">
+  <div class="w">
+    <span class="eyebrow rv">Why trust us</span>
+    <h2 class="h2 rv d1">We run RevWhisper on our own portfolio</h2>
+    <p class="sub rv d2">We're not just building tools — we're hosts who depend on them. Our team manages properties, competes in real markets, and stakes our own revenue on every strategy we deploy.</p>
+    <div class="team-row rv d3">
+      <span class="team-face"><img src="/images/team/spencer.webp" alt="Spencer" loading="lazy"><span class="tip">Spencer</span></span>
+      <span class="team-face"><img src="/images/team/david.webp" alt="David" loading="lazy"><span class="tip">David</span></span>
+      <span class="team-face"><img src="/images/team/bryan.webp" alt="Bryan" loading="lazy"><span class="tip">Bryan</span></span>
+      <span class="team-face"><img src="/images/team/alex.webp" alt="Alex" loading="lazy"><span class="tip">Alex</span></span>
+      <span class="team-face"><img src="/images/team/marisa.webp" alt="Marisa" loading="lazy"><span class="tip">Marisa</span></span>
+      <span class="team-face"><img src="/images/team/nic.webp" alt="Nicolas" loading="lazy"><span class="tip">Nicolas</span></span>
+      <span class="team-face"><img src="/images/team/chris.webp" alt="Chris" loading="lazy"><span class="tip">Chris</span></span>
+      <span class="team-face"><img src="/images/team/soliana.webp" alt="Soliana" loading="lazy"><span class="tip">Soliana</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ PRICING ════════ -->
+<section class="pricing" id="pricing">
+  <div class="w">
+    <div style="text-align:center;max-width:640px;margin:0 auto">
+      <span class="eyebrow rv">Pricing</span>
+      <h2 class="h2 rv d1">One program. One price.</h2>
+      <p class="sub rv d2">Portfolio hosts, reach out for custom pricing.</p>
+    </div>
+    <div class="price-wrap">
+      <div class="price-card feat rv">
+        <span class="price-badge">Best value</span>
+        <div class="price-amt">$500<span>/mo</span></div>
+        <div class="price-term">Billed annually · Save $3,000/year</div>
+        <div class="price-feats">
+          <div class="price-feat"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5l3.5 3.5 7.5-8" stroke="#4A6741" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Dedicated account manager</div>
+          <div class="price-feat"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5l3.5 3.5 7.5-8" stroke="#4A6741" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Expert revenue management</div>
+          <div class="price-feat"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5l3.5 3.5 7.5-8" stroke="#4A6741" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Professional photo direction &amp; edits</div>
+          <div class="price-feat"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5l3.5 3.5 7.5-8" stroke="#4A6741" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Listing copy &amp; SEO rewrites</div>
+          <div class="price-feat"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5l3.5 3.5 7.5-8" stroke="#4A6741" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Daily ranking tracking + optimizations</div>
+          <div class="price-feat"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5l3.5 3.5 7.5-8" stroke="#4A6741" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Monthly performance report</div>
+        </div>
+        <a href="/checkout-form.html?plan=annual" class="btn btn-fern" style="width:100%;justify-content:center">Enroll now <span class="arr">→</span></a>
+      </div>
+      <div class="price-card rv d1">
+        <span class="price-badge" style="background:var(--dune)">10+ properties</span>
+        <div class="price-name">Enterprise</div>
+        <div class="price-amt" style="font-size:38px;padding-top:8px">Custom</div>
+        <div class="price-term">Custom pricing for portfolios</div>
+        <div class="price-feats">
+          <div class="price-feat"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5l3.5 3.5 7.5-8" stroke="#4A6741" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Everything in our core plan, per property</div>
+          <div class="price-feat"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5l3.5 3.5 7.5-8" stroke="#4A6741" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Dedicated portfolio manager</div>
+          <div class="price-feat"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5l3.5 3.5 7.5-8" stroke="#4A6741" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Consolidated portfolio reporting</div>
+          <div class="price-feat"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5l3.5 3.5 7.5-8" stroke="#4A6741" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Cross-property market intelligence</div>
+          <div class="price-feat"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5l3.5 3.5 7.5-8" stroke="#4A6741" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Quarterly portfolio review</div>
+        </div>
+        <a href="/get-started" class="btn btn-ghost" style="width:100%;justify-content:center">Contact us</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ FINAL CTA ════════ -->
+<section class="final">
+  <div class="w">
+    <div class="final-card rv">
+      <svg class="final-rings" width="100%" height="100%" aria-hidden="true">
+        <circle cx="12%" cy="30%" r="120"/>
+        <circle cx="12%" cy="30%" r="190"/>
+        <circle cx="90%" cy="80%" r="150"/>
+        <circle cx="90%" cy="80%" r="230"/>
+      </svg>
+      <span class="k">Start now</span>
+      <h2>Stop guessing. Start <em>whispering.</em></h2>
+      <p>Get a free audit of your listing. We'll show you exactly where it's leaking revenue and walk you through what we'd fix first — live, on a call.</p>
+      <a href="/audit" class="btn btn-white">Get your free listing audit <span class="arr">→</span></a>
+      <p class="note">No obligation. No pressure. Just data.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ FOOTER ════════ -->
+<footer class="foot">
+  <div class="w">
+    <div class="foot-grid">
+      <div>
+        <div class="foot-logo">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="22" height="22" fill="none" aria-hidden="true"><path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          RevWhisper
+        </div>
+        <p class="foot-tag">A revenue intelligence team that layers into your Airbnb listing to accelerate performance and maximize earnings.</p>
+      </div>
+      <div class="foot-col">
+        <p class="foot-col-t">Explore</p>
+        <a href="/">Home</a>
+        <a href="/airbnb-listing-optimization">Listing Optimization</a>
+        <a href="/revenue-management">Revenue Management</a>
+        <a href="/photoediting">Photo Editing</a>
+        <a href="/case-study">Case Study</a>
+        <a href="/blog">Blog</a>
+      </div>
+      <div class="foot-col">
+        <p class="foot-col-t">Resources</p>
+        <a href="https://app.revwhisper.com/search-ranking">Search Ranking Tool</a>
+        <a href="/audit">Free Listing Audit</a>
+      </div>
+    </div>
+    <div class="foot-btm">
+      <span>&copy; 2026 MCO CORP d/b/a RevWhisper. All rights reserved.</span>
+      <nav aria-label="Legal"><a href="/privacy">Privacy Policy</a> &nbsp;·&nbsp; <a href="/terms">Terms of Service</a></nav>
+      <span>Stop Guessing. Start Whispering.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ── Nav shadow on scroll ── */
+  var nav = document.getElementById('nav');
+  var onScrollNav = function(){ nav.classList.toggle('scrolled', window.scrollY > 24); };
+  window.addEventListener('scroll', onScrollNav, {passive:true});
+  onScrollNav();
+
+  /* ── Reveal-on-enter ── */
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, {threshold:.18, rootMargin:'0px 0px -6% 0px'});
+  document.querySelectorAll('.rv').forEach(function(el){ io.observe(el); });
+
+  /* ── Hero headline word reveal ── */
+  var h1 = document.getElementById('heroH1');
+  if(reduced){
+    h1.classList.add('live');
+    h1.querySelectorAll('.wd>span').forEach(function(s){ s.style.transition='none'; });
+  } else {
+    h1.querySelectorAll('.wd>span').forEach(function(s,i){ s.style.transitionDelay = (i*0.055)+'s'; });
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){ h1.classList.add('live'); }); });
+  }
+
+  /* ── Hero rank shuffle: your property climbs to #1, loops gently ── */
+  var rows = Array.prototype.slice.call(document.querySelectorAll('#rankRows .rank-row'));
+  if(rows.length && !reduced){
+    var H = function(){ return rows[0].offsetHeight + 8; };
+    var orderUp = {you:0, a:1, b:2, c:3};
+    var shuffled = false;
+    function apply(up){
+      rows.forEach(function(r){
+        var key = r.getAttribute('data-key');
+        var startIdx = rows.indexOf(r);
+        var target = up ? orderUp[key] : startIdx;
+        r.style.transform = 'translateY(' + ((target - startIdx) * H()) + 'px)';
+        var pos = r.querySelector('.pos');
+        pos.textContent = (up ? orderUp[key] : startIdx) + 1;
+        if(key === 'you') r.classList.toggle('top', up);
+      });
+    }
+    var vio = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting && !shuffled){
+          shuffled = true;
+          setTimeout(function(){ apply(true); }, 900);
+          setInterval(function(){ apply(false); setTimeout(function(){ apply(true); }, 1600); }, 9000);
+        }
+      });
+    }, {threshold:.5});
+    vio.observe(document.getElementById('rankRows'));
+  } else if(rows.length){
+    rows.forEach(function(r){ if(r.getAttribute('data-key')==='you'){ r.classList.add('top'); r.querySelector('.pos').textContent='1'; } });
+  }
+
+  /* ── Hero visual parallax (scroll-linked, user-driven) ── */
+  var hv = document.getElementById('heroVisual');
+  if(hv && !reduced){
+    window.addEventListener('scroll', function(){
+      var y = window.scrollY;
+      if(y < 900) hv.style.transform = 'translateY(' + (y * -0.05) + 'px)';
+    }, {passive:true});
+  }
+
+  /* ── Count-ups (DM Mono numbers) ── */
+  function countUp(el){
+    var target = parseFloat(el.getAttribute('data-count'));
+    var prefix = el.getAttribute('data-prefix') || '';
+    var suffix = el.getAttribute('data-suffix') || '';
+    if(reduced){ el.textContent = prefix + target + suffix; return; }
+    var start = null, dur = 500; /* max animation duration */
+    function step(ts){
+      if(!start) start = ts;
+      var p = Math.min((ts - start) / dur, 1);
+      var eased = 1 - Math.pow(1 - p, 4); /* expo-out feel */
+      el.textContent = prefix + Math.round(target * eased) + suffix;
+      if(p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  var cio = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ countUp(e.target); cio.unobserve(e.target); }
+    });
+  }, {threshold:.6});
+  document.querySelectorAll('[data-count]').forEach(function(el){ cio.observe(el); });
+
+  /* ── Duplicate marquee tracks for seamless loop ── */
+  var strip = document.getElementById('stripTrack');
+  if(strip) strip.innerHTML += strip.innerHTML;
+  document.querySelectorAll('[data-dupe]').forEach(function(row){
+    row.innerHTML += row.innerHTML;
+  });
+
+  /* ── Pillar panels: trigger viz when in view + scale stack effect ── */
+  var panels = Array.prototype.slice.call(document.querySelectorAll('.panel'));
+  var pio = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting) e.target.classList.add('in-view');
+    });
+  }, {threshold:.35});
+  panels.forEach(function(p){ pio.observe(p); });
+  if(!reduced && window.matchMedia('(min-width: 881px)').matches){
+    window.addEventListener('scroll', function(){
+      panels.forEach(function(p, i){
+        if(i === panels.length - 1) return;
+        var next = panels[i+1];
+        var r = next.getBoundingClientRect();
+        var topStick = 96 + i*16;
+        var overlap = Math.min(Math.max((topStick + p.offsetHeight - r.top) / p.offsetHeight, 0), 1);
+        p.style.transform = 'scale(' + (1 - overlap * 0.045) + ')';
+        p.style.filter = 'brightness(' + (1 - overlap * 0.06) + ')';
+      });
+    }, {passive:true});
+  }
+
+  /* ── Process line draw ── */
+  var pg = document.getElementById('procGrid');
+  if(pg){
+    var gio = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){ pg.classList.add('in'); gio.unobserve(pg); }
+      });
+    }, {threshold:.3});
+    gio.observe(pg);
+  }
+})();
+</script>
+</body>
+</html>

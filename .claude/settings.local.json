@@ -69,7 +69,10 @@
       "Bash(LC_ALL=C grep -n '[^[:print:][:space:]]' /Users/yonatan/Desktop/GA4/RevWhisper-Website/welcome-back.html)",
       "Bash(grep -h G-[A-Z0-9]{10} /Users/yonatan/Desktop/GA4/RevWhisper-Website/*.html /Users/yonatan/Desktop/GA4/RevWhisper-Website/blog/*.html)",
       "Bash(kill %1)",
-      "Bash(git stash:*)"
+      "Bash(git stash:*)",
+      "Bash(git fetch:*)",
+      "Bash(cwebp -version)",
+      "Bash(node -e \"try { require\\('sharp'\\); console.log\\('sharp ok'\\); } catch\\(e\\) { console.log\\('sharp missing'\\); }\")"
     ]
   }
 }
