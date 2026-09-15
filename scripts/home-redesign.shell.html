@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Share-only preview of the redesigned homepage. Keep it out of the index so it
+     never competes with / in search, and keep it out of sitemap.xml. -->
+<meta name="robots" content="noindex,nofollow">
+
+<title>RevWhisper — homepage redesign preview</title>
+<meta name="description" content="Preview of the redesigned RevWhisper homepage. Not the live site.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="RevWhisper — homepage redesign preview">
+<meta property="og:description" content="Preview of the redesigned RevWhisper homepage. Not the live site.">
+<meta property="og:image" content="https://revwhisper.com/images/redesign/hero-home.webp">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="/icons/favicon-light.svg" type="image/svg+xml" media="(prefers-color-scheme: light)">
+<link rel="icon" href="/icons/favicon-dark.svg" type="image/svg+xml" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/icons/favicon-light.svg" type="image/svg+xml">
+
+<!-- Attribution capture (cookie-free) — same contract as the live homepage, so a lead
+     submitted from this preview still carries its utm/click ids into the CRM. -->
+<script>
+(function(){
+  var key='rw_attribution';
+  var TTL=7776000000; // 90 days — keep the last paid touch across tabs/sessions
+  var params=new URLSearchParams(window.location.search);
+  var utmFields=['utm_source','utm_medium','utm_campaign','utm_term','utm_content'];
+  var clickFields=['fbclid','gclid','ttclid','twclid','msclkid','li_fat_id'];
+  var trackedFields=utmFields.concat(clickFields);
+  var hasTracked=trackedFields.some(function(f){return params.has(f);});
+  function rwGet(k){try{return localStorage.getItem(k)||sessionStorage.getItem(k);}catch(e){try{return sessionStorage.getItem(k);}catch(e2){return null;}}}
+  function rwSet(k,v){try{localStorage.setItem(k,v);}catch(e){try{sessionStorage.setItem(k,v);}catch(e2){}}}
+  var prev=null;try{prev=JSON.parse(rwGet(key));}catch(e){prev=null;}
+  var fresh=prev&&prev.arrived_at&&((Date.now()-new Date(prev.arrived_at).getTime())<TTL);
+  if(hasTracked||!fresh){
+    var data={};
+    trackedFields.forEach(function(f){if(params.get(f))data[f]=params.get(f);});
+    try{data.referrer=document.referrer?new URL(document.referrer).hostname:'direct';}catch(e){data.referrer=document.referrer||'direct';}
+    data.landing_page=window.location.pathname;
+    data.arrived_at=new Date().toISOString();
+    rwSet(key,JSON.stringify(data));
+  }
+})();
+</script>
+
+<!-- GA4 only. The Meta and X pixels are deliberately NOT loaded here: this is an
+     internal review page, and review traffic would pollute ad audiences and teach
+     the optimizer from non-buyers. See RW_PREVIEW in /assets/home-redesign.js. -->
+<script>
+window.dataLayer=window.dataLayer||[];
+function gtag(){dataLayer.push(arguments);}
+gtag('consent','default',{'analytics_storage':'denied','ad_storage':'denied'});
+gtag('js',new Date());
+gtag('config','G-Y1FYZ5849B');
+function rwTrack(e,p){gtag('event',e,p||{});}
+(function(){
+  var c=null;try{c=localStorage.getItem('rw_cookie_consent');}catch(e){}
+  if(c==='accepted'){gtag('consent','update',{'analytics_storage':'granted','ad_storage':'granted'});}
+  var loaded=false;
+  function load(){
+    if(loaded)return;loaded=true;
+    var g=document.createElement('script');g.async=true;g.src='https://www.googletagmanager.com/gtag/js?id=G-Y1FYZ5849B';document.head.appendChild(g);
+  }
+  ['scroll','click','touchstart','keydown','mousemove'].forEach(function(e){window.addEventListener(e,load,{once:true,passive:true});});
+  if('requestIdleCallback' in window)requestIdleCallback(load,{timeout:4000});
+  else setTimeout(load,4000);
+})();
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Lora:ital,wght@0,400;0,500;1,400&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet"></noscript>
+
+<link rel="preload" href="/assets/home-redesign.css" as="style">
+<link rel="stylesheet" href="/assets/home-redesign.css">
+<link rel="preload" as="image" href="/images/redesign/hero-home.webp" fetchpriority="high">
+<script defer src="/assets/home-redesign-vals.js"></script>
+<script defer src="/assets/home-redesign.js"></script>
+</head>
+<body>
+<!--BODY-->
+</body>
+</html>

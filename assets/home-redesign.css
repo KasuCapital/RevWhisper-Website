@@ -1,0 +1,130 @@
+/* Compiled from "RevWhisper Landing.dc.html" by scripts/build-home-redesign.mjs.
+   Edit the design, then re-run the script — do not hand-edit this file. */
+html,body{margin:0;padding:0;background:#FFFFFF;scroll-behavior:smooth}
+  a{color:#4A6741;text-decoration:none}
+  a:hover{color:#32302F}
+  @keyframes rw-orbit{from{transform:rotate(-114deg)}to{transform:rotate(246deg)}}
+  @keyframes rw-ripple{0%{transform:scale(1);opacity:.5}45%{transform:scale(1.9);opacity:0}100%{transform:scale(1.9);opacity:0}}
+  @keyframes rw-rankOut{0%,10%{opacity:1}44%,92%{opacity:0}100%{opacity:1}}
+  @keyframes rw-rankIn{0%,10%{opacity:0}44%,92%{opacity:1}100%{opacity:0}}
+  @keyframes rw-halo{0%{transform:scale(1);opacity:.5}70%{transform:scale(1.4);opacity:0}100%{transform:scale(1.4);opacity:0}}
+  @keyframes rw-draw3{from{stroke-dashoffset:900}to{stroke-dashoffset:0}}
+  @keyframes rw-drawLoop{0%{stroke-dashoffset:520;opacity:0}6%{opacity:1}46%,88%{stroke-dashoffset:0;opacity:1}97%,100%{stroke-dashoffset:0;opacity:0}}
+  @keyframes rw-travel2{0%{offset-distance:0%;opacity:0}6%{opacity:1}46%,88%{offset-distance:100%;opacity:1}97%,100%{offset-distance:100%;opacity:0}}
+  @keyframes rw-flow{0%{transform:translateY(-110%)}100%{transform:translateY(320%)}}
+  @keyframes rw-travel{from{offset-distance:0%}to{offset-distance:100%}}
+  @keyframes rw-climbUp{0%,8%{transform:translateY(0)}48%,92%{transform:translateY(-120px)}100%{transform:translateY(0)}}
+  @keyframes rw-climbDn{0%,8%{transform:translateY(0)}48%,92%{transform:translateY(60px)}100%{transform:translateY(0)}}
+  @keyframes rw-flex{0%,100%{transform:scaleX(.74)}50%{transform:scaleX(1)}}
+  @keyframes rw-pill{0%,14%{background:#4A6741;color:#FFFFFF}26%,100%{background:#E0DCDA;color:#706A63}}
+  @keyframes rw-day{0%,14%{background:#4A6741;color:#FFFFFF}30%,100%{background:#E0DCDA;color:#706A63}}
+  @keyframes rw-blip{0%,100%{opacity:.4;transform:scale(.85)}50%{opacity:1;transform:scale(1.2)}}
+  @keyframes rw-pulse{0%{transform:scale(1);opacity:.9}60%{transform:scale(2.4);opacity:0}100%{transform:scale(2.4);opacity:0}}
+  @keyframes rw-nudge{0%,100%{transform:translateY(0);opacity:.55}50%{transform:translateY(4px);opacity:1}}
+  @keyframes rw-fill98{0%{width:0}55%,100%{width:98%}}
+  @keyframes rw-pop{0%{transform:scale(.4);opacity:0}60%{transform:scale(1.12);opacity:1}100%{transform:scale(1);opacity:1}}
+  @keyframes rw-lift{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+  @keyframes rw-caret{0%,45%{opacity:1}50%,95%{opacity:0}100%{opacity:1}}
+  @keyframes rw-riseRow{0%{transform:translateY(10px);opacity:0}14%,88%{transform:translateY(0);opacity:1}100%{transform:translateY(0);opacity:1}}
+  @keyframes rw-spoke{0%{stroke-dashoffset:300;opacity:0}12%{opacity:.9}70%{stroke-dashoffset:0;opacity:.35}100%{stroke-dashoffset:0;opacity:0}}
+  @keyframes rw-glow{0%,9%{opacity:0;transform:scale(.85)}13%{opacity:.34;transform:scale(1.22)}19%,100%{opacity:0;transform:scale(.85)}}
+  @keyframes rw-tick{0%,100%{opacity:.25}50%{opacity:.75}}
+  @keyframes rw-drift{from{transform:rotate(0deg)}to{transform:rotate(60deg)}}
+  @keyframes rw-sheen{0%{transform:translateX(-120%)}100%{transform:translateX(320%)}}
+  @keyframes rw-draw2{from{stroke-dashoffset:1400}to{stroke-dashoffset:0}}
+  @keyframes rw-up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes rw-cue{0%{transform:translateY(0);opacity:.9}50%{transform:translateY(5px);opacity:.45}100%{transform:translateY(0);opacity:.9}}
+  @keyframes rw-draw{from{stroke-dashoffset:520}to{stroke-dashoffset:0}}
+  @keyframes rw-marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  @keyframes rw-dot{from{opacity:0;transform:scale(.4)}to{opacity:1;transform:scale(1)}}
+  @media (prefers-reduced-motion:reduce){*{animation:none !important}}
+
+  /* the nav must never wrap: the link row needs 945px, so it collapses below 980px
+     and the bar itself is nowrap at every width */
+  [data-nav-inner]{flex-wrap:nowrap}
+  @media (max-width:1040px){
+    [data-nav-links] > a:not([data-nav-cta]){display:none !important}
+    [data-nav-links]{gap:0 !important}
+    [data-nav-inner]{padding:12px 20px !important}
+    [data-timeline] [data-stagger]{grid-template-columns:repeat(2,minmax(0,1fr)) !important}
+    [data-stat-figure]{font-size:44px !important}
+    [data-footer-links] a{padding:9px 0}
+    a[href="#results"],a[href="https://revwhisper.com/case-study-2"]{padding-top:11px;padding-bottom:11px}
+    [data-nav-inner] > a:first-child{padding:6px 0}
+    [data-legal-links] a{padding:10px 0}
+    button[aria-label="Previous factor"],button[aria-label="Next factor"]{width:44px !important;height:44px !important}
+    /* the fixed 150px rate bar overflowed the card and crushed the tier labels */
+    [data-tier-head]{display:none !important}
+    [data-tier-row]{grid-template-columns:auto minmax(0,1fr) !important;gap:12px !important;padding:20px 0 !important}
+    [data-tier-row] > span:first-child{min-width:64px;padding:6px 10px !important}
+    [data-tier-row] > span:nth-child(3){grid-column:1 / -1 !important;width:100% !important;margin-top:4px}
+  }
+  /* phone: six pills stacked ate 227px of height, so they become a swipe strip */
+  @media (max-width:600px){
+    /* logo + full-size CTA exceeds 342px and wrapped the bar to two rows */
+    [data-nav-cta]{padding:10px 14px !important;font-size:15px !important}
+    [data-nav-inner]{flex-wrap:nowrap !important;gap:12px !important}
+    [data-nav-inner] > a:first-child span:last-child{font-size:17px !important}
+    [data-pill-row]{flex-wrap:wrap !important;justify-content:center !important;gap:8px !important}
+    [data-pill-row] > div{flex:0 0 auto;padding:9px 13px !important;gap:7px !important}
+    [data-pill-row] [data-factor-title]{font-size:15px !important}
+    [data-pill-row] [data-factor-num]{font-size:12px !important}
+    [data-timeline] [data-stagger]{grid-template-columns:minmax(0,1fr) !important}
+    [data-stat-figure]{font-size:38px !important}
+    [data-case-metrics]{gap:18px !important}
+    /* the rank card hangs below the photo here, so clear room for it */
+    [data-rank-frame]{margin-bottom:46px}
+    /* the pinned RevWhisper column needs room for a whole competitor column beside it */
+    [data-compare-row]{grid-template-columns:minmax(118px,1.5fr) repeat(4,minmax(86px,1fr)) !important;min-width:462px !important}
+    [data-compare-row] > div{padding-left:5px !important;padding-right:5px !important;font-size:13px !important}
+    [data-compare-row] > div:first-child{padding-left:14px !important;padding-right:10px !important;font-size:15px !important}
+    /* brand names cannot wrap, so they shrink to fit their track */
+    [data-compare-row] > div > div{font-size:13px !important}
+    /* scrolling the data columns away from their row labels made the marks meaningless,
+       so the LABEL column is what stays pinned here and RevWhisper scrolls into view */
+    [data-os-cell]{position:static !important;box-shadow:none !important}
+    [data-compare-row] > div:first-child{position:sticky !important;left:0;z-index:3;background:#FFFFFF;box-shadow:1px 0 0 #E0DCDA}
+    /* the unshrinkable rating collapsed the title's share and nowrap truncated it */
+    [data-comp-titlerow]{flex-wrap:wrap !important;align-items:flex-start !important;gap:2px 8px !important}
+    [data-comp-title]{flex:1 1 100% !important;white-space:normal !important;overflow:visible !important;text-overflow:clip !important}
+    [data-search-bar]{flex-wrap:wrap !important}
+    [data-search-bar] > *{white-space:normal !important}
+    /* same cause as the competitor titles: an unshrinkable rank block left the text
+       column 36px wide, so the row wraps and the name is free to wrap here */
+    [data-rank-move]{flex-wrap:wrap !important}
+    [data-rank-move] > div:nth-child(2){flex:1 1 140px !important}
+    [data-rank-name]{white-space:normal !important;overflow:visible !important;text-overflow:clip !important}
+    [data-comp-meta]{white-space:normal !important;overflow:visible !important;text-overflow:clip !important}
+    [data-wheel-label]{display:none !important}
+    [data-compare-row]:first-child > div:first-child{background:#32302F;box-shadow:1px 0 0 rgba(255,255,255,.22)}
+    [data-footer-links] a{padding:9px 0}
+  }
+  /* touch devices: no hover to reveal, so inline links need their own hit area */
+  @media (hover:none){
+    a{min-height:24px}
+  }
+
+/* hover / focus states lifted out of style-hover + style-focus attributes */
+.rw-h1:hover{background:#3C5435 !important;color:#FFFFFF !important;transform:translateY(-2px) !important;box-shadow:0 4px 8px rgba(50,48,47,.05),0 10px 24px rgba(50,48,47,.12) !important}
+.rw-h2:hover{border-color:#4A6741 !important;background:#F8F7F6 !important}
+.rw-f3:focus{border-color:#4A6741 !important;box-shadow:0 0 0 3px rgba(74,103,65,.15) !important}
+.rw-h4:hover{border-color:#32302F !important;color:#32302F !important}
+.rw-f5:focus{border-color:#4A6741 !important;box-shadow:0 0 0 3px rgba(74,103,65,.13) !important}
+.rw-h6:hover{border-color:#4A6741 !important;background:#F8F7F6 !important;color:#32302F !important}
+.rw-h7:hover{background:#3C5435 !important;transform:translateY(-2px) !important}
+.rw-h8:hover{transform:scale(1.035) !important}
+.rw-h9:hover{color:#32302F !important;border-color:#32302F !important}
+.rw-h10:hover{transform:scale(1.06) !important}
+.rw-h11:hover{transform:scale(1.05) !important}
+.rw-h12:hover{background:#3C5435 !important;color:#FFFFFF !important;transform:translateY(-2px) !important}
+.rw-h13:hover{filter:none !important;opacity:1 !important}
+.rw-h14:hover{transform:translateY(-3px) !important;box-shadow:0 4px 8px rgba(50,48,47,.04),0 8px 24px rgba(50,48,47,.08) !important}
+.rw-h15:hover{filter:invert(1) !important;opacity:1 !important}
+.rw-h16:hover{background:#32302F !important;color:#FFFFFF !important}
+.rw-h17:hover{background:#F8F7F6 !important}
+.rw-h18:hover{background:#F8F7F6 !important;color:#32302F !important;transform:translateY(-2px) !important}
+.rw-h19:hover{color:#E0DCDA !important}
+.rw-h20:hover{background:#3C5435 !important}
+.rw-f21:focus{background:#3C5435 !important;box-shadow:0 0 0 3px rgba(74,103,65,.35) !important}
+.rw-h22:hover{color:#4A6741 !important}
+.rw-h23:hover{border-color:#4A6741 !important;transform:translateY(-2px) !important}
