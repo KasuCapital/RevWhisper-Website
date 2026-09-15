@@ -18,6 +18,7 @@ const PARTIALS = [
 // Pages that should ship the shared partials. Anything not listed here is left alone.
 const TARGETS = [
   'index.html',
+  'home-redesign.html',
   '404.html',
   'photoediting.html',
   'case-study.html',

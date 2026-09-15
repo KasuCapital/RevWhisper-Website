@@ -1,0 +1,48 @@
+/* ── /home-redesign: page rules layered over the site's own stylesheets ──────
+   Loaded after header.css, home.css, audit-widget.css and footer.css, so every
+   token (--accent, --g200, --heading …) and every shared component class is
+   already defined. This file only (a) lays out the authored hero and (b) tunes
+   the compiled design body to sit inside the site's chrome.                    */
+
+/* Hero ─────────────────────────────────────────────────────────────────────── */
+.rd-hero{position:relative;overflow:hidden;padding:148px 0 64px;
+  background:radial-gradient(120% 90% at 82% 12%, rgba(74,103,65,.07) 0%, rgba(255,255,255,0) 58%),
+             radial-gradient(circle at 1px 1px, rgba(50,48,47,.07) 1px, transparent 0) 0 0 / 22px 22px, #fff}
+.rd-hero-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,500px);
+  grid-template-areas:"copy form" "photo form";gap:22px 48px;align-items:start}
+.rd-hero-copy{grid-area:copy;display:flex;flex-direction:column;gap:20px;min-width:0}
+.rd-hero-photo{grid-area:photo;min-width:0}
+.rd-hero-form{grid-area:form;min-width:0}
+.rd-hero-copy .eyebrow{margin-bottom:0}
+.rd-hero-h1{font-family:var(--heading);font-weight:400;font-size:clamp(38px,4.6vw,56px);line-height:1.08;letter-spacing:-.02em;color:var(--black);margin:0}
+.rd-hero-h1 em{font-style:italic;color:var(--accent)}
+.rd-hero-sub{font-size:18px;line-height:1.6;color:var(--g700);max-width:520px;font-weight:300;margin:0}
+/* the site's trust row is centre-aligned under a centred headline; here it sits left */
+.rd-hero-trust{justify-content:flex-start;margin-top:2px;padding-top:18px;border-top:1px solid var(--g200)}
+/* the photo was a full-width band (300–460px tall); in a column it needs to be shorter */
+.rd-hero-photo [data-rank-frame] > div:first-child{height:clamp(220px,22vw,300px) !important}
+/* audit-widget.css centres the card at 560px for the live homepage's centred hero */
+.rd-hero-form .form-card{max-width:none;margin:0}
+
+.rd-up{animation:rw-up .8s cubic-bezier(.16,1,.3,1) both}
+.rd-d1{animation-delay:.08s}.rd-d2{animation-delay:.18s}.rd-d3{animation-delay:.3s}
+
+@media(max-width:960px){
+  .rd-hero{padding-top:112px}
+  .rd-hero-grid{grid-template-columns:1fr;grid-template-areas:"copy" "form" "photo";gap:32px}
+}
+@media(max-width:600px){
+  /* the rank card hangs below the photo at this width (see the design's own rule) */
+  .rd-hero-photo [data-rank-frame]{margin-bottom:46px}
+}
+
+/* Compiled design body ─────────────────────────────────────────────────────── */
+/* design containers space children with gap, so the site eyebrow's own margin doubles up */
+.rd-body .eyebrow{margin-bottom:0}
+.rd-body .h2{margin:0}
+/* Whisper Wheel pills are keyboard-reachable buttons now */
+.rd-body [data-factor-row]:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+/* bottom "Book a strategy call" card, restyled with the site's form controls */
+.rd-call-card{display:flex;flex-direction:column;gap:14px;max-width:none;margin:0}
+.rd-call-card .btn-next{flex:none;width:100%}
+.rd-call-card .field-input.error{border-color:var(--red)}

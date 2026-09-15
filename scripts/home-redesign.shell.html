@@ -46,9 +46,9 @@
 })();
 </script>
 
-<!-- GA4 only. The Meta and X pixels are deliberately NOT loaded here: this is an
-     internal review page, and review traffic would pollute ad audiences and teach
-     the optimizer from non-buyers. See RW_PREVIEW in /assets/home-redesign.js. -->
+<!-- GA4 only. The Meta and X pixels are deliberately NOT loaded on this review page, so
+     review traffic stays out of ad audiences. audit-widget.js guards every fbq/rwXTrack
+     call, so the form runs unchanged without them. -->
 <script>
 window.dataLayer=window.dataLayer||[];
 function gtag(){dataLayer.push(arguments);}
@@ -70,19 +70,46 @@ function rwTrack(e,p){gtag('event',e,p||{});}
 })();
 </script>
 
+<!-- Fonts: the same request the live homepage makes -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Lora:ital,wght@0,400;0,500;1,400&display=swap">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-<noscript><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet"></noscript>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
 
+<!-- Site chrome and components, exactly as the live homepage loads them: the shared
+     header, the design tokens + buttons in home.css, the audit form, the shared footer.
+     home-redesign.css (the compiled design body + page rules) loads last. -->
+<link rel="preload" href="/assets/header.css" as="style">
+<link rel="stylesheet" href="/assets/header.css">
+<link rel="stylesheet" href="/assets/home.css?v=4">
+<link rel="stylesheet" href="/assets/audit-widget.css">
+<link rel="stylesheet" href="/assets/footer.css" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="/assets/footer.css"></noscript>
 <link rel="preload" href="/assets/home-redesign.css" as="style">
 <link rel="stylesheet" href="/assets/home-redesign.css">
 <link rel="preload" as="image" href="/images/redesign/hero-home.webp" fetchpriority="high">
+
+<script defer src="/assets/header.js"></script>
+<!-- The live homepage's five-step audit form, unchanged. data-page on #audit-form tags
+     this page's leads as homepage-redesign. -->
+<script defer src="/assets/audit-widget.js"></script>
 <script defer src="/assets/home-redesign-vals.js"></script>
 <script defer src="/assets/home-redesign.js"></script>
 </head>
 <body>
+
+<!-- HEADER:START -->
+<!--HEADER-->
+<!-- HEADER:END -->
+
+<main id="main">
 <!--BODY-->
+</main>
+
+<!-- FOOTER:START -->
+<!--FOOTER-->
+<!-- FOOTER:END -->
+
 </body>
 </html>

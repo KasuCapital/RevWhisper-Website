@@ -20,6 +20,11 @@
 var card = document.getElementById('audit-form');
 if(!card) return;
 
+/* Pages other than the homepage can embed this card and label their leads:
+   <div class="form-card" id="audit-form" data-page="homepage-redesign">.
+   Defaults to 'homepage' so the live page is unchanged. */
+var PAGE = card.getAttribute('data-page') || 'homepage';
+
 /* rwTrack is defined inline in the page head; guard anyway so a tracking
    failure can never break the form. */
 function track(e,p){ try{ if(typeof rwTrack==='function') rwTrack(e,p||{}); }catch(err){} }
@@ -204,7 +209,7 @@ function nextStep(){
   }
   if(!validateStep(current)) return;
   var from=current;current++;
-  track('form_step',{step:current,page:'homepage'});
+  track('form_step',{step:current,page:PAGE});
   transitionStep(from,current,'forward');
 }
 function prevStep(){
@@ -309,7 +314,7 @@ function submitForm(){
     phone_number:document.getElementById('phone').value.trim(),
     qualified:qualified,
     disqualifyReason:qualified?'':'below_revenue_floor',
-    source:'homepage',
+    source:PAGE,
     submittedAt:new Date().toISOString(),
     attribution:attribution()
   };
@@ -327,7 +332,7 @@ function submitForm(){
     // measurement-only event, still capture the lead to the CRM (flagged
     // qualified:false), then route to the report page instead of the calendar.
     try{ fbq('trackCustom','UnqualifiedLead',{content_name:'Free Audit',content_category:'Audit Lead — Unqualified'}); }catch(e){}
-    track('generate_lead_unqualified',{page:'homepage',listings:data.listings,revenue:data.revenue});
+    track('generate_lead_unqualified',{page:PAGE,listings:data.listings,revenue:data.revenue});
     fetch(FORM_WEBHOOK_ENDPOINT,{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({event_type:'get_started',payload:data}),
@@ -344,7 +349,7 @@ function submitForm(){
   var xConversionId=typeof rwXConversionId==='function'?rwXConversionId('audit_lead'):'audit_lead_'+Date.now();
   try{ sessionStorage.setItem('rw_lead_event_id', eventId); }catch(e){}
   try{ fbq('track','Lead',{content_name:'Free Audit',content_category:'Audit Lead'},{eventID:eventId}); }catch(e){}
-  track('generate_lead',{page:'homepage',listings:data.listings,issue:data.issue});
+  track('generate_lead',{page:PAGE,listings:data.listings,issue:data.issue});
   // Hand the event_id + content name to the server so its CAPI Lead dedupes with the above.
   data.fbEventId=eventId; data.fbContentName='Free Audit';
   // X uses conversion_id for Pixel/CAPI dedupe; event IDs are loaded from /api/x-config.
@@ -389,17 +394,17 @@ function scheduleAdvance(){
   setTimeout(function(){ if(current===from) nextStep(); },180);
 }
 card.querySelectorAll('input[name="listings"]').forEach(function(r){
-  r.addEventListener('change',function(){ track('select_portfolio_size',{size:r.value,page:'homepage'}); renderRevenueOptions(r.value); scheduleAdvance(); });
+  r.addEventListener('change',function(){ track('select_portfolio_size',{size:r.value,page:PAGE}); renderRevenueOptions(r.value); scheduleAdvance(); });
 });
 card.querySelectorAll('input[name="issue"]').forEach(function(r){
-  r.addEventListener('change',function(){ track('select_issue',{issue:r.value,page:'homepage'}); scheduleAdvance(); });
+  r.addEventListener('change',function(){ track('select_issue',{issue:r.value,page:PAGE}); scheduleAdvance(); });
 });
 card.querySelectorAll('input[name="pricing"]').forEach(function(r){
-  r.addEventListener('change',function(){ track('select_pricing',{pricing:r.value,page:'homepage'}); scheduleAdvance(); });
+  r.addEventListener('change',function(){ track('select_pricing',{pricing:r.value,page:PAGE}); scheduleAdvance(); });
 });
 /* revenue radios are rendered dynamically — delegate the change to auto-advance */
 card.addEventListener('change',function(e){
-  if(e.target&&e.target.name==='revenue'){ track('select_revenue',{revenue:e.target.value,page:'homepage'}); scheduleAdvance(); }
+  if(e.target&&e.target.name==='revenue'){ track('select_revenue',{revenue:e.target.value,page:PAGE}); scheduleAdvance(); }
 });
 /* Re-selecting the already-checked answer advances too. After Back, the previous answer
    is still checked, and a checked radio can't fire change — without this, the only way
@@ -462,7 +467,7 @@ document.addEventListener('click',function(e){
   var a=e.target.closest('.js-to-audit');
   if(!a) return;
   e.preventDefault();
-  track('cta_click',{destination:'audit_widget',cta_text:(a.textContent||'').replace(/\s+/g,' ').trim().substring(0,60),page:'homepage'});
+  track('cta_click',{destination:'audit_widget',cta_text:(a.textContent||'').replace(/\s+/g,' ').trim().substring(0,60),page:PAGE});
   scrollToWidget();
 });
 

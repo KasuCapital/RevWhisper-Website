@@ -1,8 +1,6 @@
 /* Compiled from "RevWhisper Landing.dc.html" by scripts/build-home-redesign.mjs.
-   Edit the design, then re-run the script — do not hand-edit this file. */
-html,body{margin:0;padding:0;background:#FFFFFF;scroll-behavior:smooth}
-  a{color:#4A6741;text-decoration:none}
-  a:hover{color:#32302F}
+   Edit the design or scripts/home-redesign.extra.css, then re-run — do not hand-edit. */
+
   @keyframes rw-orbit{from{transform:rotate(-114deg)}to{transform:rotate(246deg)}}
   @keyframes rw-ripple{0%{transform:scale(1);opacity:.5}45%{transform:scale(1.9);opacity:0}100%{transform:scale(1.9);opacity:0}}
   @keyframes rw-rankOut{0%,10%{opacity:1}44%,92%{opacity:0}100%{opacity:1}}
@@ -16,8 +14,8 @@ html,body{margin:0;padding:0;background:#FFFFFF;scroll-behavior:smooth}
   @keyframes rw-climbUp{0%,8%{transform:translateY(0)}48%,92%{transform:translateY(-120px)}100%{transform:translateY(0)}}
   @keyframes rw-climbDn{0%,8%{transform:translateY(0)}48%,92%{transform:translateY(60px)}100%{transform:translateY(0)}}
   @keyframes rw-flex{0%,100%{transform:scaleX(.74)}50%{transform:scaleX(1)}}
-  @keyframes rw-pill{0%,14%{background:#4A6741;color:#FFFFFF}26%,100%{background:#E0DCDA;color:#706A63}}
-  @keyframes rw-day{0%,14%{background:#4A6741;color:#FFFFFF}30%,100%{background:#E0DCDA;color:#706A63}}
+  @keyframes rw-pill{0%,14%{background:#4A6741;color:#FFFFFF}26%,100%{background:#E0DCDA;color:#706b68}}
+  @keyframes rw-day{0%,14%{background:#4A6741;color:#FFFFFF}30%,100%{background:#E0DCDA;color:#706b68}}
   @keyframes rw-blip{0%,100%{opacity:.4;transform:scale(.85)}50%{opacity:1;transform:scale(1.2)}}
   @keyframes rw-pulse{0%{transform:scale(1);opacity:.9}60%{transform:scale(2.4);opacity:0}100%{transform:scale(2.4);opacity:0}}
   @keyframes rw-nudge{0%,100%{transform:translateY(0);opacity:.55}50%{transform:translateY(4px);opacity:1}}
@@ -101,30 +99,67 @@ html,body{margin:0;padding:0;background:#FFFFFF;scroll-behavior:smooth}
   }
   /* touch devices: no hover to reveal, so inline links need their own hit area */
   @media (hover:none){
-    a{min-height:24px}
+    .rd-body a{min-height:24px}
   }
 
 /* hover / focus states lifted out of style-hover + style-focus attributes */
-.rw-h1:hover{background:#3C5435 !important;color:#FFFFFF !important;transform:translateY(-2px) !important;box-shadow:0 4px 8px rgba(50,48,47,.05),0 10px 24px rgba(50,48,47,.12) !important}
-.rw-h2:hover{border-color:#4A6741 !important;background:#F8F7F6 !important}
-.rw-f3:focus{border-color:#4A6741 !important;box-shadow:0 0 0 3px rgba(74,103,65,.15) !important}
-.rw-h4:hover{border-color:#32302F !important;color:#32302F !important}
-.rw-f5:focus{border-color:#4A6741 !important;box-shadow:0 0 0 3px rgba(74,103,65,.13) !important}
-.rw-h6:hover{border-color:#4A6741 !important;background:#F8F7F6 !important;color:#32302F !important}
-.rw-h7:hover{background:#3C5435 !important;transform:translateY(-2px) !important}
-.rw-h8:hover{transform:scale(1.035) !important}
-.rw-h9:hover{color:#32302F !important;border-color:#32302F !important}
-.rw-h10:hover{transform:scale(1.06) !important}
-.rw-h11:hover{transform:scale(1.05) !important}
-.rw-h12:hover{background:#3C5435 !important;color:#FFFFFF !important;transform:translateY(-2px) !important}
-.rw-h13:hover{filter:none !important;opacity:1 !important}
-.rw-h14:hover{transform:translateY(-3px) !important;box-shadow:0 4px 8px rgba(50,48,47,.04),0 8px 24px rgba(50,48,47,.08) !important}
-.rw-h15:hover{filter:invert(1) !important;opacity:1 !important}
-.rw-h16:hover{background:#32302F !important;color:#FFFFFF !important}
-.rw-h17:hover{background:#F8F7F6 !important}
-.rw-h18:hover{background:#F8F7F6 !important;color:#32302F !important;transform:translateY(-2px) !important}
-.rw-h19:hover{color:#E0DCDA !important}
-.rw-h20:hover{background:#3C5435 !important}
-.rw-f21:focus{background:#3C5435 !important;box-shadow:0 0 0 3px rgba(74,103,65,.35) !important}
-.rw-h22:hover{color:#4A6741 !important}
-.rw-h23:hover{border-color:#4A6741 !important;transform:translateY(-2px) !important}
+.rw-h1:hover{transform:scale(1.035) !important}
+.rw-h2:hover{color:#32302F !important;border-color:#32302F !important}
+.rw-h3:hover{border-color:#4A6741 !important;background:#faf9f8 !important}
+.rw-f4:focus{border-color:#4A6741 !important;box-shadow:0 0 0 3px rgba(74,103,65,.15) !important}
+.rw-h5:hover{transform:scale(1.06) !important}
+.rw-h6:hover{transform:scale(1.05) !important}
+.rw-h7:hover{filter:none !important;opacity:1 !important}
+.rw-h8:hover{transform:translateY(-3px) !important;box-shadow:0 4px 8px rgba(50,48,47,.04),0 8px 24px rgba(50,48,47,.08) !important}
+.rw-h9:hover{filter:invert(1) !important;opacity:1 !important}
+.rw-h10:hover{background:#faf9f8 !important}
+.rw-h11:hover{color:#E0DCDA !important}
+
+/* ── /home-redesign: page rules layered over the site's own stylesheets ──────
+   Loaded after header.css, home.css, audit-widget.css and footer.css, so every
+   token (--accent, --g200, --heading …) and every shared component class is
+   already defined. This file only (a) lays out the authored hero and (b) tunes
+   the compiled design body to sit inside the site's chrome.                    */
+
+/* Hero ─────────────────────────────────────────────────────────────────────── */
+.rd-hero{position:relative;overflow:hidden;padding:148px 0 64px;
+  background:radial-gradient(120% 90% at 82% 12%, rgba(74,103,65,.07) 0%, rgba(255,255,255,0) 58%),
+             radial-gradient(circle at 1px 1px, rgba(50,48,47,.07) 1px, transparent 0) 0 0 / 22px 22px, #fff}
+.rd-hero-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,500px);
+  grid-template-areas:"copy form" "photo form";gap:22px 48px;align-items:start}
+.rd-hero-copy{grid-area:copy;display:flex;flex-direction:column;gap:20px;min-width:0}
+.rd-hero-photo{grid-area:photo;min-width:0}
+.rd-hero-form{grid-area:form;min-width:0}
+.rd-hero-copy .eyebrow{margin-bottom:0}
+.rd-hero-h1{font-family:var(--heading);font-weight:400;font-size:clamp(38px,4.6vw,56px);line-height:1.08;letter-spacing:-.02em;color:var(--black);margin:0}
+.rd-hero-h1 em{font-style:italic;color:var(--accent)}
+.rd-hero-sub{font-size:18px;line-height:1.6;color:var(--g700);max-width:520px;font-weight:300;margin:0}
+/* the site's trust row is centre-aligned under a centred headline; here it sits left */
+.rd-hero-trust{justify-content:flex-start;margin-top:2px;padding-top:18px;border-top:1px solid var(--g200)}
+/* the photo was a full-width band (300–460px tall); in a column it needs to be shorter */
+.rd-hero-photo [data-rank-frame] > div:first-child{height:clamp(220px,22vw,300px) !important}
+/* audit-widget.css centres the card at 560px for the live homepage's centred hero */
+.rd-hero-form .form-card{max-width:none;margin:0}
+
+.rd-up{animation:rw-up .8s cubic-bezier(.16,1,.3,1) both}
+.rd-d1{animation-delay:.08s}.rd-d2{animation-delay:.18s}.rd-d3{animation-delay:.3s}
+
+@media(max-width:960px){
+  .rd-hero{padding-top:112px}
+  .rd-hero-grid{grid-template-columns:1fr;grid-template-areas:"copy" "form" "photo";gap:32px}
+}
+@media(max-width:600px){
+  /* the rank card hangs below the photo at this width (see the design's own rule) */
+  .rd-hero-photo [data-rank-frame]{margin-bottom:46px}
+}
+
+/* Compiled design body ─────────────────────────────────────────────────────── */
+/* design containers space children with gap, so the site eyebrow's own margin doubles up */
+.rd-body .eyebrow{margin-bottom:0}
+.rd-body .h2{margin:0}
+/* Whisper Wheel pills are keyboard-reachable buttons now */
+.rd-body [data-factor-row]:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+/* bottom "Book a strategy call" card, restyled with the site's form controls */
+.rd-call-card{display:flex;flex-direction:column;gap:14px;max-width:none;margin:0}
+.rd-call-card .btn-next{flex:none;width:100%}
+.rd-call-card .field-input.error{border-color:var(--red)}
