@@ -287,6 +287,81 @@ a{color:inherit}
 .look-item h3{font-family:var(--heading);font-size:18px;font-weight:500;color:var(--black);margin-bottom:4px}
 .look-item p{font-size:14px;color:var(--g500);line-height:1.6;font-weight:300}
 .look-item .pillar-q{display:block;font-size:13px;color:var(--accent);font-weight:500;margin-top:9px}
+/* ───────────────────────── Data card (media slot: a RevWhisper data view instead of a stock listing photo) ─────────────────────────
+   9/17 feedback: the photo has to be relevant to what the section says. These pages speak to hosts who read data,
+   so the media slot shows our data (rank-adjusted pricing / pricing strategy audit / visibility report). Same chrome as the report mock. */
+.dv-stage{position:relative;max-width:430px;margin:0 auto}
+.dv-stage::before{content:'';position:absolute;inset:-8% -6% -10% -6%;background:radial-gradient(58% 54% at 50% 42%,rgba(74,103,65,.09),transparent 72%);z-index:0}
+.dv-card{position:relative;z-index:1;background:#fff;border:1px solid var(--g200);border-radius:var(--radius-lg);box-shadow:var(--sh-lg);padding:20px 20px 16px;font-family:var(--body);transition:transform .45s var(--ease-out-expo)}
+.dv-stage:hover .dv-card{transform:translateY(-4px)}
+.dv-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.dv-brand{display:flex;align-items:center;gap:7px;font-family:var(--heading);font-size:14.5px;color:var(--black);letter-spacing:-.01em}
+.dv-brand svg{width:18px;height:18px;flex-shrink:0;color:var(--accent)}
+.dv-brand b{color:var(--accent);font-weight:400}
+.dv-stamp{font-size:8.5px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--g400);border:1px solid var(--g200);border-radius:100px;padding:4px 9px;white-space:nowrap}
+.dv-head{margin-top:14px;padding-bottom:12px;border-bottom:1px solid var(--g200)}
+.dv-title{font-family:var(--heading);font-size:16.5px;font-weight:400;color:var(--black);letter-spacing:-.01em;line-height:1.3}
+.dv-sub{font-family:var(--mono);font-size:10.5px;color:var(--g400);margin-top:5px;letter-spacing:.01em}
+.dv-lbl{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:14px 0 9px;font-size:10.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--g600)}
+.dv-lbl span:last-child{font-family:var(--mono);font-size:9.5px;font-weight:500;letter-spacing:.02em;text-transform:none;color:var(--g400)}
+.dv-week{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.dv-week.cols4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.dv-day{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 3px 9px;border-radius:9px;border:1px solid var(--g200);background:#fff;min-width:0}
+.dv-day .d{font-size:9.5px;letter-spacing:.08em;color:var(--g500);text-transform:uppercase}
+.dv-day .p{font-family:var(--mono);font-size:15px;font-weight:500;color:var(--black);white-space:nowrap;letter-spacing:-.01em}
+.dv-day .r{font-size:10.5px;font-weight:600;color:var(--accent);white-space:nowrap}
+.dv-day.hot{border-color:var(--accent);background:rgba(74,103,65,.07)}
+.dv-day.soft{border-color:#d9cdb0;background:var(--gold-bg)}.dv-day.soft .r{color:var(--gold)}
+.dv-day.warn{border-color:#d8c3be;background:var(--terra-bg)}.dv-day.warn .r{color:var(--terra)}
+.dv-day.flat .r{color:var(--g400);font-weight:500}
+.dv-chart{display:block;width:100%;height:auto;overflow:visible}
+.dv-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--g500);margin-top:6px}
+.dv-legend span{display:inline-flex;align-items:center;gap:6px}
+.dv-legend i{width:12px;height:3px;border-radius:99px;background:var(--accent);display:inline-block}
+.dv-legend i.cut{background:var(--gold)}
+.dv-legend i.sq{width:10px;height:10px;border-radius:3px}
+.dv-legend i.p1{background:var(--accent-light);border:1px solid var(--accent-border)}
+.dv-legend i.p2{background:var(--gold-bg);border:1px solid #d9cdb0}
+.dv-legend i.p3{background:var(--terra-bg);border:1px solid #d8c3be}
+.dv-rows{display:flex;flex-direction:column;gap:8px}
+.dv-row{display:flex;align-items:center;gap:9px;font-size:11.5px;color:var(--g600)}
+.dv-row .k{width:86px;flex-shrink:0;color:var(--g500)}
+.dv-row .v{flex:1;min-width:0;color:var(--black);line-height:1.35}
+.dv-row .t{font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border-radius:5px;padding:3px 6px;flex-shrink:0}
+.dv-row .t.flag{background:var(--terra-bg);color:var(--terra)}
+.dv-row .t.ok{background:var(--accent-light);color:var(--accent)}
+.dv-grid{display:grid;grid-template-columns:1.3fr repeat(3,1fr);gap:6px;align-items:center}
+.dv-grid .gh{font-size:9.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--g400);text-align:center;padding-bottom:2px}
+.dv-grid .gh:first-child{text-align:left}
+.dv-grid .gk{font-size:11.5px;color:var(--g600);line-height:1.25}
+.dv-grid .gk small{display:block;font-family:var(--mono);font-size:9.5px;color:var(--g400);margin-top:2px}
+.dv-grid .gc{font-family:var(--mono);font-size:13.5px;font-weight:500;text-align:center;padding:9px 2px;border-radius:8px;border:1px solid var(--g200);color:var(--black);background:#fff}
+.dv-grid .gc.p1{background:var(--accent-light);border-color:var(--accent-border);color:var(--accent)}
+.dv-grid .gc.p2{background:var(--gold-bg);border-color:#d9cdb0;color:var(--gold)}
+.dv-grid .gc.p3{background:var(--terra-bg);border-color:#d8c3be;color:var(--terra)}
+.dv-note{margin-top:13px;padding-top:11px;border-top:1px solid var(--g100);font-size:11.5px;color:var(--g500);line-height:1.5}
+.dv-note b{color:var(--black);font-weight:600}
+@media(max-width:400px){.dv-card{padding:16px 14px 14px}.dv-day .p{font-size:13.5px}.dv-day .r{font-size:9.5px}.dv-row .k{width:74px}}
+
+/* ───────────────────────── Before / after listing cards (listing-audit media slot) ─────────────────────────
+   Same home, same final price. Before: original photo, owner-named title, flat price. After: optimized photo,
+   guest-facing title, strike-through anchor price. Shows the click psychology instead of describing it. */
+.ba-stack{max-width:380px;margin:0 auto;display:flex;flex-direction:column;gap:18px;font-family:var(--body)}
+.ba-card{position:relative}
+.ba-photo{position:relative;aspect-ratio:16/10;border-radius:14px;overflow:hidden;background:var(--g100);box-shadow:var(--sh)}
+.ba-photo img{width:100%;height:100%;object-fit:cover}
+.ba-tag{position:absolute;top:12px;left:12px;background:#fff;color:var(--black);font-size:11.5px;font-weight:600;padding:5px 10px;border-radius:100px;box-shadow:0 2px 6px rgba(0,0,0,.16);letter-spacing:.02em}
+.ba-card.after .ba-tag{background:var(--accent);color:#fff}
+.ba-info{padding:11px 4px 0}
+.ba-title{font-size:15px;font-weight:600;color:var(--black);letter-spacing:-.01em;line-height:1.3}
+.ba-meta{font-size:14px;color:var(--g500);margin-top:2px;font-weight:300}
+.ba-price{font-size:14.5px;color:var(--black);margin-top:6px;display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+.ba-price b{font-weight:600}
+.ba-price s{color:var(--g400);font-weight:400}
+.ba-price .n{color:var(--g500);font-weight:300}
+.ba-caption{text-align:center;font-size:13.5px;color:var(--g500);font-weight:300;line-height:1.5;margin-top:2px}
+.ba-caption b{color:var(--black);font-weight:500}
+
 
 /* ───────────────────────── Your report (the deliverable) ───────────────────────── */
 .how{background:var(--stone)}
@@ -495,7 +570,7 @@ a{color:inherit}
     <div class="hero-inner">
       <div class="hero-badge"><span class="dot"></span> Free Airbnb ranking audit</div>
       <h1 class="hero-h1" id="hero-h1">If your property isn't ranking in search, it's <span class="em-mark">impossible</span> for guests to find it.</h1>
-      <p class="hero-sub" id="hero-sub">A free audit of where you actually rank in Airbnb search, night by night: what's holding you down, and what to fix first.</p>
+      <p class="hero-sub" id="hero-sub">A free audit of where you actually rank in Airbnb search, for every open night and guest count: what's holding you down, and what to fix first.</p>
       <div class="hero-trust">
         <span class="ht-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.8 12 3.5l9 7.3"/><path d="M5.5 9.7V20h13V9.7"/></svg>Built by hosts, for hosts</span>
         <span class="ht-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.4 12.4l2.4 2.4 4.8-5.2"/></svg>Yours to keep, no obligation</span>
@@ -526,8 +601,8 @@ a{color:inherit}
     <!-- multi-step lead form — centered focal point -->
     <div class="form-card" id="audit-form">
         <div class="fc-title">
-          <div class="ft-name">Free <em>Visibility &amp; Conversion</em> Audit</div>
-          <p>See where you rank, why views aren't booking, and what to fix first.</p>
+          <div class="ft-name">Free <em>Visibility, Conversion &amp; Pricing</em> Audit</div>
+          <p>See where you rank, why views aren't booking, what your pricing is missing, and what to fix first.</p>
         </div>
         <div class="fc-head">
           <div class="fc-progress" aria-hidden="true">
@@ -662,42 +737,55 @@ a{color:inherit}
   </div>
 </section>
 
-<!-- ════════════════════ WHAT WE LOOK AT (Airbnb-style listing card + three pillars, above the case studies) ════════════════════
-     Left: the three audit pillars (Ranking / Pricing / Conversion) under the heading.
-     Right: a real case-study listing (61 Sombrero, Marathon FL — images/properties/sombrero.webp) recreated in Airbnb's own
-     card chrome (square photo, heart, title/meta, Superhost host row) so it reads as the host's own listing.
+<!-- ════════════════════ WHAT RANKING ACTUALLY IS (visibility-report data card + three inputs, above the case studies) ════════════════════
+     9/17 feedback: differentiate here. Rank trackers (Rankbreeze, PriceLabs ranking report) show an average for one guest
+     count. Ranking is as dynamic as pricing (supply shifts, price elasticity): different this weekend vs. two out, different
+     for 2 guests vs. 6. "An average ranking is useless." Competitor names are on the page on purpose (we bid on them).
+     Media: an illustrative visibility report, rank by date range × guest count. Sample numbers.
      Grid areas reorder to head → media → list on mobile.
 ═══════════════════════════════════════════════════════════════════ -->
 <section class="sec">
   <div class="w">
     <div class="look-split">
-      <!-- Airbnb-style listing card -->
+      <!-- Media: RevWhisper data view (9/17: make the visual relevant to hosts who read data, not a stock listing photo) -->
       <div class="look-media">
-        <div class="bnb-card">
-          <div class="bnb-photo">
-            <img src="/images/properties/clearwater.webp" alt="A short-term rental listing as it appears on Airbnb — white brick ranch with red metal roof, Clearwater FL" loading="lazy" width="430" height="430">
-            <span class="bnb-heart" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M16 28c7.3-4.6 12-9.7 12-15.2 0-3.6-2.7-6.3-6-6.3-2.4 0-4.4 1.3-6 3.6-1.6-2.3-3.6-3.6-6-3.6-3.3 0-6 2.7-6 6.3C4 18.3 8.7 23.4 16 28z"/></svg></span>
-          </div>
-          <div class="bnb-info">
-            <div class="bnb-title">Entire home in Clearwater, Florida</div>
-            <div class="bnb-meta">8 guests · 4 bedrooms · 5 beds · 3 baths</div>
+        <div class="dv-stage">
+          <div class="dv-card" role="img" aria-label="Illustrative RevWhisper visibility report: search rank for one listing across four upcoming date ranges and three guest counts, showing the position changing from night to night.">
+            <div class="dv-top">
+              <div class="dv-brand"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Rev</b>Whisper</span></div>
+              <span class="dv-stamp">Visibility report</span>
+            </div>
+            <div class="dv-head">
+              <div class="dv-title">Where you appear, by night and guest count</div>
+              <div class="dv-sub">Sample · Clearwater, FL · read from a live search</div>
+            </div>
+            <div class="dv-lbl"><span>Search position</span><span>Per open date</span></div>
+            <div class="dv-grid">
+              <div class="gh">Dates</div><div class="gh">2 guests</div><div class="gh">4 guests</div><div class="gh">6 guests</div>
+              <div class="gk">This weekend<small>Fri to Sun</small></div><div class="gc p1">#6</div><div class="gc p1">#14</div><div class="gc p2">#31</div>
+              <div class="gk">Next weekend<small>Fri to Sun</small></div><div class="gc p2">#22</div><div class="gc p1">#9</div><div class="gc p3">#48</div>
+              <div class="gk">Two weekends out<small>Fri to Sun</small></div><div class="gc p3">#41</div><div class="gc p2">#27</div><div class="gc p1">#12</div>
+              <div class="gk">Midweek gap<small>Tue to Wed</small></div><div class="gc p3">#58</div><div class="gc p3">#52</div><div class="gc p3">#63</div>
+            </div>
+            <div class="dv-legend"><span><i class="sq p1"></i>Page 1</span><span><i class="sq p2"></i>Page 2</span><span><i class="sq p3"></i>Page 3 and beyond</span></div>
+            <div class="dv-note">A monthly average would report <b>#32</b>. This listing isn't #32 on a single night. The weekends it's losing are exactly what an average hides.</div>
           </div>
         </div>
       </div>
       <!-- Heading + intro -->
       <div class="look-head">
-        <div class="eyebrow">Why rankings fall</div>
-        <h2 class="h2">Three things decide where your property <em>ranks</em>.</h2>
-        <p class="lead">Airbnb rewards listings that get booked. Your audit measures all three inputs and shows exactly which one is holding you down.</p>
+        <div class="eyebrow">What ranking actually is</div>
+        <h2 class="h2">There's no such thing as your <em>average</em> ranking.</h2>
+        <p class="lead">Rank trackers like Rankbreeze and the PriceLabs ranking report show where you land on average for one guest count. But Airbnb ranking is as dynamic as pricing. It moves as supply shifts and as your rate changes, so where you show up this weekend isn't where you'll show up two weekends from now, and your position for 2 guests isn't your position for 6. Your audit measures your real position night by night, then shows which of the two inputs you control is holding it down.</p>
       </div>
       <!-- Three pillars -->
       <div class="look-list">
         <div class="look-item">
           <div class="look-ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20v-4q0-1 1-1h1.5q1 0 1 1v4"/><path d="M11 20v-9q0-1 1-1h1.5q1 0 1 1v9"/><path d="M17 20V5q0-1 1-1h1.5q1 0 1 1v15"/><path d="M3 20.5q9.5.5 19 0"/></svg></div>
           <div>
-            <h3>Your real position</h3>
-            <p>Where you land in search for every available night, measured rather than guessed, including the dates you've slipped off page one.</p>
-            <span class="pillar-q">“Why has my visibility fallen?”</span>
+            <h3>Your real position, night by night</h3>
+            <p>Where you land for every open night and guest count, read from a live search rather than a monthly average. An average hides the exact weekends you've slipped off page one.</p>
+            <span class="pillar-q">“Where am I this weekend, not last month?”</span>
           </div>
         </div>
         <div class="look-item">
@@ -712,7 +800,7 @@ a{color:inherit}
           <div class="look-ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M14.8 9.3c-.5-1-1.6-1.6-2.8-1.6-1.7 0-3 .9-3 2.2s1.3 1.8 3 2.1 3 .9 3 2.2-1.3 2.2-3 2.2c-1.2 0-2.3-.6-2.8-1.6"/><path d="M12 6.2v11.6"/></svg></div>
           <div>
             <h3>Pricing</h3>
-            <p>Overpriced nights don't just sit empty. They teach the algorithm to show you less. Stale prices and min-stays push you down before you see it in bookings.</p>
+            <p>Rank moves with price. Overpriced nights don't just sit empty, they teach the algorithm to show you less, and a stale rate or min-stay pushes you down before it shows up in bookings.</p>
             <span class="pillar-q">“Is my pricing sinking my rank?”</span>
           </div>
         </div>
@@ -1030,6 +1118,14 @@ a{color:inherit}
       <details class="faq">
         <summary>Can you actually see my search ranking?<span class="fq-ico"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
         <div class="faq-a">Yes. We measure where your listing appears in Airbnb search results for your market across upcoming dates: real positions, not estimates. That's the first section of your report.</div>
+      </details>
+      <details class="faq">
+        <summary>Does ranking on Airbnb actually matter?<span class="fq-ico"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+        <div class="faq-a">Yes. Guests book from what they can see. If your listing isn't on the first page or two for the nights they're searching, it isn't in the running, no matter how good it is. And because rank moves night to night, you can be on page one for next weekend and invisible for the one after.</div>
+      </details>
+      <details class="faq">
+        <summary>How is this different from Rankbreeze or the PriceLabs ranking report?<span class="fq-ico"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+        <div class="faq-a">Those tools report your average position for a guest count over a month. Useful, but the average hides the problem. Your rank changes night to night as supply and prices shift, and it's different for 2 guests than for 6. We measure your actual position for every open night and guest count, then show you what's moving it.</div>
       </details>
       <details class="faq">
         <summary>My bookings just dropped. Is this what the audit figures out?<span class="fq-ico"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>

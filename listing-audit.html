@@ -287,6 +287,81 @@ a{color:inherit}
 .look-item h3{font-family:var(--heading);font-size:18px;font-weight:500;color:var(--black);margin-bottom:4px}
 .look-item p{font-size:14px;color:var(--g500);line-height:1.6;font-weight:300}
 .look-item .pillar-q{display:block;font-size:13px;color:var(--accent);font-weight:500;margin-top:9px}
+/* ───────────────────────── Data card (media slot: a RevWhisper data view instead of a stock listing photo) ─────────────────────────
+   9/17 feedback: the photo has to be relevant to what the section says. These pages speak to hosts who read data,
+   so the media slot shows our data (rank-adjusted pricing / pricing strategy audit / visibility report). Same chrome as the report mock. */
+.dv-stage{position:relative;max-width:430px;margin:0 auto}
+.dv-stage::before{content:'';position:absolute;inset:-8% -6% -10% -6%;background:radial-gradient(58% 54% at 50% 42%,rgba(74,103,65,.09),transparent 72%);z-index:0}
+.dv-card{position:relative;z-index:1;background:#fff;border:1px solid var(--g200);border-radius:var(--radius-lg);box-shadow:var(--sh-lg);padding:20px 20px 16px;font-family:var(--body);transition:transform .45s var(--ease-out-expo)}
+.dv-stage:hover .dv-card{transform:translateY(-4px)}
+.dv-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.dv-brand{display:flex;align-items:center;gap:7px;font-family:var(--heading);font-size:14.5px;color:var(--black);letter-spacing:-.01em}
+.dv-brand svg{width:18px;height:18px;flex-shrink:0;color:var(--accent)}
+.dv-brand b{color:var(--accent);font-weight:400}
+.dv-stamp{font-size:8.5px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--g400);border:1px solid var(--g200);border-radius:100px;padding:4px 9px;white-space:nowrap}
+.dv-head{margin-top:14px;padding-bottom:12px;border-bottom:1px solid var(--g200)}
+.dv-title{font-family:var(--heading);font-size:16.5px;font-weight:400;color:var(--black);letter-spacing:-.01em;line-height:1.3}
+.dv-sub{font-family:var(--mono);font-size:10.5px;color:var(--g400);margin-top:5px;letter-spacing:.01em}
+.dv-lbl{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:14px 0 9px;font-size:10.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--g600)}
+.dv-lbl span:last-child{font-family:var(--mono);font-size:9.5px;font-weight:500;letter-spacing:.02em;text-transform:none;color:var(--g400)}
+.dv-week{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.dv-week.cols4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.dv-day{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 3px 9px;border-radius:9px;border:1px solid var(--g200);background:#fff;min-width:0}
+.dv-day .d{font-size:9.5px;letter-spacing:.08em;color:var(--g500);text-transform:uppercase}
+.dv-day .p{font-family:var(--mono);font-size:15px;font-weight:500;color:var(--black);white-space:nowrap;letter-spacing:-.01em}
+.dv-day .r{font-size:10.5px;font-weight:600;color:var(--accent);white-space:nowrap}
+.dv-day.hot{border-color:var(--accent);background:rgba(74,103,65,.07)}
+.dv-day.soft{border-color:#d9cdb0;background:var(--gold-bg)}.dv-day.soft .r{color:var(--gold)}
+.dv-day.warn{border-color:#d8c3be;background:var(--terra-bg)}.dv-day.warn .r{color:var(--terra)}
+.dv-day.flat .r{color:var(--g400);font-weight:500}
+.dv-chart{display:block;width:100%;height:auto;overflow:visible}
+.dv-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--g500);margin-top:6px}
+.dv-legend span{display:inline-flex;align-items:center;gap:6px}
+.dv-legend i{width:12px;height:3px;border-radius:99px;background:var(--accent);display:inline-block}
+.dv-legend i.cut{background:var(--gold)}
+.dv-legend i.sq{width:10px;height:10px;border-radius:3px}
+.dv-legend i.p1{background:var(--accent-light);border:1px solid var(--accent-border)}
+.dv-legend i.p2{background:var(--gold-bg);border:1px solid #d9cdb0}
+.dv-legend i.p3{background:var(--terra-bg);border:1px solid #d8c3be}
+.dv-rows{display:flex;flex-direction:column;gap:8px}
+.dv-row{display:flex;align-items:center;gap:9px;font-size:11.5px;color:var(--g600)}
+.dv-row .k{width:86px;flex-shrink:0;color:var(--g500)}
+.dv-row .v{flex:1;min-width:0;color:var(--black);line-height:1.35}
+.dv-row .t{font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border-radius:5px;padding:3px 6px;flex-shrink:0}
+.dv-row .t.flag{background:var(--terra-bg);color:var(--terra)}
+.dv-row .t.ok{background:var(--accent-light);color:var(--accent)}
+.dv-grid{display:grid;grid-template-columns:1.3fr repeat(3,1fr);gap:6px;align-items:center}
+.dv-grid .gh{font-size:9.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--g400);text-align:center;padding-bottom:2px}
+.dv-grid .gh:first-child{text-align:left}
+.dv-grid .gk{font-size:11.5px;color:var(--g600);line-height:1.25}
+.dv-grid .gk small{display:block;font-family:var(--mono);font-size:9.5px;color:var(--g400);margin-top:2px}
+.dv-grid .gc{font-family:var(--mono);font-size:13.5px;font-weight:500;text-align:center;padding:9px 2px;border-radius:8px;border:1px solid var(--g200);color:var(--black);background:#fff}
+.dv-grid .gc.p1{background:var(--accent-light);border-color:var(--accent-border);color:var(--accent)}
+.dv-grid .gc.p2{background:var(--gold-bg);border-color:#d9cdb0;color:var(--gold)}
+.dv-grid .gc.p3{background:var(--terra-bg);border-color:#d8c3be;color:var(--terra)}
+.dv-note{margin-top:13px;padding-top:11px;border-top:1px solid var(--g100);font-size:11.5px;color:var(--g500);line-height:1.5}
+.dv-note b{color:var(--black);font-weight:600}
+@media(max-width:400px){.dv-card{padding:16px 14px 14px}.dv-day .p{font-size:13.5px}.dv-day .r{font-size:9.5px}.dv-row .k{width:74px}}
+
+/* ───────────────────────── Before / after listing cards (listing-audit media slot) ─────────────────────────
+   Same home, same final price. Before: original photo, owner-named title, flat price. After: optimized photo,
+   guest-facing title, strike-through anchor price. Shows the click psychology instead of describing it. */
+.ba-stack{max-width:380px;margin:0 auto;display:flex;flex-direction:column;gap:18px;font-family:var(--body)}
+.ba-card{position:relative}
+.ba-photo{position:relative;aspect-ratio:16/10;border-radius:14px;overflow:hidden;background:var(--g100);box-shadow:var(--sh)}
+.ba-photo img{width:100%;height:100%;object-fit:cover}
+.ba-tag{position:absolute;top:12px;left:12px;background:#fff;color:var(--black);font-size:11.5px;font-weight:600;padding:5px 10px;border-radius:100px;box-shadow:0 2px 6px rgba(0,0,0,.16);letter-spacing:.02em}
+.ba-card.after .ba-tag{background:var(--accent);color:#fff}
+.ba-info{padding:11px 4px 0}
+.ba-title{font-size:15px;font-weight:600;color:var(--black);letter-spacing:-.01em;line-height:1.3}
+.ba-meta{font-size:14px;color:var(--g500);margin-top:2px;font-weight:300}
+.ba-price{font-size:14.5px;color:var(--black);margin-top:6px;display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+.ba-price b{font-weight:600}
+.ba-price s{color:var(--g400);font-weight:400}
+.ba-price .n{color:var(--g500);font-weight:300}
+.ba-caption{text-align:center;font-size:13.5px;color:var(--g500);font-weight:300;line-height:1.5;margin-top:2px}
+.ba-caption b{color:var(--black);font-weight:500}
+
 
 /* ───────────────────────── Your report (the deliverable) ───────────────────────── */
 .how{background:var(--stone)}
@@ -526,8 +601,8 @@ a{color:inherit}
     <!-- multi-step lead form — centered focal point -->
     <div class="form-card" id="audit-form">
         <div class="fc-title">
-          <div class="ft-name">Free <em>Visibility &amp; Conversion</em> Audit</div>
-          <p>See where you rank, why views aren't booking, and what to fix first.</p>
+          <div class="ft-name">Free <em>Visibility, Conversion &amp; Pricing</em> Audit</div>
+          <p>See where you rank, why views aren't booking, what your pricing is missing, and what to fix first.</p>
         </div>
         <div class="fc-head">
           <div class="fc-progress" aria-hidden="true">
@@ -662,26 +737,43 @@ a{color:inherit}
   </div>
 </section>
 
-<!-- ════════════════════ WHAT WE LOOK AT (Airbnb-style listing card + three pillars, above the case studies) ════════════════════
-     Left: the three audit pillars (Ranking / Pricing / Conversion) under the heading.
-     Right: a real case-study listing (61 Sombrero, Marathon FL — images/properties/sombrero.webp) recreated in Airbnb's own
-     card chrome (square photo, heart, title/meta, Superhost host row) so it reads as the host's own listing.
+<!-- ════════════════════ THE CONVERSION SURFACE (before/after listing cards + three pillars, above the case studies) ════════════════════
+     9/17 feedback: replace the stock Clearwater photo with a real client's original hero + original title (Gulfstream Villa,
+     /case-study-2) stacked above the optimized hero + guest-facing title. Top card: flat price, no strike-through.
+     Bottom card: same final price with a larger struck-through anchor in front. "Same price, which one do you click?"
      Grid areas reorder to head → media → list on mobile.
 ═══════════════════════════════════════════════════════════════════ -->
 <section class="sec">
   <div class="w">
     <div class="look-split">
-      <!-- Airbnb-style listing card -->
+      <!-- Before / after listing cards: same home, same final price, different click -->
       <div class="look-media">
-        <div class="bnb-card">
-          <div class="bnb-photo">
-            <img src="/images/properties/clearwater.webp" alt="A short-term rental listing as it appears on Airbnb — white brick ranch with red metal roof, Clearwater FL" loading="lazy" width="430" height="430">
-            <span class="bnb-heart" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M16 28c7.3-4.6 12-9.7 12-15.2 0-3.6-2.7-6.3-6-6.3-2.4 0-4.4 1.3-6 3.6-1.6-2.3-3.6-3.6-6-3.6-3.3 0-6 2.7-6 6.3C4 18.3 8.7 23.4 16 28z"/></svg></span>
+        <div class="ba-stack">
+          <div class="ba-card before">
+            <div class="ba-photo">
+              <img src="/images/properties/gulfstream/hero-before.webp" alt="Original listing photo: a screened pool under flat midday light with an empty deck" loading="lazy" width="760" height="507">
+              <span class="ba-tag">Before</span>
+              <span class="bnb-heart" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M16 28c7.3-4.6 12-9.7 12-15.2 0-3.6-2.7-6.3-6-6.3-2.4 0-4.4 1.3-6 3.6-1.6-2.3-3.6-3.6-6-3.6-3.3 0-6 2.7-6 6.3C4 18.3 8.7 23.4 16 28z"/></svg></span>
+            </div>
+            <div class="ba-info">
+              <div class="ba-title">Gulfstream Villa | Heated Pool + Dog Friendly</div>
+              <div class="ba-meta">9 guests · 3 bedrooms · 2 baths</div>
+              <div class="ba-price"><b>$329</b> <span class="n">night</span></div>
+            </div>
           </div>
-          <div class="bnb-info">
-            <div class="bnb-title">Entire home in Clearwater, Florida</div>
-            <div class="bnb-meta">8 guests · 4 bedrooms · 5 beds · 3 baths</div>
+          <div class="ba-card after">
+            <div class="ba-photo">
+              <img src="/images/properties/gulfstream/hero-after.webp" alt="Optimized listing photo: the same pool at golden hour with loungers, towels and a drink set out" loading="lazy" width="640" height="426">
+              <span class="ba-tag">After</span>
+              <span class="bnb-heart" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M16 28c7.3-4.6 12-9.7 12-15.2 0-3.6-2.7-6.3-6-6.3-2.4 0-4.4 1.3-6 3.6-1.6-2.3-3.6-3.6-6-3.6-3.3 0-6 2.7-6 6.3C4 18.3 8.7 23.4 16 28z"/></svg></span>
+            </div>
+            <div class="ba-info">
+              <div class="ba-title">Heated Pool · Manasota Key · Dog Friendly</div>
+              <div class="ba-meta">9 guests · 3 bedrooms · 2 baths</div>
+              <div class="ba-price"><s>$429</s> <b>$329</b> <span class="n">night</span></div>
+            </div>
           </div>
+          <p class="ba-caption">Same home. Same price. <b>Which one do you click?</b></p>
         </div>
       </div>
       <!-- Heading + intro -->
@@ -712,7 +804,7 @@ a{color:inherit}
           <div class="look-ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6.5l1.5 1.5L8 5.5"/><path d="M11 7h9"/><path d="M4 12.5l1.5 1.5L8 11.5"/><path d="M11 13h9"/><path d="M4 18.5l1.5 1.5L8 17.5"/><path d="M11 19h9"/></svg></div>
           <div>
             <h3>Description, amenities &amp; pricing cues</h3>
-            <p>The details that close the booking, and the gaps and mispriced nights quietly sending guests back to search.</p>
+            <p>The details that close the booking, plus the pricing cues guests read in a split second. At the same final price, the listing showing a real strike-through wins the click.</p>
             <span class="pillar-q">“Where do guests bail?”</span>
           </div>
         </div>
