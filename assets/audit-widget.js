@@ -11,6 +11,12 @@
      • rwTrack page label is 'homepage', not 'audit'
      • CTAs elsewhere on the page scroll the card to centre instead of linking
 
+   Fullscreen focus mode (audit.html's takeover) is available as an opt-in:
+   <div class="form-card" id="audit-form" data-fullscreen>. With it set, the
+   first answer tap promotes the card to a fixed overlay and every .js-to-form
+   / .js-to-audit CTA opens that overlay instead of scrolling. The live
+   homepage does not set it, so its card behaves exactly as before.
+
    Everything runs inside one IIFE so nothing leaks into the homepage's globals
    except window.rwScrollToAuditWidget, which the page's CTAs call.
    ══════════════════════════════════════════════════════════════════════════ */
@@ -24,6 +30,10 @@ if(!card) return;
    <div class="form-card" id="audit-form" data-page="homepage-redesign">.
    Defaults to 'homepage' so the live page is unchanged. */
 var PAGE = card.getAttribute('data-page') || 'homepage';
+var FS = card.hasAttribute('data-fullscreen');
+
+/* Fullscreen focus mode state — see enterFs/exitFs below and the .rw-fs CSS. */
+var fsActive=false, fsEntering=false, fsScrollY=0, fsExitVia='';
 
 /* rwTrack is defined inline in the page head; guard anyway so a tracking
    failure can never break the form. */
@@ -59,6 +69,7 @@ function prefersReducedMotion(){
 }
 
 function centreCard(heightOverride){
+  if(fsActive) return; // the takeover scrolls internally; the window stays locked
   var HEADER=96;
   var vpH=window.innerHeight||document.documentElement.clientHeight;
   var rect=card.getBoundingClientRect();
@@ -129,6 +140,8 @@ function transitionStep(from,to,direction){
   var vpH=window.innerHeight||document.documentElement.clientHeight;
   var recentre=!(cardTopBefore>=0 && (cardTopBefore+chromeH+endH)<=vpH);
   if(recentre) centreCard(chromeH+endH);
+  // in the takeover the card is its own scroller — bring the incoming step's title into view
+  if(fsActive) card.scrollTo({top:0,behavior:'smooth'});
   // animate the card height from old → new
   vp.style.height=startH+'px';
   void vp.offsetHeight;
@@ -197,6 +210,14 @@ function validateStep(step){
 
 function nextStep(){
   if(current>=totalSteps-1) return;
+  // Let the fullscreen expansion land before the first step swap — the box glide and
+  // the step/height animation running together read as jank, and sequencing them makes
+  // the expansion the show. Same queue-and-retry as the transition lock below.
+  if(fsEntering){
+    var fsFrom=current;
+    setTimeout(function(){ if(current===fsFrom) nextStep(); },120);
+    return;
+  }
   // Never advance `current` while a step is animating: transitionStep would no-op on its
   // isTransitioning guard and the counter would desync from the visible step (stacked
   // cards, silently skipped questions). A checked radio can't re-fire change, so a
@@ -282,6 +303,127 @@ function renderRevenueOptions(listingVal){
   if(title) title.innerHTML='Roughly what did your '+(single?'listing':'portfolio')+' earn <em>last year?</em>';
   var dc=document.getElementById('doorcount-field');
   if(dc) dc.style.display=(listingVal==='26-100'||listingVal==='100+')?'':'none';
+}
+
+/* ── Fullscreen focus mode (opt-in) ─────────────────────────────────────────
+   Ported from audit.html. enterFs promotes the card on the first answer tap: the
+   page behind gets an opaque scrim, body scroll locks (position:fixed with the
+   offset pinned — iOS ignores overflow:hidden on body), and the card glides from
+   its inline box to the stylesheet's fixed, centred one. Entering pushes a #focus
+   history entry, so browser back collapses the takeover to the plain page with
+   answers intact; the quiet ✕ in the card head rides the same rail.
+   ────────────────────────────────────────────────────────────────────────── */
+function enterFs(skipPush,via){
+  if(!FS||fsActive) return;
+  fsActive=true; fsEntering=true;
+  fsScrollY=window.pageYOffset;
+  var r1=card.getBoundingClientRect();
+  var c1=getComputedStyle(card);
+  var startPad=c1.padding, startRad=c1.borderRadius;
+  // Placeholder in the card's slot: the page behind must not reflow when the card goes
+  // fixed — content jumping up under the fading scrim reads as the widget glitching.
+  var ph=document.createElement('div');
+  ph.id='fs-ph'; ph.style.height=r1.height+'px'; ph.setAttribute('aria-hidden','true');
+  card.parentNode.insertBefore(ph,card);
+  // pad for the vanishing scrollbar so the page doesn't reflow behind the fading scrim
+  var sbw=window.innerWidth-document.documentElement.clientWidth;
+  if(sbw>0) document.body.style.paddingRight=sbw+'px';
+  document.body.style.top=(-fsScrollY)+'px';
+  document.body.classList.add('rw-fs');
+  var r2=card.getBoundingClientRect();
+  var c2=getComputedStyle(card);
+  var endPad=c2.padding, endRad=c2.borderRadius;
+  var endBw=c2.borderTopWidth, endBc=c2.borderTopColor;
+  // Entry from a CTA elsewhere on the page: the card is off-screen, and a glide from its
+  // real position would streak in from a screen-height away. Start from a slightly inset
+  // copy of the destination and fade in instead — the grow-from-the-card glide is only
+  // for when the card is actually in view.
+  var vh=window.innerHeight||document.documentElement.clientHeight;
+  var offscreen=r1.bottom<=0||r1.top>=vh;
+  var start=offscreen
+    ? {top:r2.top+r2.height*.04,left:r2.left+r2.width*.04,width:r2.width*.92,height:r2.height*.92}
+    : r1;
+  var s=card.style;
+  s.transition='none'; s.transform='none'; s.margin='0'; s.maxHeight='none';
+  s.top=start.top+'px'; s.left=start.left+'px'; s.width=start.width+'px'; s.height=start.height+'px';
+  s.padding=offscreen?endPad:startPad; s.borderRadius=offscreen?endRad:startRad;
+  s.borderStyle='solid'; s.borderWidth=offscreen?endBw:c1.borderTopWidth; s.borderColor=offscreen?endBc:c1.borderTopColor;
+  s.opacity=offscreen?'0':'1';
+  void card.offsetHeight;
+  var DUR=prefersReducedMotion()?'0s':'.34s', EASE='cubic-bezier(.16,1,.3,1)';
+  s.transition=['top','left','width','height','padding','border-radius','border-width','border-color','opacity'].map(function(p){return p+' '+DUR+' '+EASE;}).join(',');
+  s.top=r2.top+'px'; s.left=r2.left+'px'; s.width=r2.width+'px'; s.height=r2.height+'px';
+  s.padding=endPad; s.borderRadius=endRad;
+  s.borderWidth=endBw; s.borderColor=endBc;
+  s.opacity='1';
+  setTimeout(function(){
+    // hand geometry back to the stylesheet — values match the landed box, so no jump —
+    // and release the deferred first step swap (see nextStep)
+    s.transition='';s.top='';s.left='';s.width='';s.height='';s.padding='';s.borderRadius='';s.transform='';s.margin='';s.maxHeight='';
+    s.borderStyle='';s.borderWidth='';s.borderColor='';s.opacity='';
+    fsEntering=false;
+  },360);
+  if(!skipPush){ try{ history.pushState({rwFs:1},'','#focus'); }catch(e){} }
+  track('form_fullscreen_open',{page:PAGE,step:current+1,via:via||'answer'});
+}
+/* Browser back while fullscreen → collapse to the plain page. Same DOM node, so
+   answers and step survive; a later answer tap re-enters the takeover. */
+function exitFs(){
+  if(!fsActive) return;
+  fsActive=false;
+  var s=card.style; // snap out of any mid-glide inline geometry before handing back to the stylesheet
+  s.transition='';s.top='';s.left='';s.width='';s.height='';s.padding='';s.borderRadius='';
+  s.transform='';s.margin='';s.maxHeight='';s.borderStyle='';s.borderWidth='';s.borderColor='';s.opacity='';
+  document.body.classList.remove('rw-fs');
+  document.body.style.top='';
+  document.body.style.paddingRight='';
+  var ph=document.getElementById('fs-ph'); if(ph) ph.remove();
+  window.scrollTo({top:fsScrollY,behavior:'instant'});
+  track('form_fullscreen_exit',{page:PAGE,via:fsExitVia||'browser_back',step:current+1});
+  fsExitVia='';
+}
+/* The ✕ rides the same rail as browser back: pop our #focus entry so history stays clean
+   and the popstate handler does the collapse. Falls back to a direct exit if the entry
+   isn't ours (pushState failed or was blocked). */
+function closeFsButton(){
+  if(!fsActive) return;
+  fsExitVia='close_button';
+  if(history.state&&history.state.rwFs){ history.back(); }
+  else { exitFs(); try{ history.replaceState(null,'',location.pathname+location.search); }catch(e){} }
+}
+/* The takeover's own chrome is built here rather than in the page markup, so the
+   card lifted from index.html stays byte-identical to the live homepage's. */
+function initFs(){
+  if(!FS) return;
+  var scrim=document.createElement('div');
+  scrim.className='fs-scrim'; scrim.setAttribute('aria-hidden','true');
+  document.body.appendChild(scrim);
+  var head=card.querySelector('.fc-head');
+  if(head&&!document.getElementById('fc-close')){
+    var x=document.createElement('button');
+    x.className='fc-close'; x.id='fc-close'; x.type='button'; x.setAttribute('aria-label','Exit full screen');
+    x.innerHTML='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>';
+    head.appendChild(x);
+    x.addEventListener('click',closeFsButton);
+  }
+  // Mobile: Back pinned to a bottom bar. It must be a DIRECT child of the card — the
+  // steps animate with transforms, and a transformed ancestor re-anchors position:fixed.
+  var bar=document.createElement('div'); bar.className='fs-bottom-bar';
+  var back=document.createElement('button'); back.className='btn-back'; back.type='button';
+  back.innerHTML='<span class="arrow">←</span> Back';
+  back.addEventListener('click',prevStep);
+  bar.appendChild(back); card.appendChild(bar);
+  // the first answer tap is the way in
+  card.addEventListener('change',function(e){
+    var n=e.target&&e.target.name;
+    if(n==='listings'||n==='issue'||n==='pricing'||n==='revenue') enterFs();
+  });
+  window.addEventListener('popstate',function(){
+    if(fsActive){ exitFs(); return; }                     // back: down to the page
+    if(location.hash==='#focus') enterFs(true,'forward'); // forward: back into the takeover (no new entry)
+  });
+  // a reload while fullscreen leaves a stale #focus in the URL — start clean
+  if(location.hash==='#focus'){ try{ history.replaceState(null,'',location.pathname+location.search); }catch(e){} }
 }
 
 /* ── Submit — fire Lead, post webhook, stash context, go to booking page ── */
@@ -425,7 +567,7 @@ card.addEventListener('click',function(e){
   // only the visible step's radios count — never advance off a hidden step's control
   var stepEl=t.closest('.step');
   if(!stepEl||!/(?:^|\s)(?:active|enter-from-below|enter-from-above)(?:\s|$)/.test(stepEl.className)) return;
-  if(rwLastVal[n]===t.value) scheduleAdvance();
+  if(rwLastVal[n]===t.value){ enterFs(); scheduleAdvance(); } // a confirm-tap is still an answer tap
 });
 
 card.querySelectorAll('.btn-back').forEach(function(b){ b.addEventListener('click',prevStep); });
@@ -452,9 +594,10 @@ card.addEventListener('keydown',function(e){
   if(current===4){e.preventDefault();submitForm();}
 });
 
-/* CTAs elsewhere on the page (.js-to-audit) scroll the card to centre and put
-   the cursor on the first option. Exposed for the header/menu, which lives in
-   a shared partial. */
+/* CTAs elsewhere on the page (.js-to-audit / .js-to-form) scroll the card to
+   centre and put the cursor on the first option — or, with fullscreen on, open
+   the takeover at whatever step the visitor is on. Exposed for the header/menu,
+   which lives in a shared partial. */
 function scrollToWidget(){
   centreCard();
   setTimeout(function(){
@@ -464,13 +607,14 @@ function scrollToWidget(){
 window.rwScrollToAuditWidget=scrollToWidget;
 
 document.addEventListener('click',function(e){
-  var a=e.target.closest('.js-to-audit');
+  var a=e.target.closest('.js-to-audit, .js-to-form');
   if(!a) return;
   e.preventDefault();
-  track('cta_click',{destination:'audit_widget',cta_text:(a.textContent||'').replace(/\s+/g,' ').trim().substring(0,60),page:PAGE});
-  scrollToWidget();
+  track('cta_click',{destination:FS?'audit_fullscreen':'audit_widget',cta_text:(a.textContent||'').replace(/\s+/g,' ').trim().substring(0,60),page:PAGE});
+  if(FS) enterFs(false,'cta'); else scrollToWidget();
 });
 
+initFs();
 updateProgress();
 
 })();

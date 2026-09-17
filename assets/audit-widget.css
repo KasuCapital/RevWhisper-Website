@@ -157,3 +157,39 @@
   /* 16px inputs prevent iOS zoom-on-focus */
   .field-input{font-size:16px}.phone-input{font-size:16px}
 }
+
+/* ── Fullscreen focus mode (opt-in: <div class="form-card" id="audit-form" data-fullscreen>) ──
+   Ported from audit.html; audit-widget.js builds the ✕, the scrim and the mobile Back bar
+   and toggles body.rw-fs. Inert on pages that don't set the attribute. Inline start,
+   takeover after the first answer: the first tap on any option promotes the card to a
+   fixed overlay and the form becomes the only thing on the page. The one escape besides
+   the quiet ✕ is the browser back gesture. Body scroll locks via position:fixed (iOS
+   ignores overflow:hidden on body). */
+.fc-close{display:none;align-items:center;justify-content:center;width:32px;height:32px;margin:-6px -8px -6px -2px;padding:0;border:none;background:none;color:var(--g300);cursor:pointer;border-radius:50%;transition:color .2s,background .2s}
+.fc-close:hover{color:var(--g500);background:var(--g50)}
+.fc-close:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+body.rw-fs .fc-close{display:inline-flex}
+.fs-scrim{position:fixed;inset:0;z-index:299;background:linear-gradient(180deg,#f6f8f4 0%,#fff 60%);opacity:0;pointer-events:none;transition:opacity .22s ease-out}
+body.rw-fs{position:fixed;left:0;right:0;overflow:hidden}
+body.rw-fs .fs-scrim{opacity:1;pointer-events:auto}
+body.rw-fs #audit-form{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:300;width:min(560px,calc(100vw - 32px));max-width:none;margin:0;max-height:calc(100vh - 40px);max-height:calc(100dvh - 40px);overflow-y:auto;-webkit-overflow-scrolling:touch}
+.fs-bottom-bar{display:none}
+@media(max-width:719px){
+  body.rw-fs #audit-form{inset:0;transform:none;width:auto;height:auto;max-height:none;border-radius:0;border:none;display:flex;flex-direction:column;padding:calc(20px + env(safe-area-inset-top)) 18px calc(72px + env(safe-area-inset-bottom))}
+  /* Center the active step in the leftover space instead of top-anchoring it. */
+  body.rw-fs #audit-form .steps-viewport{margin-top:auto;margin-bottom:auto}
+  /* Back lives in a fixed bottom bar (a direct child of the card, see the JS). The
+     per-step inline Back hides here; the final step's submit stays inline with the fields. */
+  body.rw-fs .fs-bottom-bar{display:flex;align-items:center;position:fixed;left:0;right:0;bottom:0;z-index:310;padding:10px 18px calc(10px + env(safe-area-inset-bottom));background:#fff;border-top:1px solid var(--g200)}
+  /* No Back on the opening step — nothing to go back to. Match every form the current
+     step can wear: the machinery never re-adds .active after a transition. */
+  body.rw-fs #audit-form:has(.step[data-step="0"]:is(.active,.enter-from-below,.enter-from-above)) .fs-bottom-bar,
+  body.rw-fs #audit-form:has(.step[data-step="1"]:is(.active,.enter-from-below,.enter-from-above)) .fs-bottom-bar{display:none}
+  body.rw-fs #audit-form .step .btn-back{display:none}
+}
+/* Match audit.html's card chrome: no step counter, so the ✕ sits alone at the right of
+   the progress bar; and no Back on the first takeover screen (step 1), where it would
+   read as "back to the page" — the listings answer was given on the page, and the real
+   way back is the ✕ or the browser gesture. */
+.form-card[data-fullscreen] .fc-count{display:none}
+body.rw-fs #audit-form .step[data-step="1"] .form-actions{display:none}

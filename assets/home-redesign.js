@@ -424,81 +424,6 @@
     }
   };
 
-  /* ── Bottom "Book a strategy call" card ─────────────────────────────────
-     The design drew this card but left it inert. "Choose a time" means the
-     calendar, so it captures the lead and hands off to /audit-booking, which
-     reads the same sessionStorage key the audit widget writes.                */
-  function track(name, params) {
-    try { if (typeof rwTrack === 'function') rwTrack(name, params || {}); } catch (e) {}
-  }
-  function attribution() {
-    try { return JSON.parse(localStorage.getItem('rw_attribution') || sessionStorage.getItem('rw_attribution') || '{}'); }
-    catch (e) { return {}; }
-  }
-
-  function wireCallForm() {
-    var card = $('.rd-call-card');
-    if (!card) return;
-    var inputs = $$('input', card);
-    var btn = $('button', card);
-    if (!inputs.length || !btn) return;
-
-    var kindOf = function (input) {
-      var ph = (input.getAttribute('placeholder') || '').toLowerCase();
-      if (ph.indexOf('email') !== -1) return 'email';
-      if (ph.indexOf('url') !== -1 || ph.indexOf('airbnb') !== -1) return 'url';
-      if (ph.indexOf('number') !== -1) return 'listings';
-      return 'name';
-    };
-    // same error affordance as the audit widget (.field-input.error in audit-widget.css)
-    var mark = function (input, bad) { input.classList.toggle('error', !!bad); input.setAttribute('aria-invalid', bad ? 'true' : 'false'); };
-
-    inputs.forEach(function (input) {
-      input.addEventListener('input', function () { mark(input, false); });
-      input.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); btn.click(); } });
-    });
-
-    var sending = false;
-    btn.addEventListener('click', function () {
-      if (sending) return;
-      var data = {}, ok = true, firstBad = null;
-      inputs.forEach(function (input) {
-        var kind = kindOf(input), v = (input.value || '').trim(), bad;
-        if (kind === 'email') bad = !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
-        else if (kind === 'url') { var low = v.toLowerCase(); bad = !v || !(low.indexOf('airbnb.') !== -1 || low.indexOf('abnb.me') !== -1); }
-        else if (kind === 'listings') bad = !(parseInt(v, 10) >= 1);
-        else bad = !v;
-        mark(input, bad);
-        if (bad) { ok = false; if (!firstBad) firstBad = input; }
-        data[kind] = v;
-      });
-      if (!ok) { if (firstBad) firstBad.focus(); return; }
-
-      sending = true;
-      btn.disabled = true;
-      var original = btn.textContent;
-      btn.textContent = 'Opening the calendar…';
-
-      var payload = {
-        name: data.name, email: data.email, airbnbUrl: data.url,
-        listings: data.listings, doorCount: data.listings, qualified: true,
-        source: 'homepage-redesign-call',
-        submittedAt: new Date().toISOString(),
-        attribution: attribution()
-      };
-      try { sessionStorage.setItem('rw_audit_lead', JSON.stringify(payload)); } catch (e) {}
-      track('book_call_submit', { page: 'homepage-redesign', listings: data.listings });
-      fetch('/api/form-webhook', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ event_type: 'get_started', payload: payload }), keepalive: true
-      }).catch(function () {});
-
-      // don't make the visitor wait on Make.com to reach the calendar
-      setTimeout(function () { window.location.href = '/audit-booking'; }, 150);
-      setTimeout(function () { sending = false; btn.disabled = false; btn.textContent = original; }, 4000);
-    });
-  }
-
   /* ── Boot ───────────────────────────────────────────────────────────────── */
   function boot() {
     collectBindings(document.body);
@@ -516,13 +441,14 @@
     C.parallax();
     C.timelineFx();
     C.rankCardFit();
-    wireCallForm();
 
-    // In-page anchors scroll smoothly and clear the floating header. Audit links are
-    // .js-to-audit, which audit-widget.js already handles (centres the card, focuses it).
+    // In-page anchors scroll smoothly and clear the floating header. Audit CTAs are
+    // .js-to-form / .js-to-audit, which audit-widget.js already handles (opens the
+    // fullscreen takeover, or centres the card) — and it pushes a #focus history entry
+    // that the replaceState below would otherwise overwrite.
     document.addEventListener('click', function (e) {
       var a = e.target.closest('a[href^="#"]');
-      if (!a || a.classList.contains('js-to-audit')) return;
+      if (!a || a.classList.contains('js-to-audit') || a.classList.contains('js-to-form')) return;
       var id = a.getAttribute('href').slice(1);
       var target = id && document.getElementById(id);
       if (!target) return;

@@ -9,18 +9,15 @@
   background:radial-gradient(120% 90% at 82% 12%, rgba(74,103,65,.07) 0%, rgba(255,255,255,0) 58%),
              radial-gradient(circle at 1px 1px, rgba(50,48,47,.07) 1px, transparent 0) 0 0 / 22px 22px, #fff}
 .rd-hero-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,500px);
-  grid-template-areas:"copy form" "photo form";gap:22px 48px;align-items:start}
-.rd-hero-copy{grid-area:copy;display:flex;flex-direction:column;gap:20px;min-width:0}
-.rd-hero-photo{grid-area:photo;min-width:0}
-.rd-hero-form{grid-area:form;min-width:0}
+  gap:22px 48px;align-items:start}
+.rd-hero-copy{display:flex;flex-direction:column;gap:20px;min-width:0}
+.rd-hero-form{min-width:0}
 .rd-hero-copy .eyebrow{margin-bottom:0}
 .rd-hero-h1{font-family:var(--heading);font-weight:400;font-size:clamp(38px,4.6vw,56px);line-height:1.08;letter-spacing:-.02em;color:var(--black);margin:0}
 .rd-hero-h1 em{font-style:italic;color:var(--accent)}
 .rd-hero-sub{font-size:18px;line-height:1.6;color:var(--g700);max-width:520px;font-weight:300;margin:0}
 /* the site's trust row is centre-aligned under a centred headline; here it sits left */
 .rd-hero-trust{justify-content:flex-start;margin-top:2px;padding-top:18px;border-top:1px solid var(--g200)}
-/* the photo was a full-width band (300–460px tall); in a column it needs to be shorter */
-.rd-hero-photo [data-rank-frame] > div:first-child{height:clamp(220px,22vw,300px) !important}
 /* audit-widget.css centres the card at 560px for the live homepage's centred hero */
 .rd-hero-form .form-card{max-width:none;margin:0}
 
@@ -29,11 +26,35 @@
 
 @media(max-width:960px){
   .rd-hero{padding-top:112px}
-  .rd-hero-grid{grid-template-columns:1fr;grid-template-areas:"copy" "form" "photo";gap:32px}
+  .rd-hero-grid{grid-template-columns:1fr;gap:32px}
 }
-@media(max-width:600px){
-  /* the rank card hangs below the photo at this width (see the design's own rule) */
-  .rd-hero-photo [data-rank-frame]{margin-bottom:46px}
+
+/* "What we are" ────────────────────────────────────────────────────────────── */
+/* An Airbnb-sized listing card on the left (440px square, the width at which the rank
+   card still floats inside the photo — home-redesign.js hangs it below 440), the heading
+   and its two points centred beside it. The card keeps its size when the grid stacks. */
+.rd-what{padding-top:64px}
+.rd-what-grid{display:grid;grid-template-columns:minmax(0,440px) minmax(0,1fr);gap:72px;align-items:center}
+.rd-what-photo{min-width:0;width:100%;max-width:440px}
+.rd-what-body{min-width:0;max-width:520px}
+/* the design stacked heading and points side by side under a full-width photo band */
+.rd-what-copy{display:flex;flex-direction:column;gap:24px}
+.rd-what-copy > div{min-width:0}
+/* the photo was a full-width band (300–460px tall); in its column it is a square, like the
+   Airbnb listing card it is standing in for (the design's inline height has to be overridden) */
+.rd-what-photo [data-rank-frame] > div:first-child{height:auto !important;aspect-ratio:1/1}
+
+/* the cue sits under the whole band, not tight against the photo caption */
+.rd-what-cue > div{padding-top:36px !important}
+
+@media(max-width:960px){
+  .rd-what{padding-top:48px}
+  .rd-what-grid{grid-template-columns:1fr;gap:36px}
+  .rd-what-body{max-width:none}
+}
+@media(max-width:495px){
+  /* below ~440px of photo, home-redesign.js hangs the rank card off the bottom edge */
+  .rd-what-photo [data-rank-frame]{margin-bottom:46px}
 }
 
 /* Compiled design body ─────────────────────────────────────────────────────── */
@@ -42,7 +63,14 @@
 .rd-body .h2{margin:0}
 /* Whisper Wheel pills are keyboard-reachable buttons now */
 .rd-body [data-factor-row]:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
-/* bottom "Book a strategy call" card, restyled with the site's form controls */
-.rd-call-card{display:flex;flex-direction:column;gap:14px;max-width:none;margin:0}
-.rd-call-card .btn-next{flex:none;width:100%}
-.rd-call-card .field-input.error{border-color:var(--red)}
+/* bottom band: the design's second form is now one button into the audit flow */
+.rd-call-cta{display:flex;justify-content:center}
+/* stack and comparison are both grey bands and now sit together; drop the doubled rule */
+.rd-body > div[style*="background:#faf9f8"] + div[style*="background:#faf9f8"]{border-top:none}
+
+/* Fullscreen audit form (audit-widget.js, opted in with data-fullscreen) ──────── */
+/* The hero column's entrance animation leaves an identity transform on the wrapper,
+   and a transformed ancestor re-anchors position:fixed — the takeover would centre
+   itself in the column instead of the viewport. The animation is long over by the
+   time anyone answers, so dropping it here is invisible. */
+body.rw-fs .rd-hero-form{animation:none;transform:none}

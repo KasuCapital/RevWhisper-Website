@@ -9,9 +9,14 @@
  *   - buttons, eyebrows, section headings, inputs -> home.css / audit-widget.css classes
  *
  * What comes from the design:
- *   - every section between the hero and the footer, with its interactions
- *   - the hero copy and the listing photo + rank card (recomposed: copy, form and photo
- *     all inside the hero; the design's hero CTA button is dropped — the form is the CTA)
+ *   - every section between the hero and the footer, with its interactions, in the
+ *     order set by ORDER below (proof and the process ahead of the mechanism; see the
+ *     structure audit of 16 Sep 2026)
+ *   - every CTA opens the hero form's fullscreen takeover (audit.html's flow); the header
+ *     button is the one link that still leaves for /get-started
+ *   - the hero copy, and the listing photo + rank card (recomposed: hero is copy beside
+ *     the form, the photo moves down beside the "What we are" block; the design's hero
+ *     CTA button is dropped — the form is the CTA)
  *
  * The export also leaned on three canvas-runtime features, resolved here at build time:
  *   1. style-hover / style-focus attributes  -> CSS pseudo-class rules on generated classes
@@ -93,6 +98,29 @@ const dropped = kids.filter((k) => /^<div data-(progress|nav)\b/.test(k)).length
 const hero = kids[heroIdx];
 const sections = kids.filter((k, i) => i !== heroIdx && i !== footerIdx && !/^<div data-(progress|nav)\b/.test(k));
 
+// Section order. The design runs mechanism → stack → process → results → team →
+// comparison → pricing → call. The structure audit moved the proof (results, team) and
+// the de-risking timeline (process) ahead of the explanation. Sections are picked by a
+// marker, so a re-exported design that shuffles itself still compiles in this order.
+// Markers are matched on the raw export (ids are renamed later, in siteLinks).
+const ORDER = [
+  ['stat band',  '>Average across managed listings</div>'],
+  ['results',    'id="results"'],
+  ['team',       '>Why trust us</div>'],
+  ['process',    '>The process</div>'],
+  ['mechanism',  'id="system"'],
+  ['stack',      '>The stack you can retire</div>'],
+  ['comparison', 'id="compare"'],
+  ['pricing',    'id="pricing"'],
+  ['call',       'id="call"']
+];
+const ordered = ORDER.map(([label, marker]) => {
+  const hits = sections.filter((s) => s.includes(marker));
+  if (hits.length !== 1) throw new Error(`Expected one "${label}" section (marker ${marker}), found ${hits.length}`);
+  return hits[0];
+});
+if (new Set(ordered).size !== sections.length) throw new Error(`ORDER covers ${new Set(ordered).size} of ${sections.length} sections`);
+
 // Inside the design's hero: the photo band holds [rank-frame + rank card, caption row,
 // "What we are" block] under one position:relative div, then a "See how it works" cue.
 const bandOpen = hero.indexOf('<div data-reveal style="max-width:1120px;margin:0 auto;padding:0 24px 44px">');
@@ -107,21 +135,35 @@ const cueHtml = hero.slice(matchClose(hero, bandOpen), hero.lastIndexOf('</div>'
 /* ── 3. Transform passes ──────────────────────────────────────────────────── */
 const counts = { cta: 0, eyebrow: 0, h2: 0, hover: 0, focus: 0, events: 0, bakedAttrs: 0, bakedText: 0, relinked: 0 };
 
-// 3a. CTAs -> the site's buttons. Side text next to buttons is removed for uniformity.
-const BTN = '<a href="/get-started" class="btn-accent">Book your free strategy call &rarr;</a>';
+// 3a. CTAs -> the site's buttons, every one into the audit form's fullscreen takeover
+// (.js-to-form, handled by audit-widget.js). One offer on the page, one name for it.
+// Side text next to buttons is removed for uniformity.
+const BTN = '<a href="#audit-form" class="btn-accent js-to-form">Get my free audit &rarr;</a>';
+// Inside a flex column the button would stretch to the column's width; these two sit in
+// one (the team block, the pricing card) and keep their natural width. Both are spelled
+// out rather than patched out of BTN — a string replace against BTN's class list breaks
+// silently the next time the label or the class changes.
+const BTN_NARROW = '<a href="#audit-form" class="btn-accent js-to-form" style="align-self:flex-start">Get my free audit &rarr;</a>';
+const BTN_NARROW_WHITE = '<a href="#audit-form" class="btn-white js-to-form" style="align-self:flex-start">Get my free audit &rarr;</a>';
 function siteButtons(html) {
   return html
     // pricing card (dark green): white button, drop the note beneath it
     .replace(/<a href="#call"[^>]*style-hover="background:#F8F7F6;color:#32302F[^"]*">Book a strategy call<\/a>\s*<div style="font-size:15px;color:#FFFFFF;text-align:center">[^<]*<\/div>/g,
-      () => { counts.cta++; return '<a href="/get-started" class="btn-white" style="align-self:flex-start">Book your free strategy call &rarr;</a>'; })
+      () => { counts.cta++; return BTN_NARROW_WHITE; })
     // team block (outline button inside a flex column): keep it natural width
     .replace(/<a href="#call"[^>]*style-hover="background:#32302F;color:#FFFFFF">Book a strategy call<\/a>/g,
-      () => { counts.cta++; return BTN.replace('class="btn-accent"', 'class="btn-accent" style="align-self:flex-start"'); })
+      () => { counts.cta++; return BTN_NARROW; })
     // button + trailing explainer span
     .replace(/<a href="#call"[^>]*>Book a strategy call<\/a>\s*<span style="font-size:16px;color:#706A63">[^<]*<\/span>/g,
       () => { counts.cta++; return BTN; })
     // any remaining
-    .replace(/<a href="#call"[^>]*>Book a strategy call<\/a>/g, () => { counts.cta++; return BTN; });
+    .replace(/<a href="#call"[^>]*>Book a strategy call<\/a>/g, () => { counts.cta++; return BTN; })
+    // CTA rows carry the button and nothing else: drop the "See full case studies" link
+    // beside the Results button (the case-study cards above it already link out) and
+    // centre the one row the design left flush-left (the process timeline).
+    .replace(/<a href="https:\/\/revwhisper\.com\/case-study-2"[^>]*>See full case studies<\/a>\s*/g, () => { counts.relinked++; return ''; })
+    .replace(/(<div data-reveal style="margin-top:\d+px;display:flex;align-items:center;)(flex-wrap:wrap;gap:\d+px">\s*<a href="#audit-form" class="btn-accent js-to-form">)/g,
+      (_m, a, b) => `${a}justify-content:center;${b}`);
 }
 
 // 3b. Eyebrows and section headings -> site classes (typography only; layout stays inline)
@@ -138,7 +180,7 @@ function siteTypography(html) {
 function siteLinks(html) {
   const swap = (re, to) => { html = html.replace(re, (m) => { counts.relinked++; return typeof to === 'function' ? to(m) : to; }); };
   swap(/href="https:\/\/revwhisper\.com\/case-study-2"/g, 'href="/case-study"');
-  swap(/href="#audit"/g, 'href="#audit-form" class="js-to-audit"');
+  swap(/href="#audit"/g, 'href="#audit-form" class="js-to-form"');
   swap(/id="compare"/g, 'id="why-revwhisper"');
   swap(/href="#compare"/g, 'href="#why-revwhisper"');
   swap(/id="pricing"/g, 'id="rates"');
@@ -146,21 +188,21 @@ function siteLinks(html) {
   return html;
 }
 
-// 3d. Bottom "Book a strategy call" card -> the site's form card + inputs + button
+// 3d. Bottom "Book a strategy call" card -> one button into the same fullscreen audit
+// flow as every other CTA. The design's 4-field form was a second, different funnel for
+// the same booking, and its "prefer diagnostics first" line only existed to point back
+// at the first one.
 function siteCallCard(html) {
-  const INPUT_ATTRS = {
-    'Full name': 'autocomplete="name"',
-    'Email': 'type="email" autocomplete="email" inputmode="email"',
-    'Airbnb listing URL': 'inputmode="url" autocomplete="off"',
-    'Number of listings': 'inputmode="numeric"'
-  };
-  return html
-    .replace(/<div data-reveal id="audit" style="background:#FFFFFF;border-radius:8px;padding:28px;display:flex;flex-direction:column;gap:14px">/,
-      '<div data-reveal class="form-card rd-call-card">')
-    .replace(/<input placeholder="(Full name|Email|Airbnb listing URL|Number of listings)" style="[^"]*"(?: style-focus="[^"]*")?>/g,
-      (_m, ph) => `<input class="field-input" placeholder="${ph}" ${INPUT_ATTRS[ph]}>`)
-    .replace(/<button style="[^"]*"(?: style-hover="[^"]*")?(?: style-focus="[^"]*")?>Choose a time<\/button>/,
-      '<button type="button" class="btn-next">Choose a time</button>');
+  const open = html.indexOf('<div data-reveal id="audit" style="background:#FFFFFF;border-radius:8px;padding:28px;display:flex;flex-direction:column;gap:14px">');
+  if (open < 0) throw new Error('Could not find the bottom call card');
+  const end = matchClose(html, open);
+  const cta = `<div data-reveal class="rd-call-cta">
+        <a href="#audit-form" class="btn-white js-to-form">Get my free audit &rarr;</a>
+      </div>`;
+  counts.cta++;
+  html = html.slice(0, open) + cta + html.slice(end);
+  return html.replace(/\s*<div style="font-size:16px;color:#FFFFFF">Prefer diagnostics first\? <a [^>]*>Request a free performance audit<\/a> instead\.<\/div>/,
+    () => { counts.relinked++; return ''; });
 }
 
 // 3e. style-hover / style-focus -> generated pseudo-class rules; event bindings -> hooks
@@ -241,8 +283,8 @@ function assetsAndLayout(html) {
   html = html
     .replace(/src="assets\/([^"]+)\.(png|jpg|jpeg)"/g, 'src="/images/redesign/$1.webp"')
     .replace(/https:\/\/revwhisper\.com\/images\//g, '/images/');
-  html = html.replace(/<img /g, (m, offset) =>
-    html.slice(offset, offset + 400).includes('hero-home') ? '<img fetchpriority="high" decoding="async" ' : '<img loading="lazy" decoding="async" ');
+  // no image is above the fold any more — the hero is copy + the audit form
+  html = html.replace(/<img /g, '<img loading="lazy" decoding="async" ');
   // design containers are 1120px with 24px gutters; the site's .w is 1100px with 28px
   html = html.replace(/max-width:1120px;margin:0 auto;padding:([^;"]+)/g,
     (_m, p) => `max-width:1100px;margin:0 auto;padding:${p.replace(/(^|\s)24px(?=\s|$)/g, '$128px')}`);
@@ -254,15 +296,34 @@ function assetsAndLayout(html) {
 const indexHtml = read('index.html');
 const fcOpen = indexHtml.indexOf('<div class="form-card" id="audit-form">');
 if (fcOpen < 0) throw new Error('Could not find .form-card#audit-form in index.html');
-const formCard = slice(indexHtml, fcOpen).replace('id="audit-form">', 'id="audit-form" data-page="homepage-redesign">');
+// data-fullscreen opts the card into audit.html's takeover (see audit-widget.js)
+const formCard = slice(indexHtml, fcOpen).replace('id="audit-form">', 'id="audit-form" data-page="homepage-redesign" data-fullscreen>');
 
-const heroHtml = read('scripts/home-redesign.hero.html')
-  .replace('<!--PHOTO-->', () => photoHtml)
-  .replace('<!--FORM-->', () => formCard);
+const heroHtml = read('scripts/home-redesign.hero.html').replace('<!--FORM-->', () => formCard);
 
-const whatWeAre = `<div data-reveal style="max-width:1100px;margin:0 auto;padding:56px 28px 0">\n${whatWeAreHtml}\n${cueHtml}\n</div>`;
+// "What we are": the listing photo on the left, the heading and its two points stacked
+// beside it. The design stacked those two side by side under a full-width photo band.
+const whatWeAreStacked = whatWeAreHtml.replace(
+  /^<div style="margin-top:40px;display:grid;grid-template-columns:repeat\(auto-fit,minmax\(280px,1fr\)\);gap:24px 44px;align-items:start">/,
+  '<div class="rd-what-copy">'
+);
+if (whatWeAreStacked === whatWeAreHtml) throw new Error('Could not restack the "What we are" grid');
 
-let content = [wrapperOpenTag, heroHtml, whatWeAre, ...sections, '</div>'].join('\n\n');
+const whatWeAre = `<section class="rd-what">
+  <div class="w rd-what-grid" data-reveal>
+    <div class="rd-what-photo">
+${photoHtml}
+    </div>
+    <div class="rd-what-body">
+${whatWeAreStacked}
+    </div>
+  </div>
+  <div class="rd-what-cue">
+${cueHtml}
+  </div>
+</section>`;
+
+let content = [wrapperOpenTag, heroHtml, whatWeAre, ...ordered, '</div>'].join('\n\n');
 content = siteButtons(content);
 content = siteTypography(content);
 content = siteLinks(content);
@@ -302,7 +363,8 @@ writeFileSync(join(ROOT, 'home-redesign.html'), page);
 
 console.log('Built /home-redesign');
 console.log(`  design blocks  ${kids.length} found · ${sections.length} kept · nav/progress/hero/footer replaced (${dropped + 2} dropped)`);
-console.log(`  buttons        ${counts.cta} -> .btn-accent/.btn-white`);
+console.log(`  buttons        ${counts.cta} -> .btn-accent/.btn-white, all .js-to-form (fullscreen audit)`);
+console.log(`  order          ${ORDER.map(([l]) => l).join(' → ')}`);
 console.log(`  eyebrows/h2    ${counts.eyebrow} / ${counts.h2} -> .eyebrow / .h2`);
 console.log(`  links          ${counts.relinked} rewritten`);
 console.log(`  hover/focus    ${counts.hover} / ${counts.focus} rules`);
