@@ -10,13 +10,12 @@
  *
  * What comes from the design:
  *   - every section between the hero and the footer, with its interactions, in the
- *     order set by ORDER below (proof and the process ahead of the mechanism; see the
- *     structure audit of 16 Sep 2026)
+ *     order set by ORDER below
  *   - every CTA opens the hero form's fullscreen takeover (audit.html's flow); the header
  *     button is the one link that still leaves for /get-started
- *   - the hero copy, and the listing photo + rank card (recomposed: hero is copy beside
- *     the form, the photo moves down beside the "What we are" block; the design's hero
- *     CTA button is dropped — the form is the CTA)
+ *   - the hero copy (the hero is copy beside the form; the design's hero CTA button and
+ *     its whole photo band — listing photo, rank card, "What we are" block, scroll cue —
+ *     are dropped, so the +35% band is the first thing under the hero)
  *
  * The export also leaned on three canvas-runtime features, resolved here at build time:
  *   1. style-hover / style-focus attributes  -> CSS pseudo-class rules on generated classes
@@ -95,23 +94,22 @@ const footerIdx = kids.findIndex((k) => k.includes('border-top:1px solid #E0DCDA
 if (heroIdx < 0 || footerIdx < 0) throw new Error('Wrapper children did not match the expected shape');
 
 const dropped = kids.filter((k) => /^<div data-(progress|nav)\b/.test(k)).length;
-const hero = kids[heroIdx];
 const sections = kids.filter((k, i) => i !== heroIdx && i !== footerIdx && !/^<div data-(progress|nav)\b/.test(k));
 
-// Section order. The design runs mechanism → stack → process → results → team →
-// comparison → pricing → call. The structure audit moved the proof (results, team) and
-// the de-risking timeline (process) ahead of the explanation. Sections are picked by a
-// marker, so a re-exported design that shuffles itself still compiles in this order.
-// Markers are matched on the raw export (ids are renamed later, in siteLinks).
+// Section order, set by Bryan on 17 Sep 2026. The +35% band opens the page under the
+// hero; the process timeline follows the case studies ("here are the results, here is
+// how you get them") and keeps the comparison → pricing close contiguous. Sections are
+// picked by a marker, so a re-exported design that shuffles itself still compiles in
+// this order. Markers are matched on the raw export (ids are renamed later, in siteLinks).
 const ORDER = [
   ['stat band',  '>Average across managed listings</div>'],
-  ['results',    'id="results"'],
-  ['team',       '>Why trust us</div>'],
-  ['process',    '>The process</div>'],
   ['mechanism',  'id="system"'],
   ['stack',      '>The stack you can retire</div>'],
+  ['results',    'id="results"'],
+  ['process',    '>The process</div>'],
   ['comparison', 'id="compare"'],
   ['pricing',    'id="pricing"'],
+  ['team',       '>Why trust us</div>'],
   ['call',       'id="call"']
 ];
 const ordered = ORDER.map(([label, marker]) => {
@@ -121,19 +119,8 @@ const ordered = ORDER.map(([label, marker]) => {
 });
 if (new Set(ordered).size !== sections.length) throw new Error(`ORDER covers ${new Set(ordered).size} of ${sections.length} sections`);
 
-// Inside the design's hero: the photo band holds [rank-frame + rank card, caption row,
-// "What we are" block] under one position:relative div, then a "See how it works" cue.
-const bandOpen = hero.indexOf('<div data-reveal style="max-width:1120px;margin:0 auto;padding:0 24px 44px">');
-if (bandOpen < 0) throw new Error('Could not find the hero photo band');
-const relOpen = directChildren(hero, bandOpen)[0];
-const relKids = directChildren(hero, relOpen);
-if (relKids.length !== 3) throw new Error(`Photo band has ${relKids.length} children, expected 3`);
-const photoHtml = hero.slice(relKids[0], matchClose(hero, relKids[1]));   // photo + caption
-const whatWeAreHtml = slice(hero, relKids[2]);
-const cueHtml = hero.slice(matchClose(hero, bandOpen), hero.lastIndexOf('</div>')).trim();
-
 /* ── 3. Transform passes ──────────────────────────────────────────────────── */
-const counts = { cta: 0, eyebrow: 0, h2: 0, hover: 0, focus: 0, events: 0, bakedAttrs: 0, bakedText: 0, relinked: 0 };
+const counts = { cta: 0, eyebrow: 0, h2: 0, hover: 0, focus: 0, events: 0, bakedAttrs: 0, bakedText: 0, relinked: 0, icons: 0 };
 
 // 3a. CTAs -> the site's buttons, every one into the audit form's fullscreen takeover
 // (.js-to-form, handled by audit-widget.js). One offer on the page, one name for it.
@@ -164,6 +151,41 @@ function siteButtons(html) {
     .replace(/<a href="https:\/\/revwhisper\.com\/case-study-2"[^>]*>See full case studies<\/a>\s*/g, () => { counts.relinked++; return ''; })
     .replace(/(<div data-reveal style="margin-top:\d+px;display:flex;align-items:center;)(flex-wrap:wrap;gap:\d+px">\s*<a href="#audit-form" class="btn-accent js-to-form">)/g,
       (_m, a, b) => `${a}justify-content:center;${b}`);
+}
+
+// 3i. Occupancy cards get a market icon. Line icons drawn to each market's own character
+// (palm / pine / skyline / misty ridges / snow-capped peak / rolling hills) so six cards
+// that carry near-identical numbers are told apart at a glance. Stroked in the brand
+// accent. The cards are duplicated for the marquee loop, so a global replace catches both
+// copies; the Whisper Wheel's "Your property" card shares this markup and is skipped by
+// not being a key here.
+const ICON = (paths) =>
+  `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#4A6741" stroke-width="1.7" ` +
+  `stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:0 0 auto;margin-top:2px" aria-hidden="true">${paths}</svg>`;
+const MARKET_ICONS = {
+  // palm: trunk + four fronds
+  'Florida Gulf Coast': ICON('<path d="M12.5 10.5c-.4 3.7-1.1 7.2-2.5 10.5"/><path d="M12.5 10.5C9.7 8.4 6.4 8.8 4.6 11.4"/><path d="M12.5 10.5c2.8-2.1 6.1-1.7 7.9.9"/><path d="M12.5 10.5c-.6-3.2.9-5.9 3.5-6.9"/><path d="M12.5 10.5c2.1 1.2 3.5 3.1 4.1 5.5"/>'),
+  // conifer
+  'Poconos': ICON('<path d="M12 2.8 7.6 9.9h2.6L5.6 16.2h12.8L13.8 9.9h2.6L12 2.8Z"/><path d="M12 16.2v4.6"/>'),
+  // skyline with a spire
+  'Miami': ICON('<path d="M2.5 20.5h19"/><path d="M5 20.5v-8.2h4.2v8.2"/><path d="M9.2 20.5V6.8h5.6v13.7"/><path d="M14.8 20.5v-6.4H19v6.4"/><path d="M12 6.8V4.2"/>'),
+  // ridge line with two bands of haze
+  'Smoky Mountains': ICON('<path d="M2.5 19.6 9 9.6l3.6 5.2 3.2-4.4 5.7 9.2"/><path d="M4.4 15.6h5"/><path d="M12.2 15.6h7"/>'),
+  // peak with a snow line
+  'White Mountains': ICON('<path d="M2.6 19.4 9.6 6.4l4.2 7.6 2.6-4.2 5 9.6Z"/><path d="M9.6 6.4 12 10.8H7.25Z" fill="#4A6741" stroke="none"/>'),
+  // rolling hills
+  'North Georgia Mountains': ICON('<path d="M2.5 19.3c2.6-7.8 7.4-7.8 10 0"/><path d="M10.4 19.3c2.2-6 6.4-6 8.6 0"/><path d="M2.5 19.3h19"/>')
+};
+const NAME_BLOCK = /<div style="min-width:0">\s*(<div style="font-size:16px;[^"]*">([^<]+)<\/div>\s*<div style="font-size:14px;[^"]*">[^<]*<\/div>)\s*<\/div>/g;
+function marketIcons(html) {
+  // the icon needs its own 26px, so the card grows to keep the longest name on one line
+  html = html.replace(/flex:0 0 auto;width:232px;background:#FFFFFF/g,
+    () => { counts.icons++; return 'flex:0 0 auto;width:268px;background:#FFFFFF'; });
+  return html.replace(NAME_BLOCK, (m, inner, name) => {
+    const icon = MARKET_ICONS[name];
+    if (!icon) return m;
+    return `<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px"><div style="min-width:0">${inner}</div>${icon}</div>`;
+  });
 }
 
 // 3b. Eyebrows and section headings -> site classes (typography only; layout stays inline)
@@ -301,30 +323,9 @@ const formCard = slice(indexHtml, fcOpen).replace('id="audit-form">', 'id="audit
 
 const heroHtml = read('scripts/home-redesign.hero.html').replace('<!--FORM-->', () => formCard);
 
-// "What we are": the listing photo on the left, the heading and its two points stacked
-// beside it. The design stacked those two side by side under a full-width photo band.
-const whatWeAreStacked = whatWeAreHtml.replace(
-  /^<div style="margin-top:40px;display:grid;grid-template-columns:repeat\(auto-fit,minmax\(280px,1fr\)\);gap:24px 44px;align-items:start">/,
-  '<div class="rd-what-copy">'
-);
-if (whatWeAreStacked === whatWeAreHtml) throw new Error('Could not restack the "What we are" grid');
-
-const whatWeAre = `<section class="rd-what">
-  <div class="w rd-what-grid" data-reveal>
-    <div class="rd-what-photo">
-${photoHtml}
-    </div>
-    <div class="rd-what-body">
-${whatWeAreStacked}
-    </div>
-  </div>
-  <div class="rd-what-cue">
-${cueHtml}
-  </div>
-</section>`;
-
-let content = [wrapperOpenTag, heroHtml, whatWeAre, ...ordered, '</div>'].join('\n\n');
+let content = [wrapperOpenTag, heroHtml, ...ordered, '</div>'].join('\n\n');
 content = siteButtons(content);
+content = marketIcons(content);
 content = siteTypography(content);
 content = siteLinks(content);
 content = siteCallCard(content);
@@ -367,6 +368,7 @@ console.log(`  buttons        ${counts.cta} -> .btn-accent/.btn-white, all .js-t
 console.log(`  order          ${ORDER.map(([l]) => l).join(' → ')}`);
 console.log(`  eyebrows/h2    ${counts.eyebrow} / ${counts.h2} -> .eyebrow / .h2`);
 console.log(`  links          ${counts.relinked} rewritten`);
+console.log(`  market icons   ${Object.keys(MARKET_ICONS).length} drawn · ${counts.icons} cards widened`);
 console.log(`  hover/focus    ${counts.hover} / ${counts.focus} rules`);
 console.log(`  click hooks    ${counts.events}`);
 console.log(`  baked          ${counts.bakedAttrs} attrs · ${counts.bakedText} text`);

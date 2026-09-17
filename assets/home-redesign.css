@@ -103,16 +103,15 @@
   }
 
 /* hover / focus states lifted out of style-hover + style-focus attributes */
-.rw-h1:hover{transform:scale(1.035) !important}
-.rw-h2:hover{color:#32302F !important;border-color:#32302F !important}
-.rw-h3:hover{transform:translateY(-3px) !important;box-shadow:0 4px 8px rgba(50,48,47,.04),0 8px 24px rgba(50,48,47,.08) !important}
-.rw-h4:hover{transform:scale(1.05) !important}
-.rw-h5:hover{border-color:#4A6741 !important;background:#faf9f8 !important}
-.rw-f6:focus{border-color:#4A6741 !important;box-shadow:0 0 0 3px rgba(74,103,65,.15) !important}
-.rw-h7:hover{transform:scale(1.06) !important}
-.rw-h8:hover{filter:none !important;opacity:1 !important}
-.rw-h9:hover{filter:invert(1) !important;opacity:1 !important}
-.rw-h10:hover{background:#faf9f8 !important}
+.rw-h1:hover{color:#32302F !important;border-color:#32302F !important}
+.rw-h2:hover{border-color:#4A6741 !important;background:#faf9f8 !important}
+.rw-f3:focus{border-color:#4A6741 !important;box-shadow:0 0 0 3px rgba(74,103,65,.15) !important}
+.rw-h4:hover{transform:scale(1.06) !important}
+.rw-h5:hover{transform:scale(1.05) !important}
+.rw-h6:hover{filter:none !important;opacity:1 !important}
+.rw-h7:hover{transform:translateY(-3px) !important;box-shadow:0 4px 8px rgba(50,48,47,.04),0 8px 24px rgba(50,48,47,.08) !important}
+.rw-h8:hover{filter:invert(1) !important;opacity:1 !important}
+.rw-h9:hover{background:#faf9f8 !important}
 
 /* ── /home-redesign: page rules layered over the site's own stylesheets ──────
    Loaded after header.css, home.css, audit-widget.css and footer.css, so every
@@ -145,34 +144,6 @@
   .rd-hero-grid{grid-template-columns:1fr;gap:32px}
 }
 
-/* "What we are" ────────────────────────────────────────────────────────────── */
-/* An Airbnb-sized listing card on the left (440px square, the width at which the rank
-   card still floats inside the photo — home-redesign.js hangs it below 440), the heading
-   and its two points centred beside it. The card keeps its size when the grid stacks. */
-.rd-what{padding-top:64px}
-.rd-what-grid{display:grid;grid-template-columns:minmax(0,440px) minmax(0,1fr);gap:72px;align-items:center}
-.rd-what-photo{min-width:0;width:100%;max-width:440px}
-.rd-what-body{min-width:0;max-width:520px}
-/* the design stacked heading and points side by side under a full-width photo band */
-.rd-what-copy{display:flex;flex-direction:column;gap:24px}
-.rd-what-copy > div{min-width:0}
-/* the photo was a full-width band (300–460px tall); in its column it is a square, like the
-   Airbnb listing card it is standing in for (the design's inline height has to be overridden) */
-.rd-what-photo [data-rank-frame] > div:first-child{height:auto !important;aspect-ratio:1/1}
-
-/* the cue sits under the whole band, not tight against the photo caption */
-.rd-what-cue > div{padding-top:36px !important}
-
-@media(max-width:960px){
-  .rd-what{padding-top:48px}
-  .rd-what-grid{grid-template-columns:1fr;gap:36px}
-  .rd-what-body{max-width:none}
-}
-@media(max-width:495px){
-  /* below ~440px of photo, home-redesign.js hangs the rank card off the bottom edge */
-  .rd-what-photo [data-rank-frame]{margin-bottom:46px}
-}
-
 /* Compiled design body ─────────────────────────────────────────────────────── */
 /* design containers space children with gap, so the site eyebrow's own margin doubles up */
 .rd-body .eyebrow{margin-bottom:0}
@@ -181,8 +152,6 @@
 .rd-body [data-factor-row]:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 /* bottom band: the design's second form is now one button into the audit flow */
 .rd-call-cta{display:flex;justify-content:center}
-/* stack and comparison are both grey bands and now sit together; drop the doubled rule */
-.rd-body > div[style*="background:#faf9f8"] + div[style*="background:#faf9f8"]{border-top:none}
 
 /* Fullscreen audit form (audit-widget.js, opted in with data-fullscreen) ──────── */
 /* The hero column's entrance animation leaves an identity transform on the wrapper,

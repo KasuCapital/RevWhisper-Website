@@ -29,34 +29,6 @@
   .rd-hero-grid{grid-template-columns:1fr;gap:32px}
 }
 
-/* "What we are" ────────────────────────────────────────────────────────────── */
-/* An Airbnb-sized listing card on the left (440px square, the width at which the rank
-   card still floats inside the photo — home-redesign.js hangs it below 440), the heading
-   and its two points centred beside it. The card keeps its size when the grid stacks. */
-.rd-what{padding-top:64px}
-.rd-what-grid{display:grid;grid-template-columns:minmax(0,440px) minmax(0,1fr);gap:72px;align-items:center}
-.rd-what-photo{min-width:0;width:100%;max-width:440px}
-.rd-what-body{min-width:0;max-width:520px}
-/* the design stacked heading and points side by side under a full-width photo band */
-.rd-what-copy{display:flex;flex-direction:column;gap:24px}
-.rd-what-copy > div{min-width:0}
-/* the photo was a full-width band (300–460px tall); in its column it is a square, like the
-   Airbnb listing card it is standing in for (the design's inline height has to be overridden) */
-.rd-what-photo [data-rank-frame] > div:first-child{height:auto !important;aspect-ratio:1/1}
-
-/* the cue sits under the whole band, not tight against the photo caption */
-.rd-what-cue > div{padding-top:36px !important}
-
-@media(max-width:960px){
-  .rd-what{padding-top:48px}
-  .rd-what-grid{grid-template-columns:1fr;gap:36px}
-  .rd-what-body{max-width:none}
-}
-@media(max-width:495px){
-  /* below ~440px of photo, home-redesign.js hangs the rank card off the bottom edge */
-  .rd-what-photo [data-rank-frame]{margin-bottom:46px}
-}
-
 /* Compiled design body ─────────────────────────────────────────────────────── */
 /* design containers space children with gap, so the site eyebrow's own margin doubles up */
 .rd-body .eyebrow{margin-bottom:0}
@@ -65,8 +37,6 @@
 .rd-body [data-factor-row]:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 /* bottom band: the design's second form is now one button into the audit flow */
 .rd-call-cta{display:flex;justify-content:center}
-/* stack and comparison are both grey bands and now sit together; drop the doubled rule */
-.rd-body > div[style*="background:#faf9f8"] + div[style*="background:#faf9f8"]{border-top:none}
 
 /* Fullscreen audit form (audit-widget.js, opted in with data-fullscreen) ──────── */
 /* The hero column's entrance animation leaves an identity transform on the wrapper,
