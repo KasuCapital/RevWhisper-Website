@@ -1,0 +1,138 @@
+<!-- The five-step audit form card, lifted verbatim from the previous homepage when the
+     redesign was promoted to /. Build source for scripts/build-home-redesign.mjs; the
+     build adds data-fullscreen. Edit here, then re-run the build. -->
+<div class="form-card" id="audit-form">
+        <div class="fc-title">
+          <div class="ft-name">See where I <em>rank in search</em></div>
+          <p>Plus why views aren't booking, and what to fix first.</p>
+        </div>
+        <div class="fc-head">
+          <div class="fc-progress" aria-hidden="true">
+            <span class="fc-seg on" data-seg="0"></span>
+            <span class="fc-seg" data-seg="1"></span>
+            <span class="fc-seg" data-seg="2"></span>
+            <span class="fc-seg" data-seg="3"></span>
+            <span class="fc-seg" data-seg="4"></span>
+          </div>
+          <div class="fc-count">Step <span id="fc-cur">1</span> of 5</div>
+        </div>
+
+        <div class="steps-viewport">
+          <!-- Step 0: portfolio size (zero-friction tap) -->
+          <div class="step active" data-step="0">
+            <div class="step-eyebrow">Your portfolio</div>
+            <h2 class="step-title">How many listings do you <em>have?</em></h2>
+            <p class="step-desc">Tap one to start. Your audit takes about 2 minutes to request.</p>
+            <div class="radio-group">
+              <label class="radio-card"><input type="radio" name="listings" value="1"><div class="rc-label"><span>1</span></div></label>
+              <label class="radio-card"><input type="radio" name="listings" value="2-5"><div class="rc-label"><span>2–5</span></div></label>
+              <label class="radio-card"><input type="radio" name="listings" value="6-10"><div class="rc-label"><span>6–10</span></div></label>
+              <label class="radio-card"><input type="radio" name="listings" value="11-25"><div class="rc-label"><span>11–25</span></div></label>
+              <label class="radio-card"><input type="radio" name="listings" value="26-100"><div class="rc-label"><span>26–100</span></div></label>
+              <label class="radio-card"><input type="radio" name="listings" value="100+"><div class="rc-label"><span>100+</span></div></label>
+            </div>
+          </div>
+
+          <!-- Step 1: biggest issue (light qualifier, maps to pillars) -->
+          <div class="step" data-step="1">
+            <div class="step-eyebrow">What's going on</div>
+            <h2 class="step-title">What's the biggest issue <em>right now?</em></h2>
+            <p class="step-desc">No wrong answer. It just tells us where to look first.</p>
+            <div class="option-cards">
+              <label class="option-card"><input type="radio" name="issue" value="views-no-bookings"><div class="oc-label"><span class="oc-radio"></span><span>I'm getting views but not enough bookings</span></div></label>
+              <label class="option-card"><input type="radio" name="issue" value="bookings-slowed"><div class="oc-label"><span class="oc-radio"></span><span>My bookings have slowed down</span></div></label>
+              <label class="option-card"><input type="radio" name="issue" value="pricing"><div class="oc-label"><span class="oc-radio"></span><span>I don't think my pricing is right</span></div></label>
+              <label class="option-card"><input type="radio" name="issue" value="not-sure"><div class="oc-label"><span class="oc-radio"></span><span>Not sure, that's what I want to find out</span></div></label>
+            </div>
+            <div class="form-actions">
+              <button class="btn-back" type="button"><span class="arrow">←</span> Back</button>
+            </div>
+          </div>
+
+          <!-- Step 2: pricing & revenue approach -->
+          <div class="step" data-step="2">
+            <div class="step-eyebrow">How you run it</div>
+            <h2 class="step-title">How do you handle pricing <em>right now?</em></h2>
+            <p class="step-desc">No judgement. It tells us where the quick wins are.</p>
+            <div class="option-cards">
+              <label class="option-card"><input type="radio" name="pricing" value="manual"><div class="oc-label"><span class="oc-radio"></span><span>Manually, or Airbnb Smart Pricing</span></div></label>
+              <label class="option-card"><input type="radio" name="pricing" value="tool"><div class="oc-label"><span class="oc-radio"></span><span>A pricing tool (PriceLabs, Wheelhouse, Beyond)</span></div></label>
+              <label class="option-card"><input type="radio" name="pricing" value="revenue-manager"><div class="oc-label"><span class="oc-radio"></span><span>A revenue manager or agency handles it</span></div></label>
+              <label class="option-card"><input type="radio" name="pricing" value="property-manager"><div class="oc-label"><span class="oc-radio"></span><span>My property manager handles it</span></div></label>
+              <label class="option-card"><input type="radio" name="pricing" value="none"><div class="oc-label"><span class="oc-radio"></span><span>Not really managing it yet</span></div></label>
+            </div>
+            <div class="form-actions">
+              <button class="btn-back" type="button"><span class="arrow">←</span> Back</button>
+            </div>
+          </div>
+
+          <!-- Step 3: revenue (bands rendered dynamically from the listing count) -->
+          <div class="step" data-step="3">
+            <div class="step-eyebrow">Your revenue</div>
+            <h2 class="step-title" id="revenue-title">Roughly what did your listings earn <em>last year?</em></h2>
+            <p class="step-desc">Newer to Airbnb? Estimate what you expect to bring in this year.</p>
+            <div class="field" id="doorcount-field" style="display:none">
+              <label class="field-label" for="door-count">Roughly how many listings? <span class="opt">(optional)</span></label>
+              <input type="number" class="field-input" id="door-count" placeholder="e.g. 60" min="1" inputmode="numeric">
+            </div>
+            <div class="radio-group revenue-group" id="revenue-options"></div>
+            <div class="form-actions">
+              <button class="btn-back" type="button"><span class="arrow">←</span> Back</button>
+            </div>
+          </div>
+
+          <!-- Step 4: the ask (listing + contact) -->
+          <div class="step" data-step="4">
+            <div class="step-eyebrow">Where to send it</div>
+            <h2 class="step-title">Last step: <em>your details.</em></h2>
+            <p class="step-desc">We'll start preparing your audit and show you how to get your findings, walked through with you.</p>
+            <div class="field">
+              <label class="field-label" for="airbnb-url">Your Airbnb listing URL or host profile</label>
+              <div class="input-icon-wrap">
+                <div class="input-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg></div>
+                <input type="url" class="field-input" id="airbnb-url" placeholder="airbnb.com/rooms/… or /users/show/…" autocomplete="off" inputmode="url">
+              </div>
+              <div class="field-error">Please add your Airbnb listing URL or host profile</div>
+            </div>
+            <div class="open-airbnb-wrap">
+              <span class="open-airbnb-divider">Don't have it handy?</span>
+              <a href="https://www.airbnb.com" target="_blank" rel="noopener" class="open-airbnb-btn" id="open-airbnb-btn">
+                Open Airbnb — copy your listing URL, then come back
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6m4-3h6m0 0v6m0-6L10 14"/></svg>
+              </a>
+            </div>
+            <div class="field">
+              <label class="field-label" for="full-name">Full name</label>
+              <input type="text" class="field-input" id="full-name" placeholder="Jane Doe" autocomplete="name">
+              <div class="field-error">Please enter your name</div>
+            </div>
+            <div class="field">
+              <label class="field-label" for="email">Email</label>
+              <div class="input-icon-wrap">
+                <div class="input-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div>
+                <input type="email" class="field-input" id="email" placeholder="jane@example.com" autocomplete="email" inputmode="email">
+              </div>
+              <div class="field-error">Please enter a valid email</div>
+            </div>
+            <div class="field">
+              <label class="field-label" for="phone">Phone number</label>
+              <div class="phone-wrap">
+                <select class="phone-code" id="phone-code" aria-label="Country code">
+                  <option value="+1">🇺🇸 +1</option><option value="+44">🇬🇧 +44</option><option value="+61">🇦🇺 +61</option><option value="+33">🇫🇷 +33</option><option value="+49">🇩🇪 +49</option><option value="+52">🇲🇽 +52</option><option value="+34">🇪🇸 +34</option><option value="+39">🇮🇹 +39</option><option value="+55">🇧🇷 +55</option>
+                </select>
+                <input type="tel" class="field-input phone-input" id="phone" placeholder="(555) 123-4567" autocomplete="tel" inputmode="tel" maxlength="16">
+              </div>
+              <div class="field-error">Please enter a valid phone number</div>
+              <div class="field-hint">We'll text your Google Meet link and a reminder before your audit.</div>
+            </div>
+            <div class="form-actions">
+              <button class="btn-back" type="button"><span class="arrow">←</span></button>
+              <button class="btn-next" type="button" id="btn-submit">Get my free audit <span class="arrow">→</span></button>
+            </div>
+            <div class="fc-secure">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Your info stays private. We only use it to prepare your audit.
+            </div>
+          </div>
+        </div>
+      </div>

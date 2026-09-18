@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 /**
  * Compiles the Claude Design canvas export ("RevWhisper Landing.dc.html") into
- * /home-redesign — a real page in this site's chrome, not a canvas replica.
+ * the homepage (index.html) — a real page in this site's chrome, not a canvas replica.
  *
  * What the site keeps of its own:
  *   - the shared header and footer (_partials/*.html, between sync-partials markers)
- *   - the live homepage's five-step audit form (.form-card, lifted from index.html)
+ *   - the shared five-step audit form (.form-card, in scripts/home-redesign.form.html)
  *   - buttons, eyebrows, section headings, inputs -> home.css / audit-widget.css classes
  *
  * What comes from the design:
@@ -314,12 +314,14 @@ function assetsAndLayout(html) {
 }
 
 /* ── 4. Assemble ──────────────────────────────────────────────────────────── */
-// The live homepage's form card, verbatim, tagged so its leads are attributable to this page
-const indexHtml = read('index.html');
-const fcOpen = indexHtml.indexOf('<div class="form-card" id="audit-form">');
-if (fcOpen < 0) throw new Error('Could not find .form-card#audit-form in index.html');
-// data-fullscreen opts the card into audit.html's takeover (see audit-widget.js)
-const formCard = slice(indexHtml, fcOpen).replace('id="audit-form">', 'id="audit-form" data-page="homepage-redesign" data-fullscreen>');
+// The five-step audit form card. Held in its own build source rather than lifted from
+// index.html: this build now WRITES index.html, so reading it back would be circular.
+// data-fullscreen opts the card into audit.html's takeover (see audit-widget.js). No
+// data-page — audit-widget.js then tags these leads "homepage", as the old / did.
+const formSrc = read('scripts/home-redesign.form.html');
+const fcOpen = formSrc.indexOf('<div class="form-card" id="audit-form">');
+if (fcOpen < 0) throw new Error('Could not find .form-card#audit-form in scripts/home-redesign.form.html');
+const formCard = slice(formSrc, fcOpen).replace('id="audit-form">', 'id="audit-form" data-fullscreen>');
 
 const heroHtml = read('scripts/home-redesign.hero.html').replace('<!--FORM-->', () => formCard);
 
@@ -360,9 +362,9 @@ const page = read('scripts/home-redesign.shell.html')
   .replace('<!--HEADER-->', () => read('_partials/header.html').trimEnd())
   .replace('<!--FOOTER-->', () => read('_partials/footer.html').trimEnd())
   .replace('<!--BODY-->', () => content);
-writeFileSync(join(ROOT, 'home-redesign.html'), page);
+writeFileSync(join(ROOT, 'index.html'), page);
 
-console.log('Built /home-redesign');
+console.log('Built / (index.html)');
 console.log(`  design blocks  ${kids.length} found · ${sections.length} kept · nav/progress/hero/footer replaced (${dropped + 2} dropped)`);
 console.log(`  buttons        ${counts.cta} -> .btn-accent/.btn-white, all .js-to-form (fullscreen audit)`);
 console.log(`  order          ${ORDER.map(([l]) => l).join(' → ')}`);

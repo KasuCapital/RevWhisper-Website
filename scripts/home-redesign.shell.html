@@ -4,24 +4,53 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- Share-only preview of the redesigned homepage. Keep it out of the index so it
-     never competes with / in search, and keep it out of sitemap.xml. -->
-<meta name="robots" content="noindex,nofollow">
-
-<title>RevWhisper — homepage redesign preview</title>
-<meta name="description" content="Preview of the redesigned RevWhisper homepage. Not the live site.">
+<title>Airbnb Revenue Management Company, Built by Hosts | RevWhisper</title>
+<meta name="description" content="Fully managed Airbnb revenue management — dynamic pricing, listing optimization, professional photos, and daily search-rank tracking, done for you by hosts.">
+<link rel="canonical" href="https://revwhisper.com">
 <meta property="og:type" content="website">
-<meta property="og:title" content="RevWhisper — homepage redesign preview">
-<meta property="og:description" content="Preview of the redesigned RevWhisper homepage. Not the live site.">
+<meta property="og:title" content="Airbnb Revenue Management Company, Built by Hosts | RevWhisper">
+<meta property="og:description" content="Fully managed Airbnb revenue management — dynamic pricing, listing optimization, professional photos, and daily search-rank tracking, done for you by hosts.">
+<meta property="og:url" content="https://revwhisper.com">
+<meta property="og:site_name" content="RevWhisper">
 <meta property="og:image" content="https://revwhisper.com/images/redesign/hero-home.webp">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Airbnb Revenue Management Company, Built by Hosts | RevWhisper">
+<meta name="twitter:description" content="Fully managed Airbnb revenue & listing optimization — dynamic pricing, photos, copy, and daily rank tracking, done for you by experts.">
+<meta name="twitter:image" content="https://revwhisper.com/images/redesign/hero-home.webp">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "RevWhisper",
+  "legalName": "MCO CORP",
+  "url": "https://revwhisper.com",
+  "logo": "https://revwhisper.com/icons/favicon-light.svg",
+  "description": "RevWhisper helps Airbnb hosts maximize revenue with AI-powered listing optimization, professional photography direction, and data-driven pricing strategies.",
+  "sameAs": [
+    "https://x.com/RevWhisper",
+    "https://www.instagram.com/rev.whisper/"
+  ],
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "url": "https://revwhisper.com/get-started",
+    "contactType": "sales"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "RevWhisper",
+  "url": "https://revwhisper.com"
+}
+</script>
 
 <link rel="icon" href="/icons/favicon-light.svg" type="image/svg+xml" media="(prefers-color-scheme: light)">
 <link rel="icon" href="/icons/favicon-dark.svg" type="image/svg+xml" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="/icons/favicon-light.svg" type="image/svg+xml">
 
-<!-- Attribution capture (cookie-free) — same contract as the live homepage, so a lead
-     submitted from this preview still carries its utm/click ids into the CRM. -->
+<!-- Attribution capture (cookie-free) — a lead carries its utm/click ids into the CRM. -->
 <script>
 (function(){
   var key='rw_attribution';
@@ -46,9 +75,7 @@
 })();
 </script>
 
-<!-- GA4 only. The Meta and X pixels are deliberately NOT loaded on this review page, so
-     review traffic stays out of ad audiences. audit-widget.js guards every fbq/rwXTrack
-     call, so the form runs unchanged without them. -->
+<!-- Cookie Consent + GA4 (consent-mode) -->
 <script>
 window.dataLayer=window.dataLayer||[];
 function gtag(){dataLayer.push(arguments);}
@@ -58,17 +85,51 @@ gtag('config','G-Y1FYZ5849B');
 function rwTrack(e,p){gtag('event',e,p||{});}
 (function(){
   var c=null;try{c=localStorage.getItem('rw_cookie_consent');}catch(e){}
-  if(c==='accepted'){gtag('consent','update',{'analytics_storage':'granted','ad_storage':'granted'});}
+  if(c==='accepted'){gtag('consent','update',{'analytics_storage':'granted','ad_storage':'granted'});return;}
+  if(c==='declined')return;
+  document.addEventListener('DOMContentLoaded',function(){
+    var b=document.createElement('div');b.id='rw-consent';
+    b.innerHTML='<div style="position:fixed;bottom:0;left:0;right:0;z-index:9999;padding:16px 24px;background:#32302F;color:#fff;font-family:DM Sans,system-ui,sans-serif;font-size:14px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;box-shadow:0 -4px 24px rgba(0,0,0,.15)"><span style="flex:1;min-width:240px;line-height:1.5">We use cookies to analyze site usage and improve your experience.</span><div style="display:flex;gap:10px;flex-shrink:0"><button id="rw-decline" style="background:transparent;color:#ccc8c5;border:1.5px solid #706b68;padding:8px 20px;border-radius:6px;font-size:13px;font-family:inherit;cursor:pointer">Decline</button><button id="rw-accept" style="background:#4A6741;color:#fff;border:none;padding:8px 20px;border-radius:6px;font-size:13px;font-family:inherit;cursor:pointer;font-weight:500">Accept</button></div></div>';
+    document.body.appendChild(b);
+    document.getElementById('rw-accept').addEventListener('click',function(){localStorage.setItem('rw_cookie_consent','accepted');b.remove();gtag('consent','update',{'analytics_storage':'granted','ad_storage':'granted'});});
+    document.getElementById('rw-decline').addEventListener('click',function(){localStorage.setItem('rw_cookie_consent','declined');b.remove();});
+  });
+})();
+</script>
+<!-- Meta Pixel (shim only; script loaded on interaction) -->
+<script>
+!function(f){if(f.fbq)return;var n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[]}(window);
+fbq('init','959022406709300');
+fbq('track','PageView');
+</script>
+<!-- Deferred loader: fetch tracker scripts on first interaction or idle -->
+<script>
+(function(){
   var loaded=false;
   function load(){
     if(loaded)return;loaded=true;
     var g=document.createElement('script');g.async=true;g.src='https://www.googletagmanager.com/gtag/js?id=G-Y1FYZ5849B';document.head.appendChild(g);
+    var f=document.createElement('script');f.async=true;f.src='https://connect.facebook.net/en_US/fbevents.js';document.head.appendChild(f);
   }
   ['scroll','click','touchstart','keydown','mousemove'].forEach(function(e){window.addEventListener(e,load,{once:true,passive:true});});
   if('requestIdleCallback' in window)requestIdleCallback(load,{timeout:4000});
   else setTimeout(load,4000);
 })();
 </script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=959022406709300&ev=PageView&noscript=1"/></noscript>
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+  document.addEventListener('click',function(e){
+    var el=e.target.closest('a,button');
+    if(!el)return;
+    var txt=(el.textContent||'').replace(/\s+/g,' ').trim().toLowerCase();
+    if(txt.indexOf('book your free strategy call')!==-1||txt.indexOf('book a call')!==-1){
+      fbq('track','Lead',{content_name:'Book Strategy Call'});
+    }
+  });
+});
+</script>
+<!-- End Meta Pixel -->
 
 <!-- Fonts: the same request the live homepage makes -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -90,8 +151,12 @@ function rwTrack(e,p){gtag('event',e,p||{});}
 <link rel="stylesheet" href="/assets/home-redesign.css">
 
 <script defer src="/assets/header.js"></script>
-<!-- The live homepage's five-step audit form, unchanged. data-page on #audit-form tags
-     this page's leads as homepage-redesign. -->
+<!-- X Pixel base code + audit conversion helper -->
+<script defer src="/assets/x-pixel-base.js"></script>
+<script defer src="/assets/x-tracking.js"></script>
+<!-- End X Pixel base code -->
+<!-- The five-step audit form. No data-page attribute, so audit-widget.js tags these
+     leads as "homepage" — the same value the previous homepage sent. -->
 <script defer src="/assets/audit-widget.js"></script>
 <script defer src="/assets/home-redesign-vals.js"></script>
 <script defer src="/assets/home-redesign.js"></script>

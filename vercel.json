@@ -4,6 +4,7 @@
     { "source": "/:path*", "has": [{ "type": "host", "value": "www.revwhisper.com" }], "destination": "https://revwhisper.com/:path*", "permanent": true },
     { "source": "/search-ranking", "destination": "https://app.revwhisper.com/search-ranking", "permanent": true },
     { "source": "/revenue-lift", "destination": "/search-ranking", "permanent": true },
+    { "source": "/home-redesign", "destination": "/", "permanent": true },
     { "source": "/webinar", "destination": "https://my.demio.com/ref/i6PtxjJOSUSo2kLo", "permanent": true }
   ],
   "headers": [
