@@ -177,6 +177,8 @@ function formatPhone(code,raw){
   return d.slice(0,15);
 }
 function phoneValid(code,raw){
+  // Real numbering-plan check from /assets/phone-validate.js; digit count until it loads
+  if(window.rwPhoneCheck) return rwPhoneCheck(code,raw);
   var n=phoneDigits(raw).length;
   return code==='+1' ? n===10 : (n>=7&&n<=15);
 }

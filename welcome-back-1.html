@@ -286,7 +286,7 @@ body::before{
   80%{transform:translateX(2px)}
 }
 .field-error{font-size:12px;color:#B85252;margin-top:5px;font-weight:400;display:none}
-.field-input.error ~ .field-error{display:block;animation:fadeSlideUp .3s var(--ease-out-expo)}
+.field-input.error ~ .field-error,.phone-wrap:has(.error) ~ .field-error{display:block;animation:fadeSlideUp .3s var(--ease-out-expo)}
 .input-icon-wrap{position:relative}
 .input-icon-wrap .field-input{padding-left:42px}
 .input-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--g400);display:flex;align-items:center;transition:color .3s;z-index:2;pointer-events:none}
@@ -406,6 +406,7 @@ body::before{
 <!-- X Pixel base code -->
 <script src="/assets/x-pixel-base.js"></script>
 <!-- End X Pixel base code -->
+<script defer src="/assets/phone-validate.js"></script>
 </head>
 <body>
 
@@ -583,7 +584,7 @@ function validateForm() {
 
   if (!name.value.trim()) { name.classList.add('error'); valid = false; } else { name.classList.remove('error'); }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) { email.classList.add('error'); valid = false; } else { email.classList.remove('error'); }
-  if (!phone.value.trim()) { phone.classList.add('error'); valid = false; } else { phone.classList.remove('error'); }
+  if (!phone.value.trim() || (window.rwPhoneCheck && !rwPhoneCheck(document.getElementById('phone-code').value, phone.value))) { phone.classList.add('error'); valid = false; } else { phone.classList.remove('error'); }
 
   return valid;
 }

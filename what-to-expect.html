@@ -251,6 +251,7 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 }
 @media(prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;transition-duration:.001ms!important}}
 </style>
+<script defer src="/assets/phone-validate.js"></script>
 </head>
 <body>
 
@@ -713,6 +714,8 @@ function rwFormatPhone(code,raw){
   return d.slice(0,15);
 }
 function rwPhoneValid(code,raw){
+  // Real numbering-plan check from /assets/phone-validate.js; digit count until it loads
+  if(window.rwPhoneCheck) return rwPhoneCheck(code,raw);
   var n=rwPhoneDigits(raw).length;
   return code==='+1' ? n===10 : (n>=7&&n<=15);
 }
@@ -745,7 +748,7 @@ function collectLead(){
   var bad=null;
   if(!name){nameEl.classList.add('error');bad=bad||'Please add your name.';}
   if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){emailEl.classList.add('error');bad=bad||'Please add a valid email — that\'s where your calendar invite goes.';}
-  if(phoneRaw&&!rwPhoneValid(code,phoneRaw)){phoneEl.classList.add('error');bad=bad||'That phone number doesn\'t look complete — fix it or clear the field.';}
+  if(phoneRaw&&!rwPhoneValid(code,phoneRaw)){phoneEl.classList.add('error');bad=bad||'That phone number doesn\'t look right. Fix it or clear the field.';}
   if(bad) return bad;
   booking.lead={name:name,email:email,phone:phoneRaw?(code+' '+phoneRaw):'',attribution:rwAttribution()};
   return null;

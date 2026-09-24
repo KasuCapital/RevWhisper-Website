@@ -220,8 +220,8 @@ a{color:inherit}
 @keyframes inputShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(2px)}}
 .field-hint{font-size:12px;color:var(--g400);margin-top:5px;font-weight:300}
 .field-error{font-size:12px;color:var(--red);margin-top:5px;font-weight:400;display:none}
-.field-input.error ~ .field-error{display:block;animation:fadeSlideUp .3s var(--ease-out-expo)}
-.field-input.error ~ .field-hint{display:none}
+.field-input.error ~ .field-error,.phone-wrap:has(.error) ~ .field-error{display:block;animation:fadeSlideUp .3s var(--ease-out-expo)}
+.field-input.error ~ .field-hint,.phone-wrap:has(.error) ~ .field-hint{display:none}
 /* ── Open Airbnb helper (mirrors get-started / checkout-form) ── */
 .open-airbnb-wrap{margin-top:16px;margin-bottom:18px}
 .open-airbnb-divider{display:block;font-size:12px;color:var(--g400);font-weight:400;text-align:center;margin-bottom:12px;position:relative}
@@ -560,6 +560,7 @@ a{color:inherit}
   .case-track .case[data-clone]{display:none}
 }
 </style>
+<script defer src="/assets/phone-validate.js"></script>
 </head>
 <body>
 
@@ -1415,6 +1416,8 @@ function rwFormatPhone(code,raw){
   return d.slice(0,15);
 }
 function rwPhoneValid(code,raw){
+  // Real numbering-plan check from /assets/phone-validate.js; digit count until it loads
+  if(window.rwPhoneCheck) return rwPhoneCheck(code,raw);
   var n=rwPhoneDigits(raw).length;
   return code==='+1' ? n===10 : (n>=7&&n<=15);
 }
