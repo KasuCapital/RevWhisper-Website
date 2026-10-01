@@ -604,6 +604,7 @@ a{color:inherit}
           'revenue-management':{h1:'Short-term rental <span class="em-mark">revenue management</span>, done for you.',sub:'Most revenue managers only touch your price. We run all three levers: rank-adjusted pricing, search ranking, and listing conversion, run by experts, not a dashboard you configure. It starts with a free audit.'},
           'pricing-service':{h1:'Your Airbnb pricing, managed <span class="em-mark">every day</span>.',sub:'Nightly rates, minimum stays, and gap filling tuned daily against your market and your actual search rank, by a revenue team rather than a formula. It starts with a free audit of your listing.'}
         };
+        MAP['cohost']=MAP['co-host']; // the live T7 ad sends utm_content=cohost
         try{
           var key=(new URLSearchParams(window.location.search).get('utm_content')||'').toLowerCase();
           if(!MAP[key]){var a=rwAttribution();key=(a.utm_content||a.utm_term||'').toLowerCase();}
