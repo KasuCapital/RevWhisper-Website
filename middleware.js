@@ -3,7 +3,7 @@
 // any tracker runs, whether this visitor needs an opt-in banner. Country/region only;
 // nothing identifying. Pages are served unchanged.
 export const config = {
-  matcher: ['/((?!api/|assets/|images/|icons/|fonts/|_vercel/|.*\\.[a-zA-Z0-9]{2,5}$).*)', '/(.*\\.html)']
+  matcher: ['/((?!api/|ingest/|assets/|images/|icons/|fonts/|_vercel/|.*\\.[a-zA-Z0-9]{2,5}$).*)', '/(.*\\.html)']
 };
 
 export default function middleware(request) {

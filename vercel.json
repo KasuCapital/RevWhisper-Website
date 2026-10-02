@@ -1,5 +1,10 @@
 {
   "cleanUrls": true,
+  "rewrites": [
+    { "source": "/ingest/static/:path*", "destination": "https://us-assets.i.posthog.com/static/:path*" },
+    { "source": "/ingest/array/:path*", "destination": "https://us-assets.i.posthog.com/array/:path*" },
+    { "source": "/ingest/:path*", "destination": "https://us.i.posthog.com/:path*" }
+  ],
   "redirects": [
     { "source": "/:path*", "has": [{ "type": "host", "value": "www.revwhisper.com" }], "destination": "https://revwhisper.com/:path*", "permanent": true },
     { "source": "/search-ranking", "destination": "https://app.revwhisper.com/search-ranking", "permanent": true },
