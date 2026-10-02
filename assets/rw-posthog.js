@@ -42,8 +42,10 @@
       ui_host:'https://us.posthog.com',
       defaults:'2026-05-30',
       person_profiles:'identified_only',
-      // Only runs when rwConsent allows analytics, so clear any opt-out left from an earlier "Turn off tracking".
-      loaded:function(ph){if(ph.has_opted_out_capturing())ph.opt_in_capturing();},
+      // This file only loads once rwConsent allows analytics, so record that as an explicit opt-in.
+      // posthog-js sends the initial $pageview only for opted-in visitors, and this also clears
+      // an opt-out left from an earlier "Turn off tracking".
+      loaded:function(ph){if(!ph.has_opted_in_capturing())ph.opt_in_capturing({captureEventName:false});},
       disable_session_recording:NO_REPLAY.test(location.pathname),
       session_recording:{
         maskAllInputs:true,
