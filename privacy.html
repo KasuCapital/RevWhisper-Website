@@ -26,6 +26,7 @@
 })();
 </script>
 <script src="/assets/rw-consent.js?v=1"></script>
+<script defer src="/assets/rw-posthog.js?v=1"></script>
 <!-- GA4. Consent defaults come from /assets/rw-consent.js -->
 <script>
 window.dataLayer=window.dataLayer||[];
@@ -395,6 +396,7 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
     <li><strong>Google Ads tag</strong> (Google): tells us when a visit that started from one of our Google ads leads to an audit request or a booked call.</li>
     <li><strong>Meta Pixel and Conversions API</strong> (Meta): measures our Facebook and Instagram ads and helps show them to relevant people. When you submit a form or book a call, we also send that event to Meta from our server, with your email and phone number hashed (scrambled) before they leave our systems.</li>
     <li><strong>X Pixel and Conversions API</strong> (X): the same ad measurement for ads on X.</li>
+    <li><strong>PostHog</strong> (PostHog): product analytics and session recording. Session recording captures how you move through our pages (scrolls, clicks, and which form steps you complete) so we can find and fix confusing parts of the site. Everything you type into a form field is masked in recordings, as is any email address or phone number shown on screen, and checkout pages are never recorded. When you submit an audit request, we link that visit to your email address so we can see which pages helped.</li>
     <li><strong>Vercel Web Analytics</strong> (Vercel): anonymous, cookie-free page visit counts from our hosting provider.</li>
   </ul>
   <p>Some storage is essential and always active: remembering your privacy choice, remembering which campaign brought you here (so we can credit it if you later request an audit), and a cookie with your approximate country and region, derived from your IP address, that we use only to apply the right privacy rules below.</p>
@@ -409,7 +411,7 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
   <h2 id="how-we-share">5. How we share information</h2>
   <p>We share personal information only as described here:</p>
   <ul>
-    <li><strong>Service providers</strong> who work on our behalf, including Stripe (payments), Google (analytics and ad measurement), Meta and X (ad measurement), Make.com (routing your form submissions into our CRM), Attio (our CRM), Cal.com (call scheduling), and Vercel (hosting).</li>
+    <li><strong>Service providers</strong> who work on our behalf, including Stripe (payments), Google (analytics and ad measurement), Meta and X (ad measurement), PostHog (analytics and session recording), Make.com (routing your form submissions into our CRM), Attio (our CRM), Cal.com (call scheduling), and Vercel (hosting).</li>
     <li><strong>Legal and safety</strong>: when we believe disclosure is required by law, or is necessary to enforce our agreements or protect the rights, safety, and property of RevWhisper, our clients, or others.</li>
     <li><strong>Business transfers</strong>: if RevWhisper is involved in a merger, acquisition, or sale of assets, your information may be transferred as part of that transaction.</li>
   </ul>

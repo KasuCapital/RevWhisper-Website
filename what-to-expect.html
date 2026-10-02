@@ -7,6 +7,7 @@ function rwAttribution(){try{return JSON.parse(localStorage.getItem('rw_attribut
 function rwCookie(n){try{var m=document.cookie.match(new RegExp('(?:^|; )'+n.replace(/([.$?*|{}()\[\]\\\/+^])/g,'\\$1')+'=([^;]*)'));return m?decodeURIComponent(m[1]):'';}catch(e){return '';}}
 </script>
 <script src="/assets/rw-consent.js?v=1"></script>
+<script defer src="/assets/rw-posthog.js?v=1"></script>
 <!-- GA4. Consent defaults come from /assets/rw-consent.js -->
 <script>
 window.dataLayer=window.dataLayer||[];

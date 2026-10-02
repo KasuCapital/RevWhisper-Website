@@ -31,6 +31,7 @@
 function rwAttribution(){try{return JSON.parse(localStorage.getItem('rw_attribution')||sessionStorage.getItem('rw_attribution'))||{};}catch(e){return {};}}
 </script>
 <script src="/assets/rw-consent.js?v=1"></script>
+<script defer src="/assets/rw-posthog.js?v=1"></script>
 <!-- GA4. Consent defaults come from /assets/rw-consent.js -->
 <script>
 window.dataLayer=window.dataLayer||[];
@@ -761,7 +762,7 @@ body.rw-fs .form-card{position:fixed;left:50%;top:50%;transform:translate(-50%,-
             </div>
             <div class="fc-secure">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              Your info stays private and is never sold. We use cookies to measure our ads. <a href="/privacy#cookies" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">Privacy policy</a>
+              Your info stays private and is never sold. This page uses cookies and session recording to measure our ads and improve the page. <a href="/privacy#cookies" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">Privacy policy</a>
             </div>
           </div>
         </div>
