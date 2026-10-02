@@ -158,7 +158,10 @@ module.exports = async function handler(req, res) {
 
     // Only the audit funnel sends browser event IDs. Scope server-side ad events to it so
     // we never emit a server Lead for a page that didn't fire a browser Lead to dedupe against.
-    if (payload.fbEventId) {
+    // adConsent:false = visitor is in an opt-in region without consent, or sent GPC
+    // (see /assets/rw-consent.js), so no server-side ad events either.
+    const adConsent = payload.adConsent !== false;
+    if (adConsent && payload.fbEventId) {
       const [firstName, ...rest] = name.split(' ');
       tasks.push(sendCapiEvent({
         eventName: 'Lead',
@@ -178,7 +181,7 @@ module.exports = async function handler(req, res) {
       }));
     }
 
-    if (payload.xConversionId) {
+    if (adConsent && payload.xConversionId) {
       tasks.push(sendXConversionEvent({
         eventId: process.env.X_AUDIT_LEAD_EVENT_ID || DEFAULT_X_AUDIT_LEAD_EVENT_ID,
         conversionId: String(payload.xConversionId),

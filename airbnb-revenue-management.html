@@ -27,22 +27,17 @@
 })();
 function rwAttribution(){try{return JSON.parse(localStorage.getItem('rw_attribution')||sessionStorage.getItem('rw_attribution'))||{};}catch(e){return {};}}
 </script>
-<!-- GA4 (consent-mode) — honors prior consent from other pages; banner suppressed on this paid LP -->
+<script src="/assets/rw-consent.js?v=1"></script>
+<!-- GA4. Consent defaults come from /assets/rw-consent.js -->
 <script>
 window.dataLayer=window.dataLayer||[];
 function gtag(){dataLayer.push(arguments);}
-gtag('consent','default',{'analytics_storage':'denied','ad_storage':'denied','ad_user_data':'denied','ad_personalization':'denied'});
 gtag('js',new Date());
 gtag('config','G-Y1FYZ5849B');
 // Google Ads tag. The conversion itself fires in submitForm(), qualified branch only.
 gtag('config','AW-18384012854');
-(function(){var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-Y1FYZ5849B';document.head.appendChild(s);})();
+(window.rwConsent?rwConsent.whenAllowed:function(f){f();})(function(){var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-Y1FYZ5849B';document.head.appendChild(s);});
 function rwTrack(e,p){gtag('event',e,p||{});}
-(function(){
-  if(localStorage.getItem('rw_cookie_consent')==='accepted'){
-    gtag('consent','update',{'analytics_storage':'granted','ad_storage':'granted','ad_user_data':'granted','ad_personalization':'granted'});
-  }
-})();
 </script>
 <!-- Meta Pixel — PageView only. NOTE: Lead fires on form submit (submitForm), never on page load. -->
 <script>
@@ -54,13 +49,13 @@ n.queue=[];t=b.createElement(e);t.async=!0;
 t.src=v;s=b.getElementsByTagName(e)[0];
 s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
+if(window.rwConsent&&!rwConsent.ads)fbq('consent','revoke');
 fbq('init', '959022406709300');
 fbq('track', 'PageView');
 </script>
-<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=959022406709300&ev=PageView&noscript=1"/></noscript>
 <!-- End Meta Pixel -->
 <!-- X Pixel base code + audit conversion helper -->
-<script src="/assets/x-pixel-base.js"></script>
+<script src="/assets/x-pixel-base.js?v=2"></script>
 <script src="/assets/x-tracking.js"></script>
 <!-- End X Pixel base code -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -748,7 +743,7 @@ a{color:inherit}
             </div>
             <div class="fc-secure">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              Your info stays private. We only use it to prepare your audit.
+              Your info stays private and is never sold. We use cookies to measure our ads. <a href="/privacy#cookies" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">Privacy policy</a>
             </div>
           </div>
         </div>
@@ -1204,7 +1199,7 @@ a{color:inherit}
       </details>
       <details class="faq">
         <summary>What do you do with my information?<span class="fq-ico"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
-        <div class="faq-a">We only use it to prepare your audit and reach you about your walkthrough. Your details stay private. We don't sell or share them.</div>
+        <div class="faq-a">We use it to prepare your audit, reach you about your walkthrough, and measure which of our ads work. Your details stay private, and we never sell them.</div>
       </details>
       <details class="faq">
         <summary>How much time does this take?<span class="fq-ico"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
@@ -1600,7 +1595,7 @@ function submitForm(){
     }catch(e){ finish(); }
   });
   // Hand the event_id + content name to the server so its CAPI Lead dedupes with the above.
-  data.fbEventId=eventId; data.fbContentName='Free Audit';
+  data.fbEventId=eventId; data.adConsent=!window.rwConsent||rwConsent.ads; data.fbContentName='Free Audit';
   // X uses conversion_id for Pixel/CAPI dedupe; event IDs are loaded from /api/x-config.
   data.xConversionId=xConversionId; data.xContentName='Free Audit Lead';
   if(data.attribution&&data.attribution.twclid) data.twclid=data.attribution.twclid;

@@ -25,29 +25,15 @@
   }
 })();
 </script>
-<!-- Cookie Consent + GA4 (consent-gated) -->
+<script src="/assets/rw-consent.js?v=1"></script>
+<!-- GA4. Consent defaults come from /assets/rw-consent.js -->
 <script>
 window.dataLayer=window.dataLayer||[];
 function gtag(){dataLayer.push(arguments);}
-function rwLoadGA(){
-  var s=document.createElement('script');s.async=true;
-  s.src='https://www.googletagmanager.com/gtag/js?id=G-Y1FYZ5849B';
-  document.head.appendChild(s);
-  gtag('js',new Date());gtag('config','G-Y1FYZ5849B');
-}
-function rwTrack(e,p){if(localStorage.getItem('rw_cookie_consent')==='accepted')gtag('event',e,p||{});}
-(function(){
-  var c=localStorage.getItem('rw_cookie_consent');
-  if(c==='accepted'){rwLoadGA();return;}
-  if(c==='declined')return;
-  document.addEventListener('DOMContentLoaded',function(){
-    var b=document.createElement('div');b.id='rw-consent';
-    b.innerHTML='<div style="position:fixed;bottom:0;left:0;right:0;z-index:9999;padding:16px 24px;background:#32302F;color:#fff;font-family:DM Sans,system-ui,sans-serif;font-size:14px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;box-shadow:0 -4px 24px rgba(0,0,0,.15)"><span style="flex:1;min-width:240px;line-height:1.5">We use cookies to analyze site usage and improve your experience.</span><div style="display:flex;gap:10px;flex-shrink:0"><button id="rw-decline" style="background:transparent;color:#ccc8c5;border:1.5px solid #706b68;padding:8px 20px;border-radius:6px;font-size:13px;font-family:inherit;cursor:pointer">Decline</button><button id="rw-accept" style="background:#4A6741;color:#fff;border:none;padding:8px 20px;border-radius:6px;font-size:13px;font-family:inherit;cursor:pointer;font-weight:500">Accept</button></div></div>';
-    document.body.appendChild(b);
-    document.getElementById('rw-accept').addEventListener('click',function(){localStorage.setItem('rw_cookie_consent','accepted');b.remove();rwLoadGA();});
-    document.getElementById('rw-decline').addEventListener('click',function(){localStorage.setItem('rw_cookie_consent','declined');b.remove();});
-  });
-})();
+gtag('js',new Date());
+gtag('config','G-Y1FYZ5849B');
+(window.rwConsent?rwConsent.whenAllowed:function(f){f();})(function(){var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-Y1FYZ5849B';document.head.appendChild(s);});
+function rwTrack(e,p){gtag('event',e,p||{});}
 </script>
 <!-- Meta Pixel -->
 <script>
@@ -59,10 +45,10 @@ n.queue=[];t=b.createElement(e);t.async=!0;
 t.src=v;s=b.getElementsByTagName(e)[0];
 s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
+if(window.rwConsent&&!rwConsent.ads)fbq('consent','revoke');
 fbq('init', '959022406709300');
 fbq('track', 'PageView');
 </script>
-<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=959022406709300&ev=PageView&noscript=1"/></noscript>
 <!-- End Meta Pixel -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -167,7 +153,7 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
 <script defer src="/assets/header.js"></script>
 <link rel="stylesheet" href="/assets/footer.css">
 <!-- X Pixel base code -->
-<script src="/assets/x-pixel-base.js"></script>
+<script src="/assets/x-pixel-base.js?v=2"></script>
 <!-- End X Pixel base code -->
 </head>
 <body>
@@ -328,7 +314,7 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
   <div class="lh-inner">
     <div class="legal-eyebrow">Legal</div>
     <h1>Privacy Policy</h1>
-    <div class="legal-updated">Last updated: June 1, 2026</div>
+    <div class="legal-updated">Last updated: October 2, 2026</div>
     <p>This policy explains what information RevWhisper collects, how we use it, and the choices you have. We keep it plain on purpose.</p>
     <nav class="legal-hero-nav" aria-label="Legal pages">
       <a href="/privacy" aria-current="page">Privacy Policy</a>
@@ -403,33 +389,42 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
   </ul>
 
   <h2 id="cookies">4. Cookies &amp; tracking technologies</h2>
-  <p>We use cookies and similar browser storage to run the site, remember your preferences, and understand how the site is used. When you first visit, a banner lets you <strong>Accept</strong> or <strong>Decline</strong> analytics and advertising cookies. Essential storage needed to operate the site — such as remembering your cookie choice and the campaign that referred you — is always active.</p>
-  <p>The main technologies we use are:</p>
+  <p>We use cookies, pixels, and similar browser storage to run the site, understand how visitors use it, and measure whether our ads work. Here is what runs and why:</p>
   <ul>
-    <li><strong>Google Analytics 4</strong> — to measure site traffic and usage. Analytics only loads after you accept the cookie banner.</li>
-    <li><strong>Meta Pixel</strong> — to measure ad performance and reach relevant audiences on Facebook and Instagram.</li>
-    <li><strong>Vercel</strong> — privacy-friendly performance and visit metrics for the hosting platform.</li>
+    <li><strong>Google Analytics 4</strong> (Google): measures site traffic and how visitors move through our pages and forms.</li>
+    <li><strong>Google Ads tag</strong> (Google): tells us when a visit that started from one of our Google ads leads to an audit request or a booked call.</li>
+    <li><strong>Meta Pixel and Conversions API</strong> (Meta): measures our Facebook and Instagram ads and helps show them to relevant people. When you submit a form or book a call, we also send that event to Meta from our server, with your email and phone number hashed (scrambled) before they leave our systems.</li>
+    <li><strong>X Pixel and Conversions API</strong> (X): the same ad measurement for ads on X.</li>
+    <li><strong>Vercel Web Analytics</strong> (Vercel): anonymous, cookie-free page visit counts from our hosting provider.</li>
   </ul>
-  <p>You can change your choice at any time by clearing this site&rsquo;s storage in your browser, which brings the banner back, or by using the browser and platform controls described in <a href="#advertising-choices">Advertising &amp; analytics choices</a>.</p>
+  <p>Some storage is essential and always active: remembering your privacy choice, remembering which campaign brought you here (so we can credit it if you later request an audit), and a cookie with your approximate country and region, derived from your IP address, that we use only to apply the right privacy rules below.</p>
+
+  <h3>How we decide what runs</h3>
+  <ul>
+    <li><strong>United States and Canada (outside Quebec):</strong> analytics and ad measurement are on by default. You can turn them off at any time with <a href="#privacy-choices">Privacy choices</a>, found here and at the bottom of every page.</li>
+    <li><strong>Quebec, the European Economic Area, the United Kingdom, and Switzerland:</strong> nothing beyond essential storage runs until you click <strong>Accept</strong> on our banner. If you click <strong>Decline</strong>, it stays off.</li>
+    <li><strong>Global Privacy Control:</strong> if your browser sends this signal, we treat it as an opt-out of advertising tracking: the Meta and X tags stay off, Google ad cookies and ad personalization are turned off, and we do not send ad events from our server. Basic analytics stays on unless you turn it off too.</li>
+  </ul>
 
   <h2 id="how-we-share">5. How we share information</h2>
   <p>We share personal information only as described here:</p>
   <ul>
-    <li><strong>Service providers</strong> who work on our behalf — including Stripe (payments), Google (analytics), Meta (advertising measurement), Make.com (routing your form submissions into our CRM), and Vercel (hosting). They may use your information only to provide their service to us.</li>
-    <li><strong>Legal and safety</strong> — when we believe disclosure is required by law, or is necessary to enforce our agreements or protect the rights, safety, and property of RevWhisper, our clients, or others.</li>
-    <li><strong>Business transfers</strong> — if RevWhisper is involved in a merger, acquisition, or sale of assets, your information may be transferred as part of that transaction.</li>
+    <li><strong>Service providers</strong> who work on our behalf, including Stripe (payments), Google (analytics and ad measurement), Meta and X (ad measurement), Make.com (routing your form submissions into our CRM), Attio (our CRM), Cal.com (call scheduling), and Vercel (hosting).</li>
+    <li><strong>Legal and safety</strong>: when we believe disclosure is required by law, or is necessary to enforce our agreements or protect the rights, safety, and property of RevWhisper, our clients, or others.</li>
+    <li><strong>Business transfers</strong>: if RevWhisper is involved in a merger, acquisition, or sale of assets, your information may be transferred as part of that transaction.</li>
   </ul>
   <div class="legal-note">
-    <p><strong>We do not sell or rent the contact details you submit.</strong> Your name, email, phone number, and listing links are used to prepare your audit and reach you about your call — never sold or traded. We do use the advertising and analytics cookies described above; you can opt out of those at any time.</p>
+    <p><strong>We do not sell or rent the contact details you submit.</strong> Your name, email, phone number, and listing links are used to prepare your audit and reach you about your call, and are never sold or traded. Our ad partners (Google, Meta, and X) do receive information about visits and conversions as described above, which some state laws may call &ldquo;sharing&rdquo; for advertising. You can opt out of that at any time with <a href="#privacy-choices">Privacy choices</a>.</p>
   </div>
 
   <h2 id="advertising-choices">6. Advertising &amp; analytics choices</h2>
   <p>You have several ways to control measurement and advertising:</p>
   <ul>
-    <li><strong>Our cookie banner</strong> — choose Decline to keep analytics from loading.</li>
-    <li><strong>Google</strong> — opt out of Google Analytics with the <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener">Google Analytics Opt-out Browser Add-on</a>, and manage ad personalization in your <a href="https://adssettings.google.com" target="_blank" rel="noopener">Google Ads Settings</a>.</li>
-    <li><strong>Meta</strong> — manage ad preferences in your <a href="https://www.facebook.com/settings?tab=ads" target="_blank" rel="noopener">Facebook Ad Preferences</a> or Instagram settings.</li>
-    <li><strong>Your browser</strong> — block or delete cookies, and many browsers offer a &ldquo;Do Not Track&rdquo; or &ldquo;Global Privacy Control&rdquo; signal, which we honor where required by law.</li>
+    <li><strong>Privacy choices on this site</strong>: <button type="button" class="rw-privacy-choices" data-rw-privacy-choices style="color:var(--accent);text-decoration:underline">open your privacy choices</button> to turn analytics and ad tracking off or back on. Your choice is saved in this browser.</li>
+    <li><strong>Global Privacy Control</strong>: turn it on in a supporting browser or extension and we will treat every visit as an advertising opt-out.</li>
+    <li><strong>Google</strong>: opt out of Google Analytics with the <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener">Google Analytics Opt-out Browser Add-on</a>, and manage ad personalization in your <a href="https://adssettings.google.com" target="_blank" rel="noopener">Google Ads Settings</a>.</li>
+    <li><strong>Meta</strong>: manage ad preferences in your <a href="https://www.facebook.com/settings?tab=ads" target="_blank" rel="noopener">Facebook Ad Preferences</a> or Instagram settings.</li>
+    <li><strong>Your browser</strong>: block or delete cookies and site data at any time.</li>
   </ul>
 
   <h2 id="retention">7. Data retention</h2>

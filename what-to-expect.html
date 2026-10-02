@@ -6,16 +6,15 @@
 function rwAttribution(){try{return JSON.parse(localStorage.getItem('rw_attribution')||sessionStorage.getItem('rw_attribution'))||{};}catch(e){return {};}}
 function rwCookie(n){try{var m=document.cookie.match(new RegExp('(?:^|; )'+n.replace(/([.$?*|{}()\[\]\\\/+^])/g,'\\$1')+'=([^;]*)'));return m?decodeURIComponent(m[1]):'';}catch(e){return '';}}
 </script>
-<!-- GA4 (consent-mode) — honors prior consent -->
+<script src="/assets/rw-consent.js?v=1"></script>
+<!-- GA4. Consent defaults come from /assets/rw-consent.js -->
 <script>
 window.dataLayer=window.dataLayer||[];
 function gtag(){dataLayer.push(arguments);}
-gtag('consent','default',{'analytics_storage':'denied','ad_storage':'denied'});
 gtag('js',new Date());
 gtag('config','G-Y1FYZ5849B');
-(function(){var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-Y1FYZ5849B';document.head.appendChild(s);})();
+(window.rwConsent?rwConsent.whenAllowed:function(f){f();})(function(){var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-Y1FYZ5849B';document.head.appendChild(s);});
 function rwTrack(e,p){gtag('event',e,p||{});}
-(function(){if(localStorage.getItem('rw_cookie_consent')==='accepted'){gtag('consent','update',{'analytics_storage':'granted','ad_storage':'granted'});}})();
 </script>
 <!-- Meta Pixel — PageView on load; Schedule (Call Booked) fires on confirmed booking -->
 <script>
@@ -27,13 +26,13 @@ n.queue=[];t=b.createElement(e);t.async=!0;
 t.src=v;s=b.getElementsByTagName(e)[0];
 s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
+if(window.rwConsent&&!rwConsent.ads)fbq('consent','revoke');
 fbq('init', '959022406709300');
 fbq('track', 'PageView');
 </script>
-<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=959022406709300&ev=PageView&noscript=1"/></noscript>
 <!-- End Meta Pixel -->
 <!-- X Pixel base code + audit conversion helper -->
-<script src="/assets/x-pixel-base.js"></script>
+<script src="/assets/x-pixel-base.js?v=2"></script>
 <script src="/assets/x-tracking.js"></script>
 <!-- End X Pixel base code -->
 <meta charset="UTF-8">
@@ -772,7 +771,7 @@ async function confirmBooking(){
   var evId='sched_'+Date.now()+'_'+Math.random().toString(36).slice(2,10);
   var xConversionId=typeof rwXConversionId==='function'?rwXConversionId('audit_call'):'audit_call_'+Date.now();
   var fbp=rwCookie('_fbp'), fbc=rwCookie('_fbc');
-  const payload={start:iso,name:l.name,email:l.email,phone:l.phone,timeZone:booking.timeZone,source:'what-to-expect',attribution:l.attribution||{},fbEventId:evId,fbp:fbp,fbc:fbc,xConversionId:xConversionId,twclid:(l.attribution&&l.attribution.twclid)||''};
+  const payload={start:iso,name:l.name,email:l.email,phone:l.phone,timeZone:booking.timeZone,source:'what-to-expect',attribution:l.attribution||{},fbEventId:evId,adConsent:!window.rwConsent||rwConsent.ads,fbp:fbp,fbc:fbc,xConversionId:xConversionId,twclid:(l.attribution&&l.attribution.twclid)||''};
   let bookingResult=null,bookingError=null,bookingBody=null,shouldFallback=false,slotUnavailable=false;
   try{
     const res=await fetch(CAL_BOOKING_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});

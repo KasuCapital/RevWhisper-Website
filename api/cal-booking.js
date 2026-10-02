@@ -302,7 +302,9 @@ module.exports = async function handler(req, res) {
   // Server-side Meta CAPI "Schedule" — fires on every booking made through our widget,
   // deduped with the browser event via the shared fbEventId. This endpoint is browser-called,
   // so req carries the visitor's _fbp/_fbc/IP/UA for strong match quality.
-  if (body.fbEventId) {
+  // adConsent:false = no ad-tracking consent in the browser (see /assets/rw-consent.js).
+  const adConsent = body.adConsent !== false;
+  if (adConsent && body.fbEventId) {
     const fullName = String(body.name || '').trim();
     const nameParts = fullName.split(' ');
     await sendCapiEvent({
@@ -323,7 +325,7 @@ module.exports = async function handler(req, res) {
     });
   }
 
-  if (body.xConversionId) {
+  if (adConsent && body.xConversionId) {
     await sendXConversionEvent({
       eventId: process.env.X_AUDIT_CALL_BOOKED_EVENT_ID || DEFAULT_X_AUDIT_CALL_BOOKED_EVENT_ID,
       conversionId: String(body.xConversionId),

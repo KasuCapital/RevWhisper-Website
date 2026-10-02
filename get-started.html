@@ -26,20 +26,15 @@
 })();
 function rwAttribution(){try{return JSON.parse(localStorage.getItem('rw_attribution')||sessionStorage.getItem('rw_attribution'))||{};}catch(e){return {};}}
 </script>
-<!-- GA4 (consent-mode) — banner suppressed on this page; honors prior consent from other pages -->
+<script src="/assets/rw-consent.js?v=1"></script>
+<!-- GA4. Consent defaults come from /assets/rw-consent.js -->
 <script>
 window.dataLayer=window.dataLayer||[];
 function gtag(){dataLayer.push(arguments);}
-gtag('consent','default',{'analytics_storage':'denied','ad_storage':'denied'});
 gtag('js',new Date());
 gtag('config','G-Y1FYZ5849B');
-(function(){var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-Y1FYZ5849B';document.head.appendChild(s);})();
+(window.rwConsent?rwConsent.whenAllowed:function(f){f();})(function(){var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-Y1FYZ5849B';document.head.appendChild(s);});
 function rwTrack(e,p){gtag('event',e,p||{});}
-(function(){
-  if(localStorage.getItem('rw_cookie_consent')==='accepted'){
-    gtag('consent','update',{'analytics_storage':'granted','ad_storage':'granted'});
-  }
-})();
 </script>
 <!-- Meta Pixel -->
 <script>
@@ -51,11 +46,12 @@ n.queue=[];t=b.createElement(e);t.async=!0;
 t.src=v;s=b.getElementsByTagName(e)[0];
 s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
+if(window.rwConsent&&!rwConsent.ads)fbq('consent','revoke');
 fbq('init', '959022406709300');
 fbq('track', 'PageView');
-fbq('track', 'Lead', {content_name:'Get Started Page',content_category:'High Intent'});
+// Page view only. A standard Lead here counted every visit as a lead in Meta.
+fbq('trackCustom', 'GetStartedPageView', {content_name:'Get Started Page',content_category:'High Intent'});
 </script>
-<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=959022406709300&ev=PageView&noscript=1"/></noscript>
 <script>
 document.addEventListener('DOMContentLoaded',function(){
   document.addEventListener('click',function(e){
@@ -864,7 +860,7 @@ body::before{
 }
 </style>
 <!-- X Pixel base code -->
-<script src="/assets/x-pixel-base.js"></script>
+<script src="/assets/x-pixel-base.js?v=2"></script>
 <!-- End X Pixel base code -->
 <script defer src="/assets/phone-validate.js"></script>
 </head>

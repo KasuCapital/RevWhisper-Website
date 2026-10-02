@@ -27,27 +27,15 @@
 })();
 function rwAttribution(){try{return JSON.parse(localStorage.getItem('rw_attribution')||sessionStorage.getItem('rw_attribution'))||{};}catch(e){return {};}}
 </script>
-<!-- Cookie Consent + GA4 (consent-mode) -->
+<script src="/assets/rw-consent.js?v=1"></script>
+<!-- GA4. Consent defaults come from /assets/rw-consent.js -->
 <script>
 window.dataLayer=window.dataLayer||[];
 function gtag(){dataLayer.push(arguments);}
-gtag('consent','default',{'analytics_storage':'denied','ad_storage':'denied'});
 gtag('js',new Date());
 gtag('config','G-Y1FYZ5849B');
-(function(){var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-Y1FYZ5849B';document.head.appendChild(s);})();
+(window.rwConsent?rwConsent.whenAllowed:function(f){f();})(function(){var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-Y1FYZ5849B';document.head.appendChild(s);});
 function rwTrack(e,p){gtag('event',e,p||{});}
-(function(){
-  var c=localStorage.getItem('rw_cookie_consent');
-  if(c==='accepted'){gtag('consent','update',{'analytics_storage':'granted','ad_storage':'granted'});return;}
-  if(c==='declined')return;
-  document.addEventListener('DOMContentLoaded',function(){
-    var b=document.createElement('div');b.id='rw-consent';
-    b.innerHTML='<div style="position:fixed;bottom:0;left:0;right:0;z-index:9999;padding:16px 24px;background:#32302F;color:#fff;font-family:DM Sans,system-ui,sans-serif;font-size:14px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;box-shadow:0 -4px 24px rgba(0,0,0,.15)"><span style="flex:1;min-width:240px;line-height:1.5">We use cookies to analyze site usage and improve your experience.</span><div style="display:flex;gap:10px;flex-shrink:0"><button id="rw-decline" style="background:transparent;color:#ccc8c5;border:1.5px solid #706b68;padding:8px 20px;border-radius:6px;font-size:13px;font-family:inherit;cursor:pointer">Decline</button><button id="rw-accept" style="background:#4A6741;color:#fff;border:none;padding:8px 20px;border-radius:6px;font-size:13px;font-family:inherit;cursor:pointer;font-weight:500">Accept</button></div></div>';
-    document.body.appendChild(b);
-    document.getElementById('rw-accept').addEventListener('click',function(){localStorage.setItem('rw_cookie_consent','accepted');b.remove();gtag('consent','update',{'analytics_storage':'granted','ad_storage':'granted'});});
-    document.getElementById('rw-decline').addEventListener('click',function(){localStorage.setItem('rw_cookie_consent','declined');b.remove();});
-  });
-})();
 </script>
 <!-- Meta Pixel -->
 <script>
@@ -59,11 +47,11 @@ n.queue=[];t=b.createElement(e);t.async=!0;
 t.src=v;s=b.getElementsByTagName(e)[0];
 s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
+if(window.rwConsent&&!rwConsent.ads)fbq('consent','revoke');
 fbq('init', '959022406709300');
 fbq('track', 'PageView');
 fbq('track', 'Lead', {content_name:'Welcome Back Page v2',content_category:'Retarget'});
 </script>
-<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=959022406709300&ev=PageView&noscript=1"/></noscript>
 <!-- End Meta Pixel -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
@@ -418,7 +406,7 @@ body::before{
 }
 </style>
 <!-- X Pixel base code -->
-<script src="/assets/x-pixel-base.js"></script>
+<script src="/assets/x-pixel-base.js?v=2"></script>
 <!-- End X Pixel base code -->
 <script defer src="/assets/phone-validate.js"></script>
 </head>

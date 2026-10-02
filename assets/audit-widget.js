@@ -495,7 +495,7 @@ function submitForm(){
   try{ fbq('track','Lead',{content_name:'Free Audit',content_category:'Audit Lead'},{eventID:eventId}); }catch(e){}
   track('generate_lead',{page:PAGE,listings:data.listings,issue:data.issue});
   // Hand the event_id + content name to the server so its CAPI Lead dedupes with the above.
-  data.fbEventId=eventId; data.fbContentName='Free Audit';
+  data.fbEventId=eventId; data.adConsent=!window.rwConsent||rwConsent.ads; data.fbContentName='Free Audit';
   // X uses conversion_id for Pixel/CAPI dedupe; event IDs are loaded from /api/x-config.
   data.xConversionId=xConversionId; data.xContentName='Free Audit Lead';
   if(data.attribution&&data.attribution.twclid) data.twclid=data.attribution.twclid;
