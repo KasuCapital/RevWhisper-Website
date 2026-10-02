@@ -875,6 +875,7 @@ async function confirmBooking(){
   // Success → fire Call Booked (Schedule). /api/cal-booking fires the same event server-side
   // (CAPI) with this same event_id, so Meta dedupes the browser + server pair into one.
   try{ fbq('track','Schedule',{content_name:'Audit Call Booked',content_category:'Audit'},{eventID:evId}); }catch(e){}
+  try{ rwTrack('call_booked',{page:'audit-booking',source:l.source||''}); }catch(e){}
   // Google Ads "Audit Call Booked" — Google-sourced bookings only (see rwHasGclid).
   // No redirect follows renderSuccess(), so no event_callback race to guard against here.
   if(rwHasGclid()){
