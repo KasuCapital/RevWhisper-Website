@@ -1,0 +1,174 @@
+<!-- Client results: replaces the Airbnb-style case carousel on LPs (10/3/26).
+     Cards 1-8 mirror /case-study (PriceLabs Booking Insights, July 2026 vintage); card 9 (61 Sombrero) is the May YoY figure from the old /audit carousel.
+     Update both pages together. Auto-scrolling marquee: the script below clones the cards once so the loop is seamless. -->
+<section class="lpr" id="results">
+  <div class="w">
+    <div class="lp-eyebrow">Results</div>
+    <h2 class="lp-h2">What our clients&rsquo; calendars look like right now.</h2>
+    <p class="lp-lead">Established listings measured against the same period last year. Full periods, soft months included. New launches shown from a standing start.</p>
+  </div>
+  <div class="lpr-carousel">
+    <div class="lpr-track" id="lpr-track">
+      <article class="lpr-card">
+        <div class="lpr-photo"><img src="/images/properties/cards/moonlit-peak.webp" alt="Lakefront A-frame at dusk with the dock lit up" loading="lazy" decoding="async" width="400" height="300"></div>
+        <div class="lpr-body">
+          <span class="lpr-pill">Established</span>
+          <h3 class="lpr-name">Moonlit Peak: Luxe Lake Escape</h3>
+          <div class="lpr-meta">4 BR, Pocono Mountains, PA, lakefront</div>
+          <div class="lpr-stats">
+            <div><div class="lpr-lbl">Revenue</div><div class="lpr-val">$125.0K</div><div class="lpr-delta up">+61% year over year</div></div>
+            <div><div class="lpr-lbl">Occupancy</div><div class="lpr-val">56%</div><div class="lpr-delta up">+13% in 2026 so far</div></div>
+            <div><div class="lpr-lbl">Nightly rate</div><div class="lpr-val">$711</div><div class="lpr-delta up">+27% in 2026 so far</div></div>
+          </div>
+          <p class="lpr-foot">On the books for 2026 as of July, against the same time last year.</p>
+        </div>
+      </article>
+      <article class="lpr-card">
+        <div class="lpr-photo"><img src="/images/properties/cards/candler-estate.webp" alt="Aerial of the estate with enclosed pool, giant chess set and barrel sauna" loading="lazy" decoding="async" width="400" height="300"></div>
+        <div class="lpr-body">
+          <span class="lpr-pill">First 8 months</span>
+          <h3 class="lpr-name">Candler Estate</h3>
+          <div class="lpr-meta">6 BR, sleeps 18, 20 min from Asheville, NC</div>
+          <div class="lpr-stats">
+            <div><div class="lpr-lbl">Revenue</div><div class="lpr-val">$279.1K</div><div class="lpr-delta">Booked, first 8 months live</div></div>
+            <div><div class="lpr-lbl">Occupancy</div><div class="lpr-val">86%</div><div class="lpr-delta">2026 so far</div></div>
+            <div><div class="lpr-lbl">Nightly rate</div><div class="lpr-val">$1,066</div><div class="lpr-delta">2026 so far</div></div>
+          </div>
+          <p class="lpr-foot">Went live in November. First eight months of operating, no prior-year data.</p>
+        </div>
+      </article>
+      <article class="lpr-card">
+        <div class="lpr-photo"><img src="/images/properties/cards/bears-tale.webp" alt="Aerial of the cabin at sunset" loading="lazy" decoding="async" width="400" height="300"></div>
+        <div class="lpr-body">
+          <span class="lpr-pill">Saturated market</span>
+          <h3 class="lpr-name">A Bear&rsquo;s Tale</h3>
+          <div class="lpr-meta">2 BR, Pigeon Forge, TN</div>
+          <div class="lpr-stats">
+            <div><div class="lpr-lbl">Revenue</div><div class="lpr-val">$43.3K</div><div class="lpr-delta up">+33% year over year</div></div>
+            <div><div class="lpr-lbl">Occupancy</div><div class="lpr-val">93%</div><div class="lpr-delta">Full months on the system</div></div>
+            <div><div class="lpr-lbl">Nightly rate</div><div class="lpr-val">$260</div><div class="lpr-delta">Full months on the system</div></div>
+          </div>
+          <p class="lpr-foot">On the books for 2026 as of July, against the same time last year.</p>
+        </div>
+      </article>
+      <article class="lpr-card">
+        <div class="lpr-photo"><img src="/images/properties/cards/gulfstream-villa.webp" alt="Lanai pool in golden evening light" loading="lazy" decoding="async" width="400" height="300"></div>
+        <div class="lpr-body">
+          <span class="lpr-pill">Off-season lift</span>
+          <h3 class="lpr-name">Gulfstream Villa</h3>
+          <div class="lpr-meta">3 BR, Gulf Coast, FL, heated pool</div>
+          <div class="lpr-stats">
+            <div><div class="lpr-lbl">Revenue</div><div class="lpr-val">$40.7K</div><div class="lpr-delta up">+31% year over year</div></div>
+            <div><div class="lpr-lbl">Occupancy</div><div class="lpr-val">87%</div><div class="lpr-delta up">+10% on the system</div></div>
+            <div><div class="lpr-lbl">Nightly rate</div><div class="lpr-val">$219</div><div class="lpr-delta up">+4% on the system</div></div>
+          </div>
+          <p class="lpr-foot">On the books since takeover as of July, against the same months last year.</p>
+        </div>
+      </article>
+      <article class="lpr-card">
+        <div class="lpr-photo"><img src="/images/properties/cards/20-guest-villa.webp" alt="Aerial of the resort-style backyard, pool and courts" loading="lazy" decoding="async" width="400" height="300"></div>
+        <div class="lpr-body">
+          <span class="lpr-pill">New launch</span>
+          <h3 class="lpr-name">The 20-Guest Villa</h3>
+          <div class="lpr-meta">6 BR, sleeps 20, Tampa Bay, FL</div>
+          <div class="lpr-stats">
+            <div><div class="lpr-lbl">Revenue</div><div class="lpr-val">$329.5K</div><div class="lpr-delta">Booked, first season</div></div>
+            <div><div class="lpr-lbl">Occupancy</div><div class="lpr-val">83%</div><div class="lpr-delta">Season average, best month 100%</div></div>
+            <div><div class="lpr-lbl">Nightly rate</div><div class="lpr-val">$1,345</div><div class="lpr-delta">Season average, peak $1,700</div></div>
+          </div>
+          <p class="lpr-foot">First season from a standing start, no prior year.</p>
+        </div>
+      </article>
+      <article class="lpr-card">
+        <div class="lpr-photo"><img src="/images/properties/cards/waters-edge.webp" alt="Chalet exterior on a winter evening" loading="lazy" decoding="async" width="400" height="300"></div>
+        <div class="lpr-body">
+          <span class="lpr-pill">Established</span>
+          <h3 class="lpr-name">Waters Edge Hideaway</h3>
+          <div class="lpr-meta">5 BR, Pocono Mountains, PA</div>
+          <div class="lpr-stats">
+            <div><div class="lpr-lbl">Revenue</div><div class="lpr-val">$103.3K</div><div class="lpr-delta up">+38% year over year</div></div>
+            <div><div class="lpr-lbl">Occupancy</div><div class="lpr-val">50%</div><div class="lpr-delta up">+15% in 2026 so far</div></div>
+            <div><div class="lpr-lbl">Nightly rate</div><div class="lpr-val">$684</div><div class="lpr-delta up">+7% in 2026 so far</div></div>
+          </div>
+          <p class="lpr-foot">On the books for 2026 as of July, against the same time last year.</p>
+        </div>
+      </article>
+      <article class="lpr-card">
+        <div class="lpr-photo"><img src="/images/properties/cards/1820-house.webp" alt="Farmhouse exterior in spring" loading="lazy" decoding="async" width="400" height="300"></div>
+        <div class="lpr-body">
+          <span class="lpr-pill">Ski market</span>
+          <h3 class="lpr-name">1820 House, Steps to Ski Shuttle</h3>
+          <div class="lpr-meta">4 BR, Stowe, VT</div>
+          <div class="lpr-stats">
+            <div><div class="lpr-lbl">Revenue</div><div class="lpr-val">$103.1K</div><div class="lpr-delta up">+13% year over year</div></div>
+            <div><div class="lpr-lbl">Occupancy</div><div class="lpr-val">54%</div><div class="lpr-delta up">+5% in 2026 so far</div></div>
+            <div><div class="lpr-lbl">Nightly rate</div><div class="lpr-val">$709</div><div class="lpr-delta up">+7% in 2026 so far</div></div>
+          </div>
+          <p class="lpr-foot">On the books for 2026 as of July, against the same time last year.</p>
+        </div>
+      </article>
+      <article class="lpr-card">
+        <div class="lpr-photo"><img src="/images/properties/cards/soluna-haus.webp" alt="Exterior at dusk with glowing outdoor screen" loading="lazy" decoding="async" width="400" height="300"></div>
+        <div class="lpr-body">
+          <span class="lpr-pill">New launch</span>
+          <h3 class="lpr-name">Soluna Haus</h3>
+          <div class="lpr-meta">5 BR, Asheville, NC</div>
+          <div class="lpr-stats">
+            <div><div class="lpr-lbl">Revenue</div><div class="lpr-val">$62.1K</div><div class="lpr-delta">Booked, first season</div></div>
+            <div><div class="lpr-lbl">Occupancy</div><div class="lpr-val">97%</div><div class="lpr-delta">Best month so far</div></div>
+            <div><div class="lpr-lbl">Nightly rate</div><div class="lpr-val">$708</div><div class="lpr-delta">Best month, still climbing</div></div>
+          </div>
+          <p class="lpr-foot">First season from a standing start, no prior year.</p>
+        </div>
+      </article>
+      <article class="lpr-card">
+        <div class="lpr-photo"><img src="/images/properties/cards/sombrero.webp" alt="Blue waterfront home with pool and private dock, Marathon FL" loading="lazy" decoding="async" width="400" height="300"></div>
+        <div class="lpr-body">
+          <span class="lpr-pill">Established</span>
+          <h3 class="lpr-name">61 Sombrero</h3>
+          <div class="lpr-meta">4 BR, Marathon, FL, waterfront</div>
+          <div class="lpr-stats">
+            <div><div class="lpr-lbl">Revenue</div><div class="lpr-val">$12.6K</div><div class="lpr-delta up">+68% vs May last year</div></div>
+            <div><div class="lpr-lbl">Last May</div><div class="lpr-val">$7.5K</div><div class="lpr-delta">Same month, before</div></div>
+            <div><div class="lpr-lbl">Search rank</div><div class="lpr-val">#3</div><div class="lpr-delta up">Up from page 5</div></div>
+          </div>
+          <p class="lpr-foot">May revenue against the same month last year.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+  <div class="w">
+    <p class="lpr-src">Source: PriceLabs Booking Insights. Revenue is stays on the books, counted as of July 2026 unless noted.</p>
+  </div>
+  <script>
+  /* Auto-scrolling marquee that a visitor can also swipe or drag: the cards are cloned once,
+     the strip drifts right-to-left, and any touch, hover or manual scroll pauses it
+     (touch resumes 3s after the finger lifts). Paused off-screen; off for reduced motion. */
+  (function(){
+    var c=document.querySelector('.lpr-carousel'),t=document.getElementById('lpr-track');if(!c||!t)return;
+    [].slice.call(t.children).forEach(function(n){var d=n.cloneNode(true);d.setAttribute('aria-hidden','true');d.setAttribute('data-clone','');t.appendChild(d);});
+    if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+    var SPEED=window.innerWidth<720?30:36,pos=0,last=0,hover=false,touch=false,visible=true,resumeT=null;
+    function half(){return t.scrollWidth/2;}
+    c.addEventListener('mouseenter',function(){hover=true;});
+    c.addEventListener('mouseleave',function(){hover=false;pos=c.scrollLeft;});
+    c.addEventListener('touchstart',function(){touch=true;clearTimeout(resumeT);},{passive:true});
+    c.addEventListener('touchend',function(){clearTimeout(resumeT);resumeT=setTimeout(function(){touch=false;pos=c.scrollLeft;},3000);},{passive:true});
+    c.addEventListener('scroll',function(){
+      var h=half();
+      if(c.scrollLeft>=h){c.scrollLeft-=h;}           // keep a manual swipe inside the loop
+      if(Math.abs(c.scrollLeft-pos)>2)pos=c.scrollLeft; // manual scroll: follow it
+    },{passive:true});
+    if('IntersectionObserver' in window){new IntersectionObserver(function(e){visible=e[0].isIntersecting;},{rootMargin:'80px 0px'}).observe(c);}
+    function step(ts){
+      var dt=last?Math.min(ts-last,64):0;last=ts;
+      if(visible&&!hover&&!touch&&!document.hidden){
+        pos+=SPEED*dt/1000;var h=half();if(pos>=h)pos-=h;
+        c.scrollLeft=pos;
+      }
+      requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  })();
+  </script>
+</section>

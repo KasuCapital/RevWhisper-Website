@@ -1,0 +1,1818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- Warm the two heavy third-party origins before their loaders fire below -->
+<link rel="preconnect" href="https://connect.facebook.net">
+<link rel="preconnect" href="https://www.googletagmanager.com">
+<!-- Attribution tracking (cookie-free) -->
+<script>
+(function(){
+  var key='rw_attribution';
+  var TTL=7776000000; // 90 days — keep the last paid touch across tabs/sessions
+  var params=new URLSearchParams(window.location.search);
+  var utmFields=['utm_source','utm_medium','utm_campaign','utm_term','utm_content'];
+  var clickFields=['fbclid','gclid','ttclid','twclid','msclkid','li_fat_id'];
+  var trackedFields=utmFields.concat(clickFields);
+  // /vrma: every visitor came from the VRMA campaign. Any UTM missing from the URL is
+  // filled with the campaign default (URL values always win), written back into the
+  // address bar before GA4/PostHog/Meta read it, and attribution is always overwritten so an
+  // older paid touch from another campaign can't claim the lead.
+  // Attio's utm_campaign column is fed from utm_content, so that one carries the VRMA code.
+  var VRMA_DEFAULTS={utm_source:'facebook',utm_medium:'paid_social',utm_campaign:'vrma-2026',utm_content:'RW-VRMA'};
+  var filled=false;
+  Object.keys(VRMA_DEFAULTS).forEach(function(f){if(!params.get(f)){params.set(f,VRMA_DEFAULTS[f]);filled=true;}});
+  if(filled){try{history.replaceState(history.state,'',window.location.pathname+'?'+params.toString()+window.location.hash);}catch(e){}}
+  var hasTracked=true;
+  function rwGet(k){try{return localStorage.getItem(k)||sessionStorage.getItem(k);}catch(e){try{return sessionStorage.getItem(k);}catch(e2){return null;}}}
+  function rwSet(k,v){try{localStorage.setItem(k,v);}catch(e){try{sessionStorage.setItem(k,v);}catch(e2){}}}
+  var prev=null;try{prev=JSON.parse(rwGet(key));}catch(e){prev=null;}
+  var fresh=prev&&prev.arrived_at&&((Date.now()-new Date(prev.arrived_at).getTime())<TTL);
+  if(hasTracked||!fresh){
+    var data={};
+    trackedFields.forEach(function(f){if(params.get(f))data[f]=params.get(f);});
+    try{data.referrer=document.referrer?new URL(document.referrer).hostname:'direct';}catch(e){data.referrer=document.referrer||'direct';}
+    data.landing_page=window.location.pathname;
+    data.arrived_at=new Date().toISOString();
+    rwSet(key,JSON.stringify(data));
+  }
+})();
+function rwAttribution(){try{return JSON.parse(localStorage.getItem('rw_attribution')||sessionStorage.getItem('rw_attribution'))||{};}catch(e){return {};}}
+</script>
+<script src="/assets/rw-consent.js?v=1"></script>
+<script defer src="/assets/rw-posthog.js?v=3"></script>
+<!-- GA4. Consent defaults come from /assets/rw-consent.js -->
+<script>
+window.dataLayer=window.dataLayer||[];
+function gtag(){dataLayer.push(arguments);}
+gtag('js',new Date());
+gtag('config','G-Y1FYZ5849B');
+(window.rwConsent?rwConsent.whenAllowed:function(f){f();})(function(){var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-Y1FYZ5849B';document.head.appendChild(s);});
+function rwTrack(e,p){gtag('event',e,p||{});}
+</script>
+<!-- Meta Pixel — PageView only. NOTE: Lead fires on form submit (submitForm), never on page load. -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+if(window.rwConsent&&!rwConsent.ads)fbq('consent','revoke');
+fbq('init', '959022406709300');
+fbq('track', 'PageView');
+</script>
+<!-- End Meta Pixel -->
+<!-- X Pixel base code + audit conversion helper -->
+<script defer src="/assets/x-pixel-base.js?v=2"></script>
+<script defer src="/assets/x-tracking.js"></script>
+<!-- End X Pixel base code -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VRMA Giveaway + Free Strategy Audit | RevWhisper</title>
+<meta name="description" content="At VRMA? Enter to win a full year of RevWhisper on one listing. Every entry gets a free strategy audit of your listing or portfolio. Get a free audit of your Airbnb listing's ranking, pricing, and conversion. See exactly where you're leaving bookings on the table, plus what to fix first, walked through with you, live.">
+<!-- Paid-only landing page: keep it out of the index -->
+<meta name="robots" content="noindex, nofollow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="VRMA Giveaway: Win a Year of RevWhisper">
+<meta property="og:description" content="Every entry gets a free strategy audit. One host at VRMA wins a full year of RevWhisper on one listing.">
+<meta property="og:image" content="https://revwhisper.com/images/properties/livingroom-after.webp">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="icons/favicon-light.svg" type="image/svg+xml" media="(prefers-color-scheme: light)">
+<link rel="icon" href="icons/favicon-dark.svg" type="image/svg+xml" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="icons/favicon-light.svg" type="image/svg+xml">
+<!-- Self-hosted variable fonts (latin subset) — no render-blocking third-party CSS; preload the two on the critical path -->
+<link rel="preload" href="/fonts/lora-normal-400-700.woff2" as="font" type="font/woff2" crossorigin>
+<!-- The italic face paints the underlined word in the H1 — the LCP element. Without this
+     preload it was discovered late and the H1's font swap pinned LCP to its arrival (~6.5s
+     on throttled mobile). -->
+<link rel="preload" href="/fonts/lora-italic-400-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/dm-sans-normal-300-700.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+/* ───────────────────────── Self-hosted fonts (latin, variable) ───────────────────────── */
+@font-face{font-family:'Lora';font-style:normal;font-weight:400 700;font-display:swap;src:url(/fonts/lora-normal-400-700.woff2) format('woff2')}
+@font-face{font-family:'Lora';font-style:italic;font-weight:400 700;font-display:swap;src:url(/fonts/lora-italic-400-700.woff2) format('woff2')}
+@font-face{font-family:'DM Sans';font-style:normal;font-weight:300 700;font-display:swap;src:url(/fonts/dm-sans-normal-300-700.woff2) format('woff2')}
+/* ───────────────────────── Reset & Tokens ───────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#fff;color:#32302F;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+:root{
+  --black:#32302F;--white:#fff;
+  --accent:#4A6741;--accent-light:#dce6d8;--accent-border:#b3c5ab;
+  --red:#B85252;--red-bg:#EDD8D8;--terra:#8B4A3E;--terra-bg:#EDE0DD;--gold:#9B7B3A;--gold-bg:#EDE6D6;
+  --stone:#f3f1ef;
+  --g50:#faf9f8;--g100:#f3f1ef;--g200:#E0DCDA;--g300:#ccc8c5;--g400:#a39e9b;--g500:#706b68;--g600:#58534f;--g700:#48433f;
+  --radius:8px;--radius-sm:6px;--radius-lg:16px;
+  --sh-sm:0 1px 3px rgba(50,48,47,.06),0 1px 2px rgba(50,48,47,.04);
+  --sh:0 4px 16px rgba(50,48,47,.07),0 2px 6px rgba(50,48,47,.04);
+  --sh-lg:0 16px 48px rgba(50,48,47,.1),0 4px 12px rgba(50,48,47,.05);
+  --heading:'Lora','Georgia',serif;--body:'DM Sans','system-ui','Helvetica Neue',sans-serif;--mono:'DM Mono',ui-monospace,'SF Mono',Menlo,monospace;
+  --ease-out-expo:cubic-bezier(.16,1,.3,1);--ease-out-back:cubic-bezier(.34,1.56,.64,1);
+}
+img{max-width:100%;display:block}
+a{color:inherit}
+
+/* ───────────────────────── Layout primitives ───────────────────────── */
+.w{max-width:1120px;margin:0 auto;padding:0 28px}
+.sec{padding:clamp(44px,6vw,72px) 0}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:16px}
+.h2{font-family:var(--heading);font-size:clamp(30px,4.4vw,46px);font-weight:400;letter-spacing:-.02em;line-height:1.14;color:var(--black)}
+.h2 em{font-style:italic;color:var(--accent)}
+.lead{font-size:clamp(16px,1.8vw,18px);color:var(--g500);line-height:1.65;font-weight:300;max-width:600px}
+/* heading → subheading rhythm (was 0 — caused the cramped look) */
+.h2 + .lead{margin-top:22px}
+.center{text-align:center}.center .lead{margin-left:auto;margin-right:auto}
+.em-mark{position:relative;display:inline;white-space:nowrap;font-style:italic;color:var(--accent)}
+.em-mark::after{content:'';position:absolute;left:-2%;right:-2%;bottom:-6px;height:13px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 16' preserveAspectRatio='none'%3E%3Cpath d='M2 11 C25 4, 75 4, 98 11' fill='none' stroke='%234A6741' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center/100% 100%;pointer-events:none;transform:rotate(-.5deg)}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--body);font-size:15px;font-weight:500;letter-spacing:.01em;padding:15px 30px;border-radius:var(--radius);text-decoration:none;border:none;cursor:pointer;transition:transform .25s var(--ease-out-back),box-shadow .3s}
+.btn-accent{background:var(--accent);color:#fff}
+.btn-accent:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(74,103,65,.28)}
+.btn-accent:active{transform:translateY(0) scale(.98)}
+.btn .arrow{transition:transform .25s var(--ease-out-expo)}
+.btn:hover .arrow{transform:translateX(3px)}
+
+/* ───────────────────────── Hero (centered — headline + sub stacked above the form) ───────────────────────── */
+#hero{position:relative;overflow:hidden;padding:clamp(40px,7vw,76px) 0 clamp(36px,4vw,48px);background:linear-gradient(180deg,#f6f8f4 0%,#fff 80%)}
+.hero-glow{position:absolute;top:-140px;left:50%;transform:translateX(-50%);width:1100px;max-width:130vw;height:560px;background:radial-gradient(ellipse at 50% 30%,rgba(74,103,65,.12) 0%,transparent 64%);pointer-events:none;z-index:0}
+.hero-inner{position:relative;z-index:1;text-align:center;max-width:720px;margin:0 auto 36px}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--accent-light);border:1px solid var(--accent-border);color:var(--accent);font-size:12px;font-weight:600;padding:6px 14px;border-radius:100px;margin-bottom:22px}
+.hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.hero-h1{font-family:var(--heading);font-size:clamp(36px,5.4vw,58px);font-weight:400;letter-spacing:-.025em;line-height:1.08;color:var(--black);margin:0 auto 20px}
+.hero-sub{font-size:clamp(16px,1.9vw,19px);color:var(--g500);line-height:1.65;font-weight:300;max-width:560px;margin:0 auto}
+/* hero credibility row — honest trust signals (no numbers/logos we don't have); green icons keep terracotta exclusive to actions */
+.hero-trust{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:9px 15px;margin:20px auto 0;max-width:600px}
+.hero-trust .ht-item{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:500;color:var(--g600);letter-spacing:.005em;white-space:nowrap}
+.hero-trust .ht-item svg{flex-shrink:0;color:var(--accent)}
+
+/* ───────────────────────── Form card ───────────────────────── */
+.form-glow{position:relative;max-width:560px;width:100%;margin:0 auto}
+.form-card{background:#fff;border:1px solid transparent;border-radius:var(--radius-lg);box-shadow:var(--sh-lg);padding:28px 28px 24px;position:relative;z-index:1;width:100%}
+/* ── Animated edge glow (inline card only) ──
+   A slow moss→sage light beam circles just outside the card, with a blurred copy behind it
+   as the halo and a gentle breathe. The two layers live on the .form-glow wrapper at
+   z-index:0 and the card sits above them at z-index:1, so the white surface covers the
+   middle and only the ring and halo show outside the edge. (Putting them on the card
+   itself at z-index:-1 paints them *over* the card's background — paint order puts the
+   root's background first, then negative-z children.) The rotation drives a registered
+   custom property (@property); browsers without it get a static ring, still tasteful.
+   Off in fullscreen: the card is the page there. */
+@property --rw-angle{syntax:'<angle>';inherits:false;initial-value:0deg}
+.form-glow::before,.form-glow::after{content:'';position:absolute;z-index:0;pointer-events:none;border-radius:calc(var(--radius-lg) + 2px);
+  background:conic-gradient(from var(--rw-angle),rgba(74,103,65,.12) 0deg,rgba(74,103,65,.12) 130deg,#5f7d56 200deg,#a9c49f 238deg,#e6efe2 262deg,#a9c49f 286deg,#5f7d56 324deg,rgba(74,103,65,.12) 360deg);
+  animation:rwBeam 8s linear infinite}
+.form-glow::before{inset:-1.5px}
+.form-glow::after{inset:-4px;filter:blur(18px);opacity:.4;animation:rwBeam 8s linear infinite,rwBreathe 5s ease-in-out infinite alternate}
+@keyframes rwBeam{to{--rw-angle:360deg}}
+@keyframes rwBreathe{from{opacity:.28}to{opacity:.5}}
+body.rw-fs .form-glow::before,body.rw-fs .form-glow::after{display:none}
+/* Continuous animations pause while their element is off-screen (IntersectionObserver
+   toggles .is-idle) — no visual change, but the blurred glow and the two marquees stop
+   costing paint/GPU while the visitor reads further down the page. */
+.form-glow.is-idle::before,.form-glow.is-idle::after{animation-play-state:paused}
+.case-carousel.is-idle .case-track,.review-carousel.is-idle .review-track{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.form-glow::before,.form-glow::after{animation:none}}
+.fc-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:20px}
+.fc-progress{display:flex;gap:6px;flex:1;max-width:180px}
+.fc-seg{height:5px;flex:1;border-radius:100px;background:var(--g200);overflow:hidden;position:relative}
+.fc-seg::after{content:'';position:absolute;inset:0;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .45s var(--ease-out-expo)}
+.fc-seg.on::after{transform:scaleX(1)}
+.fc-count{font-size:12px;font-weight:500;color:var(--g400);letter-spacing:.02em;white-space:nowrap}
+/* Quiet exit for the fullscreen takeover: deliberately low-contrast (there by design for
+   the person who really wants out, not an invitation to leave). 32px hit area, 12px glyph. */
+.fc-close{display:none;align-items:center;justify-content:center;width:32px;height:32px;margin:-6px -8px -6px -2px;padding:0;border:none;background:none;color:var(--g300);cursor:pointer;border-radius:50%;transition:color .2s,background .2s}
+.fc-close:hover{color:var(--g500);background:var(--g50)}
+.fc-close:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+body.rw-fs .fc-close{display:inline-flex}
+.fc-secure{display:flex;align-items:center;justify-content:center;gap:7px;margin-top:16px;font-size:12px;color:var(--g400);font-weight:300;line-height:1.4;text-align:center}
+.fc-secure svg{flex-shrink:0;color:var(--accent);opacity:.7}
+
+/* ── Fullscreen focus mode ─────────────────────────────────
+   Inline start, takeover after the first answer: the first tap on any option promotes
+   the card to a fixed overlay and the form becomes the only thing on the page — the
+   backdrop is opaque (the hero's own gradient) and there is deliberately no exit
+   control in the UI. The one escape is the browser back gesture, which collapses the
+   takeover to the plain landing page (see enterFs/exitFs) rather than bouncing the
+   visitor off the site. Body scroll locks via position:fixed (iOS ignores
+   overflow:hidden on body). */
+.fs-scrim{position:fixed;inset:0;z-index:299;background:linear-gradient(180deg,#f6f8f4 0%,#fff 60%);opacity:0;pointer-events:none;transition:opacity .22s ease-out}
+body.rw-fs{position:fixed;left:0;right:0;overflow:hidden}
+body.rw-fs .fs-scrim{opacity:1;pointer-events:auto}
+body.rw-fs .form-card{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:300;width:min(560px,calc(100vw - 32px));max-height:calc(100vh - 40px);max-height:calc(100dvh - 40px);overflow-y:auto;-webkit-overflow-scrolling:touch}
+@media(max-width:719px){
+  body.rw-fs .form-card{inset:0;transform:none;width:auto;height:auto;max-height:none;border-radius:0;border:none;display:flex;flex-direction:column;padding:calc(20px + env(safe-area-inset-top)) 18px calc(72px + env(safe-area-inset-bottom))}
+  /* Center the active step in the leftover space instead of top-anchoring it.
+     margin:auto re-splits every frame while the viewport height animates, so
+     the recentering rides the same ease as the step transition. */
+  body.rw-fs .steps-viewport{margin-top:auto;margin-bottom:auto}
+  /* Back lives in a fixed bottom bar. The bar must be a DIRECT child of the
+     card: the steps animate with transforms, and a transformed ancestor
+     re-anchors position:fixed to itself (observed: the bar glued to the step's
+     box instead of the screen). The per-step inline Back hides here instead;
+     the final step's submit stays inline with the fields. */
+  body.rw-fs .fs-bottom-bar{display:flex;align-items:center;position:fixed;left:0;right:0;bottom:0;z-index:310;padding:10px 18px calc(10px + env(safe-area-inset-bottom));background:#fff;border-top:1px solid var(--g200)}
+  /* No Back on the opening step — nothing to go back to. The machinery never
+     re-adds .active after a transition (a returned-to step rests on its
+     enter-from-* class), so match every form the current step can wear. */
+  body.rw-fs .form-card:has(.step[data-step="0"]:is(.active,.enter-from-below,.enter-from-above)) .fs-bottom-bar,
+  body.rw-fs .form-card:has(.step[data-step="1"]:is(.active,.enter-from-below,.enter-from-above)) .fs-bottom-bar{display:none}
+  body.rw-fs .step .btn-back{display:none}
+}
+
+/* steps machinery — height-animated viewport for smooth, non-jumpy transitions */
+.steps-viewport{position:relative;transition:height .42s var(--ease-out-expo)}
+.step{position:absolute;top:0;left:0;right:0;opacity:0;visibility:hidden;transform:translateY(14px);transition:none;pointer-events:none}
+.step.active{position:relative;opacity:1;visibility:visible;transform:translateY(0);pointer-events:auto}
+.step.exit-up{position:absolute;opacity:0;visibility:visible;transform:translateY(-14px);transition:opacity .28s var(--ease-out-expo),transform .28s var(--ease-out-expo),visibility 0s .28s;pointer-events:none}
+.step.exit-down{position:absolute;opacity:0;visibility:visible;transform:translateY(14px);transition:opacity .28s var(--ease-out-expo),transform .28s var(--ease-out-expo),visibility 0s .28s;pointer-events:none}
+.step.enter-from-below,.step.enter-from-above{position:relative;opacity:1;visibility:visible;transform:translateY(0);transition:opacity .4s var(--ease-out-expo) .06s,transform .4s var(--ease-out-expo) .06s;pointer-events:auto}
+.step.active .step-eyebrow,.step.enter-from-below .step-eyebrow,.step.enter-from-above .step-eyebrow{animation:fadeSlideUp .4s var(--ease-out-expo) .05s both}
+.step.active .step-title,.step.enter-from-below .step-title,.step.enter-from-above .step-title{animation:fadeSlideUp .42s var(--ease-out-expo) .11s both}
+.step.active .step-desc,.step.enter-from-below .step-desc,.step.enter-from-above .step-desc{animation:fadeSlideUp .42s var(--ease-out-expo) .17s both}
+.step.active .radio-group,.step.active .option-cards,.step.active .field,.step.enter-from-below .radio-group,.step.enter-from-below .option-cards,.step.enter-from-below .field,.step.enter-from-above .radio-group,.step.enter-from-above .option-cards,.step.enter-from-above .field{animation:fadeSlideUp .4s var(--ease-out-expo) .21s both}
+.step.active .field ~ .field,.step.enter-from-below .field ~ .field,.step.enter-from-above .field ~ .field{animation-delay:.27s}
+.step.active .field ~ .field ~ .field,.step.enter-from-below .field ~ .field ~ .field,.step.enter-from-above .field ~ .field ~ .field{animation-delay:.32s}
+.step.active .field ~ .field ~ .field ~ .field{animation-delay:.37s}
+.step.active .form-actions,.step.enter-from-below .form-actions,.step.enter-from-above .form-actions{animation:fadeSlideUp .4s var(--ease-out-expo) .3s both}
+@keyframes fadeSlideUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+.step-eyebrow{font-size:11px;font-weight:600;color:var(--accent);letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px}
+.step-title{font-family:var(--heading);font-size:clamp(24px,3vw,30px);font-weight:400;letter-spacing:-.02em;line-height:1.15;color:var(--black);margin-bottom:8px}
+.step-title em{font-style:italic;color:var(--accent)}
+.step-desc{font-size:14px;color:var(--g500);line-height:1.6;font-weight:300;margin-bottom:26px;max-width:440px}
+
+/* radio cards */
+.radio-group{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:8px}
+.radio-card{position:relative;cursor:pointer}
+.radio-card input{position:absolute;opacity:0;width:0;height:0}
+.radio-card .rc-label{display:flex;align-items:center;justify-content:center;padding:16px 8px;border:1.5px solid var(--g200);border-radius:var(--radius);background:#fff;font-size:15px;font-weight:500;color:var(--g700);text-align:center;cursor:pointer;position:relative;overflow:hidden;transition:border-color .25s,color .25s,box-shadow .25s,transform .2s var(--ease-out-back)}
+.radio-card .rc-label::before{content:'';position:absolute;inset:0;background:var(--accent-light);border-radius:var(--radius);opacity:0;transform:scale(.8);transition:opacity .3s,transform .35s var(--ease-out-expo)}
+.radio-card .rc-label:hover{border-color:var(--g300);transform:translateY(-2px);box-shadow:var(--sh)}
+.radio-card input:checked + .rc-label{border-color:var(--accent);color:var(--accent);font-weight:600;box-shadow:0 0 0 1.5px var(--accent)}
+.radio-card input:checked + .rc-label::before{opacity:1;transform:scale(1)}
+.radio-card .rc-label span{position:relative;z-index:1}
+
+/* option cards */
+.option-cards{display:flex;flex-direction:column;gap:10px;margin-bottom:8px}
+.option-card{position:relative;cursor:pointer}
+.option-card input{position:absolute;opacity:0;width:0;height:0}
+.option-card .oc-label{display:flex;align-items:center;gap:13px;padding:15px 18px;border:1.5px solid var(--g200);border-radius:var(--radius);background:#fff;font-size:14.5px;font-weight:400;color:var(--black);cursor:pointer;position:relative;overflow:hidden;transition:border-color .3s,color .3s,box-shadow .3s,transform .25s var(--ease-out-back)}
+.option-card .oc-label::before{content:'';position:absolute;inset:0;background:var(--accent-light);opacity:0;transform:scaleX(0);transform-origin:left;transition:opacity .35s,transform .4s var(--ease-out-expo)}
+.option-card .oc-label:hover{border-color:var(--g300);transform:translateY(-2px);box-shadow:var(--sh)}
+.option-card input:checked + .oc-label{border-color:var(--accent);color:var(--accent);font-weight:500;box-shadow:0 0 0 1.5px var(--accent)}
+.option-card input:checked + .oc-label::before{opacity:1;transform:scaleX(1)}
+.oc-radio{width:20px;height:20px;border-radius:50%;border:2px solid var(--g300);flex-shrink:0;display:flex;align-items:center;justify-content:center;position:relative;z-index:1;transition:all .3s var(--ease-out-back)}
+.option-card input:checked + .oc-label .oc-radio{border-color:var(--accent);background:var(--accent)}
+.oc-radio::after{content:'';width:8px;height:8px;border-radius:50%;background:#fff;opacity:0;transform:scale(0);transition:opacity .25s,transform .3s var(--ease-out-back)}
+.option-card input:checked + .oc-label .oc-radio::after{opacity:1;transform:scale(1)}
+.oc-label > span:last-child{position:relative;z-index:1}
+
+/* fields */
+.field{margin-bottom:16px}
+.field-label{display:block;font-size:13px;font-weight:500;color:var(--black);margin-bottom:7px;transition:color .2s}
+.field-label .opt{color:var(--g400);font-weight:400}
+.field-input{width:100%;padding:13px 16px;border:1.5px solid var(--g200);border-radius:var(--radius);font-size:15px;font-family:var(--body);color:var(--black);background:#fff;outline:none;transition:border-color .3s,box-shadow .3s var(--ease-out-expo),transform .2s var(--ease-out-expo)}
+.field-input::placeholder{color:var(--g400);font-weight:300}
+.field-input:hover{border-color:var(--g300)}
+.field-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(74,103,65,.1)}
+.field:focus-within .field-label{color:var(--accent)}
+.field-input.error{border-color:var(--red);box-shadow:0 0 0 3px rgba(184,82,82,.08);animation:inputShake .4s var(--ease-out-expo)}
+@keyframes inputShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(2px)}}
+.field-hint{font-size:12px;color:var(--g400);margin-top:5px;font-weight:300}
+.field-error{font-size:12px;color:var(--red);margin-top:5px;font-weight:400;display:none}
+.field-input.error ~ .field-error,.phone-wrap:has(.error) ~ .field-error{display:block;animation:fadeSlideUp .3s var(--ease-out-expo)}
+.field-input.error ~ .field-hint,.phone-wrap:has(.error) ~ .field-hint{display:none}
+/* ── Open Airbnb helper (mirrors get-started / checkout-form) ── */
+/* Helper row under the URL field: the same icon-tile + label + one-liner pattern as the
+   nav dropdown items, so it reads as one structured, pressable thing instead of a divider,
+   a floating chip and a caption. The action label can't wrap; only the one-liner may. */
+.open-airbnb-wrap{margin-top:12px;margin-bottom:4px}
+.open-airbnb-btn{display:grid;grid-template-columns:40px minmax(0,1fr) auto;align-items:center;gap:12px;width:100%;padding:10px 14px 10px 10px;border-radius:var(--radius);border:1.5px solid var(--g200);background:#fff;color:var(--black);font-family:var(--body);text-decoration:none;text-align:left;cursor:pointer;transition:border-color .25s,box-shadow .3s,transform .2s var(--ease-out-back)}
+.open-airbnb-btn:hover{border-color:var(--g300);box-shadow:var(--sh);transform:translateY(-1px)}
+.open-airbnb-btn:active{transform:translateY(0) scale(.99)}
+.oab-tile{width:40px;height:40px;border-radius:10px;background:rgba(255,56,92,.09);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .25s}
+.open-airbnb-btn:hover .oab-tile{background:rgba(255,56,92,.14)}
+.oab-logo{width:20px;height:20px;fill:#FF385C;display:block}
+.oab-text{display:flex;flex-direction:column;gap:2px;min-width:0}
+.oab-title{font-size:14px;font-weight:500;color:var(--black);line-height:1.3;white-space:nowrap}
+.oab-sub{font-size:12.5px;color:var(--g500);font-weight:300;line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.oab-ext{color:var(--g400);flex-shrink:0;transition:color .25s}
+.open-airbnb-btn:hover .oab-ext{color:var(--black)}
+.step.active .open-airbnb-wrap,.step.enter-from-below .open-airbnb-wrap,.step.enter-from-above .open-airbnb-wrap{animation:fadeSlideUp .42s var(--ease-out-expo) .25s both}
+.input-icon-wrap{position:relative}
+.input-icon-wrap .field-input{padding-left:42px}
+.input-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--g400);display:flex;align-items:center;transition:color .3s;z-index:2;pointer-events:none}
+.field:focus-within .input-icon{color:var(--accent)}
+.phone-wrap{display:flex;gap:8px}
+.phone-code{width:92px;padding:13px 12px;border:1.5px solid var(--g200);border-radius:var(--radius);font-size:16px;font-family:var(--body);color:var(--black);background:#fff;outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23a39e9b' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;transition:border-color .3s,box-shadow .3s}
+.phone-code:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(74,103,65,.1)}
+.phone-input{flex:1}
+
+/* form buttons */
+.form-actions{display:flex;align-items:center;gap:12px;margin-top:18px}
+.fs-bottom-bar{display:none}
+.btn-next{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--accent);color:#fff;font-size:15px;font-weight:500;padding:15px 28px;border-radius:var(--radius);border:none;cursor:pointer;font-family:var(--body);flex:1;transition:transform .25s var(--ease-out-back),box-shadow .3s,opacity .3s}
+.btn-next:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 22px rgba(74,103,65,.26)}
+.btn-next:active:not(:disabled){transform:translateY(0) scale(.98)}
+.btn-next:disabled{opacity:.35;cursor:not-allowed}
+.btn-next .arrow{transition:transform .25s var(--ease-out-expo)}
+.btn-next:hover:not(:disabled) .arrow{transform:translateX(3px)}
+.btn-back{display:inline-flex;align-items:center;gap:6px;background:transparent;color:var(--g500);font-size:13px;font-weight:400;padding:15px 16px;border-radius:var(--radius);border:1.5px solid var(--g200);cursor:pointer;font-family:var(--body);transition:border-color .25s,color .25s,transform .2s}
+.btn-back:hover{border-color:var(--g300);color:var(--black)}
+
+
+/* ───────────────────────── What we look at — split (Airbnb card + copy) ───────────────────────── */
+.look-split{display:grid;grid-template-columns:1fr minmax(0,.92fr);grid-template-areas:"head media" "list media";column-gap:clamp(36px,5vw,68px);align-items:center}
+.look-media{grid-area:media;align-self:center}
+.look-head{grid-area:head;align-self:end}
+.look-head .eyebrow{margin-bottom:14px}
+.look-head .lead{margin-top:18px}
+.look-list{grid-area:list;align-self:start;margin-top:28px;display:flex;flex-direction:column;gap:2px}
+
+/* Airbnb-style listing card */
+.bnb-card{max-width:430px;margin:0 auto;font-family:var(--body)}
+.bnb-photo{position:relative;aspect-ratio:1/1;border-radius:14px;overflow:hidden;background:var(--g100);box-shadow:var(--sh)}
+.bnb-photo img{width:100%;height:100%;object-fit:cover}
+.bnb-heart{position:absolute;top:14px;right:14px;width:26px;height:26px;line-height:0;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
+.bnb-heart svg{width:26px;height:26px;fill:rgba(0,0,0,.35);stroke:#fff;stroke-width:2}
+.bnb-info{padding:15px 4px 0}
+.bnb-title{font-size:16px;font-weight:600;color:var(--black);letter-spacing:-.01em;line-height:1.3}
+.bnb-meta{font-size:15px;color:var(--g500);margin-top:3px;font-weight:300}
+.bnb-host{display:flex;align-items:center;gap:11px;margin-top:15px;padding-top:15px;border-top:1px solid var(--g200)}
+.bnb-avatar{position:relative;width:31px;height:31px;border-radius:50%;background:linear-gradient(135deg,#c98a6b,var(--terra));display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:600;flex-shrink:0;font-family:var(--heading)}
+.bnb-avatar-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:50%}
+.bnb-badge{position:absolute;right:-3px;bottom:-3px;width:14px;height:14px;border-radius:50%;background:#FF385C;border:2px solid #fff;display:flex;align-items:center;justify-content:center}
+.bnb-badge svg{width:8px;height:8px;color:#fff;fill:#fff}
+.bnb-host-name{font-size:14.5px;font-weight:600;color:var(--black)}
+.bnb-host-sub{font-size:13.5px;color:var(--g500);margin-top:1px}
+
+/* compact three-up list (right column) */
+.look-item{display:flex;gap:15px;padding:15px 16px;border-radius:var(--radius-lg);transition:background .25s var(--ease-out-expo)}
+.look-item:hover{background:var(--g50)}
+.look-ico{width:42px;height:42px;flex-shrink:0;border-radius:11px;background:var(--accent-light);border:1px solid var(--accent-border);display:flex;align-items:center;justify-content:center;color:var(--accent)}
+.look-item h3{font-family:var(--heading);font-size:18px;font-weight:500;color:var(--black);margin-bottom:4px}
+.look-item p{font-size:14px;color:var(--g500);line-height:1.6;font-weight:300}
+.look-item .pillar-q{display:block;font-size:13px;color:var(--accent);font-weight:500;margin-top:9px}
+
+/* ───────────────────────── Your report (the deliverable) ───────────────────────── */
+.how{background:var(--stone)}
+.report-split{display:grid;grid-template-columns:minmax(0,1.04fr) 1fr;grid-template-areas:"media copy";column-gap:clamp(40px,5.5vw,84px);align-items:center;margin-top:6px}
+.report-media{grid-area:media;display:flex;justify-content:center;padding:16px 0}
+.report-copy{grid-area:copy}
+.report-copy .lead{margin-top:18px}
+.report-list{margin-top:28px;display:flex;flex-direction:column;gap:4px}
+.rep-item{display:flex;gap:16px;padding:14px 16px;border-radius:var(--radius-lg);transition:background .25s var(--ease-out-expo)}
+.rep-item:hover{background:rgba(255,255,255,.66)}
+.rep-ico{width:42px;height:42px;flex-shrink:0;border-radius:11px;background:var(--accent-light);border:1px solid var(--accent-border);display:flex;align-items:center;justify-content:center;color:var(--accent)}
+.rep-item h3{font-family:var(--heading);font-size:18px;font-weight:500;color:var(--black);margin-bottom:5px;letter-spacing:-.01em}
+.rep-item p{font-size:14px;color:var(--g500);line-height:1.6;font-weight:300}
+
+/* document mockup — a stack of report sheets */
+.report-stage{position:relative;width:100%;max-width:412px}
+.report-stage::before{content:'';position:absolute;inset:-7% -5% -9% -5%;background:radial-gradient(58% 54% at 50% 42%,rgba(74,103,65,.08),transparent 72%);z-index:0}
+.rd-back{position:absolute;left:0;top:0;width:100%;height:100%;background:#fff;border:1px solid var(--g200);border-radius:var(--radius-lg);box-shadow:var(--sh)}
+.rd-back.b2{transform:rotate(-4deg) translate(-13px,15px);background:var(--g50)}
+.rd-back.b1{transform:rotate(2.4deg) translate(11px,7px)}
+.rd-front{position:relative;z-index:1;background:#fff;border:1px solid var(--g200);border-radius:var(--radius-lg);box-shadow:var(--sh-lg);padding:22px 22px 18px;transition:transform .45s var(--ease-out-expo)}
+.report-stage:hover .rd-front{transform:translateY(-6px)}
+
+.rd-top{display:flex;align-items:center;justify-content:space-between}
+.rd-brand{display:flex;align-items:center;gap:7px;font-family:var(--heading);font-size:14.5px;color:var(--black);letter-spacing:-.01em}
+.rd-brand .rd-mark{width:18px;height:18px;flex-shrink:0;color:var(--accent)}
+.rd-brand b{color:var(--accent);font-weight:400}
+.rd-stamp{font-size:8.5px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--g400);border:1px solid var(--g200);border-radius:100px;padding:4px 9px}
+.rd-titlewrap{margin-top:15px;padding-bottom:13px;border-bottom:1px solid var(--g200)}
+.rd-title{font-family:var(--heading);font-size:17px;font-weight:400;color:var(--black);letter-spacing:-.01em}
+.rd-sub{font-family:var(--mono);font-size:10.5px;color:var(--g400);margin-top:5px;letter-spacing:.01em}
+
+.rd-block{padding:13px 0;border-bottom:1px solid var(--g100)}
+.rd-block:last-of-type{border-bottom:none;padding-bottom:2px}
+.rd-bhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.rd-blabel{display:flex;align-items:center;gap:8px;font-size:10.5px;font-weight:600;letter-spacing:.05em;color:var(--g600);text-transform:uppercase}
+.rd-bdot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0}
+.rd-bnum{font-family:var(--mono);font-size:9px;color:var(--g300);font-weight:500}
+
+/* ranking sparkline */
+.rd-rank{display:flex;align-items:center;gap:13px}
+.rd-spark{flex:1;height:44px;display:block;overflow:visible}
+.rd-ranknow{text-align:right;flex-shrink:0;line-height:1}
+.rd-ranknow .rn-v{font-family:var(--mono);font-size:20px;font-weight:500;color:var(--accent)}
+.rd-ranknow .rn-l{font-size:8.5px;color:var(--g400);letter-spacing:.04em;margin-top:4px;text-transform:uppercase}
+
+/* pricing comparison rows */
+.rd-rows{display:flex;flex-direction:column;gap:9px}
+.rd-row{display:flex;align-items:center;gap:11px}
+.rd-row .rr-k{font-size:10.5px;color:var(--g500);width:104px;flex-shrink:0}
+.rd-row .rr-track{flex:1;height:8px;border-radius:100px;background:var(--g100);overflow:hidden}
+.rd-row .rr-track i{display:block;height:100%;border-radius:100px;background:var(--g300)}
+.rd-row .rr-track i.up{background:var(--gold)}
+.rd-row .rr-v{font-family:var(--mono);font-size:11px;color:var(--g500);width:42px;text-align:right;flex-shrink:0}
+.rd-row .rr-v.hi{color:var(--gold);font-weight:500}
+.rd-pricenote{font-size:9.5px;color:var(--g400);margin-top:9px;letter-spacing:.01em}
+.rd-pricenote b{color:var(--gold);font-weight:500}
+
+/* conversion checklist */
+.rd-checks{display:flex;flex-direction:column;gap:8px}
+.rd-check{display:flex;align-items:center;gap:9px;font-size:11px;color:var(--g600)}
+.rd-cico{width:16px;height:16px;border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700}
+.rd-cico.flag{background:var(--terra-bg);color:var(--terra)}
+.rd-cico.ok{background:var(--accent-light);color:var(--accent)}
+
+.how-cta{margin-top:52px;text-align:center}
+
+/* ───────────────────────── Proof ───────────────────────── */
+/* plain stats — no boxes, just the numbers with light dividers */
+.stat-band{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:0;margin:48px 0 54px;text-align:center}
+.stat-cell{padding:6px clamp(26px,5vw,60px)}
+.stat-cell + .stat-cell{border-left:1px solid var(--g200)}
+.stat-val{font-family:var(--heading);font-size:clamp(42px,6vw,60px);font-weight:600;color:var(--accent);line-height:1;margin-bottom:8px}
+.stat-val em{font-style:normal;color:var(--accent)}
+.stat-lbl{font-size:13.5px;color:var(--g500);font-weight:400;letter-spacing:.02em}
+/* case studies — auto-scrolling marquee (mirrors the home-page logo carousel) */
+.case-carousel{position:relative;width:100%;overflow:hidden}
+.case-track{display:flex;align-items:stretch;width:max-content;animation:caseScroll 40s linear infinite;will-change:transform;backface-visibility:hidden}
+.case-carousel:hover .case-track{animation-play-state:paused}
+.case-track .case{width:268px;flex-shrink:0;margin-right:16px}
+@keyframes caseScroll{0%{transform:translate3d(0,0,0)}100%{transform:translate3d(-50%,0,0)}}
+/* Result cards mirror the Marathon (.bnb-*) Airbnb card exactly: square photo, DM Sans title/meta, same host row — then a standout RevWhisper numbers panel below. */
+.case{font-family:var(--body);background:none;border:none;box-shadow:none;transition:transform .3s var(--ease-out-expo);text-decoration:none;color:inherit;display:flex;flex-direction:column}
+.case:hover{transform:translateY(-2px)}
+.case:hover .case-photo img{transform:scale(1.04)}
+.case-photo{position:relative;aspect-ratio:1/1;background:var(--g100);overflow:hidden;border-radius:12px}
+.case-photo img{width:100%;height:100%;object-fit:cover;transition:transform .4s var(--ease-out-expo)}
+.case-heart{position:absolute;top:14px;right:14px;width:24px;height:24px;line-height:0;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
+.case-heart svg{width:24px;height:24px;fill:rgba(0,0,0,.4);stroke:#fff;stroke-width:2}
+.case-delta{position:absolute;top:12px;left:12px;background:#fff;color:var(--black);font-size:12.5px;font-weight:600;padding:5px 11px;border-radius:100px;box-shadow:0 2px 6px rgba(0,0,0,.16);letter-spacing:0}
+.case-body{padding:13px 2px 0;display:flex;flex-direction:column;flex:1}
+.case-name{font-size:15px;font-weight:600;color:#222;letter-spacing:-.01em;line-height:1.25}
+.case-tag{font-size:15px;color:#717171;font-weight:400;margin-top:2px;line-height:1.3}
+.case-host{display:flex;align-items:center;gap:10px;margin-top:14px;padding-top:14px;border-top:1px solid var(--g200)}
+.case-avatar{position:relative;width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#c98a6b,var(--terra));display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:600;flex-shrink:0}
+.case-avatar-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:50%}
+.case-badge{position:absolute;right:-3px;bottom:-3px;width:14px;height:14px;border-radius:50%;background:#FF385C;border:2px solid #fff;display:flex;align-items:center;justify-content:center}
+.case-badge svg{width:8px;height:8px;fill:#fff}
+.case-host-name{font-size:14px;font-weight:600;color:#222}
+.case-host-sub{font-size:13px;color:#717171;margin-top:1px}
+.case-results{margin-top:14px}
+.case-metrics{display:flex;gap:14px}
+.case-metric{flex:1;min-width:0}
+.case-metric .cm-flow{display:flex;align-items:baseline;gap:7px;font-size:15px;font-weight:600;color:var(--accent);letter-spacing:-.01em;white-space:nowrap}
+.case-metric .cm-flow .was{font-size:13px;color:#9b9b9b;font-weight:400;text-decoration:line-through;text-decoration-color:#c4c4c4}
+.case-metric .cm-flow svg{display:none}
+.case-metric .cm-lbl{font-size:12px;color:#717171;margin-top:2px;font-weight:400;letter-spacing:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.case-basis{margin-top:8px;font-size:12px;letter-spacing:0;color:#9b9b9b;font-weight:400}
+
+/* ───────────────────────── Reviews — second marquee under the result cards (scrolls the other way) ───────────────────────── */
+.reviews-head{max-width:620px;margin:56px auto 30px;text-align:center}
+.reviews-head .eyebrow{margin-bottom:12px}
+.reviews-head h3{font-family:var(--heading);font-size:clamp(22px,3vw,30px);font-weight:400;letter-spacing:-.02em;line-height:1.18;color:var(--black)}
+.reviews-head h3 em{font-style:italic;color:var(--accent)}
+.review-carousel{position:relative;width:100%;overflow:hidden;padding:8px 0}
+.review-track{display:flex;align-items:flex-start;width:max-content;animation:reviewScroll 60s linear infinite;will-change:transform;backface-visibility:hidden}
+.review-carousel:hover .review-track{animation-play-state:paused}
+.review-track .review{width:384px;flex-shrink:0;margin-right:18px}
+/* starts shifted -50% and slides back to 0 → opposite direction from the result cards */
+@keyframes reviewScroll{0%{transform:translate3d(-50%,0,0)}100%{transform:translate3d(0,0,0)}}
+.review{display:flex;flex-direction:column;background:#fff;border:1px solid var(--g200);border-radius:var(--radius-lg);box-shadow:var(--sh-sm);padding:24px 24px 20px;transition:transform .3s var(--ease-out-expo),box-shadow .3s}
+.review:hover{transform:translateY(-3px);box-shadow:var(--sh)}
+.review-stars{display:flex;gap:3px;margin-bottom:14px}
+.review-stars svg{width:16px;height:16px;fill:var(--gold)}
+.review-quote{font-family:var(--heading);font-size:16px;line-height:1.58;color:var(--g700);font-weight:400;flex:1}
+.review-host{display:flex;align-items:center;gap:11px;margin-top:20px;padding-top:18px;border-top:1px solid var(--g200)}
+.review-avatar{position:relative;width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#c98a6b,var(--terra));display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;font-weight:600;flex-shrink:0}
+.review-avatar-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:50%}
+.review-badge{position:absolute;right:-3px;bottom:-3px;width:16px;height:16px;border-radius:50%;background:#FF385C;border:2px solid #fff;display:flex;align-items:center;justify-content:center}
+.review-badge svg{width:9px;height:9px;fill:#fff}
+.review-name{font-size:14.5px;font-weight:600;color:var(--black)}
+.review-loc{font-size:13px;color:var(--g500);margin-top:1px}
+
+
+/* ───────────────────────── FAQ ───────────────────────── */
+.faq-wrap{max-width:760px;margin:48px auto 0}
+.faq{border-bottom:1px solid var(--g200)}
+.faq summary{list-style:none;cursor:pointer;padding:22px 4px;display:flex;align-items:center;justify-content:space-between;gap:16px;font-family:var(--heading);font-size:clamp(17px,2.2vw,20px);font-weight:500;color:var(--black)}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary .fq-ico{flex-shrink:0;width:26px;height:26px;border-radius:50%;border:1.5px solid var(--g300);display:flex;align-items:center;justify-content:center;color:var(--g500);transition:transform .3s var(--ease-out-expo),border-color .3s,color .3s}
+.faq.is-open summary .fq-ico{transform:rotate(45deg);border-color:var(--accent);color:var(--accent)}
+.faq summary{transition:color .2s}
+.faq.is-open summary{color:var(--accent)}
+.faq-a{padding:0 4px 24px;font-size:15px;color:var(--g500);line-height:1.7;font-weight:300;max-width:660px;overflow:hidden;transition:max-height .38s var(--ease-out-expo),opacity .3s ease,padding .38s var(--ease-out-expo)}
+/* collapsed resting state — independent of native <details> hiding so it's bulletproof */
+.faq:not(.is-open) .faq-a{max-height:0;opacity:0;padding-top:0;padding-bottom:0}
+
+/* ───────────────────────── Final CTA ───────────────────────── */
+.final{background:var(--accent);color:#fff;text-align:center;position:relative;overflow:hidden}
+.final::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% -20%,rgba(255,255,255,.1),transparent 50%),radial-gradient(ellipse at 70% 120%,rgba(0,0,0,.14),transparent 50%);pointer-events:none}
+.final .w{position:relative;z-index:1}
+.final h2{font-family:var(--heading);font-size:clamp(30px,4.6vw,48px);font-weight:400;line-height:1.12;margin-bottom:18px}
+.final h2 em{font-style:italic}
+.final p{font-size:clamp(16px,1.9vw,18px);color:rgba(255,255,255,.82);max-width:520px;margin:0 auto 32px;font-weight:300;line-height:1.6}
+.btn-onaccent{background:#fff;color:var(--accent);font-weight:600}
+.btn-onaccent:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(0,0,0,.2)}
+.final-note{margin-top:18px;font-size:13px;color:rgba(255,255,255,.6);font-weight:300}
+
+/* ───────────────────────── Footer ───────────────────────── */
+.mini-footer{padding:36px 0;border-top:1px solid var(--g200);background:#fff}
+.mf-row{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+.mf-logo{display:flex;align-items:center;gap:9px;font-family:var(--heading);font-size:17px;color:var(--black);font-weight:500}
+.mf-links{display:flex;align-items:center;gap:20px;font-size:13px;color:var(--g500)}
+.mf-links a{text-decoration:none;color:var(--g500);transition:color .2s}
+.mf-links a:hover{color:var(--accent)}
+.mf-copy{font-size:12px;color:var(--g500);margin-top:14px}
+.mf-tag{font-style:italic;color:var(--g500)}
+
+/* ───────────────────────── Sticky mobile CTA ───────────────────────── */
+.sticky-cta{position:fixed;left:0;right:0;bottom:0;z-index:50;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-top:1px solid var(--g200);padding:12px 16px calc(12px + env(safe-area-inset-bottom));display:none;box-shadow:0 -4px 20px rgba(50,48,47,.08);transform:translateY(130%);transition:transform .32s var(--ease-out-expo);pointer-events:none}
+.sticky-cta .btn{width:100%;padding:15px}
+
+/* ───────────────────────── Responsive ───────────────────────── */
+@media(max-width:920px){
+  .report-split{grid-template-columns:1fr;grid-template-areas:"copy" "media";row-gap:10px;text-align:center}
+  .report-copy .lead{margin-left:auto;margin-right:auto}
+  .report-media{margin-top:30px}
+  .report-list{margin-top:24px;text-align:left;max-width:480px;margin-left:auto;margin-right:auto}
+  .how-cta{margin-top:40px}
+  .look-split{grid-template-columns:1fr;grid-template-areas:"head" "media" "list";row-gap:6px}
+  .look-head{align-self:auto;text-align:center}
+  .look-head .lead{margin-left:auto;margin-right:auto}
+  .look-media{align-self:auto;margin:22px 0 4px}
+  .look-list{align-self:auto;margin-top:18px}
+  .look-item{padding:14px 12px}
+}
+@media(max-width:640px){
+  .w{padding:0 20px}
+  /* Subtle edge fade via static overlays (NOT a CSS mask — masks force the wide
+     animated track onto an oversized GPU layer and blank out / glitch in iOS &
+     in-app webviews like Instagram). Overlays are tiny static elements, no layer issue. */
+  .case-carousel::before,.case-carousel::after{content:"";position:absolute;top:0;bottom:0;width:24px;z-index:2;pointer-events:none}
+  .case-carousel::before{left:0;background:linear-gradient(90deg,#fff,rgba(255,255,255,0))}
+  .case-carousel::after{right:0;background:linear-gradient(270deg,#fff,rgba(255,255,255,0))}
+  .review-carousel::before,.review-carousel::after{content:"";position:absolute;top:0;bottom:0;width:24px;z-index:2;pointer-events:none}
+  .review-carousel::before{left:0;background:linear-gradient(90deg,#fff,rgba(255,255,255,0))}
+  .review-carousel::after{right:0;background:linear-gradient(270deg,#fff,rgba(255,255,255,0))}
+  .sec{padding:clamp(48px,11vw,72px) 0}
+  #hero{padding:24px 0 40px}
+  .hero-inner{margin-bottom:22px}
+  .hero-trust{margin-top:15px;gap:7px 16px}
+  .hero-trust .ht-item{font-size:12px}
+  .hero-h1{font-size:clamp(33px,8.4vw,42px)}
+  .form-card{padding:20px 18px 18px;border-radius:14px}
+  .radio-group{grid-template-columns:repeat(3,1fr)}
+  /* 16px inputs prevent iOS zoom-on-focus */
+  .field-input{font-size:16px}.phone-input{font-size:16px}
+  .stat-band{flex-direction:column;gap:24px}
+  .stat-cell{padding:0}
+  .stat-cell + .stat-cell{border-left:none}
+  .case-metrics{gap:18px}
+  .mf-row{flex-direction:column;align-items:flex-start;gap:12px}
+  .sticky-cta{display:block}
+  .sticky-cta.show{transform:translateY(0);pointer-events:auto}
+  body{padding-bottom:84px}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms!important;transition-duration:.001ms!important}
+  html{scroll-behavior:auto}
+  /* case marquee → static centered wrap; hide the duplicated set */
+  .case-track{animation:none!important;transform:none!important;width:100%;flex-wrap:wrap;justify-content:center;gap:20px}
+  .case-track .case{margin-right:0}
+  .case-track .case[data-clone]{display:none}
+  .review-track{animation:none!important;transform:none!important;width:100%;flex-wrap:wrap;justify-content:center;gap:18px}
+  .review-track .review{margin-right:0}
+  .review-track .review[data-clone]{display:none}
+}
+</style>
+<style>
+/* VRMA giveaway block */
+.vg{padding:clamp(56px,7vw,88px) 0 clamp(16px,2vw,24px)}
+.vg-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(32px,5vw,64px);align-items:start}
+.vg-btn{margin-top:28px}
+.vg-card{border:1px solid var(--g200);border-radius:12px;padding:clamp(22px,3vw,30px);background:#fff}
+.vg-card-h{font-family:var(--heading);font-size:22px;color:var(--black)}
+.vg-card-p{font-size:14px;color:var(--g500);margin-top:4px}
+.vg-list{margin-top:18px}
+.vg-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;margin-top:48px}
+.vg-step{border-top:2px solid var(--accent);padding-top:18px}
+.vg-n{font-size:12px;color:var(--accent);margin-bottom:6px}
+.vg-step h3{font-family:var(--heading);font-size:21px;font-weight:400;color:var(--black);margin-bottom:8px}
+.vg-step p{font-size:15px;line-height:1.6;color:var(--g600)}
+.vg-fine{margin-top:28px;font-size:12px;color:var(--g500)}
+@media (max-width:820px){.vg-grid,.vg-steps{grid-template-columns:1fr}.vg-steps{gap:22px;margin-top:36px}}
+@media (max-width:720px){
+  .vg-btn{display:flex;width:100%;justify-content:center;margin-top:22px}
+  .vg-grid{gap:28px}
+  .vg-card-h{font-size:20px}
+  .vg-step{padding-top:14px}
+  .vg-step h3{font-size:19px;margin-bottom:6px}
+  .vg-step p{font-size:14.5px}
+  .vg-fine{margin-top:20px}
+}
+</style>
+<link rel="stylesheet" href="/assets/lp-sections.css?v=4">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@500&display=swap" media="print" onload="this.media='all'">
+<script defer src="/assets/phone-validate.js"></script>
+</head>
+<body>
+<main id="main">
+
+<!-- ════════════════════ HERO + FORM ════════════════════ -->
+<section id="hero">
+  <div class="hero-glow"></div>
+  <div class="w">
+    <div class="hero-inner">
+      <div class="hero-badge"><span class="dot"></span> VRMA giveaway &middot; Free strategy audit</div>
+      <h1 class="hero-h1" id="hero-h1">See exactly where your listing is <span class="em-mark">leaking revenue</span>.</h1>
+      <p class="hero-sub" id="hero-sub">A free audit of your ranking, pricing, and conversion. We show you exactly what's costing you bookings, and what to fix first.</p>
+      <div class="hero-trust">
+        <span class="ht-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.8 12 3.5l9 7.3"/><path d="M5.5 9.7V20h13V9.7"/></svg>Built by hosts, for hosts</span>
+        <span class="ht-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.4 12.4l2.4 2.4 4.8-5.2"/></svg>Yours to keep, no obligation</span>
+      </div>
+      <!-- inline headline swap: mirrors the ad angle (message match) -->
+      <script>
+      (function(){
+        var MAP={
+          'views-not-bookings':{h1:'Getting views but <span class="em-mark">not bookings</span>?',sub:'A free audit of your ranking, pricing, and conversion. We pinpoint exactly what’s costing you reservations.'},
+          'pricing':{h1:'Your calendar is <span class="em-mark">underpriced</span>. Let’s prove it.',sub:'A free audit of your pricing, ranking, and conversion. We show you the nights you’re underpriced and the revenue you’re leaving behind.'},
+          'shoulder-season':{h1:'Your off-season is <span class="em-mark">costing you more</span> than you think.',sub:'A free audit of your pricing, ranking, and conversion. We show you the revenue your calendar is leaving behind.'},
+          'ranking':{h1:'If guests can’t <span class="em-mark">find your listing</span>, they can’t book it.',sub:'A free audit of your search ranking, pricing, and conversion, plus exactly what to fix first.'},
+          'occupancy':{h1:'Empty nights you <span class="em-mark">can’t get back</span>.',sub:'A free audit of your ranking, pricing, and conversion. We show you exactly what to fix first.'}
+        };
+        try{
+          // rwAttribution reads localStorage first — that's where the head script stores
+          // the touch (sessionStorage is only its fallback), so reading sessionStorage
+          // directly left these variants dead for nearly every visitor.
+          var a=rwAttribution();
+          var key=(a.utm_content||a.utm_term||'').toLowerCase();
+          if(MAP[key]){
+            document.getElementById('hero-h1').innerHTML=MAP[key].h1;
+            document.getElementById('hero-sub').textContent=MAP[key].sub;
+          }
+        }catch(e){}
+      })();
+      </script>
+    </div>
+
+    <!-- multi-step lead form — centered focal point -->
+    <div class="fs-scrim" id="fs-scrim" aria-hidden="true"></div>
+    <div class="form-glow">
+    <div class="form-card" id="audit-form">
+        <div class="fc-head">
+          <div class="fc-progress" aria-hidden="true">
+            <span class="fc-seg on" data-seg="0"></span>
+            <span class="fc-seg" data-seg="1"></span>
+            <span class="fc-seg" data-seg="2"></span>
+            <span class="fc-seg" data-seg="3"></span>
+            <span class="fc-seg" data-seg="4"></span>
+            <span class="fc-seg" data-seg="5"></span>
+          </div>
+          <button class="fc-close" id="fc-close" type="button" aria-label="Exit full screen">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+          </button>
+        </div>
+
+        <div class="steps-viewport">
+          <!-- Step 0: portfolio size (zero-friction tap) -->
+          <div class="step active" data-step="0">
+            <div class="step-eyebrow">Your portfolio</div>
+            <h2 class="step-title">How many listings do you <em>have?</em></h2>
+            <p class="step-desc">Tap one to start. Your audit takes about 2 minutes to request.</p>
+            <div class="radio-group">
+              <label class="radio-card"><input type="radio" name="listings" value="1"><div class="rc-label"><span>1</span></div></label>
+              <label class="radio-card"><input type="radio" name="listings" value="2-5"><div class="rc-label"><span>2–5</span></div></label>
+              <label class="radio-card"><input type="radio" name="listings" value="6-10"><div class="rc-label"><span>6–10</span></div></label>
+              <label class="radio-card"><input type="radio" name="listings" value="11-25"><div class="rc-label"><span>11–25</span></div></label>
+              <label class="radio-card"><input type="radio" name="listings" value="26-100"><div class="rc-label"><span>26–100</span></div></label>
+              <label class="radio-card"><input type="radio" name="listings" value="100+"><div class="rc-label"><span>100+</span></div></label>
+            </div>
+          </div>
+
+          <!-- Step 1: biggest issue (light qualifier, maps to pillars) -->
+          <div class="step" data-step="1">
+            <div class="step-eyebrow">What's going on</div>
+            <h2 class="step-title">What's the biggest issue <em>right now?</em></h2>
+            <p class="step-desc">No wrong answer. It just tells us where to look first.</p>
+            <div class="option-cards">
+              <label class="option-card"><input type="radio" name="issue" value="views-no-bookings"><div class="oc-label"><span class="oc-radio"></span><span>I'm getting views but not enough bookings</span></div></label>
+              <label class="option-card"><input type="radio" name="issue" value="bookings-slowed"><div class="oc-label"><span class="oc-radio"></span><span>My bookings have slowed down</span></div></label>
+              <label class="option-card"><input type="radio" name="issue" value="pricing"><div class="oc-label"><span class="oc-radio"></span><span>I don't think my pricing is right</span></div></label>
+              <label class="option-card"><input type="radio" name="issue" value="not-sure"><div class="oc-label"><span class="oc-radio"></span><span>Not sure, that's what I want to find out</span></div></label>
+            </div>
+            <!-- No Back here: this is the first screen of the fullscreen takeover, and a Back
+                 button reads as "back to the page" — which it isn't. The listings answer was
+                 given on the landing view; the real way back is the browser gesture. -->
+          </div>
+
+          <!-- Step 2: pricing & revenue approach -->
+          <div class="step" data-step="2">
+            <div class="step-eyebrow">How you run it</div>
+            <h2 class="step-title">How do you handle pricing <em>right now?</em></h2>
+            <p class="step-desc">No judgement. It tells us where the quick wins are.</p>
+            <div class="option-cards">
+              <label class="option-card"><input type="radio" name="pricing" value="manual"><div class="oc-label"><span class="oc-radio"></span><span>Manually, or Airbnb Smart Pricing</span></div></label>
+              <label class="option-card"><input type="radio" name="pricing" value="tool"><div class="oc-label"><span class="oc-radio"></span><span>A pricing tool (PriceLabs, Wheelhouse, Beyond)</span></div></label>
+              <label class="option-card"><input type="radio" name="pricing" value="revenue-manager"><div class="oc-label"><span class="oc-radio"></span><span>A revenue manager or agency handles it</span></div></label>
+              <label class="option-card"><input type="radio" name="pricing" value="property-manager"><div class="oc-label"><span class="oc-radio"></span><span>My property manager handles it</span></div></label>
+              <label class="option-card"><input type="radio" name="pricing" value="none"><div class="oc-label"><span class="oc-radio"></span><span>Not really managing it yet</span></div></label>
+            </div>
+            <div class="form-actions">
+              <button class="btn-back" type="button" onclick="prevStep()"><span class="arrow">←</span> Back</button>
+            </div>
+          </div>
+
+          <!-- Step 3: revenue (bands rendered dynamically from the listing count) -->
+          <div class="step" data-step="3">
+            <div class="step-eyebrow">Your revenue</div>
+            <h2 class="step-title" id="revenue-title">Roughly what did your listings earn <em>last year?</em></h2>
+            <p class="step-desc">Newer to Airbnb? Estimate what you expect to bring in this year.</p>
+            <div class="field" id="doorcount-field" style="display:none">
+              <label class="field-label" for="door-count">Roughly how many listings? <span class="opt">(optional)</span></label>
+              <input type="number" class="field-input" id="door-count" placeholder="e.g. 60" min="1" inputmode="numeric">
+            </div>
+            <div class="option-cards" id="revenue-options"></div>
+            <div class="form-actions">
+              <button class="btn-back" type="button" onclick="prevStep()"><span class="arrow">←</span> Back</button>
+            </div>
+          </div>
+
+          <!-- Step 4: the listing. The URL sits on its own step: it's the one field hosts leave
+               the page to fetch, so isolating it keeps the contact step down to three
+               autofillable fields and keeps the momentum "about your listing" until the end. -->
+          <div class="step" data-step="4">
+            <div class="step-eyebrow">Your Airbnb</div>
+            <h2 class="step-title">What's your Airbnb <em>listing URL?</em></h2>
+            <p class="step-desc">Any one of your listings works, or your host profile. It's just so we can find you on Airbnb.</p>
+            <div class="field">
+              <div class="input-icon-wrap">
+                <div class="input-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg></div>
+                <input type="url" class="field-input" id="airbnb-url" placeholder="airbnb.com/rooms/… or /users/show/…" aria-label="Your Airbnb listing URL or host profile" autocomplete="off" inputmode="url">
+              </div>
+              <div class="field-error">Please add your Airbnb listing URL or host profile</div>
+            </div>
+            <div class="open-airbnb-wrap">
+              <a href="https://www.airbnb.com" target="_blank" rel="noopener" class="open-airbnb-btn" id="open-airbnb-btn">
+                <span class="oab-tile"><svg class="oab-logo" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.001 18.275c-1.353-1.697-2.148-3.184-2.413-4.457-.263-1.027-.16-1.848.291-2.465.477-.71 1.188-1.056 2.121-1.056s1.643.345 2.12 1.063c.446.61.558 1.432.286 2.465-.291 1.298-1.085 2.785-2.412 4.458zm9.601 1.14c-.185 1.246-1.034 2.28-2.2 2.783-2.253.98-4.483-.583-6.392-2.704 3.157-3.951 3.74-7.028 2.385-9.018-.795-1.14-1.933-1.695-3.394-1.695-2.944 0-4.563 2.49-3.927 5.382.37 1.565 1.352 3.343 2.917 5.332-.98 1.085-1.91 1.856-2.732 2.333-.636.344-1.245.558-1.828.609-2.679.399-4.778-2.2-3.825-4.88.132-.345.395-.98.845-1.961l.025-.053c1.464-3.178 3.242-6.79 5.285-10.795l.053-.132.58-1.116c.45-.822.635-1.19 1.351-1.643.346-.21.77-.315 1.246-.315.954 0 1.698.558 2.016 1.007.158.239.345.557.582.953l.558 1.089.08.159c2.041 4.004 3.821 7.608 5.279 10.794l.026.025.533 1.22.318.764c.243.613.294 1.222.213 1.858zm1.22-2.39c-.186-.583-.505-1.271-.9-2.094v-.03c-1.889-4.006-3.642-7.608-5.307-10.844l-.111-.163C15.317 1.461 14.468 0 12.001 0c-2.44 0-3.476 1.695-4.535 3.898l-.081.16c-1.669 3.236-3.421 6.843-5.303 10.847v.053l-.559 1.22c-.21.504-.317.768-.345.847C-.172 20.74 2.611 24 5.98 24c.027 0 .132 0 .265-.027h.372c1.75-.213 3.554-1.325 5.384-3.317 1.829 1.989 3.635 3.104 5.382 3.317h.372c.133.027.239.027.265.027 3.37.003 6.152-3.261 4.802-6.975z"/></svg></span>
+                <span class="oab-text"><span class="oab-title">Open Airbnb</span><span class="oab-sub">Grab your link and come back.</span></span>
+                <svg class="oab-ext" xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6m4-3h6m0 0v6m0-6L10 14"/></svg>
+              </a>
+            </div>
+            <div class="form-actions">
+              <button class="btn-back" type="button" onclick="prevStep()"><span class="arrow">←</span></button>
+              <button class="btn-next" type="button" id="btn-url-next" onclick="nextStep()">Continue <span class="arrow">→</span></button>
+            </div>
+          </div>
+
+          <!-- Step 5: contact details (the ask) -->
+          <div class="step" data-step="5">
+            <div class="step-eyebrow">Where to send it</div>
+            <h2 class="step-title">Last step: <em>your details.</em></h2>
+            <p class="step-desc">We'll start preparing your audit and show you how to get your findings, walked through with you.</p>
+            <div class="field">
+              <label class="field-label" for="full-name">Full name</label>
+              <input type="text" class="field-input" id="full-name" placeholder="Jane Doe" autocomplete="name">
+              <div class="field-error">Please enter your name</div>
+            </div>
+            <div class="field">
+              <label class="field-label" for="email">Email</label>
+              <div class="input-icon-wrap">
+                <div class="input-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div>
+                <input type="email" class="field-input" id="email" placeholder="jane@example.com" autocomplete="email" inputmode="email">
+              </div>
+              <div class="field-error">Please enter a valid email</div>
+            </div>
+            <div class="field">
+              <label class="field-label" for="phone">Phone number</label>
+              <div class="phone-wrap">
+                <select class="phone-code" id="phone-code" aria-label="Country code">
+                  <option value="+1">🇺🇸 +1</option><option value="+44">🇬🇧 +44</option><option value="+61">🇦🇺 +61</option><option value="+33">🇫🇷 +33</option><option value="+49">🇩🇪 +49</option><option value="+52">🇲🇽 +52</option><option value="+34">🇪🇸 +34</option><option value="+39">🇮🇹 +39</option><option value="+55">🇧🇷 +55</option>
+                </select>
+                <input type="tel" class="field-input phone-input" id="phone" placeholder="(555) 123-4567" autocomplete="tel" inputmode="tel" maxlength="16">
+              </div>
+              <div class="field-error">Please enter a valid phone number</div>
+              <div class="field-hint">We'll text your Google Meet link and a reminder before your audit.</div>
+            </div>
+            <div class="form-actions">
+              <button class="btn-back" type="button" onclick="prevStep()"><span class="arrow">←</span></button>
+              <button class="btn-next" type="button" id="btn-submit" onclick="submitForm()">Get my free audit <span class="arrow">→</span></button>
+            </div>
+            <div class="fc-secure">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Your info stays private and is never sold. This page uses cookies and session recording to measure our ads and improve the page. <a href="/privacy#cookies" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">Privacy policy</a>
+            </div>
+          </div>
+        </div>
+        <!-- Mobile fullscreen only: Back pinned to a bottom bar (see .fs-bottom-bar CSS) -->
+        <div class="fs-bottom-bar">
+          <button class="btn-back" type="button" onclick="prevStep()"><span class="arrow">←</span> Back</button>
+        </div>
+      </div>
+    </div><!-- /.form-glow -->
+  </div>
+</section>
+
+<!-- LP-PROOF:START -->
+<!-- Proof band: first section under the hero on every LP (10/3/26).
+     +35% = average YoY revenue across managed listings with a prior-year baseline (same figure as the homepage band).
+     Occupancy bars = August 2026, PriceLabs Booking Insights, same five markets as the homepage marquee. -->
+<section class="lpp" aria-label="Results across managed listings">
+  <div class="w">
+    <div class="lpp-grid">
+      <div class="lpp-copy">
+        <div class="lp-eyebrow">Average across managed listings</div>
+        <div class="lpp-fig">+35%</div>
+        <div class="lpp-figlbl">revenue over last year</div>
+        <p>Measured against the same period a year earlier, on every listing with a prior-year baseline.</p>
+        <p>How we hold a number like that: we only take on listings we are confident we can move. If we cannot see the upside on the call, we say so.</p>
+        <div class="lpp-rule"></div>
+        <div class="lpp-hosts">Over 100 hosts</div>
+        <p>trust RevWhisper with their pricing, photos, copy and search visibility.</p>
+      </div>
+      <div>
+        <div class="lpp-cap">Occupancy by market, August 2026. Your listing against its own market.</div>
+        <div class="lpp-mkt">
+          <div><div class="lpp-name">Florida Gulf Coast</div><div class="lpp-city">Englewood, FL</div></div>
+          <div class="lpp-bars" role="img" aria-label="Florida Gulf Coast occupancy: RevWhisper 91%, market 38%">
+            <div class="lpp-row"><span class="lpp-who">RevWhisper</span><span class="lpp-track"><span class="lpp-fill" style="width:91%"></span></span><span class="lpp-pct">91%</span></div>
+            <div class="lpp-row mkt"><span class="lpp-who">Market</span><span class="lpp-track"><span class="lpp-fill" style="width:38%"></span></span><span class="lpp-pct">38%</span></div>
+          </div>
+        </div>
+        <div class="lpp-mkt">
+          <div><div class="lpp-name">Smoky Mountains</div><div class="lpp-city">Sevierville, TN</div></div>
+          <div class="lpp-bars" role="img" aria-label="Smoky Mountains occupancy: RevWhisper 87%, market 50%">
+            <div class="lpp-row"><span class="lpp-who">RevWhisper</span><span class="lpp-track"><span class="lpp-fill" style="width:87%"></span></span><span class="lpp-pct">87%</span></div>
+            <div class="lpp-row mkt"><span class="lpp-who">Market</span><span class="lpp-track"><span class="lpp-fill" style="width:50%"></span></span><span class="lpp-pct">50%</span></div>
+          </div>
+        </div>
+        <div class="lpp-mkt">
+          <div><div class="lpp-name">Miami</div><div class="lpp-city">Miami, FL</div></div>
+          <div class="lpp-bars" role="img" aria-label="Miami occupancy: RevWhisper 94%, market 58%">
+            <div class="lpp-row"><span class="lpp-who">RevWhisper</span><span class="lpp-track"><span class="lpp-fill" style="width:94%"></span></span><span class="lpp-pct">94%</span></div>
+            <div class="lpp-row mkt"><span class="lpp-who">Market</span><span class="lpp-track"><span class="lpp-fill" style="width:58%"></span></span><span class="lpp-pct">58%</span></div>
+          </div>
+        </div>
+        <div class="lpp-mkt">
+          <div><div class="lpp-name">North Georgia Mountains</div><div class="lpp-city">Ellijay, GA</div></div>
+          <div class="lpp-bars" role="img" aria-label="North Georgia Mountains occupancy: RevWhisper 93%, market 41%">
+            <div class="lpp-row"><span class="lpp-who">RevWhisper</span><span class="lpp-track"><span class="lpp-fill" style="width:93%"></span></span><span class="lpp-pct">93%</span></div>
+            <div class="lpp-row mkt"><span class="lpp-who">Market</span><span class="lpp-track"><span class="lpp-fill" style="width:41%"></span></span><span class="lpp-pct">41%</span></div>
+          </div>
+        </div>
+        <div class="lpp-mkt">
+          <div><div class="lpp-name">Poconos</div><div class="lpp-city">Pocono Lake, PA</div></div>
+          <div class="lpp-bars" role="img" aria-label="Poconos occupancy: RevWhisper 94%, market 73%">
+            <div class="lpp-row"><span class="lpp-who">RevWhisper</span><span class="lpp-track"><span class="lpp-fill" style="width:94%"></span></span><span class="lpp-pct">94%</span></div>
+            <div class="lpp-row mkt"><span class="lpp-who">Market</span><span class="lpp-track"><span class="lpp-fill" style="width:73%"></span></span><span class="lpp-pct">73%</span></div>
+          </div>
+        </div>
+        <p class="lpp-src">Occupancy and rank: PriceLabs Booking Insights and RevWhisper Calibration Scan. Market figures are for the comparable set a guest sees for the same dates.</p>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- LP-PROOF:END -->
+
+<!-- ════════════════════ VRMA GIVEAWAY (page-specific; mirrors the VRMA Facebook ad script) ════════════════════ -->
+<section class="vg" id="giveaway">
+  <div class="w">
+    <div class="vg-grid">
+      <div>
+        <div class="lp-eyebrow">The VRMA giveaway</div>
+        <h2 class="lp-h2">Win a full year of RevWhisper on <em>one listing</em>.</h2>
+        <p class="lp-lead">If you are at VRMA looking for a better way to grow revenue in 2027, one that doesn&rsquo;t mean buying more amenities, a new design, or more properties, this is it. This week one host at VRMA wins a year of RevWhisper on one of their listings.</p>
+        <a class="btn btn-accent js-to-form vg-btn" href="#audit-form">Enter the giveaway <span class="arrow">→</span></a>
+      </div>
+      <div class="vg-card">
+        <div class="vg-card-h">What the winner gets</div>
+        <p class="vg-card-p">One of our analysts runs your listing&rsquo;s strategy for twelve months:</p>
+        <ul class="lpf-list vg-list">
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Search visibility</b><span>Where you rank for every open date, read from a live guest search.</span></div></li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Click-through and impression data</b><span>How often guests see you, and how often they click.</span></div></li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Listing-level work</b><span>Photo order, title, copy and amenities, rebuilt to win the booking.</span></div></li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Rank-adjusted, dynamic pricing</b><span>A higher rate on your peak dates, and bookings on the low-demand dates that usually sit empty.</span></div></li>
+        </ul>
+      </div>
+    </div>
+    <div class="vg-steps">
+      <div class="vg-step">
+        <div class="vg-n">1</div>
+        <h3>Enter in two minutes</h3>
+        <p>Fill out the form at the top of this page. Every entry gets a full strategy audit of your listing or portfolio, whether you win or not.</p>
+      </div>
+      <div class="vg-step">
+        <div class="vg-n">2</div>
+        <h3>Find us at VRMA</h3>
+        <p>Come find us in person and we will pull your listing&rsquo;s rank live for your next 10 unbooked dates. You also get an extra entry into the draw.</p>
+      </div>
+      <div class="vg-step">
+        <div class="vg-n">3</div>
+        <h3>One winner, one listing</h3>
+        <p>We draw one winner from every entry and reach out directly. The winner gets twelve months of RevWhisper on the listing of their choice.</p>
+      </div>
+    </div>
+    <p class="vg-fine">No purchase necessary to enter or win.</p>
+  </div>
+</section>
+
+<!-- LP-RESULTS:START -->
+<!-- Client results: replaces the Airbnb-style case carousel on LPs (10/3/26).
+     Cards 1-8 mirror /case-study (PriceLabs Booking Insights, July 2026 vintage); card 9 (61 Sombrero) is the May YoY figure from the old /audit carousel.
+     Update both pages together. Auto-scrolling marquee: the script below clones the cards once so the loop is seamless. -->
+<section class="lpr" id="results">
+  <div class="w">
+    <div class="lp-eyebrow">Results</div>
+    <h2 class="lp-h2">What our clients&rsquo; calendars look like right now.</h2>
+    <p class="lp-lead">Established listings measured against the same period last year. Full periods, soft months included. New launches shown from a standing start.</p>
+  </div>
+  <div class="lpr-carousel">
+    <div class="lpr-track" id="lpr-track">
+      <article class="lpr-card">
+        <div class="lpr-photo"><img src="/images/properties/cards/moonlit-peak.webp" alt="Lakefront A-frame at dusk with the dock lit up" loading="lazy" decoding="async" width="400" height="300"></div>
+        <div class="lpr-body">
+          <span class="lpr-pill">Established</span>
+          <h3 class="lpr-name">Moonlit Peak: Luxe Lake Escape</h3>
+          <div class="lpr-meta">4 BR, Pocono Mountains, PA, lakefront</div>
+          <div class="lpr-stats">
+            <div><div class="lpr-lbl">Revenue</div><div class="lpr-val">$125.0K</div><div class="lpr-delta up">+61% year over year</div></div>
+            <div><div class="lpr-lbl">Occupancy</div><div class="lpr-val">56%</div><div class="lpr-delta up">+13% in 2026 so far</div></div>
+            <div><div class="lpr-lbl">Nightly rate</div><div class="lpr-val">$711</div><div class="lpr-delta up">+27% in 2026 so far</div></div>
+          </div>
+          <p class="lpr-foot">On the books for 2026 as of July, against the same time last year.</p>
+        </div>
+      </article>
+      <article class="lpr-card">
+        <div class="lpr-photo"><img src="/images/properties/cards/candler-estate.webp" alt="Aerial of the estate with enclosed pool, giant chess set and barrel sauna" loading="lazy" decoding="async" width="400" height="300"></div>
+        <div class="lpr-body">
+          <span class="lpr-pill">First 8 months</span>
+          <h3 class="lpr-name">Candler Estate</h3>
+          <div class="lpr-meta">6 BR, sleeps 18, 20 min from Asheville, NC</div>
+          <div class="lpr-stats">
+            <div><div class="lpr-lbl">Revenue</div><div class="lpr-val">$279.1K</div><div class="lpr-delta">Booked, first 8 months live</div></div>
+            <div><div class="lpr-lbl">Occupancy</div><div class="lpr-val">86%</div><div class="lpr-delta">2026 so far</div></div>
+            <div><div class="lpr-lbl">Nightly rate</div><div class="lpr-val">$1,066</div><div class="lpr-delta">2026 so far</div></div>
+          </div>
+          <p class="lpr-foot">Went live in November. First eight months of operating, no prior-year data.</p>
+        </div>
+      </article>
+      <article class="lpr-card">
+        <div class="lpr-photo"><img src="/images/properties/cards/bears-tale.webp" alt="Aerial of the cabin at sunset" loading="lazy" decoding="async" width="400" height="300"></div>
+        <div class="lpr-body">
+          <span class="lpr-pill">Saturated market</span>
+          <h3 class="lpr-name">A Bear&rsquo;s Tale</h3>
+          <div class="lpr-meta">2 BR, Pigeon Forge, TN</div>
+          <div class="lpr-stats">
+            <div><div class="lpr-lbl">Revenue</div><div class="lpr-val">$43.3K</div><div class="lpr-delta up">+33% year over year</div></div>
+            <div><div class="lpr-lbl">Occupancy</div><div class="lpr-val">93%</div><div class="lpr-delta">Full months on the system</div></div>
+            <div><div class="lpr-lbl">Nightly rate</div><div class="lpr-val">$260</div><div class="lpr-delta">Full months on the system</div></div>
+          </div>
+          <p class="lpr-foot">On the books for 2026 as of July, against the same time last year.</p>
+        </div>
+      </article>
+      <article class="lpr-card">
+        <div class="lpr-photo"><img src="/images/properties/cards/gulfstream-villa.webp" alt="Lanai pool in golden evening light" loading="lazy" decoding="async" width="400" height="300"></div>
+        <div class="lpr-body">
+          <span class="lpr-pill">Off-season lift</span>
+          <h3 class="lpr-name">Gulfstream Villa</h3>
+          <div class="lpr-meta">3 BR, Gulf Coast, FL, heated pool</div>
+          <div class="lpr-stats">
+            <div><div class="lpr-lbl">Revenue</div><div class="lpr-val">$40.7K</div><div class="lpr-delta up">+31% year over year</div></div>
+            <div><div class="lpr-lbl">Occupancy</div><div class="lpr-val">87%</div><div class="lpr-delta up">+10% on the system</div></div>
+            <div><div class="lpr-lbl">Nightly rate</div><div class="lpr-val">$219</div><div class="lpr-delta up">+4% on the system</div></div>
+          </div>
+          <p class="lpr-foot">On the books since takeover as of July, against the same months last year.</p>
+        </div>
+      </article>
+      <article class="lpr-card">
+        <div class="lpr-photo"><img src="/images/properties/cards/20-guest-villa.webp" alt="Aerial of the resort-style backyard, pool and courts" loading="lazy" decoding="async" width="400" height="300"></div>
+        <div class="lpr-body">
+          <span class="lpr-pill">New launch</span>
+          <h3 class="lpr-name">The 20-Guest Villa</h3>
+          <div class="lpr-meta">6 BR, sleeps 20, Tampa Bay, FL</div>
+          <div class="lpr-stats">
+            <div><div class="lpr-lbl">Revenue</div><div class="lpr-val">$329.5K</div><div class="lpr-delta">Booked, first season</div></div>
+            <div><div class="lpr-lbl">Occupancy</div><div class="lpr-val">83%</div><div class="lpr-delta">Season average, best month 100%</div></div>
+            <div><div class="lpr-lbl">Nightly rate</div><div class="lpr-val">$1,345</div><div class="lpr-delta">Season average, peak $1,700</div></div>
+          </div>
+          <p class="lpr-foot">First season from a standing start, no prior year.</p>
+        </div>
+      </article>
+      <article class="lpr-card">
+        <div class="lpr-photo"><img src="/images/properties/cards/waters-edge.webp" alt="Chalet exterior on a winter evening" loading="lazy" decoding="async" width="400" height="300"></div>
+        <div class="lpr-body">
+          <span class="lpr-pill">Established</span>
+          <h3 class="lpr-name">Waters Edge Hideaway</h3>
+          <div class="lpr-meta">5 BR, Pocono Mountains, PA</div>
+          <div class="lpr-stats">
+            <div><div class="lpr-lbl">Revenue</div><div class="lpr-val">$103.3K</div><div class="lpr-delta up">+38% year over year</div></div>
+            <div><div class="lpr-lbl">Occupancy</div><div class="lpr-val">50%</div><div class="lpr-delta up">+15% in 2026 so far</div></div>
+            <div><div class="lpr-lbl">Nightly rate</div><div class="lpr-val">$684</div><div class="lpr-delta up">+7% in 2026 so far</div></div>
+          </div>
+          <p class="lpr-foot">On the books for 2026 as of July, against the same time last year.</p>
+        </div>
+      </article>
+      <article class="lpr-card">
+        <div class="lpr-photo"><img src="/images/properties/cards/1820-house.webp" alt="Farmhouse exterior in spring" loading="lazy" decoding="async" width="400" height="300"></div>
+        <div class="lpr-body">
+          <span class="lpr-pill">Ski market</span>
+          <h3 class="lpr-name">1820 House, Steps to Ski Shuttle</h3>
+          <div class="lpr-meta">4 BR, Stowe, VT</div>
+          <div class="lpr-stats">
+            <div><div class="lpr-lbl">Revenue</div><div class="lpr-val">$103.1K</div><div class="lpr-delta up">+13% year over year</div></div>
+            <div><div class="lpr-lbl">Occupancy</div><div class="lpr-val">54%</div><div class="lpr-delta up">+5% in 2026 so far</div></div>
+            <div><div class="lpr-lbl">Nightly rate</div><div class="lpr-val">$709</div><div class="lpr-delta up">+7% in 2026 so far</div></div>
+          </div>
+          <p class="lpr-foot">On the books for 2026 as of July, against the same time last year.</p>
+        </div>
+      </article>
+      <article class="lpr-card">
+        <div class="lpr-photo"><img src="/images/properties/cards/soluna-haus.webp" alt="Exterior at dusk with glowing outdoor screen" loading="lazy" decoding="async" width="400" height="300"></div>
+        <div class="lpr-body">
+          <span class="lpr-pill">New launch</span>
+          <h3 class="lpr-name">Soluna Haus</h3>
+          <div class="lpr-meta">5 BR, Asheville, NC</div>
+          <div class="lpr-stats">
+            <div><div class="lpr-lbl">Revenue</div><div class="lpr-val">$62.1K</div><div class="lpr-delta">Booked, first season</div></div>
+            <div><div class="lpr-lbl">Occupancy</div><div class="lpr-val">97%</div><div class="lpr-delta">Best month so far</div></div>
+            <div><div class="lpr-lbl">Nightly rate</div><div class="lpr-val">$708</div><div class="lpr-delta">Best month, still climbing</div></div>
+          </div>
+          <p class="lpr-foot">First season from a standing start, no prior year.</p>
+        </div>
+      </article>
+      <article class="lpr-card">
+        <div class="lpr-photo"><img src="/images/properties/cards/sombrero.webp" alt="Blue waterfront home with pool and private dock, Marathon FL" loading="lazy" decoding="async" width="400" height="300"></div>
+        <div class="lpr-body">
+          <span class="lpr-pill">Established</span>
+          <h3 class="lpr-name">61 Sombrero</h3>
+          <div class="lpr-meta">4 BR, Marathon, FL, waterfront</div>
+          <div class="lpr-stats">
+            <div><div class="lpr-lbl">Revenue</div><div class="lpr-val">$12.6K</div><div class="lpr-delta up">+68% vs May last year</div></div>
+            <div><div class="lpr-lbl">Last May</div><div class="lpr-val">$7.5K</div><div class="lpr-delta">Same month, before</div></div>
+            <div><div class="lpr-lbl">Search rank</div><div class="lpr-val">#3</div><div class="lpr-delta up">Up from page 5</div></div>
+          </div>
+          <p class="lpr-foot">May revenue against the same month last year.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+  <div class="w">
+    <p class="lpr-src">Source: PriceLabs Booking Insights. Revenue is stays on the books, counted as of July 2026 unless noted.</p>
+  </div>
+  <script>
+  /* Auto-scrolling marquee that a visitor can also swipe or drag: the cards are cloned once,
+     the strip drifts right-to-left, and any touch, hover or manual scroll pauses it
+     (touch resumes 3s after the finger lifts). Paused off-screen; off for reduced motion. */
+  (function(){
+    var c=document.querySelector('.lpr-carousel'),t=document.getElementById('lpr-track');if(!c||!t)return;
+    [].slice.call(t.children).forEach(function(n){var d=n.cloneNode(true);d.setAttribute('aria-hidden','true');d.setAttribute('data-clone','');t.appendChild(d);});
+    if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+    var SPEED=window.innerWidth<720?30:36,pos=0,last=0,hover=false,touch=false,visible=true,resumeT=null;
+    function half(){return t.scrollWidth/2;}
+    c.addEventListener('mouseenter',function(){hover=true;});
+    c.addEventListener('mouseleave',function(){hover=false;pos=c.scrollLeft;});
+    c.addEventListener('touchstart',function(){touch=true;clearTimeout(resumeT);},{passive:true});
+    c.addEventListener('touchend',function(){clearTimeout(resumeT);resumeT=setTimeout(function(){touch=false;pos=c.scrollLeft;},3000);},{passive:true});
+    c.addEventListener('scroll',function(){
+      var h=half();
+      if(c.scrollLeft>=h){c.scrollLeft-=h;}           // keep a manual swipe inside the loop
+      if(Math.abs(c.scrollLeft-pos)>2)pos=c.scrollLeft; // manual scroll: follow it
+    },{passive:true});
+    if('IntersectionObserver' in window){new IntersectionObserver(function(e){visible=e[0].isIntersecting;},{rootMargin:'80px 0px'}).observe(c);}
+    function step(ts){
+      var dt=last?Math.min(ts-last,64):0;last=ts;
+      if(visible&&!hover&&!touch&&!document.hidden){
+        pos+=SPEED*dt/1000;var h=half();if(pos>=h)pos-=h;
+        c.scrollLeft=pos;
+      }
+      requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  })();
+  </script>
+</section>
+<!-- LP-RESULTS:END -->
+
+<!-- ════════════════════ MECHANISM (from the teammate design, 10/3/26) ════════════════════ -->
+<section class="lpm" style="background:var(--g50);border-top:1px solid var(--g200);border-bottom:1px solid var(--g200)">
+  <div class="w">
+    <div class="lp-eyebrow">The mechanism</div>
+    <h2 class="lp-h2">Airbnb is a search engine. <em>We treat it like one.</em></h2>
+    <p class="lp-lead">Most tools do one job and leave you to connect the dots. We run the whole sequence, in the order that decides whether a listing books. It starts with visibility, and nothing downstream matters without it.</p>
+    <div class="lpm-cols">
+      <div class="lpm-col">
+        <div class="lpm-n">1</div>
+        <h3>Get seen</h3>
+        <p>A guest never books a listing they never see. We read your position for each open date from a logged-out search, define the guest segment worth winning, and rebuild the listing so Airbnb knows what you offer.</p>
+        <ul><li>Ideal guest defined per property and season</li><li>Rank checked nightly, per open date</li><li>Completeness to match every search filter</li></ul>
+      </div>
+      <div class="lpm-col">
+        <div class="lpm-n">2</div>
+        <h3>Get picked</h3>
+        <p>Once a guest sees you, the photo tour and the copy decide the click and the booking. We lead with the amenity that sells and sequence the rest to follow the booking decision.</p>
+        <ul><li>Cover photo and photo order rebuilt</li><li>Professional photo direction and edits</li><li>Title, description and amenities rewritten</li></ul>
+      </div>
+      <div class="lpm-col">
+        <div class="lpm-n">3</div>
+        <h3>Get paid</h3>
+        <p>Rank-adjusted pricing. High-demand dates stress-tested upward, soft dates priced to sell, and never averaged against listings that are not booking.</p>
+        <ul><li>Comp set rebuilt per search, not per market</li><li>Prices adjusted daily</li><li>Monthly report on what changed and why</li></ul>
+      </div>
+    </div>
+    <div class="lpm-plat">
+      <p>Platforms we optimize on. Every change is deployed where you actually get paid.</p>
+      <div class="lpm-logos">
+        <img src="/images/redesign/logos/airbnb.webp" alt="Airbnb" loading="lazy" decoding="async">
+        <img src="/images/redesign/logos/vrbo.webp" alt="Vrbo" loading="lazy" decoding="async">
+        <img class="bk" src="/images/redesign/logos/bookingcom.webp" alt="Booking.com" loading="lazy" decoding="async">
+      </div>
+    </div>
+    <div class="lpm-demand">
+      <div>
+        <h3>This week, priced by demand</h3>
+        <p>Pricing tools price you to the average. Ranking tools show you data without acting on it. Rank-adjusted pricing reads where you sit for each open night and sets the rate a guest on that page will actually pay. Soft nights get priced to sell on purpose. A booking and a fresh review is worth more than an empty night held at full rate.</p>
+      </div>
+      <div class="lpm-days" role="img" aria-label="Sample week: Thursday $286 ranked 9, Friday $412 ranked 3, Saturday $438 ranked 2, Sunday $298 ranked 7, Monday $214 priced to sell">
+        <div class="lpm-day"><div class="lpm-dow">Thu</div><div class="lpm-rate">$286</div><div class="lpm-rank">#9</div></div>
+        <div class="lpm-day"><div class="lpm-dow">Fri</div><div class="lpm-rate">$412</div><div class="lpm-rank">#3</div></div>
+        <div class="lpm-day"><div class="lpm-dow">Sat</div><div class="lpm-rate">$438</div><div class="lpm-rank">#2</div></div>
+        <div class="lpm-day"><div class="lpm-dow">Sun</div><div class="lpm-rate">$298</div><div class="lpm-rank">#7</div></div>
+        <div class="lpm-day"><div class="lpm-dow">Mon</div><div class="lpm-rate">$214</div><div class="lpm-rank sell">Sell</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ WHO THIS IS FOR (from the teammate design, 10/3/26) ════════════════════ -->
+<section class="lpf">
+  <div class="w">
+    <div class="lp-eyebrow">Who this is for</div>
+    <h2 class="lp-h2">Built for a portfolio. <em>Works for one listing.</em></h2>
+    <p class="lp-lead">The service is the same at every size: a named performance manager who rebuilds each listing, prices it against what a guest actually sees for the open dates, and reports what changed and why. What differs is how it fits into your operation.</p>
+    <div class="lpf-grid">
+      <div class="lpf-card">
+        <h3>Property managers</h3>
+        <p class="lpf-sub">Running 10 or more units, with owners to answer to and a team already stretched.</p>
+        <ul class="lpf-list">
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Plugs in without a migration</b><span>We work through Airbnb&rsquo;s co-host permission. Your PMS, channel manager and pricing tool stay where they are. We read them, decide, and make the change.</span></div></li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>You keep the owner relationship</b><span>You stay the manager of record. We give you the monthly report per listing so you can show owners what moved and why.</span></div></li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Rank tracked per open date, across the portfolio</b><span>Not a monthly average. We see which units have gap nights sitting on page 4 and work those first.</span></div></li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Custom partnership rate at 10 or more</b><span>Flat rate per listing, quoted before you commit, with the same scope on every unit.</span></div></li>
+        </ul>
+      </div>
+      <div class="lpf-card">
+        <h3>Hosts and co-hosts</h3>
+        <p class="lpf-sub">Running one to nine listings and doing the pricing, photos and copy yourself.</p>
+        <ul class="lpf-list">
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>The whole stack, handled</b><span>Pricing, photo sequence, copy, amenities and categories, and daily rank tracking. You stop paying for tools you then have to read.</span></div></li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>A person, not a portal</b><span>Your performance manager knows your property and is reachable by text or email.</span></div></li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Live in 10 days</b><span>Listing rebuilt in the first three, pricing switched on by day 10, without touching a booking already on the calendar.</span></div></li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>Portfolio discount from the second listing</b><span>Your per-listing rate drops as you add units. The service does not change.</span></div></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ FINAL CTA ════════════════════ -->
+<section class="sec final">
+  <div class="w">
+    <h2>Enter the draw. <em>Keep the audit</em> either way.</h2>
+    <p>Every entry gets a full strategy audit of your listing or portfolio. One host at VRMA wins a year of RevWhisper on one listing.</p>
+    <a class="btn btn-onaccent js-to-form" href="#audit-form">Get my free audit <span class="arrow">→</span></a>
+    <div class="final-note">Free · Live walkthrough · No purchase necessary</div>
+  </div>
+</section>
+
+</main>
+
+<!-- ════════════════════ MINI FOOTER ════════════════════ -->
+<footer class="mini-footer">
+  <div class="w">
+    <div class="mf-row">
+      <div class="mf-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="22" height="22" fill="none" aria-hidden="true"><path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="#32302F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="#32302F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        RevWhisper
+      </div>
+      <div class="mf-links">
+        <a href="/privacy" target="_blank" rel="noopener">Privacy</a>
+        <a href="/terms" target="_blank" rel="noopener">Terms</a>
+        <span class="mf-tag">Stop Guessing. Start Whispering.</span>
+      </div>
+    </div>
+    <div class="mf-copy">&copy; 2026 MCO CORP d/b/a RevWhisper. All rights reserved.</div>
+  </div>
+</footer>
+
+<!-- ════════════════════ STICKY MOBILE CTA ════════════════════ -->
+<div class="sticky-cta">
+  <a class="btn btn-accent js-to-form" href="#audit-form">Get my free audit <span class="arrow">→</span></a>
+</div>
+
+<script>
+/* ───────────────────────── Multi-step lead form ───────────────────────── */
+let current = 0;
+const totalSteps = 6;
+let isTransitioning = false;
+const FORM_WEBHOOK_ENDPOINT = '/api/form-webhook';
+/* Fullscreen focus mode state — see the .rw-fs styles for the behavior contract. */
+let fsActive = false;
+let fsEntering = false;
+let fsScrollY = 0;
+
+function updateProgress(){
+  document.querySelectorAll('.fc-seg').forEach(function(s,i){ s.classList.toggle('on', i<=current); });
+  var cur=document.getElementById('fc-cur'); if(cur) cur.textContent=String(current+1);
+}
+
+/* Keep the form in view when it needs repositioning — glide the card to dead
+   centre of the viewport. Step transitions pass the card's post-transition
+   height so centring is measured against the incoming step, not the outgoing
+   one; CTAs call it bare. A card taller than the viewport pins just below the
+   top edge so the step title stays visible. */
+function scrollFormToCentre(cardH){
+  if(fsActive) return; // the takeover scrolls internally; the window stays locked
+  var card=document.getElementById('audit-form'); if(!card) return;
+  var OFFSET=16;
+  var vpH=window.innerHeight||document.documentElement.clientHeight;
+  var cardTop=window.pageYOffset + card.getBoundingClientRect().top; // stable while steps swap
+  var h=cardH||card.offsetHeight;
+  var gap=Math.max((vpH-h)/2,OFFSET);
+  var top=Math.max(0,cardTop-gap);
+  if(Math.abs(top-window.pageYOffset)<2) return; // already there — don't nudge
+  rwGlideTo(top);
+}
+/* Drive the glide with rAF instead of scrollTo({behavior:'smooth'}) — the
+   browser cancels a smooth scroll whenever scroll anchoring adjusts for the
+   card's animating height (or lazy images shifting layout), which stranded
+   the card off-centre. Re-asserting the eased position every frame can't be
+   cancelled, and the last frame lands exactly on target. User input (wheel /
+   touch) still cancels it, so we never fight a real scroll gesture. */
+function rwGlideTo(targetY){
+  var reduce=window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  if(reduce){ window.scrollTo({top:targetY,behavior:'instant'}); return; }
+  rwGlideTo._id=(rwGlideTo._id||0)+1;
+  var id=rwGlideTo._id, startY=window.pageYOffset, dist=targetY-startY, t0=null, DUR=420;
+  var stop=function(){ if(id===rwGlideTo._id) rwGlideTo._id++; cleanup(); };
+  var cleanup=function(){ window.removeEventListener('wheel',stop); window.removeEventListener('touchmove',stop); };
+  window.addEventListener('wheel',stop,{passive:true});
+  window.addEventListener('touchmove',stop,{passive:true});
+  // guaranteed landing: rAF is throttled to zero in occluded/background windows,
+  // so a timer double-checks the end state and snaps if the glide never ran.
+  // A user cancel (wheel/touch) bumps _id first, so it never fights the user.
+  setTimeout(function(){
+    if(id!==rwGlideTo._id) return;
+    if(Math.abs(window.pageYOffset-targetY)>8) window.scrollTo({top:targetY,behavior:'instant'});
+  },DUR+140);
+  function frame(ts){
+    if(id!==rwGlideTo._id){ cleanup(); return; }
+    if(t0===null) t0=ts;
+    var p=Math.min((ts-t0)/DUR,1);
+    // behavior must be 'instant': 'auto' defers to the page's html{scroll-behavior:smooth},
+    // which would turn every frame's write into a new competing smooth animation
+    window.scrollTo({top:startY+dist*(1-Math.pow(1-p,3)),behavior:'instant'});
+    if(p<1) requestAnimationFrame(frame); else cleanup();
+  }
+  requestAnimationFrame(frame);
+}
+
+function transitionStep(from,to,direction){
+  if(isTransitioning) return;
+  isTransitioning=true;
+  const vp=document.querySelector('.steps-viewport');
+  const fromEl=document.querySelector(`.step[data-step="${from}"]`);
+  const toEl=document.querySelector(`.step[data-step="${to}"]`);
+  if(!fromEl||!toEl){isTransitioning=false;return;}
+  // measure current height, then the incoming step's height, and animate the gap
+  const startH=vp.offsetHeight;
+  // stable geometry: the card's top doesn't move as steps swap — only its height changes below it
+  const card=document.getElementById('audit-form');
+  const cardTopBefore=card?card.getBoundingClientRect().top:0;
+  const chromeH=card?(card.offsetHeight-startH):0;
+  fromEl.classList.remove('active','enter-from-below','enter-from-above');
+  fromEl.classList.add(direction==='forward'?'exit-up':'exit-down');
+  toEl.classList.remove('active','exit-up','exit-down');
+  // stage the incoming step off-screen with transitions OFF, then commit via reflow
+  toEl.style.transition='none';
+  toEl.style.position='relative';toEl.style.opacity='0';toEl.style.visibility='visible';
+  toEl.style.transform=direction==='forward'?'translateY(14px)':'translateY(-14px)';
+  toEl.style.pointerEvents='auto';
+  void toEl.offsetHeight;
+  const endH=toEl.offsetHeight;
+  // if the incoming step won't fully fit as-is, glide the card to dead centre of the viewport
+  const vpH=window.innerHeight||document.documentElement.clientHeight;
+  const recentre=card && !(cardTopBefore>=0 && (cardTopBefore+chromeH+endH)<=vpH);
+  if(recentre) scrollFormToCentre(chromeH+endH);
+  // in the takeover the card is its own scroller — bring the incoming step's title into view
+  if(fsActive&&card) card.scrollTo({top:0,behavior:'smooth'});
+  // animate the card height from old → new
+  vp.style.height=startH+'px';
+  void vp.offsetHeight;
+  vp.style.height=endH+'px';
+  // enable transitions and move the step to its resting state (no rAF — reflow already committed the start)
+  toEl.style.transition='';
+  toEl.classList.add(direction==='forward'?'enter-from-below':'enter-from-above');
+  toEl.style.position='';toEl.style.opacity='';toEl.style.visibility='';toEl.style.transform='';toEl.style.pointerEvents='';
+  setTimeout(function(){
+    fromEl.classList.remove('exit-up','exit-down');fromEl.style.position='';
+    vp.style.height='';            // release to auto so inline errors can expand the step
+    isTransitioning=false;
+    // settle pass: the browser's scroll anchoring can interrupt the smooth
+    // glide while the card height animates, and again on the height release
+    // above — so re-centre a beat later, on a fully stable layout (the <2px
+    // guard makes this a no-op when the first glide already landed)
+    if(recentre) setTimeout(function(){scrollFormToCentre();},60);
+  },480);
+  updateProgress();
+}
+
+function validateStep(step){
+  let valid=true;
+  if(step===4){
+    const url=document.getElementById('airbnb-url');
+    const val=url.value.trim();
+    // Airbnb URL (listing or host profile) is required. airbnb. covers every country
+    // domain; abnb.me is what the Airbnb app's share sheet puts on the clipboard.
+    const valLower=val.toLowerCase();
+    if(!val || !(valLower.includes('airbnb.')||valLower.includes('abnb.me'))){url.classList.add('error');valid=false;}else{url.classList.remove('error');}
+  }
+  if(step===5){
+    const name=document.getElementById('full-name');
+    const email=document.getElementById('email');
+    if(!name.value.trim()){name.classList.add('error');valid=false;}else{name.classList.remove('error');}
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())){email.classList.add('error');valid=false;}else{email.classList.remove('error');}
+    const phone=document.getElementById('phone');
+    const pcode=(document.getElementById('phone-code')||{}).value||'+1';
+    if(!rwPhoneValid(pcode,phone.value)){phone.classList.add('error');valid=false;}else{phone.classList.remove('error');}
+  }
+  return valid;
+}
+
+function nextStep(){
+  if(current>=totalSteps-1) return;
+  // Let the fullscreen expansion land before the first step swap — the box glide and
+  // the step/height animation running together read as jank, and sequencing them makes
+  // the expansion the show. Same queue-and-retry as the transition lock below.
+  if(fsEntering){
+    const from=current;
+    setTimeout(function(){ if(current===from) nextStep(); },120);
+    return;
+  }
+  // Never advance `current` while a step is animating: transitionStep would no-op on its
+  // isTransitioning guard and the counter would desync from the visible step (stacked
+  // cards, silently skipped questions). A checked radio can't re-fire change, so a
+  // swallowed tap has no retry path — queue the advance instead of dropping it. The
+  // current===from check makes a queued call a no-op if another already advanced.
+  if(isTransitioning){
+    const from=current;
+    setTimeout(function(){ if(current===from) nextStep(); },140);
+    return;
+  }
+  if(!validateStep(current)) return;
+  const from=current;current++;
+  rwTrack('form_step',{step:current,page:'vrma'});
+  transitionStep(from,current,'forward');
+}
+function prevStep(){
+  if(isTransitioning) return; // safe to drop: the Back button stays put for a re-tap
+  if(current>0){const from=current;current--;transitionStep(from,current,'backward');}
+}
+
+/* Revenue bands per listing count — annual gross portfolio revenue.
+   The FIRST band in each ladder is the qualification floor: selecting it = below
+   threshold = disqualified (routed to the report page, not the booking calendar).
+   Per-listing floor decays as the portfolio grows (portfolio discounts + higher LTV):
+   $40k → $30k → $25k → ~$18k → ~$15k → ~$10k per door at the low end of each band. */
+var REVENUE_BANDS={
+  '1':['Under $40k','$40k–$60k','$60k–$85k','$85k–$120k','$120k–$175k','$175k+'],
+  '2-5':['Under $60k','$60k–$110k','$110k–$175k','$175k–$275k','$275k–$450k','$450k+'],
+  '6-10':['Under $150k','$150k–$300k','$300k–$475k','$475k–$700k','$700k–$1M','$1M+'],
+  '11-25':['Under $200k','$200k–$450k','$450k–$750k','$750k–$1.25M','$1.25M–$2.5M','$2.5M+'],
+  '26-100':['Under $400k','$400k–$900k','$900k–$1.5M','$1.5M–$3M','$3M–$6M','$6M+'],
+  '100+':['Under $1M','$1M–$3M','$3M–$6M','$6M–$12M','$12M–$25M','$25M+']
+};
+/* CAD ladder — the same qualification floors as the USD ladder at ~1.38 FX,
+   rounded to clean numbers, so the gate means the same thing in both countries.
+   The CA$ prefix travels with the submitted value, so CRM entries self-label.
+   Keep ladder + detection in sync across: audit.html, assets/audit-widget.js,
+   airbnb-revenue-management.html, pricing-tool-audit.html, ranking-audit.html,
+   listing-audit.html. */
+var REVENUE_BANDS_CAD={
+  '1':['Under CA$55k','CA$55k–85k','CA$85k–120k','CA$120k–165k','CA$165k–240k','CA$240k+'],
+  '2-5':['Under CA$85k','CA$85k–150k','CA$150k–240k','CA$240k–380k','CA$380k–620k','CA$620k+'],
+  '6-10':['Under CA$200k','CA$200k–400k','CA$400k–650k','CA$650k–950k','CA$950k–1.4M','CA$1.4M+'],
+  '11-25':['Under CA$275k','CA$275k–620k','CA$620k–1M','CA$1M–1.7M','CA$1.7M–3.4M','CA$3.4M+'],
+  '26-100':['Under CA$550k','CA$550k–1.25M','CA$1.25M–2M','CA$2M–4M','CA$4M–8M','CA$8M+'],
+  '100+':['Under CA$1.4M','CA$1.4M–4M','CA$4M–8M','CA$8M–16M','CA$16M–35M','CA$35M+']
+};
+/* Canada detection — zero-request, resolved once at load:
+   1) explicit ?geo=ca|us on the URL (tag Canada campaign links with ?geo=ca),
+   2) a *-CA browser language,
+   3) a Canadian IANA timezone (city-named, never shared with US cities, and it
+      reflects the OS clock — VPN-proof, and it still catches the many Canadians
+      whose browsers report en-US).
+   Anything ambiguous falls back to USD. */
+function rwDetectCanada(){
+  try{
+    var q=(new URLSearchParams(window.location.search).get('geo')||'').toLowerCase();
+    if(q) return q==='ca';
+    var langs=(navigator.languages&&navigator.languages.length)?navigator.languages:[navigator.language||''];
+    for(var i=0;i<langs.length;i++){ if(/-ca$/i.test(String(langs[i]))) return true; }
+    var tz=(Intl.DateTimeFormat().resolvedOptions().timeZone)||'';
+    return /^America\/(St_Johns|Halifax|Glace_Bay|Moncton|Goose_Bay|Blanc-Sablon|Toronto|Nipigon|Thunder_Bay|Iqaluit|Pangnirtung|Atikokan|Winnipeg|Rainy_River|Resolute|Rankin_Inlet|Regina|Swift_Current|Edmonton|Cambridge_Bay|Yellowknife|Inuvik|Creston|Dawson_Creek|Fort_Nelson|Vancouver|Whitehorse|Dawson)$/.test(tz);
+  }catch(e){ return false; }
+}
+var RW_IS_CA=rwDetectCanada();
+function rwBands(listingVal){
+  var t=RW_IS_CA?REVENUE_BANDS_CAD:REVENUE_BANDS;
+  return t[listingVal]||t['1'];
+}
+function renderRevenueOptions(listingVal){
+  var single=(listingVal==='1');
+  // revenue bands sized to the chosen portfolio
+  var wrap=document.getElementById('revenue-options');
+  if(wrap){
+    var bands=rwBands(listingVal);
+    var html='';
+    bands.forEach(function(b){
+      html+='<label class="option-card"><input type="radio" name="revenue" value="'+b+'"><div class="oc-label"><span class="oc-radio"></span><span>'+b+'</span></div></label>';
+    });
+    wrap.innerHTML=html;
+  }
+  var title=document.getElementById('revenue-title');
+  if(title) title.innerHTML='Roughly what did your '+(single?'listing':'portfolio')+' earn <em>last year?</em>';
+  var dc=document.getElementById('doorcount-field');
+  if(dc) dc.style.display=(listingVal==='26-100'||listingVal==='100+')?'':'none';
+}
+
+/* ── Fullscreen focus mode ──────────────────────────────────
+   enterFs promotes the card on the first answer tap — no exit control in the UI by
+   design; the form is the page from here. The one escape is the browser back gesture:
+   entering pushes a #focus history entry, so back collapses the takeover to the plain
+   landing page (answers intact) instead of bouncing the visitor off the site, and
+   forward steps back into it. Body scroll locks via position:fixed with the scroll
+   offset pinned (iOS Safari ignores overflow:hidden on body), which also keeps the
+   page from visibly jumping behind the backdrop while it fades in. */
+function enterFs(skipPush,via){
+  if(fsActive) return;
+  var card=document.getElementById('audit-form'); if(!card) return;
+  fsActive=true; fsEntering=true;
+  fsScrollY=window.pageYOffset;
+  // The expansion is a box glide, not a re-appearance: capture the card's inline
+  // geometry, flip the page into fs mode, capture where the stylesheet wants the card,
+  // then animate the real box (top/left/size/padding/radius) between the two rects.
+  // Reading the destination from a live rect (not computing it) keeps mobile inset:0,
+  // desktop translate-centring, and env(safe-area-*) all correct for free.
+  var r1=card.getBoundingClientRect();
+  var c1=getComputedStyle(card);
+  var startPad=c1.padding, startRad=c1.borderRadius;
+  // Placeholder in the card's slot: the page behind must not reflow when the card goes
+  // fixed — content jumping up under the fading scrim reads as the widget glitching.
+  var ph=document.createElement('div');
+  ph.id='fs-ph'; ph.style.height=r1.height+'px'; ph.setAttribute('aria-hidden','true');
+  card.parentNode.insertBefore(ph,card);
+  // pad for the vanishing scrollbar so the page doesn't reflow behind the fading scrim
+  var sbw=window.innerWidth-document.documentElement.clientWidth;
+  if(sbw>0) document.body.style.paddingRight=sbw+'px';
+  document.body.style.top=(-fsScrollY)+'px';
+  document.body.classList.add('rw-fs');
+  var r2=card.getBoundingClientRect();
+  var c2=getComputedStyle(card);
+  var endPad=c2.padding, endRad=c2.borderRadius;
+  var endBw=c2.borderTopWidth, endBc=c2.borderTopColor;
+  // Entry from a CTA elsewhere on the page: the card is off-screen, and a glide from its
+  // real position would streak in from a screen-height away. Start from a slightly inset
+  // copy of the destination and fade in instead — the grow-from-the-card glide is only
+  // for when the card is actually in view.
+  var vh=window.innerHeight||document.documentElement.clientHeight;
+  var offscreen=r1.bottom<=0||r1.top>=vh;
+  var start=offscreen
+    ? {top:r2.top+r2.height*.04,left:r2.left+r2.width*.04,width:r2.width*.92,height:r2.height*.92}
+    : r1;
+  var s=card.style;
+  s.transition='none'; s.transform='none'; s.margin='0'; s.maxHeight='none';
+  s.top=start.top+'px'; s.left=start.left+'px'; s.width=start.width+'px'; s.height=start.height+'px';
+  s.padding=offscreen?endPad:startPad; s.borderRadius=offscreen?endRad:startRad;
+  s.borderStyle='solid'; s.borderWidth=offscreen?endBw:c1.borderTopWidth; s.borderColor=offscreen?endBc:c1.borderTopColor;
+  s.opacity=offscreen?'0':'1';
+  void card.offsetHeight;
+  var DUR='.34s', EASE='cubic-bezier(.16,1,.3,1)';
+  s.transition=['top','left','width','height','padding','border-radius','border-width','border-color','opacity'].map(function(p){return p+' '+DUR+' '+EASE;}).join(',');
+  s.top=r2.top+'px'; s.left=r2.left+'px'; s.width=r2.width+'px'; s.height=r2.height+'px';
+  s.padding=endPad; s.borderRadius=endRad;
+  s.borderWidth=endBw; s.borderColor=endBc;
+  s.opacity='1';
+  setTimeout(function(){
+    // hand geometry back to the stylesheet — values match the landed box, so no jump —
+    // and release the deferred first step swap (see nextStep)
+    s.transition='';s.top='';s.left='';s.width='';s.height='';s.padding='';s.borderRadius='';s.transform='';s.margin='';s.maxHeight='';
+    s.borderStyle='';s.borderWidth='';s.borderColor='';s.opacity='';
+    fsEntering=false;
+  },360);
+  if(!skipPush){ try{ history.pushState({rwFs:1},'','#focus'); }catch(e){} }
+  rwTrack('form_fullscreen_open',{page:'vrma',step:current+1,via:via||'answer'});
+}
+/* Browser back while fullscreen → collapse to the plain landing page. Same DOM node,
+   so answers and step survive; a later answer tap re-enters the takeover. */
+function exitFs(){
+  if(!fsActive) return;
+  fsActive=false;
+  var card=document.getElementById('audit-form');
+  if(card){ // snap out of any mid-glide inline geometry before handing back to the stylesheet
+    var s=card.style;
+    s.transition='';s.top='';s.left='';s.width='';s.height='';s.padding='';s.borderRadius='';
+    s.transform='';s.margin='';s.maxHeight='';s.borderStyle='';s.borderWidth='';s.borderColor='';s.opacity='';
+  }
+  document.body.classList.remove('rw-fs');
+  document.body.style.top='';
+  document.body.style.paddingRight='';
+  var ph=document.getElementById('fs-ph'); if(ph) ph.remove();
+  window.scrollTo({top:fsScrollY,behavior:'instant'});
+  rwTrack('form_fullscreen_exit',{page:'vrma',via:fsExitVia||'browser_back',step:current+1});
+  fsExitVia='';
+}
+var fsExitVia='';
+/* The ✕ rides the same rail as browser back: pop our #focus entry so history stays clean
+   and the popstate handler does the collapse. Falls back to a direct exit if the entry
+   isn't ours (pushState failed or was blocked). */
+function closeFsButton(){
+  if(!fsActive) return;
+  fsExitVia='close_button';
+  if(history.state&&history.state.rwFs){ history.back(); }
+  else { exitFs(); try{ history.replaceState(null,'',location.pathname+location.search); }catch(e){} }
+}
+(function(){
+  var card=document.getElementById('audit-form'); if(!card) return;
+  card.addEventListener('change',function(e){
+    var n=e.target&&e.target.name;
+    if(n==='listings'||n==='issue'||n==='pricing'||n==='revenue') enterFs();
+  });
+  var x=document.getElementById('fc-close'); if(x) x.addEventListener('click',closeFsButton);
+  window.addEventListener('popstate',function(){
+    if(fsActive){ exitFs(); return; }           // back: down to the landing page
+    if(location.hash==='#focus') enterFs(true,'forward'); // forward: back into the takeover (no new entry)
+  });
+  // a reload while fullscreen leaves a stale #focus in the URL — start clean
+  if(location.hash==='#focus'){ try{ history.replaceState(null,'',location.pathname+location.search); }catch(e){} }
+})();
+
+/* Auto-advance taps: listings, issue, pricing, and the dynamic revenue bands.
+   scheduleAdvance captures the step at scheduling time so two answer taps inside one
+   delay window advance exactly once — a timer whose step already moved on is void. */
+function scheduleAdvance(){
+  var from=current;
+  setTimeout(function(){ if(current===from) nextStep(); },180);
+}
+document.querySelectorAll('input[name="listings"]').forEach(function(r){
+  r.addEventListener('change',function(){ rwTrack('select_portfolio_size',{size:r.value,page:'vrma'}); renderRevenueOptions(r.value); scheduleAdvance(); });
+});
+document.querySelectorAll('input[name="issue"]').forEach(function(r){
+  r.addEventListener('change',function(){ rwTrack('select_issue',{issue:r.value,page:'vrma'}); scheduleAdvance(); });
+});
+document.querySelectorAll('input[name="pricing"]').forEach(function(r){
+  r.addEventListener('change',function(){ rwTrack('select_pricing',{pricing:r.value,page:'vrma'}); scheduleAdvance(); });
+});
+/* revenue radios are rendered dynamically — delegate the change to auto-advance */
+document.addEventListener('change',function(e){
+  if(e.target&&e.target.name==='revenue'){ rwTrack('select_revenue',{revenue:e.target.value,page:'vrma'}); scheduleAdvance(); }
+});
+/* Re-selecting the already-checked answer advances too. After Back, the previous answer
+   is still checked, and a checked radio can't fire change — without this, the only way
+   forward was changing the answer. Click runs before change (checkedness is set before
+   the click event dispatches; change fires after), so a click whose value matches the
+   group's last committed value is a confirm-tap, not a new selection: advance without
+   re-firing the select_* tracking. */
+(function(){
+  var card=document.getElementById('audit-form'); if(!card) return;
+  var lastVal={};
+  card.addEventListener('change',function(e){
+    var n=e.target&&e.target.name;
+    if(n==='listings'||n==='issue'||n==='pricing'||n==='revenue') lastVal[n]=e.target.value;
+  });
+  card.addEventListener('click',function(e){
+    var t=e.target;
+    if(!t||t.type!=='radio') return;
+    var n=t.name;
+    if(n!=='listings'&&n!=='issue'&&n!=='pricing'&&n!=='revenue') return;
+    // only the visible step's radios count — never advance off a hidden step's control
+    var stepEl=t.closest('.step');
+    if(!stepEl||!/(?:^|\s)(?:active|enter-from-below|enter-from-above)(?:\s|$)/.test(stepEl.className)) return;
+    if(lastVal[n]===t.value){ enterFs(); scheduleAdvance(); } // a confirm-tap is still an answer tap
+  });
+})();
+
+/* Phone input: country-code-aware live mask + validation (US/Canada = 10 digits; intl = 7-15) */
+function rwPhoneDigits(v){ return (String(v||'').match(/\d/g)||[]).join(''); }
+function rwFormatPhone(code,raw){
+  var d=rwPhoneDigits(raw);
+  if(code==='+1'){
+    d=d.slice(0,10);
+    if(!d) return '';
+    if(d.length<4) return '('+d;
+    if(d.length<7) return '('+d.slice(0,3)+') '+d.slice(3);
+    return '('+d.slice(0,3)+') '+d.slice(3,6)+'-'+d.slice(6);
+  }
+  return d.slice(0,15);
+}
+function rwPhoneValid(code,raw){
+  // Real numbering-plan check from /assets/phone-validate.js; digit count until it loads
+  if(window.rwPhoneCheck) return rwPhoneCheck(code,raw);
+  var n=rwPhoneDigits(raw).length;
+  return code==='+1' ? n===10 : (n>=7&&n<=15);
+}
+function rwApplyPhoneMask(){
+  var p=document.getElementById('phone'),c=document.getElementById('phone-code');
+  if(!p||!c) return;
+  p.value=rwFormatPhone(c.value,p.value);
+  p.placeholder=c.value==='+1'?'(555) 123-4567':'Phone number';
+  p.classList.remove('error');
+}
+(function(){
+  var p=document.getElementById('phone'),c=document.getElementById('phone-code');
+  if(p) p.addEventListener('input',rwApplyPhoneMask);
+  if(c) c.addEventListener('change',rwApplyPhoneMask);
+  // Canadians see the maple leaf on the +1 option (value stays '+1' — same NANP mask/validation)
+  if(RW_IS_CA&&c){var o=c.querySelector('option[value="+1"]');if(o)o.textContent='🇨🇦 +1';}
+})();
+
+/* Clear field error as the user types */
+document.querySelectorAll('.field-input').forEach(function(input){
+  input.addEventListener('input',function(){input.classList.remove('error');});
+});
+
+/* Submit — fire Lead, post webhook, stash context, go to booking page */
+var submitted=false;
+function submitForm(){
+  if(!validateStep(4)){ prevStep(); return; } // URL step was skipped/emptied somehow — send them back to it
+  if(!validateStep(5)) return;
+  if(submitted) return;
+  const btn=document.getElementById('btn-submit');
+  btn.disabled=true;
+
+  const listingsVal=(document.querySelector('input[name="listings"]:checked')||{}).value||'';
+  const revenueVal=(document.querySelector('input[name="revenue"]:checked')||{}).value||'';
+  // Qualification gate: the first band in each ladder is the disqualifying floor.
+  // Selecting it (and only it) means the portfolio is below threshold for the service.
+  const bandsForListings=rwBands(listingsVal);
+  const qualified=!(revenueVal && revenueVal===bandsForListings[0]);
+
+  const data={
+    listings:listingsVal,
+    issue:(document.querySelector('input[name="issue"]:checked')||{}).value||'',
+    pricing:(document.querySelector('input[name="pricing"]:checked')||{}).value||'',
+    revenue:revenueVal,
+    currency:RW_IS_CA?'CAD':'USD',
+    doorCount:((document.getElementById('door-count')||{}).value||'').trim(),
+    airbnbUrl:document.getElementById('airbnb-url').value.trim(),
+    name:document.getElementById('full-name').value.trim(),
+    email:document.getElementById('email').value.trim(),
+    phone:(document.getElementById('phone-code').value.trim()+' '+document.getElementById('phone').value.trim()).trim(),
+    phone_code:document.getElementById('phone-code').value.trim(),
+    phone_number:document.getElementById('phone').value.trim(),
+    qualified:qualified,
+    disqualifyReason:qualified?'':'below_revenue_floor',
+    source:'facebook-ads',
+    campaign:'vrma-giveaway',
+    submittedAt:new Date().toISOString(),
+    attribution:rwAttribution()
+  };
+
+  submitted=true;
+
+  // hand the lead context to the next page (booking or report)
+  try{ sessionStorage.setItem('rw_audit_lead', JSON.stringify(data)); }catch(e){}
+
+  if(!qualified){
+    // ── Below threshold ──────────────────────────────────────────────────────
+    // Do NOT fire the standard Lead (and we omit fbEventId/xConversionId below,
+    // so the server's CAPI Lead is skipped too) — this keeps Meta's optimizer
+    // from learning to find more sub-threshold submitters. We fire a custom
+    // measurement-only event, still capture the lead to the CRM (flagged
+    // qualified:false), then route to the report page instead of the calendar.
+    try{ fbq('trackCustom','UnqualifiedLead',{content_name:'Free Audit',content_category:'Audit Lead — Unqualified'}); }catch(e){}
+    rwTrack('generate_lead_unqualified',{page:'vrma',listings:data.listings,revenue:data.revenue});
+    fetch(FORM_WEBHOOK_ENDPOINT,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({event_type:'get_started',payload:data}),
+      keepalive:true
+    }).catch(function(){});
+    window.location.href='/audit-report-coming';
+    return;
+  }
+
+  // ── Qualified ──────────────────────────────────────────────────────────────
+  // Meta Lead — fired browser-side now, and again server-side from /api/form-webhook
+  // (CAPI) using this same event_id, so Meta deduplicates the pair into one Lead.
+  var eventId='lead_'+Date.now()+'_'+Math.random().toString(36).slice(2,10);
+  var xConversionId=typeof rwXConversionId==='function'?rwXConversionId('audit_lead'):'audit_lead_'+Date.now();
+  try{ sessionStorage.setItem('rw_lead_event_id', eventId); }catch(e){}
+  try{ fbq('track','Lead',{content_name:'Free Audit',content_category:'Audit Lead'},{eventID:eventId}); }catch(e){}
+  rwTrack('generate_lead',{page:'vrma',listings:data.listings,issue:data.issue});
+  // Hand the event_id + content name to the server so its CAPI Lead dedupes with the above.
+  data.fbEventId=eventId; data.adConsent=!window.rwConsent||rwConsent.ads; data.fbContentName='Free Audit';
+  // X uses conversion_id for Pixel/CAPI dedupe; event IDs are loaded from /api/x-config.
+  data.xConversionId=xConversionId; data.xContentName='Free Audit Lead';
+  if(data.attribution&&data.attribution.twclid) data.twclid=data.attribution.twclid;
+
+  function fireXLead(){
+    var xParams={conversion_id:xConversionId,email_address:data.email};
+    if(data.phone&&typeof rwXNormalizePhone==='function') xParams.phone_number=rwXNormalizePhone(data.phone);
+    try{ rwXTrack('auditLead',xParams); }catch(e){}
+  }
+
+  // CRM webhook (fire-and-forget — don't block the redirect on Make.com latency)
+  fetch(FORM_WEBHOOK_ENDPOINT,{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({event_type:'get_started',payload:data}),
+    keepalive:true
+  }).catch(function(){});
+
+  // straight to the live-audit booking page
+  var redirect=function(){window.location.href='/audit-booking';};
+  if(window.rwXReady&&typeof window.rwXReady.then==='function'){
+    Promise.race([window.rwXReady,new Promise(function(resolve){setTimeout(resolve,120);})])
+      .then(function(){fireXLead();redirect();})
+      .catch(redirect);
+  }else{
+    fireXLead();
+    redirect();
+  }
+}
+
+/* Enter key advances / submits */
+document.addEventListener('keydown',function(e){
+  if(e.key!=='Enter') return;
+  if(e.target.tagName==='TEXTAREA') return;
+  if(current===4){e.preventDefault();nextStep();}       // Enter in the URL field → continue
+  else if(current===5){e.preventDefault();submitForm();}
+});
+
+/* Every other "Get my free audit" CTA on the page (report section, final band, sticky
+   mobile bar) opens the fullscreen form at whatever step the visitor is on — the first
+   question for a fresh visitor — instead of scrolling them back up to the inline card. */
+document.querySelectorAll('.js-to-form').forEach(function(a){
+  a.addEventListener('click',function(e){
+    e.preventDefault();
+    enterFs(false,'cta');
+  });
+});
+
+updateProgress();
+
+/* FAQ accordion — smooth max-height + opacity; fixed-duration cleanup (no transitionend dependency) */
+document.querySelectorAll('.faq').forEach(function(d){
+  var summary=d.querySelector('summary');
+  var c=d.querySelector('.faq-a');
+  if(!summary||!c) return;
+  var DUR=400;
+  summary.addEventListener('click',function(e){
+    e.preventDefault();
+    if(d.dataset.anim==='1') return;
+    d.dataset.anim='1';
+    if(d.classList.contains('is-open')){
+      // close
+      c.style.maxHeight=c.scrollHeight+'px'; c.style.opacity='1';
+      void c.offsetHeight;
+      d.classList.remove('is-open');
+      c.style.maxHeight='0px'; c.style.opacity='0';
+      setTimeout(function(){ d.open=false; c.style.maxHeight=''; c.style.opacity=''; d.dataset.anim='0'; },DUR);
+    } else {
+      // open
+      d.open=true; d.classList.add('is-open');
+      c.style.maxHeight='0px'; c.style.opacity='0';
+      void c.offsetHeight;
+      c.style.maxHeight=c.scrollHeight+'px'; c.style.opacity='1';
+      setTimeout(function(){ if(d.classList.contains('is-open')){ c.style.maxHeight='none'; c.style.opacity=''; } d.dataset.anim='0'; },DUR);
+    }
+  });
+});
+
+/* Duplicate the case-study cards so the marquee loops seamlessly (clones flagged for reduced-motion) */
+(function(){var t=document.getElementById('case-track');if(!t)return;[].slice.call(t.children).forEach(function(c){var d=c.cloneNode(true);d.setAttribute('aria-hidden','true');d.setAttribute('data-clone','');t.appendChild(d);});})();
+/* Same duplication for the reviews marquee */
+(function(){var t=document.getElementById('review-track');if(!t)return;[].slice.call(t.children).forEach(function(c){var d=c.cloneNode(true);d.setAttribute('aria-hidden','true');d.setAttribute('data-clone','');t.appendChild(d);});})();
+
+/* Pause the always-on animations (edge glow, two marquees) while off-screen */
+(function(){
+  if(!('IntersectionObserver' in window)) return;
+  var targets=[].slice.call(document.querySelectorAll('.form-glow,.case-carousel,.review-carousel'));
+  if(!targets.length) return;
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){ en.target.classList.toggle('is-idle', !en.isIntersecting); });
+  },{rootMargin:'80px 0px'});
+  targets.forEach(function(t){ io.observe(t); });
+})();
+
+/* Sticky mobile CTA: only show once the hero form has scrolled out of view (hidden while the form is on screen) */
+(function(){
+  var bar=document.querySelector('.sticky-cta'), form=document.getElementById('audit-form');
+  if(!bar||!form) return;
+  function update(){ bar.classList.toggle('show', form.getBoundingClientRect().bottom < 10); }
+  window.addEventListener('scroll', update, {passive:true});
+  window.addEventListener('resize', update);
+  update();
+})();
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>

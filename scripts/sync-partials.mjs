@@ -13,6 +13,9 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const PARTIALS = [
   { name: 'HEADER', file: '_partials/header.html' },
   { name: 'FOOTER', file: '_partials/footer.html' },
+  // Landing-page sections (10/3/26): proof band + client results, shared across paid LPs.
+  { name: 'LP-PROOF', file: '_partials/lp-proof.html' },
+  { name: 'LP-RESULTS', file: '_partials/lp-results.html' },
 ];
 
 // Pages that should ship the shared partials. Anything not listed here is left alone.
@@ -27,6 +30,7 @@ const TARGETS = [
   'terms.html',
   'blog/index.html',
   'blog/_template.html',
+  'vrma.html',
 ];
 
 // Auto-include every HTML file under blog/ that isn't the index/template.
