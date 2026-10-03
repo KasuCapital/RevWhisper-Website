@@ -599,7 +599,13 @@ body.rw-fs .form-card{position:fixed;left:50%;top:50%;transform:translate(-50%,-
 .vg-n{font-size:12px;color:var(--accent);margin-bottom:6px}
 .vg-step h3{font-family:var(--heading);font-size:21px;font-weight:400;color:var(--black);margin-bottom:8px}
 .vg-step p{font-size:15px;line-height:1.6;color:var(--g600)}
-.vg-fine{margin-top:28px;font-size:12px;color:var(--g500)}
+.vg-step a{color:var(--accent)}
+.vg-rules{margin-top:32px;border-top:1px solid var(--g200);padding-top:16px}
+.vg-rules summary{cursor:pointer;font-size:13.5px;font-weight:500;color:var(--g600);list-style-position:inside}
+.vg-rules ul{margin:14px 0 0 18px;display:flex;flex-direction:column;gap:9px;max-width:820px}
+.vg-rules li{font-size:13px;line-height:1.6;color:var(--g600)}
+.vg-rules b{font-weight:500;color:var(--black)}
+.vg-rules a{color:var(--accent)}
 @media (max-width:820px){.vg-grid,.vg-steps{grid-template-columns:1fr}.vg-steps{gap:22px;margin-top:36px}}
 @media (max-width:720px){
   .vg-btn{display:flex;width:100%;justify-content:center;margin-top:22px}
@@ -608,7 +614,7 @@ body.rw-fs .form-card{position:fixed;left:50%;top:50%;transform:translate(-50%,-
   .vg-step{padding-top:14px}
   .vg-step h3{font-size:19px;margin-bottom:6px}
   .vg-step p{font-size:14.5px}
-  .vg-fine{margin-top:20px}
+  .vg-rules{margin-top:24px}
 }
 </style>
 <link rel="stylesheet" href="/assets/lp-sections.css?v=4">
@@ -903,16 +909,28 @@ body.rw-fs .form-card{position:fixed;left:50%;top:50%;transform:translate(-50%,-
       </div>
       <div class="vg-step">
         <div class="vg-n">2</div>
-        <h3>Find us at VRMA</h3>
-        <p>Come find us in person and we will pull your listing&rsquo;s rank live for your next 10 unbooked dates. You also get an extra entry into the draw.</p>
+        <h3>Find Nick at VRMA</h3>
+        <p>Find Nick in person and he will pull your listing&rsquo;s rank live for your next 10 unbooked dates, plus give you an extra entry. Not at VRMA? Email <a href="mailto:Admin@RevWhisper.com?subject=VRMA%20extra%20entry">Admin@RevWhisper.com</a> with the subject &ldquo;VRMA extra entry&rdquo; for the same extra entry.</p>
       </div>
       <div class="vg-step">
         <div class="vg-n">3</div>
-        <h3>One winner, one listing</h3>
-        <p>We draw one winner from every entry and reach out directly. The winner gets twelve months of RevWhisper on the listing of their choice.</p>
+        <h3>Winner drawn Friday, October 9</h3>
+        <p>We draw one winner at random from every entry and reach out directly. The winner gets twelve months of RevWhisper on the listing of their choice.</p>
       </div>
     </div>
-    <p class="vg-fine">No purchase necessary to enter or win.</p>
+    <details class="vg-rules">
+      <summary>Giveaway rules (summary)</summary>
+      <ul>
+        <li><b>No purchase necessary.</b> No payment of any kind is needed to enter or win. Booking a call or buying a service does not improve your chances.</li>
+        <li><b>Sponsor:</b> MCO CORP d/b/a RevWhisper, 501 East Kennedy Boulevard, Tampa, FL 33602. This giveaway is not sponsored, endorsed or administered by VRMA or by Meta (Facebook or Instagram).</li>
+        <li><b>Who can enter:</b> individuals 18 or older who are legal residents of the United States or Canada (excluding Quebec). RevWhisper employees and their households are not eligible. Void where prohibited.</li>
+        <li><b>Entry period:</b> now through Thursday, October 8, 2026 at 11:59 PM ET.</li>
+        <li><b>How to enter:</b> submit the form on this page for one entry, one per person. <b>Extra entry</b> (limit one per person): find Nick in person at VRMA, or email <a href="mailto:Admin@RevWhisper.com?subject=VRMA%20extra%20entry">Admin@RevWhisper.com</a> with the subject &ldquo;VRMA extra entry&rdquo; and your name during the entry period. Both ways count the same.</li>
+        <li><b>Prize:</b> one winner receives twelve months of RevWhisper service on one short-term rental listing of their choice, under RevWhisper&rsquo;s standard service terms. Approximate retail value: $6,500. Not transferable, no cash alternative. The winner is responsible for any taxes and may be asked for a W-9.</li>
+        <li><b>Drawing:</b> one winner is drawn at random from all eligible entries on Friday, October 9, 2026. Odds depend on the number of entries. The winner is contacted by email or phone and has 7 days to respond, or an alternate winner is drawn. A winner in Canada must correctly answer a skill-testing question.</li>
+        <li><b>Your information:</b> used to run the giveaway and prepare your strategy audit, as described in our <a href="/privacy" target="_blank" rel="noopener">privacy policy</a>.</li>
+      </ul>
+    </details>
   </div>
 </section>
 
@@ -1180,7 +1198,7 @@ body.rw-fs .form-card{position:fixed;left:50%;top:50%;transform:translate(-50%,-
     <h2>Enter the draw. <em>Keep the audit</em> either way.</h2>
     <p>Every entry gets a full strategy audit of your listing or portfolio. One host at VRMA wins a year of RevWhisper on one listing.</p>
     <a class="btn btn-onaccent js-to-form" href="#audit-form">Get my free audit <span class="arrow">→</span></a>
-    <div class="final-note">Free · Live walkthrough · No purchase necessary</div>
+    <div class="final-note">No purchase necessary · Draw Friday, October 9 · <a href="#giveaway" style="color:inherit">Rules</a></div>
   </div>
 </section>
 
