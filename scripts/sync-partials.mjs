@@ -31,6 +31,11 @@ const TARGETS = [
   'blog/index.html',
   'blog/_template.html',
   'vrma.html',
+  'audit.html',
+  'airbnb-revenue-management.html',
+  'pricing-tool-audit.html',
+  'ranking-audit.html',
+  'listing-audit.html',
 ];
 
 // Auto-include every HTML file under blog/ that isn't the index/template.
