@@ -19,7 +19,7 @@
   // address bar before GA4/PostHog/Meta read it, and attribution is always overwritten so an
   // older paid touch from another campaign can't claim the lead.
   // Attio's utm_campaign column is fed from utm_content, so that one carries the VRMA code.
-  var VRMA_DEFAULTS={utm_source:'facebook',utm_medium:'paid_social',utm_campaign:'vrma-2026',utm_content:'RW-VRMA'};
+  var VRMA_DEFAULTS={utm_source:'meta',utm_medium:'paid',utm_campaign:'vrma-2026',utm_content:'RW-VRMA'};
   var filled=false;
   Object.keys(VRMA_DEFAULTS).forEach(function(f){if(!params.get(f)){params.set(f,VRMA_DEFAULTS[f]);filled=true;}});
   if(filled){try{history.replaceState(history.state,'',window.location.pathname+'?'+params.toString()+window.location.hash);}catch(e){}}
