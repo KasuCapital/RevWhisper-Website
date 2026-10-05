@@ -569,12 +569,77 @@ body.terms-expanded .step[data-step="2"] .form-actions{
 .step[data-step="2"] .terms-box{text-align:left}
 .step[data-step="2"] .terms-agree{text-align:left;max-width:540px;margin:0 auto}
 
+/* Short viewports — keep the whole step (and its Next button) on screen.
+   Tiers compress spacing/type by height; the sticky action row is the
+   last-resort guarantee if a step still overflows. */
+body{overflow-y:auto}
+/* Idle hidden steps are absolutely positioned; collapse them so a tall one
+   (the terms step) doesn't stretch the scroll area of the step on screen. */
+.step:not(.active):not(.exit-up):not(.exit-down):not(.enter-from-below):not(.enter-from-above){max-height:0;overflow:hidden}
+.form-actions{position:sticky;bottom:0;z-index:5}
+@media(max-height:880px){
+  .form-shell{padding-top:80px;padding-bottom:16px}
+  .step-desc{margin-bottom:clamp(14px,3vh,28px)}
+  .plan-badge{margin-bottom:clamp(10px,2vh,18px)}
+  .odometer{font-size:clamp(54px,11.5vh,104px)}
+  .count-btn{width:clamp(46px,7vh,60px);height:clamp(46px,7vh,60px);font-size:clamp(24px,3.4vh,28px)}
+  .count-unit{margin-top:clamp(4px,1vh,10px)}
+  .price-block{margin-top:clamp(10px,2.4vh,24px)}
+  .count-hint{margin-top:clamp(6px,1.4vh,14px)}
+  .form-actions{margin-top:clamp(8px,2.6vh,28px)}
+}
+@media(min-width:641px) and (max-height:880px){
+  .step-title{font-size:clamp(30px,5.4vh,48px)}
+}
+@media(max-height:680px){
+  .form-shell{padding-top:66px}
+  .step-eyebrow{margin-bottom:6px}
+  .step-title{margin-bottom:6px}
+  .step-desc{font-size:14px;line-height:1.5}
+  .price-amount{font-size:24px}
+  .price-each{margin-top:4px;font-size:12.5px}
+  .count-hint{font-size:12px;line-height:1.45}
+  .form-actions{padding:10px 0 12px}
+}
+@media(max-height:560px){
+  .form-shell{padding-top:58px}
+  .checkout-head{padding-top:14px;padding-bottom:14px}
+  .step[data-step="1"] .step-desc{display:none}
+}
+
 @media(max-width:640px){
   .checkout-head{padding:16px 18px}
   .form-shell{padding-top:78px}
   .ln{font-size:13px}
   .lm{width:28px;height:28px}
   .secure-badge span{display:none}
+}
+
+/* ── Fit-to-screen: every step, legal line included, fits without scrolling ── */
+.form-actions{padding:10px 0 12px}
+.terms-box:not(.is-expanded){max-height:clamp(120px,calc(100vh - 450px),280px)}
+@media(max-height:880px){
+  .form-legal{margin-top:6px}
+  .terms-section{margin-bottom:12px}
+  .success-state{padding:8px 0}
+  .success-icon{width:64px;height:64px;margin-bottom:18px}
+  .success-desc{margin-bottom:20px}
+}
+@media(max-height:600px){
+  .step[data-step="1"] .step-desc,
+  .step[data-step="2"] .step-desc,
+  .step[data-step="2"] .step-eyebrow{display:none}
+  .terms-box:not(.is-expanded){max-height:clamp(110px,calc(100vh - 340px),280px)}
+}
+@media(max-width:640px){
+  body{padding:0 12px}
+  .form-shell{padding:64px 8px 8px}
+  .terms-box:not(.is-expanded){max-height:clamp(110px,calc(100vh - 445px),220px)}
+}
+@media(max-width:640px) and (max-height:700px){
+  .form-shell{padding-top:56px}
+  .checkout-head{padding-top:12px;padding-bottom:12px}
+  .step-title{font-size:24px}
 }
 </style>
 <!-- X Pixel base code -->
