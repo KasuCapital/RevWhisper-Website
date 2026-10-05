@@ -1,0 +1,8 @@
+/* Self-hosted brand fonts (latin). Replaces fonts.googleapis.com so no visitor IP goes to
+   Google before consent (EEA/UK opt-in). DM Sans + Lora files are variable fonts. */
+@font-face{font-family:'Lora';font-style:normal;font-weight:400 700;font-display:swap;src:url(/fonts/lora-normal-400-700.woff2) format('woff2')}
+@font-face{font-family:'Lora';font-style:italic;font-weight:400 700;font-display:swap;src:url(/fonts/lora-italic-400-700.woff2) format('woff2')}
+@font-face{font-family:'DM Sans';font-style:normal;font-weight:100 1000;font-display:swap;src:url(/fonts/dm-sans-normal-300-700.woff2) format('woff2')}
+@font-face{font-family:'DM Mono';font-style:normal;font-weight:300;font-display:swap;src:url(/fonts/dm-mono-300.woff2) format('woff2')}
+@font-face{font-family:'DM Mono';font-style:normal;font-weight:400;font-display:swap;src:url(/fonts/dm-mono-400.woff2) format('woff2')}
+@font-face{font-family:'DM Mono';font-style:normal;font-weight:500;font-display:swap;src:url(/fonts/dm-mono-500.woff2) format('woff2')}

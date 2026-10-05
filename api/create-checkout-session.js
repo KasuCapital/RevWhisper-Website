@@ -1,3 +1,5 @@
+const { rateLimit } = require('./_guard');
+
 const MAX_LISTINGS = 10;
 const VALID_PLANS = new Set(['monthly', 'annual', 'enterprise']);
 // Standard (non-enterprise) one-time onboarding fee, charged upfront per listing.
@@ -5,6 +7,12 @@ const VALID_PLANS = new Set(['monthly', 'annual', 'enterprise']);
 const ONBOARDING_FEE_PER_LISTING = 996;
 // Hardcoded promo codes → fraction off the onboarding fee. Mirrored in checkout-form.html.
 const PROMO_CODES = { welcome50: 0.5 };
+// Price floors. Custom prices (enterprise fee, monthly cost, onboarding cap) arrive from the
+// rep-built link in the browser, so anyone could edit them. These floors stop a hand-edited
+// link from producing a near-free checkout. Override per deploy with the env vars.
+const MIN_ONBOARDING_TOTAL = Number(process.env.CHECKOUT_MIN_ONBOARDING_TOTAL) || 250;
+const MIN_MONTHLY_PER_LISTING = Number(process.env.CHECKOUT_MIN_MONTHLY) || 100;
+const BAD_PRICE_ERROR = 'This checkout link has an invalid price. Please contact your RevWhisper rep for a new link.';
 
 function sendJson(res, statusCode, payload) {
   res.statusCode = statusCode;
@@ -86,6 +94,10 @@ module.exports = async function handler(req, res) {
     return sendJson(res, 405, { error: 'Method not allowed.' });
   }
 
+  if (!rateLimit(req, 'checkout', 20, 10 * 60 * 1000)) {
+    return sendJson(res, 429, { error: 'Too many requests. Please wait a few minutes and try again.' });
+  }
+
   const payload = await parseBody(req);
   const email = String(payload.email || '').trim().toLowerCase();
   const submittedPlan = String(payload.plan || '').trim().toLowerCase();
@@ -119,6 +131,22 @@ module.exports = async function handler(req, res) {
   // links). When per-listing fee × count exceeds it, we bill the cap amount instead.
   const onboardingCap = parseNumeric(payload.onboarding_cap);
   const useSubscriptionMode = isEnterprise && onboardingFee === 0;
+
+  if (onboardingFee < 0 || monthlyCost < 0 || onboardingCap < 0) {
+    return sendJson(res, 400, { error: BAD_PRICE_ERROR });
+  }
+  if (monthlyCost > 0 && monthlyCost < MIN_MONTHLY_PER_LISTING) {
+    return sendJson(res, 400, { error: BAD_PRICE_ERROR });
+  }
+  if (!useSubscriptionMode) {
+    // Total one-time charge after promo and cap must clear the floor.
+    const perListing = isEnterprise ? onboardingFee : ONBOARDING_FEE_PER_LISTING * (1 - promoDiscount);
+    const uncapped = perListing * listingCount;
+    const total = onboardingCap > 0 ? Math.min(uncapped, onboardingCap) : uncapped;
+    if (perListing > 0 && total < MIN_ONBOARDING_TOTAL) {
+      return sendJson(res, 400, { error: BAD_PRICE_ERROR });
+    }
+  }
 
   const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
 

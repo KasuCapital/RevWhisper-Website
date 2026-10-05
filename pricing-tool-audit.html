@@ -27,7 +27,7 @@
 })();
 function rwAttribution(){try{return JSON.parse(localStorage.getItem('rw_attribution')||sessionStorage.getItem('rw_attribution'))||{};}catch(e){return {};}}
 </script>
-<script src="/assets/rw-consent.js?v=1"></script>
+<script src="/assets/rw-consent.js?v=2"></script>
 <script defer src="/assets/rw-posthog.js?v=3"></script>
 <!-- GA4. Consent defaults come from /assets/rw-consent.js -->
 <script>
@@ -48,7 +48,7 @@ n.callMethod.apply(n,arguments):n.queue.push(arguments)};
 if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
 n.queue=[];t=b.createElement(e);t.async=!0;
 t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
+(window.rwConsent?rwConsent.whenAdsAllowed:function(g){g()})(function(){s.parentNode.insertBefore(t,s)})}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
 if(window.rwConsent&&!rwConsent.ads)fbq('consent','revoke');
 fbq('init', '959022406709300');
@@ -557,8 +557,7 @@ a{color:inherit}
 }
 </style>
 <link rel="stylesheet" href="/assets/lp-sections.css?v=4">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@500&display=swap" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="/assets/fonts.css">
 <script defer src="/assets/phone-validate.js"></script>
 </head>
 <body>
@@ -729,7 +728,7 @@ a{color:inherit}
             </div>
             <div class="fc-secure">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              Your info stays private and is never sold. This page uses cookies and session recording to measure our ads and improve the page. <a href="/privacy#cookies" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">Privacy policy</a>
+              <span style="color:var(--g500,#706b68)">Your info stays private and is never sold. By submitting, you agree RevWhisper may call and text you at the number you provide, including automated texts, about your audit and our services. Consent isn&rsquo;t a condition of purchase. Msg &amp; data rates may apply. Reply STOP to opt out. This page uses cookies and session recording to measure our ads and improve the page. <a href="/privacy#cookies" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">Privacy policy</a> &middot; <a href="/terms" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">Terms</a></span>
             </div>
           </div>
         </div>

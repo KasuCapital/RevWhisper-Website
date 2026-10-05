@@ -25,7 +25,7 @@
   }
 })();
 </script>
-<script src="/assets/rw-consent.js?v=1"></script>
+<script src="/assets/rw-consent.js?v=2"></script>
 <script defer src="/assets/rw-posthog.js?v=3"></script>
 <!-- GA4. Consent defaults come from /assets/rw-consent.js -->
 <script>
@@ -44,7 +44,7 @@ n.callMethod.apply(n,arguments):n.queue.push(arguments)};
 if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
 n.queue=[];t=b.createElement(e);t.async=!0;
 t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
+(window.rwConsent?rwConsent.whenAdsAllowed:function(g){g()})(function(){s.parentNode.insertBefore(t,s)})}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
 if(window.rwConsent&&!rwConsent.ads)fbq('consent','revoke');
 fbq('init', '959022406709300');
@@ -59,9 +59,7 @@ fbq('track', 'PageView');
 <link rel="icon" href="/icons/favicon-light.svg" type="image/svg+xml" media="(prefers-color-scheme: light)">
 <link rel="icon" href="/icons/favicon-dark.svg" type="image/svg+xml" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="/icons/favicon-light.svg" type="image/svg+xml">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=DM+Sans:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/fonts.css">
 <style>
 /* ── Reset & Base ── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}

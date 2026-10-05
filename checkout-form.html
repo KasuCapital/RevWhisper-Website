@@ -1,6 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- Rep links carry ?email=. Pull it out of the address bar before any analytics or ad tag
+     loads, so the plaintext email never reaches Meta, GA4 or PostHog via the page URL.
+     Kept in sessionStorage so a refresh still skips the contact step. -->
+<script>
+(function(){
+  try{
+    var u=new URL(location.href),e=u.searchParams.get('email');
+    if(e){
+      window.__rwPrefillEmail=e;
+      try{sessionStorage.setItem('rw_checkout_email',e);}catch(x){}
+      u.searchParams.delete('email');
+      history.replaceState(history.state,'',u.pathname+u.search+u.hash);
+    }else{
+      try{window.__rwPrefillEmail=sessionStorage.getItem('rw_checkout_email')||'';}catch(x){}
+    }
+  }catch(x){}
+})();
+</script>
 <!-- Attribution tracking (cookie-free) -->
 <script>
 (function(){
@@ -26,7 +44,7 @@
 })();
 function rwAttribution(){try{return JSON.parse(localStorage.getItem('rw_attribution')||sessionStorage.getItem('rw_attribution'))||{};}catch(e){return {};}}
 </script>
-<script src="/assets/rw-consent.js?v=1"></script>
+<script src="/assets/rw-consent.js?v=2"></script>
 <script defer src="/assets/rw-posthog.js?v=3"></script>
 <!-- GA4. Consent defaults come from /assets/rw-consent.js -->
 <script>
@@ -45,7 +63,7 @@ n.callMethod.apply(n,arguments):n.queue.push(arguments)};
 if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
 n.queue=[];t=b.createElement(e);t.async=!0;
 t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
+(window.rwConsent?rwConsent.whenAdsAllowed:function(g){g()})(function(){s.parentNode.insertBefore(t,s)})}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
 if(window.rwConsent&&!rwConsent.ads)fbq('consent','revoke');
 fbq('init', '959022406709300');
@@ -71,9 +89,7 @@ fbq('track', 'InitiateCheckout', {content_name: 'Enrollment Form'});
 <link rel="icon" href="icons/favicon-light.svg" type="image/svg+xml" media="(prefers-color-scheme: light)">
 <link rel="icon" href="icons/favicon-dark.svg" type="image/svg+xml" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="icons/favicon-light.svg" type="image/svg+xml">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=DM+Sans:wght@200;300;400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/fonts.css">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{height:100%;overflow:hidden;overflow-x:hidden}
@@ -866,7 +882,7 @@ body{overflow-y:auto}
     </div>
 
   </form>
-  <p class="form-legal">By enrolling, you agree to our <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>.</p>
+  <p class="form-legal">By enrolling, you agree to our <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>. <button type="button" class="rw-privacy-choices" data-rw-privacy-choices style="text-decoration:underline">Your Privacy Choices</button></p>
 </div>
 
 <div class="confetti-wrap" id="confetti-wrap"></div>
@@ -882,7 +898,7 @@ const requestedPlan = params.get('plan');
 const isEnterprise = requestedPlan === 'enterprise';
 const selectedPlan = isEnterprise ? 'enterprise' : (requestedPlan === 'annual' ? 'annual' : 'monthly');
 const enterpriseMonthly = isEnterprise ? Number(params.get('monthly_cost')) || 0 : 0;
-const enterpriseOnboarding = isEnterprise && params.get('onboarding_fee') ? Number(params.get('onboarding_fee')) : 998;
+const enterpriseOnboarding = isEnterprise && params.get('onboarding_fee') ? Number(params.get('onboarding_fee')) : 996;
 const enterpriseTermMonths = isEnterprise ? Number(params.get('term_months')) || 0 : 0;
 const onboardingFee = isEnterprise ? enterpriseOnboarding : 996;
 // Optional cap on the TOTAL one-time onboarding charge — set via rep-built links
@@ -907,7 +923,7 @@ rwTrack('begin_checkout',{plan:selectedPlan,page:'checkout-form'});
 
 // Prefill email when arriving from a rep-built checkout link (additive — absent param =
 // normal flow). Email is the only contact field we collect.
-const prefilledEmail = (params.get('email') || '').trim();
+const prefilledEmail = (params.get('email') || window.__rwPrefillEmail || '').trim();
 (function prefillContact() {
   const el = document.getElementById('email');
   if (el && prefilledEmail) el.value = prefilledEmail;

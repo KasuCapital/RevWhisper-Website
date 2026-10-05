@@ -21,6 +21,7 @@ const WEBHOOK_URLS = {
 const INTAKE_WEBHOOK_URL = 'https://hook.us2.make.com/9x8k27nrk3ll6rfrjtfrn469cnslxpuj';
 const DEFAULT_X_AUDIT_LEAD_EVENT_ID = 'tw-r8ftv-r8ftx';
 
+const { rateLimit } = require('./_guard');
 const { sendCapiEvent, buildUserData } = require('./_meta-capi');
 const { sendXConversionEvent, buildIdentifiers } = require('./_x-capi');
 async function sendIntakeWebhook(name, email) {
@@ -92,6 +93,10 @@ module.exports = async function handler(req, res) {
     return sendJson(res, 405, { error: 'Method not allowed.' });
   }
 
+  if (!rateLimit(req, 'form-webhook', 30, 10 * 60 * 1000)) {
+    return sendJson(res, 429, { error: 'Too many requests. Please wait a few minutes and try again.' });
+  }
+
   const body = await parseBody(req);
   const eventType = String(body.event_type || '').trim();
   const payload = body.payload && typeof body.payload === 'object' ? body.payload : null;
@@ -160,7 +165,7 @@ module.exports = async function handler(req, res) {
     // we never emit a server Lead for a page that didn't fire a browser Lead to dedupe against.
     // adConsent:false = visitor is in an opt-in region without consent, or sent GPC
     // (see /assets/rw-consent.js), so no server-side ad events either.
-    const adConsent = payload.adConsent !== false;
+    const adConsent = (payload.adConsent === true || payload.adConsent === 'true'); // missing = no consent (fail closed)
     if (adConsent && payload.fbEventId) {
       const [firstName, ...rest] = name.split(' ');
       tasks.push(sendCapiEvent({

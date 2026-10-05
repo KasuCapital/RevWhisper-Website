@@ -5,7 +5,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { execSync } from 'node:child_process';
 
 const WRITE = process.argv.includes('--write');
-const TAG = '<script src="/assets/rw-consent.js?v=1"></script>';
+const TAG = '<script src="/assets/rw-consent.js?v=2"></script>';
 const files = execSync("git ls-files '*.html' scripts/home-redesign.shell.html").toString().trim().split('\n')
   .filter(f => !f.startsWith('.claude/'));
 

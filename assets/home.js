@@ -1102,7 +1102,7 @@
       var id = btn.getAttribute('data-video');
       if (!id) return;
       var extra = btn.getAttribute('data-query') || '';
-      var src = 'https://www.youtube.com/embed/' + id + '?autoplay=1&' + extra;
+      var src = 'https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&' + extra;
       var iframe = document.createElement('iframe');
       iframe.setAttribute('src', src);
       iframe.setAttribute('title', btn.getAttribute('aria-label') || 'YouTube video player');

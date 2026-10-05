@@ -25,7 +25,7 @@
   }
 })();
 </script>
-<script src="/assets/rw-consent.js?v=1"></script>
+<script src="/assets/rw-consent.js?v=2"></script>
 <script defer src="/assets/rw-posthog.js?v=3"></script>
 <!-- GA4. Consent defaults come from /assets/rw-consent.js -->
 <script>
@@ -44,7 +44,7 @@ n.callMethod.apply(n,arguments):n.queue.push(arguments)};
 if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
 n.queue=[];t=b.createElement(e);t.async=!0;
 t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
+(window.rwConsent?rwConsent.whenAdsAllowed:function(g){g()})(function(){s.parentNode.insertBefore(t,s)})}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
 if(window.rwConsent&&!rwConsent.ads)fbq('consent','revoke');
 fbq('init', '959022406709300');
@@ -59,9 +59,7 @@ fbq('track', 'PageView');
 <link rel="icon" href="/icons/favicon-light.svg" type="image/svg+xml" media="(prefers-color-scheme: light)">
 <link rel="icon" href="/icons/favicon-dark.svg" type="image/svg+xml" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="/icons/favicon-light.svg" type="image/svg+xml">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=DM+Sans:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/fonts.css">
 <style>
 /* ── Reset & Base ── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -315,7 +313,7 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
   <div class="lh-inner">
     <div class="legal-eyebrow">Legal</div>
     <h1>Privacy Policy</h1>
-    <div class="legal-updated">Last updated: October 2, 2026</div>
+    <div class="legal-updated">Last updated: October 5, 2026</div>
     <p>This policy explains what information RevWhisper collects, how we use it, and the choices you have. We keep it plain on purpose.</p>
     <nav class="legal-hero-nav" aria-label="Legal pages">
       <a href="/privacy" aria-current="page">Privacy Policy</a>
@@ -371,7 +369,8 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
     <li>Device and browser type, approximate location derived from your IP address, and similar technical data;</li>
     <li>Pages you view, links you click, and how you move through the site;</li>
     <li>The website that referred you; and</li>
-    <li>Marketing campaign parameters (such as UTM tags) so we know which ad or link brought you here.</li>
+    <li>Marketing campaign parameters (such as UTM tags) so we know which ad or link brought you here; and</li>
+    <li>Ad click identifiers (such as a Google or Meta click ID) when you arrive from one of our ads, stored only where ad measurement is allowed under the rules in section 4.</li>
   </ul>
 
   <h3>Payment information</h3>
@@ -389,40 +388,45 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
     <li>Comply with our legal obligations.</li>
   </ul>
 
+  <h3 id="calls-texts">Calls and text messages</h3>
+  <p>If you give us your phone number, you agree that RevWhisper may call and text you at that number, including with automated text messages, about your audit, your booked call, and our services. Consent is not a condition of purchase. Message frequency varies, and message and data rates may apply. Reply <strong>STOP</strong> to any text to stop receiving texts, or <strong>HELP</strong> for help, and you can ask us to stop calling at any time. We do not sell your phone number, and we do not share your mobile number or your text-message consent with third parties for their own marketing.</p>
+
   <h2 id="cookies">4. Cookies &amp; tracking technologies</h2>
   <p>We use cookies, pixels, and similar browser storage to run the site, understand how visitors use it, and measure whether our ads work. Here is what runs and why:</p>
   <ul>
     <li><strong>Google Analytics 4</strong> (Google): measures site traffic and how visitors move through our pages and forms.</li>
-    <li><strong>Google Ads tag</strong> (Google): tells us when a visit that started from one of our Google ads leads to an audit request or a booked call.</li>
-    <li><strong>Meta Pixel and Conversions API</strong> (Meta): measures our Facebook and Instagram ads and helps show them to relevant people. When you submit a form or book a call, we also send that event to Meta from our server, with your email and phone number hashed (scrambled) before they leave our systems.</li>
-    <li><strong>X Pixel and Conversions API</strong> (X): the same ad measurement for ads on X.</li>
+    <li><strong>Google Ads tag</strong> (Google): tells us when a visit that started from one of our Google ads leads to an audit request or a booked call. When you submit a form or book a call, the tag also sends Google your email address and phone number in hashed (scrambled) form (&ldquo;enhanced conversions&rdquo;) so Google can match the conversion to the ad.</li>
+    <li><strong>Meta Pixel and Conversions API</strong> (Meta): measures our Facebook and Instagram ads and helps show them to relevant people. When you submit a form or book a call, we also send that event to Meta from our server. It includes your email address, phone number, and name, hashed (scrambled) before they leave our systems, along with your IP address, browser type, and Meta&rsquo;s own browser and click identifiers.</li>
+    <li><strong>X Pixel and Conversions API</strong> (X): the same ad measurement for ads on X. When you submit a form or book a call, X receives your email address and phone number in hashed form, along with X&rsquo;s click identifier if you arrived from an X ad.</li>
     <li><strong>PostHog</strong> (PostHog): product analytics and session recording. Session recording captures how you move through our pages (scrolls, clicks, and which form steps you complete) so we can find and fix confusing parts of the site. Everything you type into a form field is masked in recordings, as is any email address or phone number shown on screen, and checkout pages are never recorded. When you submit an audit request, we link that visit to your email address so we can see which pages helped.</li>
     <li><strong>Vercel Web Analytics</strong> (Vercel): anonymous, cookie-free page visit counts from our hosting provider.</li>
+    <li><strong>YouTube</strong> (Google): some pages include a video. It loads from YouTube&rsquo;s privacy-enhanced mode only when you click play.</li>
   </ul>
+  <p>Our fonts and images are served from our own servers, so viewing a page does not send your information to a font or image provider.</p>
   <p>Some storage is essential and always active: remembering your privacy choice, remembering which campaign brought you here (so we can credit it if you later request an audit), and a cookie with your approximate country and region, derived from your IP address, that we use only to apply the right privacy rules below.</p>
 
   <h3>How we decide what runs</h3>
   <ul>
-    <li><strong>United States and Canada (outside Quebec):</strong> analytics and ad measurement are on by default. You can turn them off at any time with <a href="#privacy-choices">Privacy choices</a>, found here and at the bottom of every page.</li>
-    <li><strong>Quebec, the European Economic Area, the United Kingdom, and Switzerland:</strong> nothing beyond essential storage runs until you click <strong>Accept</strong> on our banner. If you click <strong>Decline</strong>, it stays off.</li>
-    <li><strong>Global Privacy Control:</strong> if your browser sends this signal, we treat it as an opt-out of advertising tracking: the Meta and X tags stay off, Google ad cookies and ad personalization are turned off, and we do not send ad events from our server. Basic analytics stays on unless you turn it off too.</li>
+    <li><strong>United States and Canada (outside Quebec):</strong> analytics and ad measurement are on by default. You can turn them off at any time with <a href="#privacy-choices">Your Privacy Choices</a>, found here and at the bottom of every page.</li>
+    <li><strong>Quebec, the European Economic Area, the United Kingdom, and Switzerland:</strong> nothing beyond essential storage runs, and no analytics or ad tag loads, until you click <strong>Accept</strong> on our banner. If you click <strong>Decline</strong>, it stays off.</li>
+    <li><strong>Global Privacy Control:</strong> if your browser sends this signal, we treat it as an opt-out of advertising tracking: the Meta and X tags do not load, Google ad cookies and ad personalization are turned off, and we do not send ad events from our server. Basic analytics stays on unless you turn it off too.</li>
   </ul>
 
   <h2 id="how-we-share">5. How we share information</h2>
   <p>We share personal information only as described here:</p>
   <ul>
-    <li><strong>Service providers</strong> who work on our behalf, including Stripe (payments), Google (analytics and ad measurement), Meta and X (ad measurement), PostHog (analytics and session recording), Make.com (routing your form submissions into our CRM), Attio (our CRM), Cal.com (call scheduling), and Vercel (hosting).</li>
+    <li><strong>Service providers</strong> who work on our behalf, including Stripe (payments), Google (analytics and ad measurement), Meta and X (ad measurement), PostHog (analytics and session recording), Make.com (routing your form submissions into our CRM), Attio (our CRM), Cal.com (call scheduling and reminders), Resend (email delivery), and Vercel (hosting).</li>
     <li><strong>Legal and safety</strong>: when we believe disclosure is required by law, or is necessary to enforce our agreements or protect the rights, safety, and property of RevWhisper, our clients, or others.</li>
     <li><strong>Business transfers</strong>: if RevWhisper is involved in a merger, acquisition, or sale of assets, your information may be transferred as part of that transaction.</li>
   </ul>
   <div class="legal-note">
-    <p><strong>We do not sell or rent the contact details you submit.</strong> Your name, email, phone number, and listing links are used to prepare your audit and reach you about your call, and are never sold or traded. Our ad partners (Google, Meta, and X) do receive information about visits and conversions as described above, which some state laws may call &ldquo;sharing&rdquo; for advertising. You can opt out of that at any time with <a href="#privacy-choices">Privacy choices</a>.</p>
+    <p><strong>We do not sell or rent the contact details you submit.</strong> Your name, email, phone number, and listing links are used to prepare your audit and reach you about your call, and are never sold or traded. Our ad partners (Google, Meta, and X) do receive information about visits and conversions as described above, which some state laws may call &ldquo;sharing&rdquo; for advertising. You can opt out of that at any time with <a href="#privacy-choices">Your Privacy Choices</a> or by turning on Global Privacy Control.</p>
   </div>
 
   <h2 id="advertising-choices">6. Advertising &amp; analytics choices</h2>
   <p>You have several ways to control measurement and advertising:</p>
   <ul>
-    <li><strong>Privacy choices on this site</strong>: <button type="button" class="rw-privacy-choices" data-rw-privacy-choices style="color:var(--accent);text-decoration:underline">open your privacy choices</button> to turn analytics and ad tracking off or back on. Your choice is saved in this browser.</li>
+    <li><strong>Your Privacy Choices on this site</strong>: <button type="button" class="rw-privacy-choices" data-rw-privacy-choices style="color:var(--accent);text-decoration:underline">open your privacy choices</button> to turn analytics and ad tracking off or back on. Your choice is saved in this browser.</li>
     <li><strong>Global Privacy Control</strong>: turn it on in a supporting browser or extension and we will treat every visit as an advertising opt-out.</li>
     <li><strong>Google</strong>: opt out of Google Analytics with the <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener">Google Analytics Opt-out Browser Add-on</a>, and manage ad personalization in your <a href="https://adssettings.google.com" target="_blank" rel="noopener">Google Ads Settings</a>.</li>
     <li><strong>Meta</strong>: manage ad preferences in your <a href="https://www.facebook.com/settings?tab=ads" target="_blank" rel="noopener">Facebook Ad Preferences</a> or Instagram settings.</li>
@@ -430,17 +434,36 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
   </ul>
 
   <h2 id="retention">7. Data retention</h2>
-  <p>We keep personal information for as long as needed to provide our services and for the purposes described in this policy — for example, while you are a client and for a reasonable period afterward — and as required to meet our legal, tax, and accounting obligations. When information is no longer needed, we delete or de-identify it.</p>
+  <p>We keep personal information only as long as we need it for the purposes in this policy, and then delete or de-identify it. As a general guide:</p>
+  <ul>
+    <li><strong>Audit requests and sales conversations</strong> (contact details, listing links, and notes): up to 3 years after our last contact with you.</li>
+    <li><strong>Client and payment records</strong>: for as long as you are a client, plus up to 7 years afterward to meet tax, accounting, and legal obligations.</li>
+    <li><strong>Session recordings</strong>: up to 90 days.</li>
+    <li><strong>Site analytics events</strong>: up to 2 years.</li>
+    <li><strong>Ad measurement data</strong> held by Google, Meta, and X: according to each platform&rsquo;s own retention policy.</li>
+  </ul>
 
   <h2 id="security">8. How we protect your information</h2>
   <p>We use commercially reasonable administrative, technical, and physical safeguards to protect your information, and we limit access to those who need it. No method of transmission or storage is completely secure, however, so we cannot guarantee absolute security.</p>
 
   <h2 id="your-rights">9. Your privacy rights</h2>
-  <p>Depending on where you live, you may have the right to access, correct, delete, or receive a copy of your personal information, and to opt out of certain uses. To exercise any of these rights, email us at <a href="mailto:Admin@RevWhisper.com">Admin@RevWhisper.com</a> and we will respond as required by applicable law. We will not discriminate against you for exercising your rights.</p>
+  <p>Depending on where you live, you may have the right to access, correct, delete, or receive a copy of your personal information, and to opt out of certain uses. To exercise any of these rights, email us at <a href="mailto:Admin@RevWhisper.com">Admin@RevWhisper.com</a> and we will respond as required by applicable law. To protect your information, we verify requests by matching the details you give us (such as your email address) with the information we hold, and we may ask for more if needed. You can also use an authorized agent; we may ask the agent for your signed permission and ask you to confirm your identity. We will not discriminate against you for exercising your rights.</p>
+
+  <h3 id="us-state-rights">California and other U.S. state residents</h3>
+  <p>California and several other states give residents the right to know what personal information we collect, use, and disclose; to access, correct, and delete it; and to opt out of the &ldquo;sale&rdquo; or &ldquo;sharing&rdquo; of personal information for cross-context behavioral advertising. To opt out, use <a href="#privacy-choices">Your Privacy Choices</a> or turn on Global Privacy Control. If you are logged out or switch browsers, set your choice again in that browser. In the past 12 months we collected the following categories, for the purposes described in section 3:</p>
   <ul>
-    <li><strong>California residents</strong> — you may request the categories and specific pieces of personal information we have collected, request deletion, and opt out of any &ldquo;sale&rdquo; or &ldquo;sharing&rdquo; of personal information. As noted above, we do not sell the contact details you submit.</li>
-    <li><strong>EEA &amp; UK residents</strong> — you may have rights to access, rectify, erase, restrict, or object to processing, and to data portability. You also have the right to lodge a complaint with your local data protection authority.</li>
+    <li><strong>Identifiers</strong> (name, email address, phone number, IP address, cookie and device identifiers): collected from you and your device. Disclosed to our service providers, and IP address, hashed contact details, and device identifiers to Google, Meta, and X for ad measurement.</li>
+    <li><strong>Commercial and professional information</strong> (your listings, number of properties, revenue range, the plan you choose, and payment records): collected from you and from Stripe. Disclosed to our service providers only.</li>
+    <li><strong>Internet or other electronic network activity</strong> (pages viewed, clicks, form progress, session recordings, referring site, and campaign parameters): collected from your device. Disclosed to our analytics providers, and to Google, Meta, and X for ad measurement.</li>
+    <li><strong>Approximate geolocation</strong> (country and region derived from your IP address): collected from your device. Used to apply the right privacy rules and disclosed to our analytics and ad partners as part of normal web requests.</li>
   </ul>
+  <p>We do not sell personal information for money. The only &ldquo;sharing&rdquo; we do is the ad measurement described above, which you can turn off at any time. We do not collect sensitive personal information as defined under California law, and we do not knowingly sell or share the personal information of anyone under 16.</p>
+
+  <h3 id="eea-uk-rights">EEA, UK, and Swiss residents</h3>
+  <p>You may have rights to access, rectify, erase, restrict, or object to processing, to data portability, and to withdraw consent at any time. We rely on these legal bases: performing our contract with you or taking steps you asked for before one (preparing your audit, booking your call, providing our services); your consent (analytics and ad measurement, which only run after you click Accept); and our legitimate interests in running and securing our business and responding to your requests. You also have the right to lodge a complaint with your local data protection authority.</p>
+
+  <h3 id="quebec-rights">Quebec residents</h3>
+  <p>The person in charge of protecting personal information at RevWhisper is our Privacy Officer, who you can reach at <a href="mailto:Admin@RevWhisper.com">Admin@RevWhisper.com</a> or at the mailing address in section 14.</p>
 
   <h2 id="third-party">10. Third-party sites &amp; platforms</h2>
   <p>Our site links to and works alongside third-party platforms such as Airbnb and other booking sites, our application at app.revwhisper.com, and our scheduling and payment providers. This policy does not cover those third parties. Please review their privacy policies, since their handling of your information is governed by their own terms.</p>
@@ -449,7 +472,7 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
   <p>RevWhisper is a service for businesses and property hosts. It is not directed to children, and we do not knowingly collect personal information from anyone under 16. If you believe a child has provided us information, contact us and we will delete it.</p>
 
   <h2 id="international">12. International visitors</h2>
-  <p>RevWhisper is operated from the United States. If you access the site from outside the U.S., your information will be processed in the United States, where data protection laws may differ from those in your country.</p>
+  <p>RevWhisper is operated from the United States. If you access the site from outside the U.S., your information will be processed in the United States, where data protection laws may differ from those in your country. When we transfer personal information from the EEA, the UK, or Switzerland, we rely on safeguards such as the European Commission&rsquo;s Standard Contractual Clauses or our providers&rsquo; certification under the EU-U.S. Data Privacy Framework and its UK and Swiss extensions.</p>
 
   <h2 id="changes">13. Changes to this policy</h2>
   <p>We may update this policy from time to time. When we do, we will revise the &ldquo;Last updated&rdquo; date above. Material changes will be made clear on this page. Your continued use of the site after an update means you accept the revised policy.</p>
@@ -458,6 +481,7 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
   <p>Questions about this policy or your information? We&rsquo;re happy to help.</p>
   <div class="legal-contact">
     <p class="lc-name">MCO CORP d/b/a RevWhisper</p>
+    <p>501 East Kennedy Boulevard, Tampa, FL 33602</p>
     <p>Email: <a href="mailto:Admin@RevWhisper.com">Admin@RevWhisper.com</a></p>
   </div>
 </main>

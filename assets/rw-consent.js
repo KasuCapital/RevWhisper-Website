@@ -3,7 +3,7 @@
  *  - Opt-in regions (EEA, UK, Switzerland, Quebec): everything off until the visitor
  *    clicks Accept. These are the only visitors who ever see a banner.
  *  - Everywhere else (US, rest of Canada, ...): on by default, disclosed in /privacy,
- *    with "Privacy choices" in the footer to opt out at any time.
+ *    with "Your Privacy Choices" in the footer to opt out at any time (CCPA opt-out link).
  *  - Global Privacy Control: ad tracking off (Meta, X, Google Ads), analytics stays on,
  *    unless the visitor explicitly allowed everything in the choices panel.
  *
@@ -100,6 +100,33 @@
   };
   window.rwConsent=rw;
 
+  // Ad click IDs (gclid, fbclid, ...) are ad identifiers, not essential storage. Each page's
+  // attribution script saves them to rw_attribution before this file runs, so in opt-in
+  // regions without ad consent they are pulled out of storage and held in memory for this
+  // page only, then written back if the visitor accepts.
+  var CLICK_IDS=['fbclid','gclid','ttclid','twclid','msclkid','li_fat_id'];
+  var heldClickIds=null;
+  function scrubClickIds(){
+    if(!optIn||state.ads)return;
+    var raw=get('localStorage','rw_attribution')||get('sessionStorage','rw_attribution');
+    if(!raw)return;
+    try{
+      var data=JSON.parse(raw),found=false;
+      CLICK_IDS.forEach(function(k){if(data[k]){heldClickIds=heldClickIds||{};heldClickIds[k]=data[k];delete data[k];found=true;}});
+      if(found){var v=JSON.stringify(data);set('localStorage','rw_attribution',v);if(get('sessionStorage','rw_attribution'))set('sessionStorage','rw_attribution',v);}
+    }catch(e){}
+  }
+  function restoreClickIds(){
+    if(!heldClickIds||!state.ads)return;
+    try{
+      var data=JSON.parse(get('localStorage','rw_attribution')||'{}');
+      for(var k in heldClickIds)data[k]=heldClickIds[k];
+      set('localStorage','rw_attribution',JSON.stringify(data));
+    }catch(e){}
+    heldClickIds=null;
+  }
+  scrubClickIds();
+
   // Meta: each page calls fbq('consent','revoke') before fbq('init') when rwConsent.ads is false.
   function applyMeta(){
     if(typeof window.fbq==='function')window.fbq('consent',state.ads?'grant':'revoke');
@@ -113,6 +140,7 @@
     state=compute();
     window.gtag('consent','update',signals(state));
     applyMeta();
+    restoreClickIds();
     var pending=listeners;listeners=[];
     pending.forEach(function(l){if(l.cond(state)){try{l.fn(state);}catch(e){}}else{listeners.push(l);}});
     if(before.ads!==state.ads||before.analytics!==state.analytics){
@@ -136,7 +164,10 @@
       '#rw-consent .rwc-no{background:transparent;color:#fff}'+
       '#rw-consent .rwc-yes{background:#fff;color:#32302F}'+
       '#rw-consent .rwc-x{position:absolute;top:6px;right:10px;min-height:0;padding:4px 8px;border:0;background:transparent;color:#ccc8c5;font-size:20px}'+
-      '.rw-privacy-choices{background:none;border:0;padding:0;font:inherit;color:inherit;cursor:pointer;text-decoration:inherit}';
+      '.rw-privacy-choices{background:none;border:0;padding:0;font:inherit;color:inherit;cursor:pointer;text-decoration:inherit;display:inline-flex;align-items:center;gap:5px}'+
+      '.rw-privacy-choices svg{width:26px;height:12px;flex-shrink:0}'+
+      '#rw-privacy-line{padding:18px 16px 22px;text-align:center;font:400 12px/1.5 "DM Sans",system-ui,sans-serif;color:#706b68}'+
+      '#rw-privacy-line a,#rw-privacy-line button{color:#706b68;text-decoration:underline}';
     document.head.appendChild(s);
   }
   function hidePanel(){if(panel){panel.remove();panel=null;}}
@@ -158,22 +189,57 @@
     var x=panel.querySelector('.rwc-x');if(x)x.addEventListener('click',hidePanel);
   }
 
-  // "Privacy choices" next to every footer Privacy link, plus any [data-rw-privacy-choices].
+  // CCPA opt-out icon (toggle) shown with the "Your Privacy Choices" label.
+  var ICON='<svg viewBox="0 0 30 14" aria-hidden="true"><rect x=".5" y=".5" width="29" height="13" rx="6.5" fill="#fff" stroke="#0066ff"/><path d="M15 .5h8a6.5 6.5 0 010 13h-8z" fill="#0066ff"/><path d="M5.5 7l2 2 3.5-4" fill="none" stroke="#0066ff" stroke-width="1.4" stroke-linecap="round"/><path d="M19 4.6l4.8 4.8m0-4.8L19 9.4" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/></svg>';
+  function choicesButton(){
+    var b=document.createElement('button');b.type='button';b.className='rw-privacy-choices';
+    b.innerHTML='<span>Your Privacy Choices</span>'+ICON;
+    return b;
+  }
+
+  // Where the fallback privacy line goes: the end of <body>, unless <body> lays its children
+  // out side by side (single-card pages with a flex-row or grid body), in which case the
+  // line goes at the bottom of the largest in-flow child (the page's card) instead.
+  function lineHost(){
+    var b=document.body,cs;
+    try{cs=getComputedStyle(b);}catch(e){return b;}
+    var sideBySide=(/flex/.test(cs.display)&&!/column/.test(cs.flexDirection))||/grid/.test(cs.display);
+    if(!sideBySide)return b;
+    var best=null,bestArea=0;
+    for(var i=0;i<b.children.length;i++){
+      var c=b.children[i],s=getComputedStyle(c);
+      if(/SCRIPT|STYLE|NOSCRIPT/.test(c.tagName)||s.position==='fixed'||s.position==='absolute'||s.display==='none')continue;
+      var r=c.getBoundingClientRect(),a=r.width*r.height;
+      if(a>bestArea){best=c;bestArea=a;}
+    }
+    return best||b;
+  }
+
+  // "Your Privacy Choices" next to every footer Privacy link, plus any [data-rw-privacy-choices].
+  // Pages with no footer Privacy link get a small privacy line appended at the end of <body>.
   function addFooterLinks(){
     var links=document.querySelectorAll('footer a[href^="/privacy"]');
     for(var i=0;i<links.length;i++){
       var a=links[i];
       if(a.parentNode.querySelector('.rw-privacy-choices'))continue;
-      var b=document.createElement('button');b.type='button';b.className='rw-privacy-choices';b.textContent='Privacy choices';
+      var b=choicesButton();
       if(a.className)b.className+=' '+a.className;
       try{var cs=getComputedStyle(a);b.style.color=cs.color;b.style.fontSize=cs.fontSize;b.style.fontWeight=cs.fontWeight;b.style.letterSpacing=cs.letterSpacing;}catch(e){}
       var wrapper=a.parentNode.tagName==='LI'?document.createElement('li'):null;
       if(wrapper){wrapper.appendChild(b);a.parentNode.parentNode.insertBefore(wrapper,a.parentNode.nextSibling);}
       else{a.parentNode.insertBefore(b,a.nextSibling);if(a.previousSibling&&a.previousSibling.nodeType===3&&/\S/.test(a.previousSibling.nodeValue)){a.parentNode.insertBefore(document.createTextNode(a.previousSibling.nodeValue),b);}}
     }
+    if(!links.length&&!document.querySelector('[data-rw-privacy-choices],#rw-privacy-line')&&!document.body.hasAttribute('data-rw-no-privacy-line')){
+      var line=document.createElement('div');line.id='rw-privacy-line';
+      line.innerHTML='This site uses cookies and session recording to improve it. <a href="/privacy">Privacy policy</a> &middot; <a href="/terms">Terms</a> &middot; ';
+      line.appendChild(choicesButton());
+      var host=document.querySelector('[data-rw-privacy-line-host]')||lineHost();
+      host.appendChild(line);
+    }
   }
 
   function onReady(){
+    scrubClickIds(); // again, for pages whose attribution script runs after this file
     css();
     addFooterLinks();
     document.addEventListener('click',function(e){

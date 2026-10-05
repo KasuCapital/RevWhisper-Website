@@ -30,7 +30,7 @@
 })();
 function rwAttribution(){try{return JSON.parse(localStorage.getItem('rw_attribution')||sessionStorage.getItem('rw_attribution'))||{};}catch(e){return {};}}
 </script>
-<script src="/assets/rw-consent.js?v=1"></script>
+<script src="/assets/rw-consent.js?v=2"></script>
 <script defer src="/assets/rw-posthog.js?v=3"></script>
 <!-- GA4. Consent defaults come from /assets/rw-consent.js -->
 <script>
@@ -49,7 +49,7 @@ n.callMethod.apply(n,arguments):n.queue.push(arguments)};
 if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
 n.queue=[];t=b.createElement(e);t.async=!0;
 t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
+(window.rwConsent?rwConsent.whenAdsAllowed:function(g){g()})(function(){s.parentNode.insertBefore(t,s)})}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
 if(window.rwConsent&&!rwConsent.ads)fbq('consent','revoke');
 fbq('init', '959022406709300');
@@ -577,8 +577,7 @@ body.rw-fs .form-card{position:fixed;left:50%;top:50%;transform:translate(-50%,-
 }
 </style>
 <link rel="stylesheet" href="/assets/lp-sections.css?v=4">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@500&display=swap" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="/assets/fonts.css">
 <script defer src="/assets/phone-validate.js"></script>
 </head>
 <body>
@@ -765,7 +764,7 @@ body.rw-fs .form-card{position:fixed;left:50%;top:50%;transform:translate(-50%,-
             </div>
             <div class="fc-secure">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              Your info stays private and is never sold. This page uses cookies and session recording to measure our ads and improve the page. <a href="/privacy#cookies" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">Privacy policy</a>
+              <span style="color:var(--g500,#706b68)">Your info stays private and is never sold. By submitting, you agree RevWhisper may call and text you at the number you provide, including automated texts, about your audit and our services. Consent isn&rsquo;t a condition of purchase. Msg &amp; data rates may apply. Reply STOP to opt out. This page uses cookies and session recording to measure our ads and improve the page. <a href="/privacy#cookies" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">Privacy policy</a> &middot; <a href="/terms" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">Terms</a></span>
             </div>
           </div>
         </div>
@@ -1125,78 +1124,6 @@ body.rw-fs .form-card{position:fixed;left:50%;top:50%;transform:translate(-50%,-
 </section>
 
 
-<!-- ════════════════════ REVIEWS — standalone marquee (sits between the report and the FAQ) ════════════════════
-     One testimonial per host shown in the results carousel; same avatars, opposite-scrolling marquee.
-     FILLER copy for now — swap in real host reviews when ready.
-═══════════════════════════════════════════════════════════════════ -->
-<section class="sec reviews">
-  <div class="w center">
-    <div class="eyebrow">In their words</div>
-    <h2 class="h2">The hosts behind the <em>numbers</em>.</h2>
-    <p class="lead">Straight from the people who own them. Unedited, and yes, a little skeptical at first.</p>
-  </div>
-  <div class="w" style="margin-top:44px">
-    <div class="review-carousel">
-      <div class="review-track" id="review-track">
-
-        <!-- Dave — Tobyhanna chalet -->
-        <div class="review">
-          <div class="review-stars" role="img" aria-label="5 out of 5 stars">
-            <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg>
-          </div>
-          <p class="review-quote">"Two years running my own pricing, so I'll admit I was skeptical handing it off. June booked to 97% at a better nightly rate than I ever held myself. August is usually a ghost town and it filled to $17.4K. All in it was about $31K more across the summer than last year. Should've done this a year ago."</p>
-          <div class="review-host"><div class="review-avatar">D<img class="review-avatar-photo" src="/images/hosts/dave.webp" alt="Dave, Superhost" loading="lazy" onerror="this.remove()"><span class="review-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8z"/></svg></span></div><div><div class="review-name">Dave</div><div class="review-loc">Tobyhanna, PA · Superhost</div></div></div>
-        </div>
-
-        <!-- Carla — Marathon -->
-        <div class="review">
-          <div class="review-stars" role="img" aria-label="5 out of 5 stars">
-            <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg>
-          </div>
-          <p class="review-quote">"I was sitting at 48% booked going into May and starting to sweat it. A month after they took over it was at 84%, revenue up almost 70% over last May. And I didn't have to learn a single new tool, which is honestly half of why I said yes."</p>
-          <div class="review-host"><div class="review-avatar">C<img class="review-avatar-photo" src="/images/hosts/carla.webp" alt="Carla, Superhost" loading="lazy" onerror="this.remove()"><span class="review-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8z"/></svg></span></div><div><div class="review-name">Carla</div><div class="review-loc">Marathon, FL · Superhost</div></div></div>
-        </div>
-
-        <!-- Ryan — Tobyhanna cabin -->
-        <div class="review">
-          <div class="review-stars" role="img" aria-label="5 out of 5 stars">
-            <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg>
-          </div>
-          <p class="review-quote">"July's my big month so I watch it like a hawk. Last year it did about $6K. This year, same house, it pulled $22.5K. I always figured you had to drop your rate to fill the calendar, and somehow both my occupancy and my nightly rate went up at the same time. Still not totally sure how they pulled that off. Not gonna question it."</p>
-          <div class="review-host"><div class="review-avatar">R<img class="review-avatar-photo" src="/images/hosts/ryan.webp" alt="Ryan, Superhost" loading="lazy" onerror="this.remove()"><span class="review-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8z"/></svg></span></div><div><div class="review-name">Ryan</div><div class="review-loc">Tobyhanna, PA · Superhost</div></div></div>
-        </div>
-
-        <!-- Emily — Stowe -->
-        <div class="review">
-          <div class="review-stars" role="img" aria-label="5 out of 5 stars">
-            <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg>
-          </div>
-          <p class="review-quote">"Ok so it's a ski cabin, basically all my money comes in December through March, and I'd more or less written off the rest of the year. Last May I made maybe five grand? This May it was right around $7K, and even August climbed. For the off season that's kind of wild to me. But the thing I keep telling people isn't even the money. I used to check my pricing first thing every morning, before coffee, every single day. I just don't anymore. My husband actually noticed before I did, said I seemed less wound up about the place. Anyway. Huge fan."</p>
-          <div class="review-host"><div class="review-avatar">E<img class="review-avatar-photo" src="/images/hosts/emily.webp" alt="Emily, Superhost" loading="lazy" onerror="this.remove()"><span class="review-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8z"/></svg></span></div><div><div class="review-name">Emily</div><div class="review-loc">Stowe, VT · Superhost</div></div></div>
-        </div>
-
-        <!-- Marcus — Candler new build -->
-        <div class="review">
-          <div class="review-stars" role="img" aria-label="5 out of 5 stars">
-            <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg>
-          </div>
-          <p class="review-quote">"We launched a six-bedroom estate this year with zero booking history, which at a four-figure nightly rate is a nerve-wracking way to start. Everybody's instinct is to discount to fill the calendar. They didn't. We're going into June around 93% booked at nearly $1,400 a night, and the place has already done $85.9K this year. For a brand new luxury listing I did not expect to be saying that this soon."</p>
-          <div class="review-host"><div class="review-avatar">M<img class="review-avatar-photo" src="/images/hosts/marcus.webp" alt="Marcus, Superhost" loading="lazy" onerror="this.remove()"><span class="review-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8z"/></svg></span></div><div><div class="review-name">Marcus</div><div class="review-loc">Candler, NC · Superhost</div></div></div>
-        </div>
-
-        <!-- Sofia — Englewood villa -->
-        <div class="review">
-          <div class="review-stars" role="img" aria-label="5 out of 5 stars">
-            <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.8.6-5.1 4.6 1.5 6.7L12 17.3 6 20.8l1.5-6.7L2.4 8.9l6.8-.6z"/></svg>
-          </div>
-          <p class="review-quote">"First year without the usual dead stretches, just steady the whole way through. We're up about 40% over the last twelve months and somehow ranking #1 in my area, which I never pulled off on my own."</p>
-          <div class="review-host"><div class="review-avatar">S<img class="review-avatar-photo" src="/images/hosts/sofia.webp" alt="Sofia, Superhost" loading="lazy" onerror="this.remove()"><span class="review-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8z"/></svg></span></div><div><div class="review-name">Sofia</div><div class="review-loc">Englewood, FL · Superhost</div></div></div>
-        </div>
-
-      </div><!-- /.review-track -->
-    </div><!-- /.review-carousel -->
-  </div>
-</section>
 
 
 <!-- ════════════════════ FAQ / OBJECTIONS ════════════════════ -->

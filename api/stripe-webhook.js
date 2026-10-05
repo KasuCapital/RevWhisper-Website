@@ -86,8 +86,12 @@ module.exports = async function handler(req, res) {
     const email =
       object.customer_details?.email || object.customer_email || object.metadata?.email || null;
     const checkoutSecret = process.env.ONBOARDING_CHECKOUT_SECRET;
+    // Only kick off onboarding for a session Stripe says is actually paid.
+    const paid = object.payment_status === 'paid' || object.payment_status === 'no_payment_required';
 
-    if (email && checkoutSecret) {
+    if (!paid) {
+      console.error('[checkout] session completed but not paid; skipping Growth Hub notify:', object.id, object.payment_status);
+    } else if (email && checkoutSecret) {
       try {
         await fetch('https://app.revwhisper.com/api/public/onboarding/checkout', {
           method: 'POST',

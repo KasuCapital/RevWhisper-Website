@@ -6,7 +6,7 @@
 function rwAttribution(){try{return JSON.parse(localStorage.getItem('rw_attribution')||sessionStorage.getItem('rw_attribution'))||{};}catch(e){return {};}}
 function rwCookie(n){try{var m=document.cookie.match(new RegExp('(?:^|; )'+n.replace(/([.$?*|{}()\[\]\\\/+^])/g,'\\$1')+'=([^;]*)'));return m?decodeURIComponent(m[1]):'';}catch(e){return '';}}
 </script>
-<script src="/assets/rw-consent.js?v=1"></script>
+<script src="/assets/rw-consent.js?v=2"></script>
 <script defer src="/assets/rw-posthog.js?v=3"></script>
 <!-- GA4. Consent defaults come from /assets/rw-consent.js -->
 <script>
@@ -38,7 +38,7 @@ n.callMethod.apply(n,arguments):n.queue.push(arguments)};
 if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
 n.queue=[];t=b.createElement(e);t.async=!0;
 t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
+(window.rwConsent?rwConsent.whenAdsAllowed:function(g){g()})(function(){s.parentNode.insertBefore(t,s)})}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
 if(window.rwConsent&&!rwConsent.ads)fbq('consent','revoke');
 fbq('init', '959022406709300');
@@ -436,7 +436,7 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
     </div>
     <div class="vsl-player">
       <button class="vsl-facade" type="button" id="pre-vsl-facade" aria-label="Play the video">
-        <img class="vsl-thumb" src="https://i.ytimg.com/vi/Trovk73GTWc/maxresdefault.jpg" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/Trovk73GTWc/hqdefault.jpg'" alt="" loading="lazy">
+        <img class="vsl-thumb" src="/images/video/Trovk73GTWc.webp" alt="" loading="lazy">
         <span class="vsl-play"><svg width="22" height="22" viewBox="0 0 24 24" fill="#fff"><path d="M8 5.5v13l11-6.5z"/></svg></span>
         <span class="vsl-dur">4:45</span>
       </button>
@@ -478,7 +478,7 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 </div>
 
 <footer class="mini-footer">
-  <div class="mf-copy"><span class="tag">Stop Guessing. Start Whispering.</span>&copy; 2026 MCO CORP d/b/a RevWhisper. All rights reserved.</div>
+  <div class="mf-copy"><span class="tag">Stop Guessing. Start Whispering.</span>&copy; 2026 MCO CORP d/b/a RevWhisper. All rights reserved.<span style="display:block;margin-top:6px">This site uses cookies and session recording to improve it. <a href="/terms" style="color:inherit;text-decoration:underline">Terms</a> &middot; <a href="/privacy" style="color:inherit;text-decoration:underline">Privacy policy</a></span></div>
 </footer>
 
 <div class="confetti-wrap" id="confetti-wrap"></div>
@@ -937,8 +937,7 @@ function setupVsl(host){
   vslActive=v;
   var thumb=document.getElementById('vsl-thumb');
   if(thumb){
-    thumb.src='https://i.ytimg.com/vi/'+v.videoId+'/maxresdefault.jpg';
-    thumb.onerror=function(){this.onerror=null;this.src='https://i.ytimg.com/vi/'+v.videoId+'/hqdefault.jpg';};
+    thumb.src='/images/video/'+v.videoId+'.webp'; // self-hosted, so nothing loads from YouTube until play
   }
   var dur=document.getElementById('vsl-dur'); if(dur) dur.textContent=v.durBadge;
   var row=document.getElementById('vsl-host');

@@ -6,9 +6,7 @@
 <title>Conference Link Builder | RevWhisper Internal</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" href="icons/favicon-light.svg" type="image/svg+xml">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/fonts.css">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{height:100%}
@@ -159,6 +157,20 @@ select:focus,input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(74
 const BASE = 'https://revwhisper.com/checkout-form';
 const SEND_ENDPOINT = '/api/send-client-email';
 
+// The send endpoint needs the shared team key (RW_TEAM_KEY in Vercel). Asked once per
+// device, then remembered; a rejected key is forgotten so the next send asks again.
+const TEAM_KEY_STORE = 'rw_team_key';
+function teamKey(forceAsk) {
+  let key = '';
+  try { key = forceAsk ? '' : (localStorage.getItem(TEAM_KEY_STORE) || ''); } catch (e) {}
+  if (!key) {
+    key = (window.prompt('Enter the RevWhisper team key to send emails:') || '').trim();
+    if (key) { try { localStorage.setItem(TEAM_KEY_STORE, key); } catch (e) {} }
+  }
+  return key;
+}
+function forgetTeamKey() { try { localStorage.removeItem(TEAM_KEY_STORE); } catch (e) {} }
+
 // ---- Prospect from the intake redirect ----
 const qp = new URLSearchParams(window.location.search);
 const prospect = {
@@ -263,18 +275,28 @@ sendBtn.addEventListener('click', function() {
   sendBtn.disabled = true;
   sendBtn.innerHTML = 'Sending…';
 
-  fetch(SEND_ENDPOINT, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      name: prospect.name,
-      email: prospect.email,
-      checkout_url: output.value,
-      plan: planEl.value
-    })
-  }).then(function(res) {
-    return res.json().then(function(body) { return { ok: res.ok, body: body }; });
+  function post(key) {
+    return fetch(SEND_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-rw-team-key': key },
+      body: JSON.stringify({
+        name: prospect.name,
+        email: prospect.email,
+        checkout_url: output.value,
+        plan: planEl.value
+      })
+    }).then(function(res) {
+      return res.json().then(function(body) { return { ok: res.ok, status: res.status, body: body }; });
+    });
+  }
+
+  post(teamKey(false)).then(function(result) {
+    if (result.status !== 401) return result;
+    forgetTeamKey();
+    const retryKey = teamKey(true);
+    return retryKey ? post(retryKey) : result;
   }).then(function(result) {
+    if (result.status === 401) forgetTeamKey();
     if (result.ok && result.body && result.body.sent) {
       sendStatus.textContent = '✓ Sent to ' + prospect.email;
       sendStatus.className = 'send-status ok';

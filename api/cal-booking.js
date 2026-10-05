@@ -303,7 +303,7 @@ module.exports = async function handler(req, res) {
   // deduped with the browser event via the shared fbEventId. This endpoint is browser-called,
   // so req carries the visitor's _fbp/_fbc/IP/UA for strong match quality.
   // adConsent:false = no ad-tracking consent in the browser (see /assets/rw-consent.js).
-  const adConsent = body.adConsent !== false;
+  const adConsent = (body.adConsent === true || body.adConsent === 'true'); // missing = no consent (fail closed)
   if (adConsent && body.fbEventId) {
     const fullName = String(body.name || '').trim();
     const nameParts = fullName.split(' ');

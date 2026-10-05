@@ -75,7 +75,7 @@
 })();
 </script>
 
-<script src="/assets/rw-consent.js?v=1"></script>
+<script src="/assets/rw-consent.js?v=2"></script>
 <script defer src="/assets/rw-posthog.js?v=3"></script>
 <!-- GA4. Consent defaults come from /assets/rw-consent.js -->
 <script>
@@ -99,7 +99,7 @@ fbq('track','PageView');
   function load(){
     if(loaded)return;loaded=true;
     (window.rwConsent?rwConsent.whenAllowed:function(f){f();})(function(){var g=document.createElement('script');g.async=true;g.src='https://www.googletagmanager.com/gtag/js?id=G-Y1FYZ5849B';document.head.appendChild(g);});
-    var f=document.createElement('script');f.async=true;f.src='https://connect.facebook.net/en_US/fbevents.js';document.head.appendChild(f);
+    (window.rwConsent?rwConsent.whenAdsAllowed:function(g){g();})(function(){var f=document.createElement('script');f.async=true;f.src='https://connect.facebook.net/en_US/fbevents.js';document.head.appendChild(f);});
   }
   ['scroll','click','touchstart','keydown','mousemove'].forEach(function(e){window.addEventListener(e,load,{once:true,passive:true});});
   if('requestIdleCallback' in window)requestIdleCallback(load,{timeout:4000});
@@ -121,11 +121,7 @@ document.addEventListener('DOMContentLoaded',function(){
 <!-- End Meta Pixel -->
 
 <!-- Fonts: the same request the live homepage makes -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap">
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-<noscript><link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
+<link rel="stylesheet" href="/assets/fonts.css">
 
 <!-- Site chrome and components, exactly as the live homepage loads them: the shared
      header, the design tokens + buttons in home.css, the audit form, the shared footer.
@@ -456,7 +452,7 @@ document.addEventListener('DOMContentLoaded',function(){
             </div>
             <div class="fc-secure">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              Your info stays private and is never sold. This page uses cookies and session recording to measure our ads and improve the page. <a href="/privacy#cookies" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">Privacy policy</a>
+              <span style="color:var(--g500,#706b68)">Your info stays private and is never sold. By submitting, you agree RevWhisper may call and text you at the number you provide, including automated texts, about your audit and our services. Consent isn&rsquo;t a condition of purchase. Msg &amp; data rates may apply. Reply STOP to opt out. This page uses cookies and session recording to measure our ads and improve the page. <a href="/privacy#cookies" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">Privacy policy</a> &middot; <a href="/terms" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">Terms</a></span>
             </div>
           </div>
         </div>
@@ -1094,7 +1090,7 @@ document.addEventListener('DOMContentLoaded',function(){
           <div style="padding:14px 14px 10px;border:1px solid #E0DCDA;border-radius:10px;background:#FFFFFF">
             <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:8px">
               <span style="font-size:13px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:#706b68">Rank</span>
-              <span style="font-size:13px;color:#706b68">This card&rsquo;s exact search &middot; one point per scrape day</span>
+              <span style="font-size:13px;color:#706b68">This card&rsquo;s exact search &middot; one point per tracking day</span>
             </div>
             <svg viewBox="0 0 640 182" preserveAspectRatio="none" style="display:block;width:100%;height:132px;font-family:'DM Sans',system-ui,sans-serif">
             <text x="58" y="36.7" text-anchor="end" font-size="26" fill="#706b68">#16</text>

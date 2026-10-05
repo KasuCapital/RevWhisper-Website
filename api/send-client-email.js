@@ -3,6 +3,7 @@
 // Triggered by the "Send to client" button on /event-builder.
 
 const { sendEmail } = require('./_resend');
+const { checkTeamKey, rateLimit } = require('./_guard');
 
 const BOOKING_URL = 'https://cal.com/team/revwhisper/discovery';
 const ALLOWED_CHECKOUT_HOSTS = new Set(['revwhisper.com', 'www.revwhisper.com']);
@@ -39,8 +40,8 @@ async function parseBody(req) {
   }
 }
 
-// The endpoint is unauthenticated, so only allow checkout links that point back to our
-// own checkout form — never let it be used to mail an arbitrary URL to an arbitrary inbox.
+// Team-key protected (see api/_guard.js). As a second line of defence, only allow checkout
+// links that point back to our own checkout form, never an arbitrary URL.
 function isAllowedCheckoutUrl(value) {
   try {
     const url = new URL(String(value));
@@ -178,6 +179,11 @@ function buildEmailHtml({ firstName, checkoutUrl, bookingUrl }) {
             </td>
           </tr>
         </table>
+
+        <p style="font-size:11px;line-height:1.6;color:#a39e9b;margin:28px 0 0;">
+          MCO CORP d/b/a RevWhisper &middot; 501 East Kennedy Boulevard, Tampa, FL 33602<br>
+          You're receiving this because we met at a conference. Reply &ldquo;unsubscribe&rdquo; and we won't email you again.
+        </p>
       </div>
     </div>
   `;
@@ -187,6 +193,13 @@ module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
     return sendJson(res, 405, { error: 'Method not allowed.' });
+  }
+
+  const denied = checkTeamKey(req);
+  if (denied) return sendJson(res, denied.status, { error: denied.error });
+
+  if (!rateLimit(req, 'send-client-email', 20, 60 * 60 * 1000)) {
+    return sendJson(res, 429, { error: 'Too many emails sent from this device. Try again later.' });
   }
 
   const body = await parseBody(req);

@@ -6,7 +6,7 @@
 function rwAttribution(){try{return JSON.parse(localStorage.getItem('rw_attribution')||sessionStorage.getItem('rw_attribution'))||{};}catch(e){return {};}}
 function rwCookie(n){try{var m=document.cookie.match(new RegExp('(?:^|; )'+n.replace(/([.$?*|{}()\[\]\\\/+^])/g,'\\$1')+'=([^;]*)'));return m?decodeURIComponent(m[1]):'';}catch(e){return '';}}
 </script>
-<script src="/assets/rw-consent.js?v=1"></script>
+<script src="/assets/rw-consent.js?v=2"></script>
 <script defer src="/assets/rw-posthog.js?v=3"></script>
 <!-- GA4. Consent defaults come from /assets/rw-consent.js -->
 <script>
@@ -25,7 +25,7 @@ n.callMethod.apply(n,arguments):n.queue.push(arguments)};
 if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
 n.queue=[];t=b.createElement(e);t.async=!0;
 t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
+(window.rwConsent?rwConsent.whenAdsAllowed:function(g){g()})(function(){s.parentNode.insertBefore(t,s)})}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
 if(window.rwConsent&&!rwConsent.ads)fbq('consent','revoke');
 fbq('init', '959022406709300');
@@ -388,9 +388,10 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
                 </select>
                 <input class="book-input" type="tel" id="book-phone" placeholder="(555) 123-4567" autocomplete="tel" inputmode="tel" maxlength="16">
               </div>
-              <div class="book-field-hint">Add it and we'll text your Google Meet link and a reminder before your audit. Nothing else.</div>
+              <div class="book-field-hint">Add it and we'll text your Google Meet link and a reminder before your audit.</div>
             </div>
             <button class="btn-confirm" type="button" id="confirm-btn" onclick="confirmBooking()">Confirm my audit <span class="arrow">→</span></button>
+            <p class="rw-sms-consent" style="margin:14px 0 0;font-size:11.5px;line-height:1.55;color:#706b68;text-align:center">If you add a phone number, you agree RevWhisper may call and text you at the number you provide, including automated texts, about your audit and our services. Consent isn&rsquo;t a condition of purchase. Msg &amp; data rates may apply. Reply STOP to opt out. This page uses session recording to improve it. <a href="/privacy" style="color:inherit;text-decoration:underline">Privacy policy</a> &middot; <a href="/terms" style="color:inherit;text-decoration:underline">Terms</a></p>
             <div class="form-actions"><button class="btn-back" type="button" onclick="prevStep()"><span class="arrow">←</span> Back</button></div>
           </div>
 
@@ -435,7 +436,7 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 </div>
 
 <footer class="mini-footer">
-  <div class="mf-copy"><span class="tag">Stop Guessing. Start Whispering.</span>&copy; 2026 MCO CORP d/b/a RevWhisper. All rights reserved.</div>
+  <div class="mf-copy"><span class="tag">Stop Guessing. Start Whispering.</span>&copy; 2026 MCO CORP d/b/a RevWhisper. All rights reserved.<span style="display:block;margin-top:6px">This site uses cookies and session recording to improve it. <a href="/terms" style="color:inherit;text-decoration:underline">Terms</a> &middot; <a href="/privacy" style="color:inherit;text-decoration:underline">Privacy policy</a></span></div>
 </footer>
 
 <div class="confetti-wrap" id="confetti-wrap"></div>
@@ -460,8 +461,7 @@ var vslActive=vslHost||VSL_HOSTS.bryan; // neutral fallback still plays the defa
   var v=vslActive;
   var thumb=document.getElementById('vsl-thumb');
   if(thumb){
-    thumb.src='https://i.ytimg.com/vi/'+v.videoId+'/maxresdefault.jpg';
-    thumb.onerror=function(){this.onerror=null;this.src='https://i.ytimg.com/vi/'+v.videoId+'/hqdefault.jpg';};
+    thumb.src='/images/video/'+v.videoId+'.webp'; // self-hosted, so nothing loads from YouTube until play
   }
   var dur=document.getElementById('vsl-dur'); if(dur) dur.textContent=v.durBadge;
   var row=document.getElementById('vsl-host');
