@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Attribution tracking (cookie-free) -->
+<script>
+(function(){
+  var key='rw_attribution';
+  var TTL=7776000000; // 90 days — keep the last paid touch across tabs/sessions
+  var params=new URLSearchParams(window.location.search);
+  var utmFields=['utm_source','utm_medium','utm_campaign','utm_term','utm_content'];
+  var clickFields=['fbclid','gclid','ttclid','twclid','msclkid','li_fat_id'];
+  var trackedFields=utmFields.concat(clickFields);
+  var hasTracked=trackedFields.some(function(f){return params.has(f);});
+  function rwGet(k){try{return localStorage.getItem(k)||sessionStorage.getItem(k);}catch(e){try{return sessionStorage.getItem(k);}catch(e2){return null;}}}
+  function rwSet(k,v){try{localStorage.setItem(k,v);}catch(e){try{sessionStorage.setItem(k,v);}catch(e2){}}}
+  var prev=null;try{prev=JSON.parse(rwGet(key));}catch(e){prev=null;}
+  var fresh=prev&&prev.arrived_at&&((Date.now()-new Date(prev.arrived_at).getTime())<TTL);
+  if(hasTracked||!fresh){
+    var data={};
+    trackedFields.forEach(function(f){if(params.get(f))data[f]=params.get(f);});
+    try{data.referrer=document.referrer?new URL(document.referrer).hostname:'direct';}catch(e){data.referrer=document.referrer||'direct';}
+    data.landing_page=window.location.pathname;
+    data.arrived_at=new Date().toISOString();
+    rwSet(key,JSON.stringify(data));
+  }
+})();
+</script>
+<script src="/assets/rw-consent.js?v=2"></script>
+<script defer src="/assets/rw-posthog.js?v=3"></script>
+<!-- GA4. Consent defaults come from /assets/rw-consent.js -->
+<script>
+window.dataLayer=window.dataLayer||[];
+function gtag(){dataLayer.push(arguments);}
+gtag('js',new Date());
+gtag('config','G-Y1FYZ5849B');
+(window.rwConsent?rwConsent.whenAllowed:function(f){f();})(function(){var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-Y1FYZ5849B';document.head.appendChild(s);});
+function rwTrack(e,p){gtag('event',e,p||{});}
+</script>
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+(window.rwConsent?rwConsent.whenAdsAllowed:function(g){g()})(function(){s.parentNode.insertBefore(t,s)})}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+if(window.rwConsent&&!rwConsent.ads)fbq('consent','revoke');
+fbq('init', '959022406709300');
+fbq('track', 'PageView');
+</script>
+<!-- End Meta Pixel -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Service Agreement | RevWhisper</title>
+<meta name="description" content="The RevWhisper Service Agreement for revenue uplift and listing optimization services, between MCO CORP d/b/a RevWhisper and Client.">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://revwhisper.com/service-agreement">
+<link rel="icon" href="/icons/favicon-light.svg" type="image/svg+xml" media="(prefers-color-scheme: light)">
+<link rel="icon" href="/icons/favicon-dark.svg" type="image/svg+xml" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/icons/favicon-light.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/fonts.css">
+<style>
+/* ── Reset & Base ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#fff;color:#32302F;line-height:1.6;font-size:18px;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+/* ── Design Tokens ── */
+:root{
+  --black:#32302F;
+  --white:#ffffff;
+  --accent:#4A6741;
+  --accent-light:#dce6d8;
+  --accent-border:#b3c5ab;
+  --green:#4A6741;
+  --red:#B85252;
+  --terra:#8B4A3E;
+  --gold:#9B7B3A;
+  --stone:#f3f1ef;
+  --g50:#faf9f8;--g100:#f3f1ef;--g200:#E0DCDA;--g300:#ccc8c5;--g400:#a39e9b;--g500:#706b68;--g600:#58534f;--g700:#48433f;
+  --radius:8px;--radius-sm:6px;
+  --sh-sm:0 1px 3px rgba(50,48,47,.06),0 1px 2px rgba(50,48,47,.04);
+  --sh:0 4px 16px rgba(50,48,47,.07),0 2px 6px rgba(50,48,47,.04);
+  --sh-lg:0 16px 48px rgba(50,48,47,.1),0 4px 12px rgba(50,48,47,.05);
+  --heading:'Lora','Georgia',serif;
+  --body:'DM Sans','system-ui','Helvetica Neue',sans-serif;
+  --mono:'DM Mono','Consolas',monospace;
+}
+
+/* ── Layout ── */
+.w{max-width:1100px;margin:0 auto;padding:0 28px}
+
+/* ── Hero ── */
+.legal-hero{background:var(--accent);color:var(--white);padding:140px 28px 64px;text-align:center;position:relative;overflow:hidden}
+.legal-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% -20%,rgba(255,255,255,.08),transparent 50%),radial-gradient(ellipse at 70% 120%,rgba(0,0,0,.12),transparent 50%);pointer-events:none}
+.legal-hero .lh-inner{position:relative;z-index:1;max-width:760px;margin:0 auto}
+.legal-eyebrow{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;opacity:.65;margin-bottom:18px}
+.legal-hero h1{font-family:var(--heading);font-size:clamp(34px,5vw,52px);font-weight:400;line-height:1.15;letter-spacing:-.02em;margin-bottom:16px}
+.legal-updated{font-family:var(--mono);font-size:13px;color:rgba(255,255,255,.72);margin-bottom:18px}
+.legal-hero p{font-size:16px;line-height:1.7;color:rgba(255,255,255,.85);font-weight:300;max-width:560px;margin:0 auto}
+.legal-hero-nav{margin-top:26px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.legal-hero-nav a{font-family:var(--body);font-size:13px;font-weight:500;color:var(--white);text-decoration:none;border:1px solid rgba(255,255,255,.35);border-radius:100px;padding:7px 16px;transition:background .2s,border-color .2s}
+.legal-hero-nav a:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.6)}
+.legal-hero-nav a[aria-current="page"]{background:var(--white);color:var(--accent);border-color:var(--white)}
+
+/* ── Body ── */
+.legal-body{max-width:760px;margin:0 auto;padding:64px 28px 80px}
+.legal-lead{font-size:18px;line-height:1.75;color:var(--g600);margin-bottom:8px}
+
+/* Table of contents */
+.legal-toc{background:var(--g50);border:1px solid var(--g200);border-radius:var(--radius);padding:24px 26px;margin:36px 0 52px}
+.legal-toc-title{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--g500);margin-bottom:16px}
+.legal-toc ol{list-style:none;counter-reset:toc;padding:0;margin:0;columns:2;column-gap:36px}
+.legal-toc li{counter-increment:toc;margin-bottom:9px;font-size:14px;break-inside:avoid}
+.legal-toc a{color:var(--g700);text-decoration:none;transition:color .2s}
+.legal-toc a::before{content:counter(toc) ". ";color:var(--accent);font-family:var(--mono);font-size:12px}
+.legal-toc a:hover{color:var(--accent)}
+
+/* Prose */
+.legal-body h2{font-family:var(--heading);font-size:clamp(22px,3vw,28px);font-weight:400;letter-spacing:-.02em;line-height:1.25;color:var(--black);margin:52px 0 14px;scroll-margin-top:24px}
+.legal-body h3{font-family:var(--heading);font-size:18px;font-weight:500;color:var(--black);margin:26px 0 8px}
+.legal-body p{font-size:16px;line-height:1.75;color:var(--g700);margin-bottom:16px}
+.legal-body ul{margin:0 0 16px;padding-left:22px}
+.legal-body li{font-size:16px;line-height:1.7;color:var(--g700);margin-bottom:8px}
+.legal-body a{color:var(--accent);text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
+.legal-body a:hover{text-decoration-thickness:2px}
+.legal-body strong{color:var(--black);font-weight:600}
+.legal-body h2:first-of-type{margin-top:0}
+
+/* Callout note (Fern emphasis — used sparingly) */
+.legal-note{background:var(--accent-light);border:1px solid var(--accent-border);border-left:3px solid var(--accent);border-radius:var(--radius);padding:18px 22px;margin:24px 0}
+.legal-note p{color:var(--g700);margin:0}
+.legal-note p strong{color:var(--accent)}
+
+/* Contact block */
+.legal-contact{margin-top:14px;background:var(--g50);border:1px solid var(--g200);border-radius:var(--radius);padding:22px 24px}
+.legal-contact p{margin:0 0 4px}
+.legal-contact .lc-name{font-weight:600;color:var(--black)}
+
+/* ── Responsive ── */
+@media(max-width:768px){
+  .legal-hero{padding:116px 20px 52px}
+  .legal-body{padding:48px 20px 64px}
+  .legal-toc ol{columns:1}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+}
+</style>
+<link rel="stylesheet" href="/assets/header.css">
+<script defer src="/assets/header.js"></script>
+<link rel="stylesheet" href="/assets/footer.css">
+<!-- X Pixel base code -->
+<script src="/assets/x-pixel-base.js?v=2"></script>
+<!-- End X Pixel base code -->
+</head>
+<body>
+
+<!-- HEADER:START -->
+<nav class="float-bar" id="float-bar" aria-label="Primary">
+  <a href="/" class="fb-logo">
+    <div class="lm"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24" fill="none" aria-hidden="true"><path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <span class="ln">RevWhisper</span>
+  </a>
+
+  <div class="fb-links" id="fb-links">
+
+    <!-- Services dropdown -->
+    <div class="fb-dropdown" data-dropdown>
+      <button class="fb-link fb-dropdown-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="fb-menu-services">
+        Services
+        <svg class="fb-chevron" viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="fb-menu" id="fb-menu-services">
+
+        <!-- Listing Optimization: document with text lines -->
+        <a href="/airbnb-listing-optimization" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/>
+              <path d="M14 2v4a2 2 0 0 0 2 2h4"/>
+              <path d="M10 9H8"/>
+              <path d="M16 13H8"/>
+              <path d="M16 17H8"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Listing Optimization</span>
+            </span>
+            <span class="fb-menu-desc">Title, description, and amenities tuned for conversion</span>
+          </span>
+        </a>
+
+        <!-- Revenue Management: stacked coins / database cylinder -->
+        <a href="/revenue-management" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <ellipse cx="12" cy="5" rx="9" ry="3"/>
+              <path d="M3 5v14a9 3 0 0 0 18 0V5"/>
+              <path d="M3 12a9 3 0 0 0 18 0"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Revenue Management</span>
+            </span>
+            <span class="fb-menu-desc">Dynamic pricing, minimum stays, seasonal strategy</span>
+          </span>
+        </a>
+
+        <!-- Photo Optimization: photo frame with sun + mountains -->
+        <a href="/photoediting" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              <circle cx="9" cy="9" r="2"/>
+              <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Photo Optimization</span>
+            </span>
+            <span class="fb-menu-desc">Cover photos, photo order, professional editing</span>
+          </span>
+        </a>
+
+      </div>
+    </div>
+
+    <!-- Resources dropdown -->
+    <div class="fb-dropdown" data-dropdown>
+      <button class="fb-link fb-dropdown-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="fb-menu-resources">
+        Resources
+        <svg class="fb-chevron" viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="fb-menu" id="fb-menu-resources">
+
+        <!-- Blog: notebook with binding + text lines -->
+        <a href="/blog" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="4" y="2" width="16" height="20" rx="2"/>
+              <path d="M2 6h4"/>
+              <path d="M2 10h4"/>
+              <path d="M2 14h4"/>
+              <path d="M2 18h4"/>
+              <path d="M9.5 8h5"/>
+              <path d="M9.5 12H16"/>
+              <path d="M9.5 16H14"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Blog</span>
+            </span>
+            <span class="fb-menu-desc">Strategies, data, and host insights</span>
+          </span>
+        </a>
+
+        <!-- Case Studies: open book -->
+        <a href="/case-study" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 7v14"/>
+              <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Case Studies</span>
+            </span>
+            <span class="fb-menu-desc">Real revenue lifts from real listings</span>
+          </span>
+        </a>
+
+        <!-- Free Listing Audit: clean magnifying glass -->
+        <a href="/#audit-form" class="fb-menu-item js-to-audit">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="10.5" cy="10.5" r="6.5"/>
+              <path d="m15.5 15.5 4 4"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Free Listing Audit</span>
+            </span>
+            <span class="fb-menu-desc">Ranking, pricing and conversion, walked through live</span>
+          </span>
+        </a>
+      </div>
+    </div>
+
+    <a href="/get-started" class="fb-link fb-link--mobile-cta">Book a Strategy Call</a>
+  </div>
+
+  <a href="/get-started" class="fb-cta">Book a Strategy Call</a>
+  <button class="fb-hamburger" id="fb-hamburger" aria-label="Toggle navigation" aria-expanded="false">
+    <span class="fb-ham-line"></span>
+    <span class="fb-ham-line"></span>
+    <span class="fb-ham-line"></span>
+  </button>
+</nav>
+<!-- HEADER:END -->
+
+<!-- ════════════════════════════════════════════════
+     HERO
+     ════════════════════════════════════════════════ -->
+<section class="legal-hero">
+  <div class="lh-inner">
+    <div class="legal-eyebrow">Legal</div>
+    <h1>Service Agreement</h1>
+    <p>Revenue Uplift &amp; Listing Optimization Services<br>MCO CORP d/b/a RevWhisper</p>
+    <nav class="legal-hero-nav" aria-label="Legal pages">
+      <a href="/privacy">Privacy Policy</a>
+      <a href="/terms">Terms of Service</a>
+      <a href="/service-agreement" aria-current="page">Service Agreement</a>
+    </nav>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     BODY
+     ════════════════════════════════════════════════ -->
+<main class="legal-body">
+  <p>This Service Agreement (this &ldquo;Agreement&rdquo;) is entered into as of the date of the last signature below (the &ldquo;Effective Date&rdquo;), by and between:</p>
+  <p><strong>MCO CORP</strong>, doing business as RevWhisper (&ldquo;Provider&rdquo; or &ldquo;RevWhisper&rdquo;); and the individual or entity identified on the signature page below (&ldquo;Client&rdquo;).</p>
+  <p>Provider and Client are each a &ldquo;Party&rdquo; and collectively the &ldquo;Parties.&rdquo; This Agreement is valid for one (1) property only.</p>
+
+  <h2>1. Services</h2>
+  <h3>1.1 Scope of Services</h3>
+  <p>Provider shall deliver the following done-for-you revenue uplift and listing optimization services for the Client&rsquo;s short-term rental property (the &ldquo;Listing&rdquo;):</p>
+  <p><strong>(a) Dynamic Pricing Management.</strong> Daily pricing adjustments informed by booking pace, competitive set movement, local event calendars, and platform-specific demand signals. Custom promotion deployment across all connected OTAs, including Airbnb weekly/monthly coupons, last-minute deals, and early bird discounts. Minimum stay optimization by season, day-of-week, and booking window. Gap night identification and tactical pricing adjustments. Monthly revenue reporting including ADR trends, RevPAR benchmarking, occupancy pacing, and actions taken.</p>
+  <p><strong>(b) Listing Content Optimization.</strong> Algorithmic title optimization, keyword-dense description engineering, amenity audit and optimization, review response strategy, and seasonal content refresh cycles (minimum quarterly). All content optimized per OTA&rsquo;s known indexing and search patterns.</p>
+  <p><strong>(c) Photo Optimization.</strong> Professional photo editing (brightness, white balance, color correction, declutter retouching), photo ordering optimization by season and property type, visual description writing for all photo caption fields, photo gap analysis benchmarked against the competitive set, and photo quality scoring against known OTA algorithm signals.</p>
+  <p><strong>(d) OTA Algorithm Strategy.</strong> Platform-specific algorithmic optimization across Airbnb and any additional OTAs connected to the Client&rsquo;s account. This includes Instant Book strategy, calendar freshness management, response rate monitoring, Superhost/Guest Favorite qualification strategy, and new listing boost exploitation where applicable.</p>
+  <p><strong>(e) Competitive Intelligence.</strong> Identification and ongoing monitoring of a competitive set of comparable listings per property. Tracking of competitor pricing, availability, reviews, and promotional activity to inform pricing and content strategy.</p>
+  <p><strong>(f) Reporting.</strong> Monthly performance report delivered to Client showing revenue versus prior period, revenue versus market, ranking changes, actions taken, and upcoming strategy.</p>
+
+  <h3>1.2 Execution Model</h3>
+  <p>Provider executes all services directly. All pricing changes, promotion deployments, photo edits, description rewrites, photo uploads, review responses, and listing updates are performed by Provider&rsquo;s team. Client is not expected to log into any platform to make edits.</p>
+
+  <h3>1.3 Listing Optimization</h3>
+  <p>Upon execution of this Agreement, Provider shall conduct an initial listing optimization process for the Listing, which includes: a full listing health score audit, competitive set identification, guest avatar profiling, market demand baseline analysis, initial photo audit and editing pass, keyword and filter audit, baseline ranking position tracking, and setup of all monitoring systems. The listing optimization process is expected to take approximately ten (10) business days from the date Provider receives all required account access. Client&rsquo;s monthly subscription shall commence upon completion of the listing optimization period and the start of ongoing revenue management services.</p>
+
+  <h3>1.4 Services Not Included</h3>
+  <p>Provider does not provide property management, guest communication, cleaning coordination, maintenance services, or any on-site services. Provider does not handle payment processing, financial account management, or tax preparation on behalf of Client.</p>
+
+  <h2>2. Term and Termination</h2>
+  <h3>2.1 Initial Term</h3>
+  <p>This Agreement shall commence on the Effective Date under one of the following term options selected by Client at signing:</p><ul><li><strong>3-Month Plan:</strong> An initial term of three (3) months, after which this Agreement shall automatically continue on a month-to-month basis unless terminated in accordance with this Agreement.</li><li><strong>12-Month Plan:</strong> An initial term of twelve (12) months, after which this Agreement shall automatically renew for additional annual terms unless either Party provides written notice of non-renewal at least thirty (30) days prior to the end of the then-current term.</li></ul>
+
+  <h3>2.2 Renewal</h3>
+  <ul><li><strong>3-Month Plan:</strong> Automatically continues on a month-to-month basis. Either Party may terminate with thirty (30) days written notice.</li><li><strong>12-Month Plan:</strong> Automatically renews for additional annual terms unless either Party provides written notice of non-renewal at least thirty (30) days prior to the end of the then-current term.</li></ul>
+
+  <h3>2.3 Early Termination</h3>
+  <ul><li><strong>3-Month Plan:</strong> If Client terminates prior to the expiration of the Initial Term, Client shall pay an early termination fee equal to two (2) months of the applicable Monthly Fee, due within fifteen (15) days of the date of termination notice.</li><li><strong>12-Month Plan:</strong> No early termination is permitted during the Initial Term. Client is committed to the full twelve (12) month term.</li></ul>
+
+  <h3>2.4 Effect of Termination</h3>
+  <p>Upon termination or expiration: (a) Provider shall cease all services within five (5) business days; (b) Provider shall remove itself from all Client accounts within five (5) business days; (c) Client shall pay all outstanding fees through the effective date of termination; and (d) all work product created during the term shall remain the property of Client pursuant to Section 7.</p>
+
+  <h2>3. Fees and Payment</h2>
+  <h3>3.1 Listing Optimization Fee</h3>
+  <p>Client shall pay a one-time listing optimization fee of $996.00 per Listing (the &ldquo;Listing Optimization Fee&rdquo;). The Listing Optimization Fee is due upfront upon execution of this Agreement and is non-refundable. Client&rsquo;s monthly subscription shall commence upon completion of the listing optimization period and the start of ongoing revenue management services.</p>
+
+  <h3>3.2 Monthly Service Fee</h3>
+  <ul><li><strong>3-Month Plan (Month-to-Month):</strong> $750.00 per month, per Listing. The first Monthly Fee is due upon execution. Subsequent fees are due on the first (1st) of each calendar month.</li><li><strong>12-Month Plan (Annual, Paid Upfront):</strong> $500.00 per month, per Listing, paid in full upfront at signing ($6,000.00 total).</li></ul>
+
+  <h3>3.3 Payment Method</h3>
+  <p>All fees shall be paid via Stripe invoice or credit card. Provider may use a third-party payment processor.</p>
+
+  <h3>3.4 Late Payment</h3>
+  <p>Any amount not paid when due shall accrue interest at the rate of 1.5% per month, or the maximum rate permitted by applicable law, whichever is less. If payment is not received within five (5) business days of the due date, Provider may suspend all services until the account is brought current.</p>
+
+  <h3>3.5 Portfolio Pricing</h3>
+  <p>Clients with ten (10) or more Listings may be eligible for portfolio pricing. Contact Provider for details.</p>
+
+  <h2>4. Account Access and Credentials</h2>
+  <h3>4.1 Required Access</h3>
+  <p>Client shall provide Provider with: Airbnb team member access with full authority (excluding payment and payout settings); PMS credentials with necessary permissions; access to Client&rsquo;s photo library.</p>
+
+  <h3>4.2 Restricted Access</h3>
+  <p>Provider shall not access, modify, or manage Client&rsquo;s payment settings, payout information, bank account details, tax information, or any financial account credentials.</p>
+
+  <h3>4.3 Security</h3>
+  <p>Provider shall use commercially reasonable security measures to protect Client&rsquo;s account credentials and shall not share them with any third party without Client&rsquo;s prior written consent.</p>
+
+  <h2>5. Confidentiality</h2>
+  <p>Each Party shall maintain the confidentiality of all proprietary and confidential information received from the other Party in connection with this Agreement.</p>
+
+  <h2>6. Data and Privacy</h2>
+  <p>Provider shall handle all Client data in accordance with applicable data protection laws and its Privacy Policy.</p>
+
+  <h2>7. Intellectual Property</h2>
+  <h3>7.1 Work Product Ownership</h3>
+  <p>All work product created by Provider specifically for Client shall be owned by Client upon full payment of all fees due.</p>
+
+  <h3>7.2 Provider Tools and Methods</h3>
+  <p>Provider&rsquo;s proprietary tools, methodologies, frameworks, templates, processes, and general know-how remain the exclusive property of Provider.</p>
+
+  <h2>8. Disclaimers and Limitation of Liability</h2>
+  <h3>8.1 No Revenue Guarantee</h3>
+  <p>Provider does not guarantee any specific level of revenue, occupancy, or ranking improvement. Provider&rsquo;s obligation is to apply professional expertise and commercially reasonable efforts.</p>
+
+  <h3>8.2 OTA Platform Risk</h3>
+  <p>Changes to Airbnb platforms, including algorithm updates, policy changes, or account suspensions not caused by Provider, are outside Provider&rsquo;s control and shall not constitute a breach.</p>
+
+  <h3>8.3 Client Actions</h3>
+  <p>Provider shall not be liable for negative outcomes resulting from Client&rsquo;s actions, including modifications to listings without coordinating with Provider, poor guest experiences, or violation of platform terms.</p>
+
+  <h3>8.4 Limitation of Liability</h3>
+  <p>PROVIDER&rsquo;S TOTAL AGGREGATE LIABILITY SHALL NOT EXCEED THE TOTAL FEES PAID BY CLIENT DURING THE THREE (3) MONTHS IMMEDIATELY PRECEDING THE EVENT GIVING RISE TO THE CLAIM. IN NO EVENT SHALL PROVIDER BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES.</p>
+
+  <h3>8.5 Indemnification</h3>
+  <p>Client shall indemnify and hold harmless Provider from claims arising out of: Client&rsquo;s breach of this Agreement; violation of platform terms; violation of applicable law; claims by guests or third parties related to Client&rsquo;s property; or Client&rsquo;s actions affecting listing performance.</p>
+
+  <h2>9. Representations and Warranties</h2>
+  <p>Each Party represents it has full authority to enter into this Agreement. Client additionally represents that it is the lawful owner or authorized manager of the Listing and has authority to grant Provider the account access described herein.</p>
+
+  <h2>10. Dispute Resolution</h2>
+  <p>Disputes shall be resolved first through negotiation, then mediation (if jointly agreed), then binding arbitration in the State of Delaware before a single arbitrator. Nothing prevents either Party from seeking injunctive relief to prevent irreparable harm.</p>
+
+  <h2>11. General Provisions</h2>
+  <p>This Agreement is governed by Delaware law. It constitutes the entire agreement between the Parties. Amendments require written consent of both Parties. Client may not assign without Provider&rsquo;s consent. Provider is an independent contractor. Neither Party is liable for force majeure events.</p>
+
+  <div class="legal-contact">
+    <p>Notices: <a href="mailto:Admin@RevWhisper.com">Admin@RevWhisper.com</a></p>
+  </div>
+</main>
+
+<!-- ════════════════════════════════════════════════
+     FOOTER
+     ════════════════════════════════════════════════ -->
+
+<!-- FOOTER:START -->
+<footer class="site-footer">
+  <div class="w">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">
+          <div class="lm">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24" fill="none" aria-hidden="true">
+              <path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="#32302F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="#32302F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="footer-logo-name">RevWhisper</span>
+        </div>
+        <p class="footer-tag">A revenue intelligence team that layers into your Airbnb listing to accelerate performance and maximize earnings.</p>
+        <p class="footer-tag footer-address">501 East Kennedy Boulevard, Tampa, FL 33602 (Space 15&ndash;144)</p>
+        <div class="footer-socials">
+          <a href="https://x.com/RevWhisper" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+          <a href="https://www.instagram.com/rev.whisper/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          </a>
+          <a href="https://www.facebook.com/groups/airbnblistingoptimization" target="_blank" rel="noopener noreferrer" aria-label="Facebook Group">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <p class="footer-col-title">Explore</p>
+        <a href="/" class="footer-link">Home</a>
+        <a href="/airbnb-listing-optimization" class="footer-link">Listing Optimization</a>
+        <a href="/revenue-management" class="footer-link">Revenue Management</a>
+        <a href="/photoediting" class="footer-link">Photo Editing</a>
+        <a href="/case-study" class="footer-link">Case Study</a>
+        <a href="/blog" class="footer-link">Blog</a>
+        <a href="/get-started" class="footer-link">Book a Strategy Call</a>
+      </div>
+      <div class="footer-col">
+        <p class="footer-col-title">Resources</p>
+        <a href="/#audit-form" class="footer-link js-to-audit">Free Listing Audit</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 MCO CORP d/b/a RevWhisper. All rights reserved.</span>
+      <nav class="footer-legal" aria-label="Legal">
+        <a href="/privacy">Privacy Policy</a>
+        <a href="/terms">Terms of Service</a>
+      </nav>
+      <span>Stop Guessing. Start Whispering.</span>
+    </div>
+  </div>
+</footer>
+<!-- FOOTER:END -->
+
+</body>
+</html>
