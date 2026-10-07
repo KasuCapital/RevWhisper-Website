@@ -16,6 +16,12 @@
   ],
   "headers": [
     {
+      "source": "/service-agreement",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow" }
+      ]
+    },
+    {
       "source": "/(.*).md",
       "headers": [
         { "key": "X-Robots-Tag", "value": "noindex" }

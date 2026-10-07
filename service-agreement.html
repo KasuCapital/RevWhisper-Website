@@ -55,7 +55,7 @@ fbq('track', 'PageView');
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Service Agreement | RevWhisper</title>
 <meta name="description" content="The RevWhisper Service Agreement for revenue uplift and listing optimization services, between MCO CORP d/b/a RevWhisper and Client.">
-<meta name="robots" content="noindex">
+<meta name="robots" content="noindex, nofollow">
 <link rel="canonical" href="https://revwhisper.com/service-agreement">
 <link rel="icon" href="/icons/favicon-light.svg" type="image/svg+xml" media="(prefers-color-scheme: light)">
 <link rel="icon" href="/icons/favicon-dark.svg" type="image/svg+xml" media="(prefers-color-scheme: dark)">
@@ -106,7 +106,7 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
 .legal-hero-nav a[aria-current="page"]{background:var(--white);color:var(--accent);border-color:var(--white)}
 
 /* ── Body ── */
-.legal-body{max-width:760px;margin:0 auto;padding:64px 28px 80px}
+.legal-body{max-width:760px;margin:0 auto;padding:56px 28px 80px}
 .legal-lead{font-size:18px;line-height:1.75;color:var(--g600);margin-bottom:8px}
 
 /* Table of contents */
@@ -139,6 +139,9 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
 .legal-contact p{margin:0 0 4px}
 .legal-contact .lc-name{font-weight:600;color:var(--black)}
 
+.sa-title{font-family:var(--heading);font-size:clamp(28px,4vw,38px);font-weight:500;letter-spacing:.02em;color:var(--black);text-align:center;margin-bottom:10px}
+.legal-body .sa-sub{text-align:center;font-size:15px;color:var(--g500);margin-bottom:44px}
+
 /* ── Responsive ── */
 @media(max-width:768px){
   .legal-hero{padding:116px 20px 52px}
@@ -149,184 +152,16 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
   html{scroll-behavior:auto}
 }
 </style>
-<link rel="stylesheet" href="/assets/header.css">
-<script defer src="/assets/header.js"></script>
-<link rel="stylesheet" href="/assets/footer.css">
 <!-- X Pixel base code -->
 <script src="/assets/x-pixel-base.js?v=2"></script>
 <!-- End X Pixel base code -->
 </head>
 <body>
 
-<!-- HEADER:START -->
-<nav class="float-bar" id="float-bar" aria-label="Primary">
-  <a href="/" class="fb-logo">
-    <div class="lm"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24" fill="none" aria-hidden="true"><path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-    <span class="ln">RevWhisper</span>
-  </a>
-
-  <div class="fb-links" id="fb-links">
-
-    <!-- Services dropdown -->
-    <div class="fb-dropdown" data-dropdown>
-      <button class="fb-link fb-dropdown-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="fb-menu-services">
-        Services
-        <svg class="fb-chevron" viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
-      <div class="fb-menu" id="fb-menu-services">
-
-        <!-- Listing Optimization: document with text lines -->
-        <a href="/airbnb-listing-optimization" class="fb-menu-item">
-          <span class="fb-menu-icon">
-            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/>
-              <path d="M14 2v4a2 2 0 0 0 2 2h4"/>
-              <path d="M10 9H8"/>
-              <path d="M16 13H8"/>
-              <path d="M16 17H8"/>
-            </svg>
-          </span>
-          <span class="fb-menu-content">
-            <span class="fb-menu-row">
-              <span class="fb-menu-label">Listing Optimization</span>
-            </span>
-            <span class="fb-menu-desc">Title, description, and amenities tuned for conversion</span>
-          </span>
-        </a>
-
-        <!-- Revenue Management: stacked coins / database cylinder -->
-        <a href="/revenue-management" class="fb-menu-item">
-          <span class="fb-menu-icon">
-            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <ellipse cx="12" cy="5" rx="9" ry="3"/>
-              <path d="M3 5v14a9 3 0 0 0 18 0V5"/>
-              <path d="M3 12a9 3 0 0 0 18 0"/>
-            </svg>
-          </span>
-          <span class="fb-menu-content">
-            <span class="fb-menu-row">
-              <span class="fb-menu-label">Revenue Management</span>
-            </span>
-            <span class="fb-menu-desc">Dynamic pricing, minimum stays, seasonal strategy</span>
-          </span>
-        </a>
-
-        <!-- Photo Optimization: photo frame with sun + mountains -->
-        <a href="/photoediting" class="fb-menu-item">
-          <span class="fb-menu-icon">
-            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-              <circle cx="9" cy="9" r="2"/>
-              <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
-            </svg>
-          </span>
-          <span class="fb-menu-content">
-            <span class="fb-menu-row">
-              <span class="fb-menu-label">Photo Optimization</span>
-            </span>
-            <span class="fb-menu-desc">Cover photos, photo order, professional editing</span>
-          </span>
-        </a>
-
-      </div>
-    </div>
-
-    <!-- Resources dropdown -->
-    <div class="fb-dropdown" data-dropdown>
-      <button class="fb-link fb-dropdown-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="fb-menu-resources">
-        Resources
-        <svg class="fb-chevron" viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
-      <div class="fb-menu" id="fb-menu-resources">
-
-        <!-- Blog: notebook with binding + text lines -->
-        <a href="/blog" class="fb-menu-item">
-          <span class="fb-menu-icon">
-            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <rect x="4" y="2" width="16" height="20" rx="2"/>
-              <path d="M2 6h4"/>
-              <path d="M2 10h4"/>
-              <path d="M2 14h4"/>
-              <path d="M2 18h4"/>
-              <path d="M9.5 8h5"/>
-              <path d="M9.5 12H16"/>
-              <path d="M9.5 16H14"/>
-            </svg>
-          </span>
-          <span class="fb-menu-content">
-            <span class="fb-menu-row">
-              <span class="fb-menu-label">Blog</span>
-            </span>
-            <span class="fb-menu-desc">Strategies, data, and host insights</span>
-          </span>
-        </a>
-
-        <!-- Case Studies: open book -->
-        <a href="/case-study" class="fb-menu-item">
-          <span class="fb-menu-icon">
-            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M12 7v14"/>
-              <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>
-            </svg>
-          </span>
-          <span class="fb-menu-content">
-            <span class="fb-menu-row">
-              <span class="fb-menu-label">Case Studies</span>
-            </span>
-            <span class="fb-menu-desc">Real revenue lifts from real listings</span>
-          </span>
-        </a>
-
-        <!-- Free Listing Audit: clean magnifying glass -->
-        <a href="/#audit-form" class="fb-menu-item js-to-audit">
-          <span class="fb-menu-icon">
-            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <circle cx="10.5" cy="10.5" r="6.5"/>
-              <path d="m15.5 15.5 4 4"/>
-            </svg>
-          </span>
-          <span class="fb-menu-content">
-            <span class="fb-menu-row">
-              <span class="fb-menu-label">Free Listing Audit</span>
-            </span>
-            <span class="fb-menu-desc">Ranking, pricing and conversion, walked through live</span>
-          </span>
-        </a>
-      </div>
-    </div>
-
-    <a href="/get-started" class="fb-link fb-link--mobile-cta">Book a Strategy Call</a>
-  </div>
-
-  <a href="/get-started" class="fb-cta">Book a Strategy Call</a>
-  <button class="fb-hamburger" id="fb-hamburger" aria-label="Toggle navigation" aria-expanded="false">
-    <span class="fb-ham-line"></span>
-    <span class="fb-ham-line"></span>
-    <span class="fb-ham-line"></span>
-  </button>
-</nav>
-<!-- HEADER:END -->
-
-<!-- ════════════════════════════════════════════════
-     HERO
-     ════════════════════════════════════════════════ -->
-<section class="legal-hero">
-  <div class="lh-inner">
-    <div class="legal-eyebrow">Legal</div>
-    <h1>Service Agreement</h1>
-    <p>Revenue Uplift &amp; Listing Optimization Services<br>MCO CORP d/b/a RevWhisper</p>
-    <nav class="legal-hero-nav" aria-label="Legal pages">
-      <a href="/privacy">Privacy Policy</a>
-      <a href="/terms">Terms of Service</a>
-      <a href="/service-agreement" aria-current="page">Service Agreement</a>
-    </nav>
-  </div>
-</section>
-
-<!-- ════════════════════════════════════════════════
-     BODY
-     ════════════════════════════════════════════════ -->
 <main class="legal-body">
+  <h1 class="sa-title">SERVICE AGREEMENT</h1>
+  <p class="sa-sub">Revenue Uplift &amp; Listing Optimization Services<br>MCO CORP d/b/a RevWhisper</p>
+
   <p>This Service Agreement (this &ldquo;Agreement&rdquo;) is entered into as of the date of the last signature below (the &ldquo;Effective Date&rdquo;), by and between:</p>
   <p><strong>MCO CORP</strong>, doing business as RevWhisper (&ldquo;Provider&rdquo; or &ldquo;RevWhisper&rdquo;); and the individual or entity identified on the signature page below (&ldquo;Client&rdquo;).</p>
   <p>Provider and Client are each a &ldquo;Party&rdquo; and collectively the &ldquo;Parties.&rdquo; This Agreement is valid for one (1) property only.</p>
@@ -431,65 +266,6 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
     <p>Notices: <a href="mailto:Admin@RevWhisper.com">Admin@RevWhisper.com</a></p>
   </div>
 </main>
-
-<!-- ════════════════════════════════════════════════
-     FOOTER
-     ════════════════════════════════════════════════ -->
-
-<!-- FOOTER:START -->
-<footer class="site-footer">
-  <div class="w">
-    <div class="footer-grid">
-      <div>
-        <div class="footer-logo">
-          <div class="lm">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24" fill="none" aria-hidden="true">
-              <path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="#32302F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="#32302F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-          <span class="footer-logo-name">RevWhisper</span>
-        </div>
-        <p class="footer-tag">A revenue intelligence team that layers into your Airbnb listing to accelerate performance and maximize earnings.</p>
-        <p class="footer-tag footer-address">501 East Kennedy Boulevard, Tampa, FL 33602 (Space 15&ndash;144)</p>
-        <div class="footer-socials">
-          <a href="https://x.com/RevWhisper" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-          </a>
-          <a href="https://www.instagram.com/rev.whisper/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-          </a>
-          <a href="https://www.facebook.com/groups/airbnblistingoptimization" target="_blank" rel="noopener noreferrer" aria-label="Facebook Group">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-          </a>
-        </div>
-      </div>
-      <div class="footer-col">
-        <p class="footer-col-title">Explore</p>
-        <a href="/" class="footer-link">Home</a>
-        <a href="/airbnb-listing-optimization" class="footer-link">Listing Optimization</a>
-        <a href="/revenue-management" class="footer-link">Revenue Management</a>
-        <a href="/photoediting" class="footer-link">Photo Editing</a>
-        <a href="/case-study" class="footer-link">Case Study</a>
-        <a href="/blog" class="footer-link">Blog</a>
-        <a href="/get-started" class="footer-link">Book a Strategy Call</a>
-      </div>
-      <div class="footer-col">
-        <p class="footer-col-title">Resources</p>
-        <a href="/#audit-form" class="footer-link js-to-audit">Free Listing Audit</a>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <span>&copy; 2026 MCO CORP d/b/a RevWhisper. All rights reserved.</span>
-      <nav class="footer-legal" aria-label="Legal">
-        <a href="/privacy">Privacy Policy</a>
-        <a href="/terms">Terms of Service</a>
-      </nav>
-      <span>Stop Guessing. Start Whispering.</span>
-    </div>
-  </div>
-</footer>
-<!-- FOOTER:END -->
 
 </body>
 </html>
