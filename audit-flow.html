@@ -307,10 +307,10 @@ body.kb .scr .pill{display:none}
 .intro.gone{display:none}
 .app.intro-on .top{opacity:0;pointer-events:none}
 .top{transition:opacity .35s var(--silk)}
-.rows{--cw:clamp(86px,14.2vh,128px);position:relative;flex:0 1 auto;min-height:0;display:flex;flex-direction:column;gap:14px;padding-top:calc(env(safe-area-inset-top,0px) + 16px);overflow:hidden}
+.rows{--cw:clamp(98px,19vh,160px);position:relative;flex:1 1 auto;min-height:0;display:flex;flex-direction:column;gap:8px;padding-top:calc(env(safe-area-inset-top,0px) + 16px);overflow:hidden}
 .rows::after{content:"";position:absolute;left:0;right:0;bottom:0;height:62%;pointer-events:none;
   background:linear-gradient(180deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.55) 38%,rgba(255,255,255,.9) 70%,#fff 100%)}
-.row{display:flex;width:max-content;gap:12px;will-change:transform}
+.row{display:flex;width:max-content;gap:8px;will-change:transform}
 .row.l{animation:rowL 46s linear infinite}
 .row.r{animation:rowR 52s linear infinite}
 .row.l2{animation:rowL 58s linear infinite}
@@ -318,26 +318,23 @@ body.kb .scr .pill{display:none}
 @keyframes rowR{from{transform:translate3d(-50%,0,0)}to{transform:translate3d(0,0,0)}}
 .intro.gone .row{animation-play-state:paused}
 .lc{width:var(--cw);flex:0 0 auto}
-.lc-ph{position:relative;width:var(--cw);height:var(--cw);border-radius:14px;overflow:hidden;background:var(--g100)}
+.lc-ph{position:relative;width:var(--cw);height:var(--cw);border-radius:16px;overflow:hidden;background:var(--g100)}
 .lc-ph img{width:100%;height:100%;object-fit:cover}
-.lc-fav{position:absolute;left:7px;top:7px;background:#fff;border-radius:999px;padding:3px 7px;font-size:9px;font-weight:600;color:#222;box-shadow:0 1px 3px rgba(0,0,0,.12);white-space:nowrap}
-.lc-heart{position:absolute;right:7px;top:7px;width:17px;height:17px}
-.lc-t{margin-top:6px;font-size:10.5px;font-weight:600;color:#222;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.lc-s{font-size:10px;color:#6a6a6a;line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.lc-s b{color:#222;font-weight:600}
-.intro-body{position:relative;flex:1 0 auto;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 24px calc(env(safe-area-inset-bottom,0px) + 20px)}
+.lc-fav{position:absolute;left:8px;top:8px;background:#fff;border-radius:999px;padding:3px 8px;font-size:9.5px;font-weight:600;color:#222;box-shadow:0 1px 3px rgba(0,0,0,.12);white-space:nowrap}
+.lc-heart{position:absolute;right:8px;top:8px;width:19px;height:19px}
+.intro-body{position:relative;flex:0 0 auto;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 22px calc(env(safe-area-inset-bottom,0px) + 20px)}
 .logo{width:78px;height:78px;border-radius:50%;background:#fff;display:grid;place-items:center;margin-top:-46px;position:relative;z-index:1;
   box-shadow:0 1px 2px rgba(50,48,47,.06),0 12px 30px -8px rgba(50,48,47,.25)}
 .logo img{width:42px;height:42px}
-.intro-h{font-family:var(--heading);font-weight:400;font-size:clamp(27px,7.8vw,32px);line-height:1.13;letter-spacing:-.022em;margin:18px auto 10px;max-width:320px;text-wrap:balance}
+.intro-h{font-family:var(--heading);font-weight:400;font-size:clamp(27px,7.8vw,32px);line-height:1.13;letter-spacing:-.022em;margin:18px auto 10px;max-width:340px;text-wrap:balance}
 .intro-h em{font-style:italic;color:var(--accent)}
-.intro-sub{font-size:15px;line-height:1.5;color:var(--g500);max-width:300px;text-wrap:balance}
+.intro-sub{font-size:15px;line-height:1.5;color:var(--g500);max-width:340px;text-wrap:pretty}
 .intro-meta{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:16px;font-size:12.5px;font-weight:500;color:var(--g600)}
 .intro-meta span{display:inline-flex;align-items:center;gap:5px}
 .intro-meta svg{width:14px;height:14px;color:var(--accent)}
 .intro-body .cta{margin-top:auto}
-.intro-gap{flex:1 1 18px;min-height:18px}
-@media(max-height:720px){ .lc-fav{display:none} }
+.intro-gap{flex:0 0 24px}
+@media(max-height:600px){ .lc-fav{display:none} }
 @media(max-height:620px){ .intro-sub{font-size:14px} .intro-meta{display:none} .intro-h{margin-top:12px} }
 @keyframes introIn{from{opacity:0;transform:translate3d(0,14px,0)}to{opacity:1;transform:none}}
 @keyframes rowsIn{from{opacity:0}to{opacity:1}}
@@ -625,17 +622,12 @@ function go(to){
 const intro=document.getElementById('intro'), app=document.getElementById('app');
 let introOpen=true;
 (function(){
-  // Airbnb-style result cards: real RevWhisper-managed listing photos, illustrative captions
-  const L=[
-    ['l06','Cabin in the Poconos','4.97','289',1],['l04','Estate in Asheville','4.95','612',0],['l09','Home in the Poconos','4.93','341',1],
-    ['l05','Villa in Florida','4.98','475',0],['l02','Villa with pool','4.96','820',1],['l01','Historic home','4.92','264',0],
-    ['l03','Cabin with hot tub','4.99','236',1],['l07','Modern home','4.94','398',0],['l08','Home with pool','4.91','305',0],
-    ['l10','Lakefront home','4.95','352',1],['l11','Group retreat','4.90','560',0],['l12','Mountain cabin','4.97','219',1]
-  ];
+  // Airbnb-style result cards: real RevWhisper-managed listing photos; 1 = "Guest favorite" tag
+  const L=[['l06',1],['l04',0],['l09',1],['l05',0],['l02',1],['l01',0],['l03',1],['l07',0],['l08',0],['l10',1],['l11',0],['l12',1]];
   const heart='<svg class="lc-heart" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 28c7-4.7 14-10 14-17a7 7 0 0 0-14-3 7 7 0 0 0-14 3c0 7 7 12.3 14 17z" fill="rgba(0,0,0,.45)" stroke="#fff" stroke-width="2.4"/></svg>';
   function card(c){
-    return '<div class="lc"><div class="lc-ph"><img src="/images/flow/'+c[0]+'.webp" alt="" loading="eager" decoding="async">'+(c[4]?'<span class="lc-fav">Guest favorite</span>':'')+heart+'</div>'+
-      '<div class="lc-t">'+c[1]+'</div><div class="lc-s"><b>$'+c[3]+'</b> night · ★ '+c[2]+'</div></div>';
+    return '<div class="lc"><div class="lc-ph"><img src="/images/flow/'+c[0]+'.webp" alt="" loading="eager" decoding="async">'+(c[1]?'<span class="lc-fav">Guest favorite</span>':'')+heart+'</div>'+
+      '</div>';
   }
   const order=[[0,1,2,3,4,5,6,7],[8,9,10,11,0,3,6,1],[5,7,2,9,4,11,8,10]];
   document.querySelectorAll('.row').forEach(function(r,i){
