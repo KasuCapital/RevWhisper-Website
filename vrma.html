@@ -584,6 +584,18 @@ body.rw-fs .form-card{position:fixed;left:50%;top:50%;transform:translate(-50%,-
   .review-track .review{margin-right:0}
   .review-track .review[data-clone]{display:none}
 }
+/* ── Steady tap (2026-10-08) ───────────────────────────────
+   Tapping an answer made its text jump: the checked label switched to a heavier weight
+   (wider glyphs reflow the line), the press animation scaled the whole label, and on
+   touch screens the sticky :hover lifted it 2px with a shadow. The selection now reads
+   through border, ring, tint and colour only — the text never moves. */
+.radio-card input:checked + .rc-label{font-weight:500}
+.option-card input:checked + .oc-label{font-weight:400}
+.radio-card input:checked + .rc-label,.option-card input:checked + .oc-label{animation:none}
+@media(hover:none){
+  .radio-card .rc-label:hover,.option-card .oc-label:hover{transform:none;box-shadow:none;border-color:var(--g200)}
+  .open-airbnb-btn:hover{transform:none}
+}
 </style>
 <style>
 /* VRMA giveaway block */
