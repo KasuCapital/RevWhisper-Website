@@ -297,6 +297,59 @@ body.kb .scr .pill{display:none}
 .bars i.last{background:var(--black)}
 .scr.in .bars i{animation:grow 1s var(--silk) .15s both}
 
+/* ── Intro: a welcome screen before the first question ─────────────────────────
+   Three rows of Airbnb-style listing cards drift past (left, right, left) and fade into
+   white under the logo, the offer, and one Continue. The rows are compositor-only
+   translateX loops over a duplicated track, paused once the intro is gone. */
+.intro{position:absolute;inset:0;z-index:20;background:#fff;display:flex;flex-direction:column;overflow:hidden;
+  transition:opacity .22s var(--silk-out),transform .26s var(--silk-out)}
+.intro.out{opacity:0;transform:translate3d(0,-10px,0);pointer-events:none}
+.intro.gone{display:none}
+.app.intro-on .top{opacity:0;pointer-events:none}
+.top{transition:opacity .35s var(--silk)}
+.rows{--cw:clamp(86px,14.2vh,128px);position:relative;flex:0 1 auto;min-height:0;display:flex;flex-direction:column;gap:14px;padding-top:calc(env(safe-area-inset-top,0px) + 16px);overflow:hidden}
+.rows::after{content:"";position:absolute;left:0;right:0;bottom:0;height:62%;pointer-events:none;
+  background:linear-gradient(180deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.55) 38%,rgba(255,255,255,.9) 70%,#fff 100%)}
+.row{display:flex;width:max-content;gap:12px;will-change:transform}
+.row.l{animation:rowL 46s linear infinite}
+.row.r{animation:rowR 52s linear infinite}
+.row.l2{animation:rowL 58s linear infinite}
+@keyframes rowL{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}
+@keyframes rowR{from{transform:translate3d(-50%,0,0)}to{transform:translate3d(0,0,0)}}
+.intro.gone .row{animation-play-state:paused}
+.lc{width:var(--cw);flex:0 0 auto}
+.lc-ph{position:relative;width:var(--cw);height:var(--cw);border-radius:14px;overflow:hidden;background:var(--g100)}
+.lc-ph img{width:100%;height:100%;object-fit:cover}
+.lc-fav{position:absolute;left:7px;top:7px;background:#fff;border-radius:999px;padding:3px 7px;font-size:9px;font-weight:600;color:#222;box-shadow:0 1px 3px rgba(0,0,0,.12);white-space:nowrap}
+.lc-heart{position:absolute;right:7px;top:7px;width:17px;height:17px}
+.lc-t{margin-top:6px;font-size:10.5px;font-weight:600;color:#222;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lc-s{font-size:10px;color:#6a6a6a;line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lc-s b{color:#222;font-weight:600}
+.intro-body{position:relative;flex:1 0 auto;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 24px calc(env(safe-area-inset-bottom,0px) + 20px)}
+.logo{width:78px;height:78px;border-radius:50%;background:#fff;display:grid;place-items:center;margin-top:-46px;position:relative;z-index:1;
+  box-shadow:0 1px 2px rgba(50,48,47,.06),0 12px 30px -8px rgba(50,48,47,.25)}
+.logo img{width:42px;height:42px}
+.intro-h{font-family:var(--heading);font-weight:400;font-size:clamp(27px,7.8vw,32px);line-height:1.13;letter-spacing:-.022em;margin:18px auto 10px;max-width:320px;text-wrap:balance}
+.intro-h em{font-style:italic;color:var(--accent)}
+.intro-sub{font-size:15px;line-height:1.5;color:var(--g500);max-width:300px;text-wrap:balance}
+.intro-meta{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:16px;font-size:12.5px;font-weight:500;color:var(--g600)}
+.intro-meta span{display:inline-flex;align-items:center;gap:5px}
+.intro-meta svg{width:14px;height:14px;color:var(--accent)}
+.intro-body .cta{margin-top:auto}
+.intro-gap{flex:1 1 18px;min-height:18px}
+@media(max-height:720px){ .lc-fav{display:none} }
+@media(max-height:620px){ .intro-sub{font-size:14px} .intro-meta{display:none} .intro-h{margin-top:12px} }
+@keyframes introIn{from{opacity:0;transform:translate3d(0,14px,0)}to{opacity:1;transform:none}}
+@keyframes rowsIn{from{opacity:0}to{opacity:1}}
+@keyframes logoIn{from{opacity:0;transform:translate3d(0,8px,0) scale(.86)}to{opacity:1;transform:none}}
+.intro .rows{animation:rowsIn .8s ease-out both}
+.intro .logo{animation:logoIn .7s var(--silk) .15s both}
+.intro .intro-h{animation:introIn .6s var(--silk) .22s both}
+.intro .intro-sub{animation:introIn .6s var(--silk) .27s both}
+.intro .intro-meta{animation:introIn .6s var(--silk) .32s both}
+.intro .cta{animation:introIn .6s var(--silk) .38s both}
+@media(prefers-reduced-motion:reduce){ .row{animation:none!important} }
+
 @media(prefers-reduced-motion:reduce){
   .f1,.f2,.f3,.tw,.tw2{animation:none}
   .scr.in *{animation-duration:.01s!important;animation-delay:0s!important}
@@ -306,7 +359,19 @@ body.kb .scr .pill{display:none}
 <script defer src="/assets/phone-validate.js"></script>
 </head>
 <body>
-<div class="app" id="app">
+<div class="app intro-on" id="app">
+  <!-- Intro: welcome screen before question 1 (rows filled by JS) -->
+  <section class="intro" id="intro" aria-labelledby="intro-h">
+    <div class="rows" aria-hidden="true"><div class="row l"></div><div class="row r"></div><div class="row l2"></div></div>
+    <div class="intro-body">
+      <div class="logo"><img src="/icons/favicon-light.svg" alt="RevWhisper" width="42" height="42"></div>
+      <h1 class="intro-h" id="intro-h">Find out what's costing you <em>bookings</em></h1>
+      <p class="intro-sub">A free audit of your Airbnb's ranking, pricing, and listing, walked through with you live.</p>
+      <div class="intro-meta"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>2 minutes</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>Free</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>No commitment</span></div>
+      <div class="intro-gap"></div>
+      <button class="cta" type="button" id="intro-go">Continue</button>
+    </div>
+  </section>
   <div class="top">
     <button class="back" id="back" type="button" aria-label="Back" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
     <img class="mark" src="/icons/favicon-light.svg" alt="RevWhisper" width="28" height="28">
@@ -316,7 +381,7 @@ body.kb .scr .pill{display:none}
   <div class="stage" id="stage">
 
     <!-- Q1: portfolio size. The first screen is the first question: no landing page to scroll past. -->
-    <section class="scr cur in" data-step="0">
+    <section class="scr cur" data-step="0">
       <div class="art"><div class="comp">
         <div class="halo"></div>
         <div class="orbit"></div>
@@ -331,7 +396,6 @@ body.kb .scr .pill{display:none}
         <svg class="spark g tw" style="left:152px;top:206px" width="15" height="15" viewBox="0 0 24 24"><path fill="currentColor" d="M12 0c1 6.5 5.5 11 12 12-6.5 1-11 5.5-12 12-1-6.5-5.5-11-12-12C6.5 11 11 6.5 12 0z"/></svg>
       </div></div>
       <div class="copy">
-        <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>2 minutes · free</span>
         <h1 class="h">How many listings do you <em>have?</em></h1>
         <p class="sub">Tap one to start your free Airbnb audit.</p>
       </div>
@@ -557,9 +621,57 @@ function go(to){
   show(to,to>current?1:-1);
   return true;
 }
-try{ history.replaceState({rwStep:0},'',location.pathname+location.search); }catch(e){}
+/* ── Intro ── */
+const intro=document.getElementById('intro'), app=document.getElementById('app');
+let introOpen=true;
+(function(){
+  // Airbnb-style result cards: real RevWhisper-managed listing photos, illustrative captions
+  const L=[
+    ['l06','Cabin in the Poconos','4.97','289',1],['l04','Estate in Asheville','4.95','612',0],['l09','Home in the Poconos','4.93','341',1],
+    ['l05','Villa in Florida','4.98','475',0],['l02','Villa with pool','4.96','820',1],['l01','Historic home','4.92','264',0],
+    ['l03','Cabin with hot tub','4.99','236',1],['l07','Modern home','4.94','398',0],['l08','Home with pool','4.91','305',0],
+    ['l10','Lakefront home','4.95','352',1],['l11','Group retreat','4.90','560',0],['l12','Mountain cabin','4.97','219',1]
+  ];
+  const heart='<svg class="lc-heart" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 28c7-4.7 14-10 14-17a7 7 0 0 0-14-3 7 7 0 0 0-14 3c0 7 7 12.3 14 17z" fill="rgba(0,0,0,.45)" stroke="#fff" stroke-width="2.4"/></svg>';
+  function card(c){
+    return '<div class="lc"><div class="lc-ph"><img src="/images/flow/'+c[0]+'.webp" alt="" loading="eager" decoding="async">'+(c[4]?'<span class="lc-fav">Guest favorite</span>':'')+heart+'</div>'+
+      '<div class="lc-t">'+c[1]+'</div><div class="lc-s"><b>$'+c[3]+'</b> night · ★ '+c[2]+'</div></div>';
+  }
+  const order=[[0,1,2,3,4,5,6,7],[8,9,10,11,0,3,6,1],[5,7,2,9,4,11,8,10]];
+  document.querySelectorAll('.row').forEach(function(r,i){
+    const set=order[i].map(function(j){ return card(L[j]); }).join('');
+    r.innerHTML=set+set; // two copies: translating by -50% loops seamlessly
+  });
+})();
+function closeIntro(push){
+  if(!introOpen) return;
+  introOpen=false;
+  if(push){ rwTrack('form_intro_continue',{page:PAGE}); try{ history.pushState({rwStep:0},'','#q1'); }catch(e){} }
+  intro.classList.add('out');
+  setTimeout(function(){
+    intro.classList.add('gone');
+    app.classList.remove('intro-on');
+    const q=screens[current]; q.classList.remove('in'); void q.offsetWidth; q.classList.add('in');
+    sizeArt();
+  },230);
+}
+function openIntro(){
+  if(introOpen) return;
+  introOpen=true;
+  app.classList.add('intro-on');
+  intro.classList.remove('gone');
+  void intro.offsetWidth;
+  intro.classList.remove('out');
+}
+document.getElementById('intro-go').addEventListener('click',function(){ closeIntro(true); });
+try{ history.replaceState({rwStep:-1},'',location.pathname+location.search); }catch(e){}
 window.addEventListener('popstate',function(e){
-  const to=(e.state&&typeof e.state.rwStep==='number')?e.state.rwStep:0;
+  const to=(e.state&&typeof e.state.rwStep==='number')?e.state.rwStep:-1;
+  if(to<0){ // back to the welcome screen (Q1 underneath keeps its answer)
+    if(current!==0){ busy=false; screens[current].classList.remove('cur','in','out'); current=0; screens[0].classList.add('cur'); paintProgress(); }
+    openIntro(); return;
+  }
+  if(introOpen){ closeIntro(false); if(to===0) return; }
   if(to===current) return;
   if(busy){ setTimeout(function(){ show(to,to>current?1:-1); },240); return; }
   if(to>current&&!validateStep(current)){ try{ history.back(); }catch(err){} return; }
@@ -754,10 +866,11 @@ function submitForm(){
   }else{ fireXLead(); redirect(); }
 }
 
-/* ?preview=N opens straight on question N (1-6) for design review; answers aren't faked */
+/* ?preview=N opens straight on question N (1-6), skipping the intro, for design review; ?preview=0 or none shows the intro */
 (function(){
   var n=parseInt(new URLSearchParams(location.search).get('preview'),10);
-  if(!(n>=2&&n<=TOTAL)) return;
+  if(!(n>=1&&n<=TOTAL)) return;
+  introOpen=false; intro.classList.add('out','gone'); app.classList.remove('intro-on');
   screens[0].classList.remove('cur','in');
   current=n-1; screens[current].classList.add('cur','in');
 })();
