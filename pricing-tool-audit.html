@@ -745,6 +745,16 @@ body.rw-fs .fc-title{display:none}
   .form-glow::after{display:none}
   body.rw-fs .steps-viewport{transition:none}
 }
+/* ── Container transform (2026-10-08) ─────────────────────────
+   Phones, first answer tap: the card you are looking at grows from its exact spot and
+   corner radius until it fills the screen, then the next question settles into it.
+   A white layer above the takeover animates clip-path from the card's rect to the full
+   viewport (a pure clip: the card never stretches, text never scales), then cross-fades
+   into the real fullscreen card. The inline card first empties in place so the layer
+   takes over from an identical blank card. */
+.fs-morph{position:fixed;inset:0;z-index:305;background:#fff;pointer-events:none;will-change:clip-path}
+.form-glow.rw-morphing::before{opacity:0;transition:opacity .13s ease-out}
+.form-glow.rw-morphing .form-card{box-shadow:none;border-color:transparent;transition:box-shadow .13s ease-out,border-color .13s ease-out}
 /* ── Steady tap (2026-10-08) ───────────────────────────────
    Tapping an answer made its text jump: the checked label switched to a heavier weight
    (wider glyphs reflow the line), the press animation scaled the whole label, and on
@@ -1713,7 +1723,33 @@ function renderRevenueOptions(listingVal){
    forward steps back into it. Body scroll locks via position:fixed with the scroll
    offset pinned (iOS Safari ignores overflow:hidden on body), which also keeps the
    page from visibly jumping behind the backdrop while it fades in. */
+/* Phones, answer tap on the visible card: a container transform instead of a cut.
+   0-110ms the tapped answer fills (the choice registers) · 110-240ms the card empties in
+   place · then rwEnterFsNow grows a white layer from the card's rect to the full screen.
+   Every other entry (desktop, page CTAs, browser forward, card off-screen) goes straight
+   to rwEnterFsNow as before. */
+var rwFsPending=false;
 function enterFs(skipPush,via){
+  if(fsActive||rwFsPending) return;
+  var card=document.getElementById('audit-form'); if(!card) return;
+  var phone=window.matchMedia&&window.matchMedia('(max-width:719px)').matches;
+  var r=card.getBoundingClientRect(), vh=window.innerHeight||document.documentElement.clientHeight;
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  if(!phone||via||reduce||r.bottom<=0||r.top>=vh){ rwEnterFsNow(skipPush,via,false); return; }
+  rwFsPending=true; fsEntering=true;
+  var kids=[].slice.call(card.children), glow=card.parentElement;
+  setTimeout(function(){
+    kids.forEach(function(k){ k.style.transition='opacity .13s ease-out'; k.style.opacity='0'; });
+    if(glow&&glow.classList.contains('form-glow')) glow.classList.add('rw-morphing');
+  },110);
+  setTimeout(function(){
+    // same task as rwEnterFsNow hiding the card, so the restored children never paint
+    kids.forEach(function(k){ k.style.transition=''; k.style.opacity=''; });
+    rwFsPending=false;
+    rwEnterFsNow(skipPush,via,true);
+  },240);
+}
+function rwEnterFsNow(skipPush,via,morph){
   if(fsActive) return;
   var card=document.getElementById('audit-form'); if(!card) return;
   fsActive=true; fsEntering=true;
@@ -1740,7 +1776,34 @@ function enterFs(skipPush,via){
   var c2=getComputedStyle(card);
   var endPad=c2.padding, endRad=c2.borderRadius;
   var endBw=c2.borderTopWidth, endBc=c2.borderTopColor;
-  if(window.matchMedia&&window.matchMedia('(max-width:719px)').matches){
+  if(window.matchMedia&&window.matchMedia('(max-width:719px)').matches&&morph){
+    // Container transform: a white layer clipped to the card's rect (same corner radius)
+    // opens to the full viewport. clip-path only, so nothing stretches; the real
+    // fullscreen card sits hidden underneath and is cross-faded in as the layer lands.
+    var ov=document.createElement('div'); ov.className='fs-morph'; ov.setAttribute('aria-hidden','true');
+    var vw=document.documentElement.clientWidth, vhh=window.innerHeight||document.documentElement.clientHeight;
+    var rad=parseFloat(startRad)||14;
+    var from='inset('+r1.top.toFixed(1)+'px '+(vw-r1.right).toFixed(1)+'px '+(vhh-r1.bottom).toFixed(1)+'px '+r1.left.toFixed(1)+'px round '+rad+'px)';
+    ov.style.clipPath=from; ov.style.webkitClipPath=from;
+    document.body.appendChild(ov);
+    card.style.transition='none'; card.style.opacity='0';
+    var answered=document.querySelector('.step[data-step="'+current+'"]');
+    if(answered){ answered.style.transition='none'; answered.style.opacity='0'; rwFsQuick=true; }
+    void ov.offsetWidth;
+    ov.style.transition='clip-path .56s cubic-bezier(.16,1,.3,1),-webkit-clip-path .56s cubic-bezier(.16,1,.3,1)';
+    ov.style.clipPath='inset(0px 0px 0px 0px round 0px)'; ov.style.webkitClipPath='inset(0px 0px 0px 0px round 0px)';
+    setTimeout(function(){
+      // the expo ease has covered ~95% of the distance here: reveal the real card under the
+      // layer and let the next question start cascading in as the layer dissolves
+      card.style.transition=''; card.style.opacity='';
+      fsEntering=false;
+      ov.style.transition='opacity .26s ease-out'; ov.style.opacity='0';
+      setTimeout(function(){
+        if(ov.parentNode) ov.parentNode.removeChild(ov);
+        var g=card.parentElement; if(g) g.classList.remove('rw-morphing');
+      },300);
+    },340);
+  } else if(window.matchMedia&&window.matchMedia('(max-width:719px)').matches){
     // Phones: the takeover is full-bleed anyway, so skip the box glide — it animates
     // top/left/size/padding, a layout pass every frame, which dropped in-app webviews to
     // ~15fps. Fade + lift on transform/opacity only: compositor-driven, full refresh rate.
@@ -1805,6 +1868,8 @@ function exitFs(){
     s.transition='';s.top='';s.left='';s.width='';s.height='';s.padding='';s.borderRadius='';
     s.transform='';s.margin='';s.maxHeight='';s.borderStyle='';s.borderWidth='';s.borderColor='';s.opacity='';
   }
+  var morphL=document.querySelector('.fs-morph'); if(morphL&&morphL.parentNode) morphL.parentNode.removeChild(morphL);
+  if(card&&card.parentElement) card.parentElement.classList.remove('rw-morphing');
   document.body.classList.remove('rw-fs');
   document.body.style.top='';
   document.body.style.paddingRight='';
