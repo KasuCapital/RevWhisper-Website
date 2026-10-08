@@ -575,6 +575,57 @@ body.rw-fs .form-card{position:fixed;left:50%;top:50%;transform:translate(-50%,-
   .review-track .review{margin-right:0}
   .review-track .review[data-clone]{display:none}
 }
+/* ── Fit to phone (2026-10-08) ──────────────────────────────
+   PostHog: 68% of mobile /audit visitors never tapped the first answer, with a median
+   scroll of 0 — the answers sat at the bottom edge (or below it on the Google LPs).
+   On phones the hero trims to headline + form so the whole first question is on the
+   first screen, and every fullscreen step compacts on short viewports (in-app browsers
+   with toolbars land around 550px) so no step needs a scroll. */
+@media(max-width:719px){
+  #hero{padding-top:14px}
+  .hero-badge,.hero-sub,.hero-trust{display:none}
+  .hero-h1{font-size:clamp(28px,7.6vw,36px);margin-bottom:0}
+  .hero-inner{margin-bottom:16px}
+  .fc-title{margin:-2px 0 12px;padding-bottom:12px}
+  .fc-title .ft-name{font-size:18px}
+  .fc-title p{display:none}
+  .fc-head{margin-bottom:14px}
+  .step-eyebrow{margin-bottom:8px}
+  .step[data-step="0"] .step-desc{margin-bottom:14px}
+  .radio-card .rc-label{padding:14px 8px}
+  /* Idle (never-shown or already-left) steps take no room in the takeover, so the card
+     can't be scrolled into the blank space their hidden boxes used to add. The staged
+     incoming step carries an inline visibility style while it's measured, so it is
+     never collapsed mid-transition. */
+  body.rw-fs .step:not(.active):not(.enter-from-below):not(.enter-from-above):not(.exit-up):not(.exit-down):not([style*="visibility"]){max-height:0;overflow:hidden}
+}
+@media(max-width:719px) and (max-height:780px){
+  body.rw-fs .form-card{padding-top:calc(12px + env(safe-area-inset-top));padding-bottom:calc(64px + env(safe-area-inset-bottom))}
+  body.rw-fs .fs-bottom-bar{padding-top:8px;padding-bottom:calc(8px + env(safe-area-inset-bottom))}
+  body.rw-fs .fc-head{margin-bottom:12px}
+  body.rw-fs .step-eyebrow{margin-bottom:6px}
+  body.rw-fs .step-title{font-size:23px;margin-bottom:6px}
+  body.rw-fs .step-desc{font-size:13.5px;line-height:1.45;margin-bottom:14px}
+  body.rw-fs .option-cards{gap:8px}
+  body.rw-fs .option-card .oc-label{padding:11px 14px}
+  body.rw-fs .field{margin-bottom:10px}
+  body.rw-fs .field-label{margin-bottom:5px}
+  body.rw-fs .field-input{padding:11px 14px}
+  body.rw-fs .phone-code{padding:11px 10px}
+  body.rw-fs .field-hint{margin-top:4px;font-size:12px}
+  body.rw-fs .open-airbnb-wrap{margin-top:8px}
+  body.rw-fs .form-actions{margin-top:12px}
+  body.rw-fs .btn-next{padding-top:13px;padding-bottom:13px}
+  body.rw-fs .fc-secure{margin-top:10px;font-size:11px;line-height:1.35}
+}
+@media(max-width:719px) and (max-height:640px){
+  body.rw-fs .step-desc{display:none}
+  body.rw-fs .step-title{font-size:21px;margin-bottom:12px}
+  body.rw-fs .option-card .oc-label{padding:9px 14px;font-size:14px}
+  body.rw-fs .field-hint{display:none}
+  body.rw-fs .fc-secure{font-size:10.5px;line-height:1.3;margin-top:8px}
+  body.rw-fs .form-actions{margin-top:10px}
+}
 </style>
 <link rel="stylesheet" href="/assets/lp-sections.css?v=4">
 <link rel="stylesheet" href="/assets/fonts.css">
@@ -753,7 +804,7 @@ body.rw-fs .form-card{position:fixed;left:50%;top:50%;transform:translate(-50%,-
                 <select class="phone-code" id="phone-code" aria-label="Country code">
                   <option value="+1">🇺🇸 +1</option><option value="+44">🇬🇧 +44</option><option value="+61">🇦🇺 +61</option><option value="+33">🇫🇷 +33</option><option value="+49">🇩🇪 +49</option><option value="+52">🇲🇽 +52</option><option value="+34">🇪🇸 +34</option><option value="+39">🇮🇹 +39</option><option value="+55">🇧🇷 +55</option>
                 </select>
-                <input type="tel" class="field-input phone-input" id="phone" placeholder="(555) 123-4567" autocomplete="tel" inputmode="tel" maxlength="16">
+                <input type="tel" class="field-input phone-input" id="phone" placeholder="(555) 123-4567" autocomplete="tel" inputmode="tel" maxlength="20">
               </div>
               <div class="field-error">Please enter a valid phone number</div>
               <div class="field-hint">We'll text your Google Meet link and a reminder before your audit.</div>
@@ -1590,6 +1641,9 @@ function rwPhoneDigits(v){ return (String(v||'').match(/\d/g)||[]).join(''); }
 function rwFormatPhone(code,raw){
   var d=rwPhoneDigits(raw);
   if(code==='+1'){
+    // A leading 1 is the country code (NANP area codes never start with 1): autofill fills
+    // "+1 415 555 2671", and keeping the 1 shifted every digit and failed validation.
+    if(d.length>1&&d.charAt(0)==='1') d=d.slice(1);
     d=d.slice(0,10);
     if(!d) return '';
     if(d.length<4) return '('+d;

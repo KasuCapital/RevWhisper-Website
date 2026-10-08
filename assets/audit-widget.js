@@ -168,6 +168,9 @@ function phoneDigits(v){ return (String(v||'').match(/\d/g)||[]).join(''); }
 function formatPhone(code,raw){
   var d=phoneDigits(raw);
   if(code==='+1'){
+    // A leading 1 is the country code (NANP area codes never start with 1): autofill fills
+    // "+1 415 555 2671", and keeping the 1 shifted every digit and failed validation.
+    if(d.length>1&&d.charAt(0)==='1') d=d.slice(1);
     d=d.slice(0,10);
     if(!d) return '';
     if(d.length<4) return '('+d;

@@ -386,7 +386,7 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
                 <select class="book-phone-code" id="book-phone-code" aria-label="Country code">
                   <option value="+1">🇺🇸 +1</option><option value="+44">🇬🇧 +44</option><option value="+61">🇦🇺 +61</option><option value="+33">🇫🇷 +33</option><option value="+49">🇩🇪 +49</option><option value="+52">🇲🇽 +52</option><option value="+34">🇪🇸 +34</option><option value="+39">🇮🇹 +39</option><option value="+55">🇧🇷 +55</option>
                 </select>
-                <input class="book-input" type="tel" id="book-phone" placeholder="(555) 123-4567" autocomplete="tel" inputmode="tel" maxlength="16">
+                <input class="book-input" type="tel" id="book-phone" placeholder="(555) 123-4567" autocomplete="tel" inputmode="tel" maxlength="20">
               </div>
               <div class="book-field-hint">Add it and we'll text your Google Meet link and a reminder before your audit.</div>
             </div>
@@ -705,6 +705,9 @@ function rwPhoneDigits(v){ return (String(v||'').match(/\d/g)||[]).join(''); }
 function rwFormatPhone(code,raw){
   var d=rwPhoneDigits(raw);
   if(code==='+1'){
+    // A leading 1 is the country code (NANP area codes never start with 1): autofill fills
+    // "+1 415 555 2671", and keeping the 1 shifted every digit and failed validation.
+    if(d.length>1&&d.charAt(0)==='1') d=d.slice(1);
     d=d.slice(0,10);
     if(!d) return '';
     if(d.length<4) return '('+d;
