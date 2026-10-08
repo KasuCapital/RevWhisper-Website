@@ -676,31 +676,73 @@ body.rw-fs .fc-title{display:none}
   body.rw-fs .fc-secure{font-size:10.5px;line-height:1.3;margin-top:8px}
   body.rw-fs .form-actions{margin-top:10px}
 }
-/* ── Snappy motion (2026-10-08) ─────────────────────────────
-   Phones were running the form at ~15-30fps: the takeover glided top/left/size/padding
-   and every step change animated the container height — both force a layout pass per
-   frame — while the rotating, blurred edge glow repainted the whole card underneath.
-   Now steps move on transform/opacity only (compositor-driven, runs at the display's
-   refresh rate), timings are roughly halved, and phones get a static edge ring. */
-.steps-viewport{transition:height .26s var(--ease-out-expo)}
-.step{will-change:auto}
-.step.exit-up,.step.exit-down{transition:opacity .16s var(--ease-out-expo),transform .16s var(--ease-out-expo),visibility 0s .16s}
-.step.enter-from-below,.step.enter-from-above{transition:opacity .24s var(--ease-out-expo) .02s,transform .24s var(--ease-out-expo) .02s;will-change:transform,opacity}
-.step.active .step-eyebrow,.step.enter-from-below .step-eyebrow,.step.enter-from-above .step-eyebrow{animation:fadeSlideUp .26s var(--ease-out-expo) .02s both}
-.step.active .step-title,.step.enter-from-below .step-title,.step.enter-from-above .step-title{animation:fadeSlideUp .28s var(--ease-out-expo) .04s both}
-.step.active .step-desc,.step.enter-from-below .step-desc,.step.enter-from-above .step-desc{animation:fadeSlideUp .28s var(--ease-out-expo) .06s both}
-.step.active .radio-group,.step.active .option-cards,.step.active .field,.step.enter-from-below .radio-group,.step.enter-from-below .option-cards,.step.enter-from-below .field,.step.enter-from-above .radio-group,.step.enter-from-above .option-cards,.step.enter-from-above .field{animation:fadeSlideUp .28s var(--ease-out-expo) .08s both}
-.step.active .field ~ .field,.step.enter-from-below .field ~ .field,.step.enter-from-above .field ~ .field{animation-delay:.1s}
-.step.active .field ~ .field ~ .field,.step.enter-from-below .field ~ .field ~ .field,.step.enter-from-above .field ~ .field ~ .field{animation-delay:.12s}
-.step.active .field ~ .field ~ .field ~ .field{animation-delay:.14s}
-.step.active .open-airbnb-wrap,.step.enter-from-below .open-airbnb-wrap,.step.enter-from-above .open-airbnb-wrap{animation:fadeSlideUp .28s var(--ease-out-expo) .1s both}
-.step.active .form-actions,.step.enter-from-below .form-actions,.step.enter-from-above .form-actions{animation:fadeSlideUp .28s var(--ease-out-expo) .12s both}
-.fs-scrim{transition:opacity .16s ease-out}
+/* ── Silk motion (2026-10-08, sequenced) ───────────────────
+   One beat per answer, compositor-only (transform + opacity) so it runs at full refresh rate:
+   1. the tapped answer presses in and fills, so the choice registers before anything moves
+   2. the old question fades and lifts away and is FULLY gone (180ms) before
+   3. the new question settles in as a cascade: eyebrow, title, description, then each
+      answer one after another, decelerating into place on a long expo ease-out.
+   Strictly sequential: there is never a frame with both questions on screen.
+   Phones get a static edge ring and no container-height animation (layout per frame). */
+:root{--silk:cubic-bezier(.16,1,.3,1);--silk-out:cubic-bezier(.4,0,1,1)}
+@keyframes rwRise{from{opacity:0;transform:translate3d(0,16px,0)}to{opacity:1;transform:translate3d(0,0,0)}}
+@keyframes rwPick{0%{transform:scale(1)}35%{transform:scale(.965)}100%{transform:scale(1)}}
+.steps-viewport{transition:height .5s var(--silk) 0.09s}
+.step.exit-up{transform:translate3d(0,-10px,0)}
+.step.exit-down{transform:translate3d(0,10px,0)}
+.step.exit-up,.step.exit-down{transition:opacity 0.18s var(--silk-out),transform 0.18s var(--silk-out),visibility 0s 0.18s}
+.step.enter-from-below,.step.enter-from-above{transition:opacity .01s linear 0.18s,transform .01s linear 0.18s;will-change:transform,opacity}
+.step.active .step-eyebrow,.step.enter-from-below .step-eyebrow,.step.enter-from-above .step-eyebrow{animation:rwRise 0.5s var(--silk) 0s both}
+.step.enter-from-below .step-eyebrow,.step.enter-from-above .step-eyebrow{animation-delay:0.18s}
+.step.active .step-title,.step.enter-from-below .step-title,.step.enter-from-above .step-title{animation:rwRise 0.55s var(--silk) 0.025s both}
+.step.enter-from-below .step-title,.step.enter-from-above .step-title{animation-delay:0.205s}
+.step.active .step-desc,.step.enter-from-below .step-desc,.step.enter-from-above .step-desc{animation:rwRise 0.55s var(--silk) 0.05s both}
+.step.enter-from-below .step-desc,.step.enter-from-above .step-desc{animation-delay:0.23s}
+.step.active .radio-group,.step.enter-from-below .radio-group,.step.enter-from-above .radio-group,.step.active .option-cards,.step.enter-from-below .option-cards,.step.enter-from-above .option-cards{animation:none}
+.step.active .radio-group > .radio-card,.step.enter-from-below .radio-group > .radio-card,.step.enter-from-above .radio-group > .radio-card,.step.active .option-cards > .option-card,.step.enter-from-below .option-cards > .option-card,.step.enter-from-above .option-cards > .option-card{animation:rwRise .55s var(--silk) both}
+.step.active .radio-group > .radio-card:nth-child(1){animation-delay:0.08s}
+.step.enter-from-below .radio-group > .radio-card:nth-child(1),.step.enter-from-above .radio-group > .radio-card:nth-child(1){animation-delay:0.26s}
+.step.active .radio-group > .radio-card:nth-child(2){animation-delay:0.11s}
+.step.enter-from-below .radio-group > .radio-card:nth-child(2),.step.enter-from-above .radio-group > .radio-card:nth-child(2){animation-delay:0.29s}
+.step.active .radio-group > .radio-card:nth-child(3){animation-delay:0.14s}
+.step.enter-from-below .radio-group > .radio-card:nth-child(3),.step.enter-from-above .radio-group > .radio-card:nth-child(3){animation-delay:0.32s}
+.step.active .radio-group > .radio-card:nth-child(4){animation-delay:0.17s}
+.step.enter-from-below .radio-group > .radio-card:nth-child(4),.step.enter-from-above .radio-group > .radio-card:nth-child(4){animation-delay:0.35s}
+.step.active .radio-group > .radio-card:nth-child(5){animation-delay:0.2s}
+.step.enter-from-below .radio-group > .radio-card:nth-child(5),.step.enter-from-above .radio-group > .radio-card:nth-child(5){animation-delay:0.38s}
+.step.active .radio-group > .radio-card:nth-child(6){animation-delay:0.23s}
+.step.enter-from-below .radio-group > .radio-card:nth-child(6),.step.enter-from-above .radio-group > .radio-card:nth-child(6){animation-delay:0.41s}
+.step.active .option-cards > .option-card:nth-child(1){animation-delay:0.08s}
+.step.enter-from-below .option-cards > .option-card:nth-child(1),.step.enter-from-above .option-cards > .option-card:nth-child(1){animation-delay:0.26s}
+.step.active .option-cards > .option-card:nth-child(2){animation-delay:0.115s}
+.step.enter-from-below .option-cards > .option-card:nth-child(2),.step.enter-from-above .option-cards > .option-card:nth-child(2){animation-delay:0.295s}
+.step.active .option-cards > .option-card:nth-child(3){animation-delay:0.15s}
+.step.enter-from-below .option-cards > .option-card:nth-child(3),.step.enter-from-above .option-cards > .option-card:nth-child(3){animation-delay:0.33s}
+.step.active .option-cards > .option-card:nth-child(4){animation-delay:0.185s}
+.step.enter-from-below .option-cards > .option-card:nth-child(4),.step.enter-from-above .option-cards > .option-card:nth-child(4){animation-delay:0.365s}
+.step.active .option-cards > .option-card:nth-child(5){animation-delay:0.22s}
+.step.enter-from-below .option-cards > .option-card:nth-child(5),.step.enter-from-above .option-cards > .option-card:nth-child(5){animation-delay:0.4s}
+.step.active .option-cards > .option-card:nth-child(6){animation-delay:0.255s}
+.step.enter-from-below .option-cards > .option-card:nth-child(6),.step.enter-from-above .option-cards > .option-card:nth-child(6){animation-delay:0.435s}
+.step.active .field,.step.enter-from-below .field,.step.enter-from-above .field{animation:rwRise 0.55s var(--silk) 0.12s both}
+.step.enter-from-below .field,.step.enter-from-above .field{animation-delay:0.3s}
+.step.active .field ~ .field,.step.enter-from-below .field ~ .field,.step.enter-from-above .field ~ .field{animation-delay:.16s}
+.step.enter-from-below .field ~ .field,.step.enter-from-above .field ~ .field{animation-delay:0.34s}
+.step.active .field ~ .field ~ .field,.step.enter-from-below .field ~ .field ~ .field,.step.enter-from-above .field ~ .field ~ .field{animation-delay:.2s}
+.step.enter-from-below .field ~ .field ~ .field,.step.enter-from-above .field ~ .field ~ .field{animation-delay:0.38s}
+.step.active .open-airbnb-wrap,.step.enter-from-below .open-airbnb-wrap,.step.enter-from-above .open-airbnb-wrap{animation:rwRise 0.55s var(--silk) 0.17s both}
+.step.enter-from-below .open-airbnb-wrap,.step.enter-from-above .open-airbnb-wrap{animation-delay:0.35s}
+.step.active .form-actions,.step.enter-from-below .form-actions,.step.enter-from-above .form-actions{animation:rwRise 0.55s var(--silk) 0.22s both}
+.step.enter-from-below .form-actions,.step.enter-from-above .form-actions{animation-delay:0.4s}
+.step.active .fc-secure,.step.enter-from-below .fc-secure,.step.enter-from-above .fc-secure{animation:rwRise 0.55s var(--silk) 0.27s both}
+.step.enter-from-below .fc-secure,.step.enter-from-above .fc-secure{animation-delay:0.45s}
+.radio-card input:checked + .rc-label,.option-card input:checked + .oc-label{animation:rwPick .34s var(--silk)}
+.radio-card .rc-label::before,.option-card .oc-label::before{transition-duration:.38s;transition-timing-function:var(--silk)}
+.fc-seg::after{transition:transform .6s var(--silk)}
+.fs-scrim{transition:opacity .3s ease-out}
 @media(max-width:719px){
-  /* static ring: no rotating conic repaint, no blurred halo layer */
   .form-glow::before{animation:none}
   .form-glow::after{display:none}
-  /* full-bleed takeover: the height animation only re-centred the step every frame */
   body.rw-fs .steps-viewport{transition:none}
 }
 </style>
@@ -1520,7 +1562,7 @@ function transitionStep(from,to,direction){
     // above — so re-centre a beat later, on a fully stable layout (the <2px
     // guard makes this a no-op when the first glide already landed)
     if(recentre) setTimeout(function(){scrollFormToCentre();},60);
-  },300);
+  },520);
   updateProgress();
 }
 
@@ -1683,12 +1725,13 @@ function enterFs(skipPush,via){
     // top/left/size/padding, a layout pass every frame, which dropped in-app webviews to
     // ~15fps. Fade + lift on transform/opacity only: compositor-driven, full refresh rate.
     var ms=card.style;
-    ms.transition='none'; ms.opacity='0'; ms.transform='translate3d(0,16px,0)';
+    ms.transition='none'; ms.opacity='0'; ms.transform='translate3d(0,28px,0) scale(.975)';
     void card.offsetHeight;
-    ms.transition='opacity .18s ease-out,transform .26s cubic-bezier(.16,1,.3,1)';
-    ms.opacity='1'; ms.transform='translate3d(0,0,0)';
-    setTimeout(function(){ ms.transition=''; ms.opacity=''; ms.transform=''; },300);
-    setTimeout(function(){ fsEntering=false; },110);
+    ms.transition='opacity .38s cubic-bezier(.16,1,.3,1),transform .62s cubic-bezier(.16,1,.3,1)';
+    ms.opacity='1'; ms.transform='translate3d(0,0,0) scale(1)';
+    setTimeout(function(){ ms.transition=''; ms.opacity=''; ms.transform=''; },660);
+    // release the first step swap as the card is landing, so the two motions overlap into one
+    setTimeout(function(){ fsEntering=false; },200);
   } else {
   // Entry from a CTA elsewhere on the page: the card is off-screen, and a glide from its
   // real position would streak in from a screen-height away. Start from a slightly inset
@@ -1706,7 +1749,7 @@ function enterFs(skipPush,via){
   s.borderStyle='solid'; s.borderWidth=offscreen?endBw:c1.borderTopWidth; s.borderColor=offscreen?endBc:c1.borderTopColor;
   s.opacity=offscreen?'0':'1';
   void card.offsetHeight;
-  var DUR='.28s', EASE='cubic-bezier(.16,1,.3,1)';
+  var DUR='.42s', EASE='cubic-bezier(.16,1,.3,1)';
   s.transition=['top','left','width','height','padding','border-radius','border-width','border-color','opacity'].map(function(p){return p+' '+DUR+' '+EASE;}).join(',');
   s.top=r2.top+'px'; s.left=r2.left+'px'; s.width=r2.width+'px'; s.height=r2.height+'px';
   s.padding=endPad; s.borderRadius=endRad;
@@ -1718,7 +1761,7 @@ function enterFs(skipPush,via){
     s.transition='';s.top='';s.left='';s.width='';s.height='';s.padding='';s.borderRadius='';s.transform='';s.margin='';s.maxHeight='';
     s.borderStyle='';s.borderWidth='';s.borderColor='';s.opacity='';
     fsEntering=false;
-  },300);
+  },440);
   }
   if(!skipPush){ try{ history.pushState({rwFs:1},'','#focus'); }catch(e){} }
   rwTrack('form_fullscreen_open',{page:'pricing-tool-audit',step:current+1,via:via||'answer'});
@@ -1772,7 +1815,7 @@ function closeFsButton(){
    delay window advance exactly once — a timer whose step already moved on is void. */
 function scheduleAdvance(){
   var from=current;
-  setTimeout(function(){ if(current===from) nextStep(); },110);
+  setTimeout(function(){ if(current===from) nextStep(); },170);
 }
 document.querySelectorAll('input[name="listings"]').forEach(function(r){
   r.addEventListener('change',function(){ rwTrack('select_portfolio_size',{size:r.value,page:'pricing-tool-audit'}); renderRevenueOptions(r.value); scheduleAdvance(); });
