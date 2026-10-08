@@ -641,51 +641,51 @@ body.rw-fs .form-card{position:fixed;left:50%;top:50%;transform:translate(-50%,-
 .step.exit-up{transform:translate3d(0,-10px,0)}
 .step.exit-down{transform:translate3d(0,10px,0)}
 .step.exit-up,.step.exit-down{transition:opacity 0.18s var(--silk-out),transform 0.18s var(--silk-out),visibility 0s 0.18s}
-.step.enter-from-below,.step.enter-from-above{transition:opacity .01s linear 0.18s,transform .01s linear 0.18s;will-change:transform,opacity}
+.step.enter-from-below,.step.enter-from-above{transition:opacity .01s linear 0s,transform .01s linear 0s;will-change:transform,opacity}
 .step.active .step-eyebrow,.step.enter-from-below .step-eyebrow,.step.enter-from-above .step-eyebrow{animation:rwRise 0.5s var(--silk) 0s both}
-.step.enter-from-below .step-eyebrow,.step.enter-from-above .step-eyebrow{animation-delay:0.18s}
+.step.enter-from-below .step-eyebrow,.step.enter-from-above .step-eyebrow{animation-delay:0s}
 .step.active .step-title,.step.enter-from-below .step-title,.step.enter-from-above .step-title{animation:rwRise 0.55s var(--silk) 0.025s both}
-.step.enter-from-below .step-title,.step.enter-from-above .step-title{animation-delay:0.205s}
+.step.enter-from-below .step-title,.step.enter-from-above .step-title{animation-delay:0.025s}
 .step.active .step-desc,.step.enter-from-below .step-desc,.step.enter-from-above .step-desc{animation:rwRise 0.55s var(--silk) 0.05s both}
-.step.enter-from-below .step-desc,.step.enter-from-above .step-desc{animation-delay:0.23s}
+.step.enter-from-below .step-desc,.step.enter-from-above .step-desc{animation-delay:0.05s}
 .step.active .radio-group,.step.enter-from-below .radio-group,.step.enter-from-above .radio-group,.step.active .option-cards,.step.enter-from-below .option-cards,.step.enter-from-above .option-cards{animation:none}
 .step.active .radio-group > .radio-card,.step.enter-from-below .radio-group > .radio-card,.step.enter-from-above .radio-group > .radio-card,.step.active .option-cards > .option-card,.step.enter-from-below .option-cards > .option-card,.step.enter-from-above .option-cards > .option-card{animation:rwRise .55s var(--silk) both}
 .step.active .radio-group > .radio-card:nth-child(1){animation-delay:0.08s}
-.step.enter-from-below .radio-group > .radio-card:nth-child(1),.step.enter-from-above .radio-group > .radio-card:nth-child(1){animation-delay:0.26s}
+.step.enter-from-below .radio-group > .radio-card:nth-child(1),.step.enter-from-above .radio-group > .radio-card:nth-child(1){animation-delay:0.08s}
 .step.active .radio-group > .radio-card:nth-child(2){animation-delay:0.11s}
-.step.enter-from-below .radio-group > .radio-card:nth-child(2),.step.enter-from-above .radio-group > .radio-card:nth-child(2){animation-delay:0.29s}
+.step.enter-from-below .radio-group > .radio-card:nth-child(2),.step.enter-from-above .radio-group > .radio-card:nth-child(2){animation-delay:0.11s}
 .step.active .radio-group > .radio-card:nth-child(3){animation-delay:0.14s}
-.step.enter-from-below .radio-group > .radio-card:nth-child(3),.step.enter-from-above .radio-group > .radio-card:nth-child(3){animation-delay:0.32s}
+.step.enter-from-below .radio-group > .radio-card:nth-child(3),.step.enter-from-above .radio-group > .radio-card:nth-child(3){animation-delay:0.14s}
 .step.active .radio-group > .radio-card:nth-child(4){animation-delay:0.17s}
-.step.enter-from-below .radio-group > .radio-card:nth-child(4),.step.enter-from-above .radio-group > .radio-card:nth-child(4){animation-delay:0.35s}
+.step.enter-from-below .radio-group > .radio-card:nth-child(4),.step.enter-from-above .radio-group > .radio-card:nth-child(4){animation-delay:0.17s}
 .step.active .radio-group > .radio-card:nth-child(5){animation-delay:0.2s}
-.step.enter-from-below .radio-group > .radio-card:nth-child(5),.step.enter-from-above .radio-group > .radio-card:nth-child(5){animation-delay:0.38s}
+.step.enter-from-below .radio-group > .radio-card:nth-child(5),.step.enter-from-above .radio-group > .radio-card:nth-child(5){animation-delay:0.2s}
 .step.active .radio-group > .radio-card:nth-child(6){animation-delay:0.23s}
-.step.enter-from-below .radio-group > .radio-card:nth-child(6),.step.enter-from-above .radio-group > .radio-card:nth-child(6){animation-delay:0.41s}
+.step.enter-from-below .radio-group > .radio-card:nth-child(6),.step.enter-from-above .radio-group > .radio-card:nth-child(6){animation-delay:0.23s}
 .step.active .option-cards > .option-card:nth-child(1){animation-delay:0.08s}
-.step.enter-from-below .option-cards > .option-card:nth-child(1),.step.enter-from-above .option-cards > .option-card:nth-child(1){animation-delay:0.26s}
+.step.enter-from-below .option-cards > .option-card:nth-child(1),.step.enter-from-above .option-cards > .option-card:nth-child(1){animation-delay:0.08s}
 .step.active .option-cards > .option-card:nth-child(2){animation-delay:0.115s}
-.step.enter-from-below .option-cards > .option-card:nth-child(2),.step.enter-from-above .option-cards > .option-card:nth-child(2){animation-delay:0.295s}
+.step.enter-from-below .option-cards > .option-card:nth-child(2),.step.enter-from-above .option-cards > .option-card:nth-child(2){animation-delay:0.115s}
 .step.active .option-cards > .option-card:nth-child(3){animation-delay:0.15s}
-.step.enter-from-below .option-cards > .option-card:nth-child(3),.step.enter-from-above .option-cards > .option-card:nth-child(3){animation-delay:0.33s}
+.step.enter-from-below .option-cards > .option-card:nth-child(3),.step.enter-from-above .option-cards > .option-card:nth-child(3){animation-delay:0.15s}
 .step.active .option-cards > .option-card:nth-child(4){animation-delay:0.185s}
-.step.enter-from-below .option-cards > .option-card:nth-child(4),.step.enter-from-above .option-cards > .option-card:nth-child(4){animation-delay:0.365s}
+.step.enter-from-below .option-cards > .option-card:nth-child(4),.step.enter-from-above .option-cards > .option-card:nth-child(4){animation-delay:0.185s}
 .step.active .option-cards > .option-card:nth-child(5){animation-delay:0.22s}
-.step.enter-from-below .option-cards > .option-card:nth-child(5),.step.enter-from-above .option-cards > .option-card:nth-child(5){animation-delay:0.4s}
+.step.enter-from-below .option-cards > .option-card:nth-child(5),.step.enter-from-above .option-cards > .option-card:nth-child(5){animation-delay:0.22s}
 .step.active .option-cards > .option-card:nth-child(6){animation-delay:0.255s}
-.step.enter-from-below .option-cards > .option-card:nth-child(6),.step.enter-from-above .option-cards > .option-card:nth-child(6){animation-delay:0.435s}
+.step.enter-from-below .option-cards > .option-card:nth-child(6),.step.enter-from-above .option-cards > .option-card:nth-child(6){animation-delay:0.255s}
 .step.active .field,.step.enter-from-below .field,.step.enter-from-above .field{animation:rwRise 0.55s var(--silk) 0.12s both}
-.step.enter-from-below .field,.step.enter-from-above .field{animation-delay:0.3s}
+.step.enter-from-below .field,.step.enter-from-above .field{animation-delay:0.12s}
 .step.active .field ~ .field,.step.enter-from-below .field ~ .field,.step.enter-from-above .field ~ .field{animation-delay:.16s}
-.step.enter-from-below .field ~ .field,.step.enter-from-above .field ~ .field{animation-delay:0.34s}
+.step.enter-from-below .field ~ .field,.step.enter-from-above .field ~ .field{animation-delay:0.16s}
 .step.active .field ~ .field ~ .field,.step.enter-from-below .field ~ .field ~ .field,.step.enter-from-above .field ~ .field ~ .field{animation-delay:.2s}
-.step.enter-from-below .field ~ .field ~ .field,.step.enter-from-above .field ~ .field ~ .field{animation-delay:0.38s}
+.step.enter-from-below .field ~ .field ~ .field,.step.enter-from-above .field ~ .field ~ .field{animation-delay:0.2s}
 .step.active .open-airbnb-wrap,.step.enter-from-below .open-airbnb-wrap,.step.enter-from-above .open-airbnb-wrap{animation:rwRise 0.55s var(--silk) 0.17s both}
-.step.enter-from-below .open-airbnb-wrap,.step.enter-from-above .open-airbnb-wrap{animation-delay:0.35s}
+.step.enter-from-below .open-airbnb-wrap,.step.enter-from-above .open-airbnb-wrap{animation-delay:0.17s}
 .step.active .form-actions,.step.enter-from-below .form-actions,.step.enter-from-above .form-actions{animation:rwRise 0.55s var(--silk) 0.22s both}
-.step.enter-from-below .form-actions,.step.enter-from-above .form-actions{animation-delay:0.4s}
+.step.enter-from-below .form-actions,.step.enter-from-above .form-actions{animation-delay:0.22s}
 .step.active .fc-secure,.step.enter-from-below .fc-secure,.step.enter-from-above .fc-secure{animation:rwRise 0.55s var(--silk) 0.27s both}
-.step.enter-from-below .fc-secure,.step.enter-from-above .fc-secure{animation-delay:0.45s}
+.step.enter-from-below .fc-secure,.step.enter-from-above .fc-secure{animation-delay:0.27s}
 .radio-card input:checked + .rc-label,.option-card input:checked + .oc-label{animation:rwPick .34s var(--silk)}
 .radio-card .rc-label::before,.option-card .oc-label::before{transition-duration:.38s;transition-timing-function:var(--silk)}
 .fc-seg::after{transition:transform .6s var(--silk)}
@@ -1335,6 +1335,9 @@ const FORM_WEBHOOK_ENDPOINT = '/api/form-webhook';
 let fsActive = false;
 let fsEntering = false;
 let fsScrollY = 0;
+/* Set when a phone takeover opens on an answer tap: the step that was answered is hidden
+   on the spot, so the next transition skips its fade-out (there is nothing left to fade). */
+let rwFsQuick = false;
 
 function updateProgress(){
   document.querySelectorAll('.fc-seg').forEach(function(s,i){ s.classList.toggle('on', i<=current); });
@@ -1399,47 +1402,52 @@ function transitionStep(from,to,direction){
   const fromEl=document.querySelector(`.step[data-step="${from}"]`);
   const toEl=document.querySelector(`.step[data-step="${to}"]`);
   if(!fromEl||!toEl){isTransitioning=false;return;}
-  // measure current height, then the incoming step's height, and animate the gap
-  const startH=vp.offsetHeight;
-  // stable geometry: the card's top doesn't move as steps swap — only its height changes below it
-  const card=document.getElementById('audit-form');
-  const cardTopBefore=card?card.getBoundingClientRect().top:0;
-  const chromeH=card?(card.offsetHeight-startH):0;
+  // Phase 1 — the old question fades out exactly where it stands. It stays in normal flow
+  // (position:relative) so nothing re-lays out underneath it. Swapping the layout first
+  // (old step out of flow, new step in) re-centred the fullscreen box to the new step's
+  // height, and the fading heading visibly jumped into the incoming heading's slot.
+  const quick=rwFsQuick; rwFsQuick=false;
   fromEl.classList.remove('active','enter-from-below','enter-from-above');
+  fromEl.style.position='relative';
   fromEl.classList.add(direction==='forward'?'exit-up':'exit-down');
-  toEl.classList.remove('active','exit-up','exit-down');
-  // stage the incoming step off-screen with transitions OFF, then commit via reflow
-  toEl.style.transition='none';
-  toEl.style.position='relative';toEl.style.opacity='0';toEl.style.visibility='visible';
-  toEl.style.transform=direction==='forward'?'translateY(14px)':'translateY(-14px)';
-  toEl.style.pointerEvents='auto';
-  void toEl.offsetHeight;
-  const endH=toEl.offsetHeight;
-  // if the incoming step won't fully fit as-is, glide the card to dead centre of the viewport
-  const vpH=window.innerHeight||document.documentElement.clientHeight;
-  const recentre=card && !(cardTopBefore>=0 && (cardTopBefore+chromeH+endH)<=vpH);
-  if(recentre) scrollFormToCentre(chromeH+endH);
-  // in the takeover the card is its own scroller — bring the incoming step's title into view
-  if(fsActive&&card) card.scrollTo({top:0,behavior:'smooth'});
-  // animate the card height from old → new
-  vp.style.height=startH+'px';
-  void vp.offsetHeight;
-  vp.style.height=endH+'px';
-  // enable transitions and move the step to its resting state (no rAF — reflow already committed the start)
-  toEl.style.transition='';
-  toEl.classList.add(direction==='forward'?'enter-from-below':'enter-from-above');
-  toEl.style.position='';toEl.style.opacity='';toEl.style.visibility='';toEl.style.transform='';toEl.style.pointerEvents='';
-  setTimeout(function(){
-    fromEl.classList.remove('exit-up','exit-down');fromEl.style.position='';
-    vp.style.height='';            // release to auto so inline errors can expand the step
-    isTransitioning=false;
-    // settle pass: the browser's scroll anchoring can interrupt the smooth
-    // glide while the card height animates, and again on the height release
-    // above — so re-centre a beat later, on a fully stable layout (the <2px
-    // guard makes this a no-op when the first glide already landed)
-    if(recentre) setTimeout(function(){scrollFormToCentre();},60);
-  },520);
   updateProgress();
+  setTimeout(function(){
+    // Phase 2 — the old question is invisible now. Freeze the box at its current height,
+    // take the old step out of flow, stage + measure the new one, then let it in.
+    const startH=vp.offsetHeight;
+    vp.style.height=startH+'px';
+    const card=document.getElementById('audit-form');
+    const cardTopBefore=card?card.getBoundingClientRect().top:0;
+    const chromeH=card?(card.offsetHeight-startH):0;
+    fromEl.style.position='';fromEl.style.transition='';fromEl.style.opacity='';
+    toEl.classList.remove('active','exit-up','exit-down');
+    // stage the incoming step with transitions OFF, then commit via reflow
+    toEl.style.transition='none';
+    toEl.style.position='relative';toEl.style.opacity='0';toEl.style.visibility='visible';
+    toEl.style.transform=direction==='forward'?'translateY(14px)':'translateY(-14px)';
+    toEl.style.pointerEvents='auto';
+    void toEl.offsetHeight;
+    const endH=toEl.offsetHeight;
+    // if the incoming step won't fully fit as-is, glide the card to dead centre of the viewport
+    const vpH=window.innerHeight||document.documentElement.clientHeight;
+    const recentre=card && !(cardTopBefore>=0 && (cardTopBefore+chromeH+endH)<=vpH);
+    if(recentre) scrollFormToCentre(chromeH+endH);
+    // in the takeover the card is its own scroller — bring the incoming step's title into view
+    if(fsActive&&card) card.scrollTo({top:0,behavior:'smooth'});
+    // size the box for the new step (animated on desktop; instant inside the phone takeover)
+    void vp.offsetHeight;
+    vp.style.height=endH+'px';
+    toEl.style.transition='';
+    toEl.classList.add(direction==='forward'?'enter-from-below':'enter-from-above');
+    toEl.style.position='';toEl.style.opacity='';toEl.style.visibility='';toEl.style.transform='';toEl.style.pointerEvents='';
+    setTimeout(function(){
+      fromEl.classList.remove('exit-up','exit-down');
+      vp.style.height='';            // release to auto so inline errors can expand the step
+      isTransitioning=false;
+      // settle pass: scroll anchoring can interrupt the glide while the height animates
+      if(recentre) setTimeout(function(){scrollFormToCentre();},60);
+    },440);
+  },quick?0:200);
 }
 
 function validateStep(step){
@@ -1606,8 +1614,16 @@ function enterFs(skipPush,via){
     ms.transition='opacity .38s cubic-bezier(.16,1,.3,1),transform .62s cubic-bezier(.16,1,.3,1)';
     ms.opacity='1'; ms.transform='translate3d(0,0,0)';
     setTimeout(function(){ ms.transition=''; ms.opacity=''; ms.transform=''; },660);
-    // release the first step swap as the card is landing, so the two motions overlap into one
-    setTimeout(function(){ fsEntering=false; },200);
+    if(!via){
+      // Answer tap: the card has just jumped to its fullscreen position, so the question that
+      // was answered must not be seen there — hide it now. The card lifts in empty and the next
+      // question cascades into it, instead of the old heading reappearing in the new slot.
+      var answered=document.querySelector('.step[data-step="'+current+'"]');
+      if(answered){ answered.style.transition='none'; answered.style.opacity='0'; rwFsQuick=true; }
+      fsEntering=false;
+    } else {
+      setTimeout(function(){ fsEntering=false; },200);
+    }
   } else {
   // Entry from a CTA elsewhere on the page: the card is off-screen, and a glide from its
   // real position would streak in from a screen-height away. Start from a slightly inset
