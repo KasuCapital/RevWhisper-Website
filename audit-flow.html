@@ -40,6 +40,18 @@ gtag('js',new Date());
 gtag('config','G-Y1FYZ5849B');
 (window.rwConsent?rwConsent.whenAllowed:function(f){f();})(function(){var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-Y1FYZ5849B';document.head.appendChild(s);});
 function rwTrack(e,p){gtag('event',e,p||{});}
+function rwCookie(n){try{var m=document.cookie.match(new RegExp('(?:^|; )'+n.replace(/([.$?*|{}()\[\]\\\/+^])/g,'\\$1')+'=([^;]*)'));return m?decodeURIComponent(m[1]):'';}catch(e){return '';}}
+/* Google Ads: only configured for leads that arrived from a Google ad click (same rule as /audit-booking);
+   rwHasGclid also gates the Call Booked conversion after an in-flow booking. */
+function rwHasGclid(){
+  try{
+    var l=JSON.parse(sessionStorage.getItem('rw_audit_lead')||'null');
+    if(l&&l.attribution&&l.attribution.gclid) return true;
+    var a=JSON.parse(localStorage.getItem('rw_attribution')||sessionStorage.getItem('rw_attribution')||'null');
+    return !!(a&&a.gclid);
+  }catch(e){ return false; }
+}
+if(rwHasGclid()) gtag('config','AW-18384012854');
 </script>
 <!-- Meta Pixel — PageView only. NOTE: Lead fires on form submit (submitForm), never on page load. -->
 <script>
@@ -369,6 +381,92 @@ body.kb .scr .pill{display:none}
 .intro .cta{animation:introIn .6s var(--silk) .38s both}
 @media(prefers-reduced-motion:reduce){ .row{animation:none!important} }
 
+/* ── Booking: the same shell after a qualified submit (calendar → time → confirm → booked) ──
+   Calendar cells borrow the Q3 illustration's language: sage = open, black = chosen. Corners are
+   concentric: card 22 − padding 12 = cell 10; invite card 22 − padding 10 = date tile 12. */
+.segs.book{display:none}
+.pv-tag{flex:0 0 auto;font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--g500);border:1px solid var(--line);border-radius:999px;padding:3px 8px;background:#fff}
+.app.booking .segs.form{display:none}
+.app.booking .segs.book{display:flex}
+.calc{margin-top:22px;background:#fff;border-radius:22px;padding:12px 12px 10px;box-shadow:var(--sh-card),0 0 0 1px rgba(50,48,47,.05)}
+.calc-h{display:flex;align-items:center;justify-content:space-between;padding:2px 2px 10px 6px}
+.calc-m{font-family:var(--heading);font-size:19px;letter-spacing:-.015em}
+.calc-nav{display:flex;gap:6px}
+.nav-b{width:34px;height:34px;border-radius:50%;border:0;background:#fff;box-shadow:0 1px 3px rgba(50,48,47,.08),0 0 0 1px var(--line);display:grid;place-items:center;cursor:pointer;transition:opacity .2s,transform .2s var(--silk)}
+.nav-b svg{width:15px;height:15px}
+.nav-b:active{transform:scale(.92)}
+.nav-b:disabled{opacity:.28;cursor:default;transform:none}
+.calc-w,.calc-g{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.calc-w b{font-size:10.5px;font-weight:600;color:var(--g400);text-align:center;letter-spacing:.04em;padding-bottom:6px}
+.cd{position:relative;height:40px;padding:0;border:0;border-radius:10px;background:transparent;font-size:14.5px;font-weight:500;color:var(--g300);display:grid;place-items:center;font-variant-numeric:tabular-nums}
+.cd.x{visibility:hidden}
+.cd.ok{background:#e9f0e5;color:var(--black);font-weight:600;cursor:pointer;transition:background-color .2s var(--silk),color .2s var(--silk),transform .2s var(--silk)}
+.cd.ok:active{transform:scale(.92)}
+@media(hover:hover){.cd.ok:hover{background:#dbe7d4}}
+.cd.sel,.cd.sel:hover{background:var(--black);color:#fff}
+.cd.today::after{content:"";position:absolute;bottom:5px;left:50%;width:4px;height:4px;margin-left:-2px;border-radius:50%;background:currentColor;opacity:.5}
+.cd.sk{background:var(--g100);animation:sk 1.1s ease-in-out infinite}
+.cd:focus-visible,.nav-b:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@keyframes sk{0%,100%{opacity:.5}50%{opacity:1}}
+.calc-g.sl{animation:slideL .34s var(--silk) both}
+.calc-g.sr{animation:slideR .34s var(--silk) both}
+@keyframes slideL{from{opacity:0;transform:translate3d(18px,0,0)}to{opacity:1;transform:none}}
+@keyframes slideR{from{opacity:0;transform:translate3d(-18px,0,0)}to{opacity:1;transform:none}}
+.calc-tz{font-size:11.5px;color:var(--g500);text-align:center;padding-top:10px}
+#slot-list .chip span{font-variant-numeric:tabular-nums}
+.tz-note{font-size:12px;color:var(--g500);text-align:center;margin-top:16px}
+.bk-msg{margin-top:16px;padding:12px 14px;border-radius:14px;background:#fbf1f1;color:#8b3a3a;font-size:13px;line-height:1.45;text-align:left}
+.bk-msg a{color:inherit;font-weight:600}
+.bk-msg[hidden]{display:none}
+/* invite card: in the confirm illustration and as a row on the booked screen */
+.inv{display:flex;align-items:center;gap:13px;padding:10px 16px 10px 10px;border-radius:22px;background:#fff;text-align:left}
+.inv-d{width:58px;height:62px;border-radius:12px;background:var(--black);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;flex:0 0 auto}
+.inv-d small{font-size:9.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;opacity:.72}
+.inv-d b{font-family:var(--heading);font-size:25px;font-weight:500;line-height:1.05;margin-top:1px}
+.inv-t{display:flex;flex-direction:column;gap:2px;min-width:0}
+.inv-t b{font-size:14px;font-weight:600;letter-spacing:-.005em}
+.inv-t span{font-size:12.5px;color:var(--g600);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.inv-t .inv-x{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;color:var(--g500)}
+.inv-x svg{width:13px;height:13px;color:var(--accent);flex:0 0 auto}
+.inv.solo{margin-top:22px;box-shadow:var(--sh-chip),0 0 0 1px var(--line)}
+.addcal{margin-top:18px}
+.addcal .choices{margin-top:8px}
+.h em.line{display:block}
+.addcal-l{font-size:12px;font-weight:500;color:var(--g500);text-align:center}
+.addcal[hidden]{display:none}
+a.chip{text-decoration:none;color:inherit}
+a.chip span{white-space:nowrap}
+/* booked seal: the check draws itself in */
+.seal{position:absolute;left:50%;top:50%;width:96px;height:96px;margin:-48px 0 0 -48px;border-radius:50%;background:var(--accent);display:grid;place-items:center;
+  box-shadow:0 16px 34px -12px rgba(74,103,65,.6),0 0 0 9px rgba(74,103,65,.11)}
+.seal svg{width:44px;height:44px;fill:none;stroke:#fff;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:22;stroke-dashoffset:22}
+.seal::after{content:"";position:absolute;top:-9px;left:-9px;right:-9px;bottom:-9px;border-radius:50%;border:2px solid rgba(74,103,65,.28);opacity:0}
+.scr.in .seal{animation:sealIn .75s var(--silk) .05s both}
+.scr.in .seal svg{animation:draw .5s var(--silk) .42s forwards}
+.scr.in .seal::after{animation:ring 2.6s ease-out 1.1s infinite}
+@keyframes sealIn{from{opacity:0;transform:scale(.55)}to{opacity:1;transform:none}}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes ring{0%{opacity:.9;transform:scale(1)}100%{opacity:0;transform:scale(1.45)}}
+/* confirm button: spins in place while the booking is made */
+.cta .spin{display:none;width:17px;height:17px;border-radius:50%;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;animation:spin .7s linear infinite}
+.cta.loading .spin{display:block}
+.cta.loading .arw{display:none}
+.cta.loading:disabled{opacity:1}
+@keyframes spin{to{transform:rotate(360deg)}}
+.confetti-wrap{position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;overflow:hidden;z-index:30}
+.confetti{position:absolute;top:-14px;opacity:0;will-change:transform}
+.confetti.go{animation:fall var(--d) cubic-bezier(.22,.6,.36,1) forwards}
+@keyframes fall{0%{opacity:1;transform:translate3d(0,0,0) rotate(0)}85%{opacity:1}100%{opacity:0;transform:translate3d(var(--x),calc(var(--vvh,100vh) + 40px),0) rotate(var(--r))}}
+.scr.in .calc,.scr.in .tz-note,.scr.in .inv.solo,.scr.in .addcal,.scr.in > .legal{animation:rise .55s var(--silk) .13s both}
+.scr.in .addcal{animation-delay:.18s}
+.scr.in > .legal{animation-delay:.22s}
+@media(max-height:700px){ .cd{height:36px} .calc{margin-top:18px} }
+@media(max-height:620px){ .cd{height:32px} .calc-tz{display:none} .calc-h{padding-bottom:6px} }
+@media(prefers-reduced-motion:reduce){
+  .seal svg{stroke-dashoffset:0;animation:none!important}
+  .seal::after,.calc-g{animation:none!important}
+}
+
 @media(prefers-reduced-motion:reduce){
   .f1,.f2,.f3,.tw,.tw2,.fan,.fan.fr .ph::after{animation:none}
   .fan.bl{transform:rotate(-10deg) translate3d(-2px,12px,0)}
@@ -396,7 +494,8 @@ body.kb .scr .pill{display:none}
   <div class="top">
     <button class="back" id="back" type="button" aria-label="Back" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
     <img class="mark" src="/icons/favicon-light.svg" alt="RevWhisper" width="28" height="28">
-    <div class="segs" aria-hidden="true"><div class="seg"><i></i></div><div class="seg"><i></i></div><div class="seg"><i></i></div><div class="seg"><i></i></div><div class="seg"><i></i></div><div class="seg"><i></i></div></div>
+    <div class="segs form" aria-hidden="true"><div class="seg"><i></i></div><div class="seg"><i></i></div><div class="seg"><i></i></div><div class="seg"><i></i></div><div class="seg"><i></i></div><div class="seg"><i></i></div></div>
+    <div class="segs book" aria-hidden="true"><div class="seg"><i></i></div><div class="seg"><i></i></div><div class="seg"><i></i></div></div>
   </div>
 
   <div class="stage" id="stage">
@@ -564,7 +663,90 @@ body.kb .scr .pill{display:none}
       </div>
     </section>
 
+    <!-- ── Booking ── A qualified submit carries straight on into these screens (no page load).
+         /audit-flow#book opens the calendar directly and #booked the confirmation; without a lead in
+         this tab that's a preview (dummy lead, real availability, nothing booked or tracked). -->
+    <section class="scr" data-step="6">
+      <div class="copy">
+        <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg><span id="bk-pill">Request received</span></span>
+        <h2 class="h">When works <em>for you?</em></h2>
+      </div>
+      <div class="bk-msg" id="cal-msg" role="alert" hidden></div>
+      <div class="calc">
+        <div class="calc-h">
+          <span class="calc-m" id="cal-month">&nbsp;</span>
+          <span class="calc-nav">
+            <button class="nav-b" type="button" id="cal-prev" aria-label="Previous month" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+            <button class="nav-b" type="button" id="cal-next" aria-label="Next month" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+          </span>
+        </div>
+        <div class="calc-w" aria-hidden="true"><b>S</b><b>M</b><b>T</b><b>W</b><b>T</b><b>F</b><b>S</b></div>
+        <div class="calc-g" id="cal-grid" aria-label="Open days"></div>
+        <div class="calc-tz" id="cal-tz"></div>
+      </div>
+    </section>
+
+    <section class="scr" data-step="7">
+      <div class="copy">
+        <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><span id="slot-date">&nbsp;</span></span>
+        <h2 class="h">What time <em>works best?</em></h2>
+      </div>
+      <div class="choices list" id="slot-list" role="radiogroup" aria-label="Open times"></div>
+      <p class="tz-note" id="slot-tz"></p>
+    </section>
+
+    <section class="scr" data-step="8">
+      <div class="art"><div class="comp">
+        <div class="halo"></div>
+        <div class="bub f2" style="left:95px;top:14px;width:52px;height:52px"><img src="/images/team/bryan.webp" alt="" width="322" height="400" decoding="async" fetchpriority="low"></div>
+        <div class="bub f1" style="left:129px;top:4px;width:62px;height:62px;z-index:1"><img src="/images/team/marisa.webp" alt="" width="322" height="400" decoding="async" fetchpriority="low"></div>
+        <div class="bub f3" style="left:173px;top:14px;width:52px;height:52px"><img src="/images/team/nic.webp" alt="" width="322" height="400" decoding="async" fetchpriority="low"></div>
+        <div class="inv card f1" style="left:34px;top:86px;width:252px;z-index:2">
+          <span class="inv-d"><small class="js-mon">Oct</small><b class="js-day">16</b></span>
+          <span class="inv-t"><b>Your live audit</b><span class="js-when">Thursday · 2:00 PM</span><span class="inv-x"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 10l5-3v10l-5-3M3 7h12v10H3z"/></svg>30 min · Google Meet</span></span>
+        </div>
+        <svg class="spark tw" style="left:52px;top:40px" width="17" height="17" viewBox="0 0 24 24"><path fill="currentColor" d="M12 0c1 6.5 5.5 11 12 12-6.5 1-11 5.5-12 12-1-6.5-5.5-11-12-12C6.5 11 11 6.5 12 0z"/></svg>
+        <svg class="spark g tw2" style="left:286px;top:70px" width="13" height="13" viewBox="0 0 24 24"><path fill="currentColor" d="M12 0c1 6.5 5.5 11 12 12-6.5 1-11 5.5-12 12-1-6.5-5.5-11-12-12C6.5 11 11 6.5 12 0z"/></svg>
+        <svg class="spark g tw" style="left:150px;top:184px" width="14" height="14" viewBox="0 0 24 24"><path fill="currentColor" d="M12 0c1 6.5 5.5 11 12 12-6.5 1-11 5.5-12 12-1-6.5-5.5-11-12-12C6.5 11 11 6.5 12 0z"/></svg>
+      </div></div>
+      <div class="copy">
+        <h2 class="h">Confirm your <em>live audit.</em></h2>
+      </div>
+      <div class="bk-msg" id="confirm-msg" role="alert" hidden></div>
+      <div class="foot">
+        <button class="cta" type="button" id="btn-book"><span class="spin" aria-hidden="true"></span><span class="lbl">Confirm my audit</span> <svg class="arw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        <p class="legal" id="confirm-note">&nbsp;</p>
+      </div>
+    </section>
+
+    <section class="scr" data-step="9">
+      <div class="art"><div class="comp">
+        <div class="halo"></div>
+        <div class="seal"><svg viewBox="0 0 24 24"><path d="M5.5 12.5l4.5 4.5L19 7.5"/></svg></div>
+        <svg class="spark tw" style="left:86px;top:52px" width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M12 0c1 6.5 5.5 11 12 12-6.5 1-11 5.5-12 12-1-6.5-5.5-11-12-12C6.5 11 11 6.5 12 0z"/></svg>
+        <svg class="spark g tw2" style="left:222px;top:66px" width="14" height="14" viewBox="0 0 24 24"><path fill="currentColor" d="M12 0c1 6.5 5.5 11 12 12-6.5 1-11 5.5-12 12-1-6.5-5.5-11-12-12C6.5 11 11 6.5 12 0z"/></svg>
+        <svg class="spark g tw" style="left:104px;top:166px" width="13" height="13" viewBox="0 0 24 24"><path fill="currentColor" d="M12 0c1 6.5 5.5 11 12 12-6.5 1-11 5.5-12 12-1-6.5-5.5-11-12-12C6.5 11 11 6.5 12 0z"/></svg>
+        <svg class="spark tw2" style="left:210px;top:160px" width="15" height="15" viewBox="0 0 24 24"><path fill="currentColor" d="M12 0c1 6.5 5.5 11 12 12-6.5 1-11 5.5-12 12-1-6.5-5.5-11-12-12C6.5 11 11 6.5 12 0z"/></svg>
+      </div></div>
+      <div class="copy">
+        <h2 class="h">See you soon<span id="bk-name"></span>. <em class="line">You're booked.</em></h2>
+      </div>
+      <div class="inv solo">
+          <span class="inv-d"><small class="js-mon">Oct</small><b class="js-day">16</b></span>
+          <span class="inv-t"><b>Your live audit</b><span class="js-when">Thursday · 2:00 PM</span><span class="inv-x"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 10l5-3v10l-5-3M3 7h12v10H3z"/></svg>30 min · Google Meet</span></span>
+        </div>
+      <div class="addcal" id="addcal">
+        <p class="addcal-l">Add it to your calendar</p>
+        <div class="choices grid2">
+          <a class="chip" id="addcal-g" target="_blank" rel="noopener"><span>Google</span></a>
+          <a class="chip" id="addcal-ics"><span>Apple · Outlook</span></a>
+        </div>
+      </div>
+      <p class="legal" id="booked-note">&nbsp;</p>
+    </section>
+
   </div>
+  <div class="confetti-wrap" id="confetti" aria-hidden="true"></div>
 </div>
 
 <script>
@@ -636,14 +818,18 @@ if(window.ResizeObserver){
 if(document.fonts&&document.fonts.ready) document.fonts.ready.then(sizeArt);
 
 function paintProgress(){
-  document.querySelectorAll('.seg').forEach(function(s,i){ s.classList.toggle('on',i<=current); });
-  backBtn.hidden=current===0;
+  const inBook=current>=TOTAL;
+  document.getElementById('app').classList.toggle('booking',inBook);
+  document.querySelectorAll('.segs.form .seg').forEach(function(s,i){ s.classList.toggle('on',i<=current); });
+  document.querySelectorAll('.segs.book .seg').forEach(function(s,i){ s.classList.toggle('on',i<=current-TOTAL); });
+  // no Back on Q1, on the calendar (the lead is already in) or once booked
+  backBtn.hidden=current===0||current===TOTAL||current===TOTAL+3;
 }
 
 /* One beat per answer: the old screen fades and lifts away (180ms), then — with nothing
    else on screen — the new one rises in as a cascade. Never two questions visible. */
 function show(to,dir){
-  if(busy||to===current||to<0||to>=TOTAL) return;
+  if(busy||to===current||to<0||to>=screens.length) return;
   busy=true;
   const from=screens[current], next=screens[to];
   stage.classList.toggle('rev',dir<0);
@@ -663,12 +849,14 @@ function show(to,dir){
 function go(to){
   if(busy) return false;
   if(to>current){
-    rwTrack('form_step',{step:to,page:PAGE});
-    try{ history.pushState({rwStep:to},'','#q'+(to+1)); }catch(e){}
+    if(to<TOTAL) rwTrack('form_step',{step:to,page:PAGE});
+    try{ history.pushState({rwStep:to},'',hashFor(to)); }catch(e){}
   }
+  if(to>=4) loadSlots(); // warm the calendar while they paste their link and type their details
   show(to,to>current?1:-1);
   return true;
 }
+function hashFor(i){ return i<TOTAL?'#q'+(i+1):'#'+['book','time','confirm','booked'][i-TOTAL]; }
 /* ── Intro ── */
 const intro=document.getElementById('intro'), app=document.getElementById('app');
 let introOpen=true;
@@ -709,9 +897,19 @@ function openIntro(){
   setTimeout(function(){ if(introOpen) screens[current].classList.remove('in'); },420);
 }
 document.getElementById('intro-go').addEventListener('click',function(){ closeIntro(true); });
+const ENTRY_HASH=(location.hash||'').slice(1);
 try{ history.replaceState({rwStep:-1},'',location.pathname+location.search); }catch(e){}
 window.addEventListener('popstate',function(e){
   const to=(e.state&&typeof e.state.rwStep==='number')?e.state.rwStep:-1;
+  if(bk.phase){ // once the lead is in, history only moves between the booking screens
+    let t=bk.done?B_DONE:Math.max(B_CAL,Math.min(to,B_CONF));
+    if(t>=B_TIME&&!bk.date) t=B_CAL;
+    if(t>=B_CONF&&!bk.slot) t=bk.date?B_TIME:B_CAL;
+    if(t===current) return;
+    const move=function(){ show(t,t>current?1:-1); };
+    if(busy) setTimeout(move,240); else move();
+    return;
+  }
   if(to<0){ // back to the welcome screen (Q1 underneath keeps its answer)
     if(current!==0){ busy=false; screens[current].classList.remove('cur','in','out'); current=0; screens[0].classList.add('cur'); paintProgress(); }
     openIntro(); return;
@@ -807,6 +1005,7 @@ document.addEventListener('change',function(e){
   else if(n==='issue') rwTrack('select_issue',{issue:t.value,page:PAGE});
   else if(n==='pricing') rwTrack('select_pricing',{pricing:t.value,page:PAGE});
   else if(n==='revenue') rwTrack('select_revenue',{revenue:t.value,page:PAGE});
+  else if(n==='slot') selectSlot(t.value);
   else return;
   lastVal[n]=t.value;
   scheduleAdvance();
@@ -922,16 +1121,360 @@ function submitForm(){
     try{ rwXTrack('auditLead',xParams); }catch(e){}
   }
   fetch(FORM_WEBHOOK_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({event_type:'get_started',payload:data}),keepalive:true}).catch(function(){});
-  var redirect=function(){ window.location.href='/audit-booking'; };
+  if(!INLINE_BOOKING){ // live default until the in-flow calendar is signed off: the separate booking page
+    var redirect=function(){ window.location.href='/audit-booking'; };
+    if(window.rwXReady&&typeof window.rwXReady.then==='function'){
+      Promise.race([window.rwXReady,new Promise(function(r){ setTimeout(r,120); })]).then(function(){ fireXLead(); redirect(); }).catch(redirect);
+    }else{ fireXLead(); redirect(); }
+    return;
+  }
   if(window.rwXReady&&typeof window.rwXReady.then==='function'){
-    Promise.race([window.rwXReady,new Promise(function(r){ setTimeout(r,120); })]).then(function(){ fireXLead(); redirect(); }).catch(redirect);
-  }else{ fireXLead(); redirect(); }
+    Promise.race([window.rwXReady,new Promise(function(r){ setTimeout(r,1500); })]).then(fireXLead).catch(function(){});
+  }else fireXLead();
+  // No redirect: the calendar is the next screen (it replaces /audit-booking for this flow)
+  enterBooking(data,false);
+  try{ history.pushState({rwStep:B_CAL},'','#book'); }catch(e){}
+  show(B_CAL,1);
 }
+
+/* ── Booking ──────────────────────────────────────────────────────────────────
+   Same job as /audit-booking (same endpoints, fallbacks and Meta/Google/X conversions), as four
+   screens in this shell: calendar → time → confirm → booked. No intro video here. */
+const B_CAL=TOTAL, B_TIME=TOTAL+1, B_CONF=TOTAL+2, B_DONE=TOTAL+3;
+/* Switch: true = qualified leads book right here after submitting; false = they go to /audit-booking
+   as before. #book / #booked previews work either way. */
+const INLINE_BOOKING=false;
+const CAL_SLOTS_ENDPOINT='/api/cal-slots', CAL_BOOKING_ENDPOINT='/api/cal-booking', CAL_FALLBACK_BASE='https://cal.com/team/revwhisper/discovery';
+const PREVIEW_LEAD={name:'Jordan Avery',email:'jordan@example.com',phone:'+1 (512) 555-0199',listings:'1',source:'preview'};
+const bk={lead:null,preview:false,phase:false,done:false,
+  tz:(function(){ try{ return Intl.DateTimeFormat().resolvedOptions().timeZone||'UTC'; }catch(e){ return 'UTC'; } })(),
+  slotsByDate:{},loaded:false,loading:null,start:null,end:null,month:null,date:null,slot:null,inFlight:false};
+function bkTrack(e,p){ if(!bk.preview) rwTrack(e,p); } // a preview never reaches analytics
+function esc(v){ return String(v==null?'':v).replace(/[&<>"']/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+function ymd(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function tzShort(d){
+  try{ const p=new Intl.DateTimeFormat(undefined,{timeZoneName:'short'}).formatToParts(d||new Date()).find(function(x){ return x.type==='timeZoneName'; }); return p?p.value:bk.tz; }catch(e){ return bk.tz; }
+}
+function storedLead(){
+  try{ const l=JSON.parse(sessionStorage.getItem('rw_audit_lead')); return (l&&l.email&&l.name&&l.qualified!==false)?l:null; }catch(e){ return null; }
+}
+function enterBooking(lead,preview){
+  bk.lead=lead; bk.preview=!!preview; bk.phase=true;
+  if(bk.preview&&!document.querySelector('.pv-tag')){ // never mistakable for a real booking
+    const t=document.createElement('span'); t.className='pv-tag'; t.textContent='Preview';
+    document.querySelector('.top').appendChild(t);
+  }
+  const first=String(lead.name||'').trim().split(' ')[0];
+  document.getElementById('bk-pill').textContent=first?'Request received, '+first:'Request received';
+  document.getElementById('cal-tz').textContent='Times shown in your timezone ('+tzShort()+')';
+  renderCalendar();
+  loadSlots();
+}
+
+/* Availability: one 60-day fetch, started as soon as they reach the link step, so the calendar is
+   usually ready before they submit. Absolute 60×24h window (see /audit-booking: DST-safe). */
+function loadSlots(){
+  if(bk.loaded) return Promise.resolve();
+  if(bk.loading) return bk.loading;
+  const start=new Date(); start.setHours(0,0,0,0);
+  const end=new Date(start.getTime()+60*24*60*60*1000);
+  bk.start=start; bk.end=end;
+  const q=new URLSearchParams({start:start.toISOString(),end:end.toISOString(),timeZone:bk.tz});
+  bk.loading=fetch(CAL_SLOTS_ENDPOINT+'?'+q.toString()).then(function(res){
+    return res.json().catch(function(){ return {}; }).then(function(b){
+      if(!res.ok){ const e=new Error(b.error||('Cal.com returned '+res.status)); e.serverBody=b; e.status=res.status; throw e; }
+      return b;
+    });
+  }).then(function(json){
+    const data=(json&&json.data)||{};
+    bk.slotsByDate={};
+    Object.keys(data).forEach(function(k){
+      const arr=data[k];
+      if(Array.isArray(arr)&&arr.length) bk.slotsByDate[k]=arr.map(function(it){ return typeof it==='string'?it:(it&&it.start)||null; }).filter(Boolean);
+    });
+    bk.loaded=true;
+  }).catch(function(err){
+    if(bk.preview){ bk.slotsByDate=demoSlots(); bk.loaded=true; return; } // local preview without the API
+    bk.loadError=err;
+    reportClientError('availability',err);
+  }).then(function(){
+    bk.loading=null;
+    if(bk.loaded){
+      const first=openMonths()[0];
+      if(first&&(!bk.month||!monthOpen(bk.month))) bk.month=first;
+      if(!Object.keys(bk.slotsByDate).length) calMsg("We don't have open times in the next 60 days right now. Please try again shortly.",{retry:true});
+    }else if(bk.phase){
+      const e=bk.loadError;
+      calMsg(e&&e.message?"We couldn't load availability: "+e.message:"We couldn't load availability.",{retry:true,fallback:true});
+    }
+    if(bk.phase) renderCalendar();
+  });
+  return bk.loading;
+}
+function demoSlots(){
+  const out={}, d=new Date(); d.setHours(0,0,0,0);
+  for(let i=1;i<40;i++){
+    const day=new Date(d.getTime()+i*864e5), dow=day.getDay();
+    if(dow===0||dow===6||i%5===3) continue;
+    out[ymd(day)]=[11,13,14,15].filter(function(h,j){ return (i+j)%3!==0; }).map(function(h){ const t=new Date(day); t.setHours(h,0,0,0); return t.toISOString(); });
+  }
+  return out;
+}
+function calMsg(text,opts){
+  const el=document.getElementById('cal-msg');
+  if(!text){ el.hidden=true; el.innerHTML=''; return; }
+  const links=[];
+  if(opts&&opts.retry) links.push('<a href="#" data-act="retry">Try again</a>');
+  if(opts&&opts.fallback) links.push('<a href="#" data-act="cal">Pick a time on Cal.com instead</a>');
+  el.innerHTML=esc(text)+(links.length?'<br>'+links.join(' &nbsp;·&nbsp; '):'');
+  el.hidden=false;
+  sizeArt();
+}
+document.getElementById('cal-msg').addEventListener('click',function(e){
+  const a=e.target.closest('a[data-act]'); if(!a) return;
+  e.preventDefault();
+  if(a.dataset.act==='retry'){ calMsg(''); bk.loaded=false; bk.loadError=null; renderCalendar(); loadSlots(); }
+  else{
+    const l=bk.lead||{};
+    try{ bkTrack('booking_fallback',{reason:'user_chose_fallback',page:PAGE}); }catch(err){}
+    location.href=CAL_FALLBACK_BASE+'?'+new URLSearchParams({name:l.name||'',email:l.email||'',phone:l.phone||''}).toString();
+  }
+});
+/* Failures only this browser saw (the API alerts ops itself when IT fails and says alerted:true). */
+function reportClientError(stage,err,serverBody){
+  try{
+    const b=serverBody||(err&&err.serverBody)||null;
+    if(b&&b.alerted) return;
+    fetch('/api/client-error',{method:'POST',headers:{'Content-Type':'application/json'},keepalive:true,body:JSON.stringify({
+      page:PAGE,stage:stage,status:(err&&err.status)||undefined,message:String((err&&err.message)||err||'unknown error').slice(0,500),
+      detail:{url:location.pathname+location.search,tz:bk.tz,server:b?JSON.stringify(b).slice(0,400):null}})}).catch(function(){});
+  }catch(e){}
+}
+
+/* Months: only months with openings are reachable, so nobody lands on an empty one. */
+function openMonths(){
+  const seen={};
+  Object.keys(bk.slotsByDate).forEach(function(k){ const p=k.split('-'); seen[p[0]+'-'+p[1]]=new Date(+p[0],+p[1]-1,1); });
+  return Object.keys(seen).sort().map(function(k){ return seen[k]; });
+}
+function monthOpen(m){ return openMonths().some(function(o){ return o.getTime()===m.getTime(); }); }
+function stepMonth(dir){
+  const list=openMonths(); if(!bk.month) return null;
+  const cur=bk.month.getTime();
+  if(dir>0){ for(let i=0;i<list.length;i++) if(list[i].getTime()>cur) return list[i]; return null; }
+  for(let i=list.length-1;i>=0;i--) if(list[i].getTime()<cur) return list[i];
+  return null;
+}
+function renderCalendar(dir){
+  const grid=document.getElementById('cal-grid');
+  const today=new Date(); today.setHours(0,0,0,0);
+  const m=bk.month||new Date(today.getFullYear(),today.getMonth(),1);
+  document.getElementById('cal-month').textContent=m.toLocaleDateString(undefined,{month:'long',year:'numeric'});
+  document.getElementById('cal-prev').disabled=!bk.loaded||!stepMonth(-1);
+  document.getElementById('cal-next').disabled=!bk.loaded||!stepMonth(1);
+  const lead=new Date(m.getFullYear(),m.getMonth(),1).getDay(), days=new Date(m.getFullYear(),m.getMonth()+1,0).getDate();
+  // rows = what the tallest reachable month needs, so the card keeps one height while paging months
+  const rowsFor=function(mm){ return Math.ceil((new Date(mm.getFullYear(),mm.getMonth(),1).getDay()+new Date(mm.getFullYear(),mm.getMonth()+1,0).getDate())/7); };
+  const rows=Math.max.apply(null,[rowsFor(m)].concat(bk.loaded?openMonths().map(rowsFor):[]));
+  let html='';
+  for(let i=0;i<rows*7;i++){
+    const n=i-lead+1;
+    if(n<1||n>days){ html+='<span class="cd x"></span>'; continue; }
+    const d=new Date(m.getFullYear(),m.getMonth(),n), key=ymd(d);
+    if(!bk.loaded){ html+='<span class="cd sk" style="animation-delay:'+(i%7)*60+'ms"></span>'; continue; }
+    const open=d>=today&&d<=bk.end&&!!bk.slotsByDate[key];
+    const cls='cd'+(open?' ok':'')+(key===bk.date?' sel':'')+(d.getTime()===today.getTime()?' today':'');
+    const label=d.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
+    html+=open?'<button type="button" class="'+cls+'" data-day="'+key+'" aria-label="'+esc(label)+'"'+(key===bk.date?' aria-pressed="true"':'')+'>'+n+'</button>'
+              :'<span class="'+cls+'" aria-hidden="true">'+n+'</span>';
+  }
+  grid.innerHTML=html;
+  if(dir){ grid.classList.remove('sl','sr'); void grid.offsetWidth; grid.classList.add(dir>0?'sl':'sr'); }
+}
+['cal-prev','cal-next'].forEach(function(id,i){
+  document.getElementById(id).addEventListener('click',function(){
+    const dir=i?1:-1, m=stepMonth(dir); if(!m) return;
+    bk.month=m; renderCalendar(dir);
+  });
+});
+document.getElementById('cal-grid').addEventListener('click',function(e){
+  const b=e.target.closest('button[data-day]'); if(!b||busy||current!==B_CAL) return;
+  const key=b.dataset.day;
+  bk.date=key; bk.slot=null;
+  this.querySelectorAll('.sel').forEach(function(x){ x.classList.remove('sel'); x.removeAttribute('aria-pressed'); });
+  b.classList.add('sel'); b.setAttribute('aria-pressed','true');
+  bkTrack('select_booking_date',{date:key,page:PAGE});
+  renderSlots();
+  setTimeout(function(){ if(current===B_CAL&&bk.date===key) go(B_TIME); },200); // the same beat as an answer tap
+});
+function renderSlots(){
+  const slots=bk.slotsByDate[bk.date]||[], list=document.getElementById('slot-list');
+  const d=new Date(bk.date+'T12:00:00');
+  document.getElementById('slot-date').textContent=d.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
+  // a few times read best as a list; a long day as a grid
+  list.className='choices '+(slots.length>4?'grid3':'list');
+  list.innerHTML=slots.map(function(iso){
+    const t=new Date(iso).toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});
+    return '<label class="chip"><input type="radio" name="slot" value="'+esc(iso)+'"><span>'+esc(t)+'</span></label>';
+  }).join('')||'<p class="tz-note">No times left on this day. Go back and pick another.</p>';
+  delete lastVal.slot;
+  document.getElementById('slot-tz').textContent='Times shown in your timezone ('+tzShort(d)+')';
+}
+function fillInvites(iso){
+  const t=new Date(iso);
+  const when=t.toLocaleDateString(undefined,{weekday:'long'})+' · '+t.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'})+' '+tzShort(t);
+  document.querySelectorAll('.js-mon').forEach(function(e){ e.textContent=t.toLocaleDateString(undefined,{month:'short'}).replace('.',''); });
+  document.querySelectorAll('.js-day').forEach(function(e){ e.textContent=t.getDate(); });
+  document.querySelectorAll('.js-when').forEach(function(e){ e.textContent=when; });
+}
+function selectSlot(iso){
+  bk.slot=iso;
+  bkTrack('select_booking_time',{time:iso,page:PAGE});
+  fillInvites(iso);
+  const l=bk.lead||{};
+  document.getElementById('confirm-note').textContent=l.email?'Your calendar invite goes to '+l.email+'.':'';
+  confirmMsg('');
+  const b=document.getElementById('btn-book'); b.disabled=false; b.classList.remove('loading');
+  b.querySelector('.lbl').textContent='Confirm my audit';
+}
+function confirmMsg(text){
+  const el=document.getElementById('confirm-msg');
+  el.textContent=text||''; el.hidden=!text; sizeArt();
+}
+
+/* Book it. Mirrors /audit-booking: Meta Schedule (browser + CAPI share one event id), Google Ads
+   Call Booked for gclid leads, X auditCallBooked; a taken slot sends them back to fresh times. */
+async function confirmBooking(){
+  if(busy||bk.inFlight||!bk.slot) return;
+  bk.inFlight=true; confirmMsg('');
+  const btn=document.getElementById('btn-book');
+  btn.disabled=true; btn.classList.add('loading'); btn.querySelector('.lbl').textContent='Locking in your time…';
+  const l=bk.lead||{}, iso=bk.slot, startedAt=Date.now(), MIN_MS=1100;
+  const settle=function(){ const left=MIN_MS-(Date.now()-startedAt); return left>0?new Promise(function(r){ setTimeout(r,left); }):Promise.resolve(); };
+  if(bk.preview){ // nothing is booked, nothing is tracked
+    await settle();
+    bk.inFlight=false;
+    return finishBooking({start:iso});
+  }
+  const evId='sched_'+Date.now()+'_'+Math.random().toString(36).slice(2,10);
+  const xConversionId=typeof rwXConversionId==='function'?rwXConversionId('audit_call'):'audit_call_'+Date.now();
+  const payload={start:iso,name:l.name,email:l.email,phone:l.phone||'',timeZone:bk.tz,listings:l.listings,airbnbUrl:l.airbnbUrl,
+    source:l.source||PAGE,attribution:l.attribution||{},fbEventId:evId,adConsent:!window.rwConsent||rwConsent.ads,
+    fbp:rwCookie('_fbp'),fbc:rwCookie('_fbc'),xConversionId:xConversionId,twclid:l.twclid||(l.attribution&&l.attribution.twclid)||''};
+  let result=null, err=null, body=null, taken=false;
+  try{
+    const res=await fetch(CAL_BOOKING_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    body=await res.json().catch(function(){ return {}; });
+    if(res.ok&&body.ok) result=body.booking;
+    else if(body&&body.code==='slot_unavailable') taken=true;
+    else{ err=new Error((body&&body.error)||('Cal.com returned '+res.status)); err.serverBody=body; err.status=res.status; }
+  }catch(e){ err=e; }
+  await settle();
+  bk.inFlight=false;
+  if(taken){ // someone else got there first: fresh times, back on the calendar
+    bkTrack('booking_slot_taken',{page:PAGE});
+    bk.loaded=false; bk.slot=null; bk.date=null;
+    show(B_CAL,-1);
+    try{ history.replaceState({rwStep:B_CAL},'','#book'); }catch(e){}
+    calMsg('That time was just booked by someone else. Here are the latest open times. Please pick another.');
+    renderCalendar(); loadSlots();
+    return;
+  }
+  if(err||!result&&body&&body.fallback){
+    reportClientError('booking',err||new Error('scheduler unavailable'),body);
+    btn.disabled=false; btn.classList.remove('loading'); btn.querySelector('.lbl').textContent='Confirm my audit';
+    confirmMsg(err&&err.message?"That didn't work: "+err.message+'. Please try again.':"We couldn't reach the scheduler just now. Please try again in a moment.");
+    return;
+  }
+  try{ fbq('track','Schedule',{content_name:'Audit Call Booked',content_category:'Audit'},{eventID:evId}); }catch(e){}
+  if(rwHasGclid()){
+    try{
+      const gud={email:l.email};
+      if(l.phone&&typeof rwXNormalizePhone==='function') gud.phone_number=rwXNormalizePhone(l.phone);
+      gtag('set','user_data',gud);
+      gtag('event','conversion',{send_to:'AW-18384012854/7WsKCMij2-ccELaMl75E',value:400.0,currency:'USD'});
+    }catch(e){}
+  }
+  const fireX=function(){
+    const xp={conversion_id:xConversionId,email_address:l.email};
+    if(l.phone&&typeof rwXNormalizePhone==='function') xp.phone_number=rwXNormalizePhone(l.phone);
+    try{ rwXTrack('auditCallBooked',xp); }catch(e){}
+  };
+  if(window.rwXReady&&typeof window.rwXReady.then==='function') Promise.race([window.rwXReady,new Promise(function(r){ setTimeout(r,1500); })]).then(fireX).catch(function(){});
+  else fireX();
+  rwTrack('call_booked',{time:iso,page:PAGE,listings:l.listings,source:l.source||''});
+  rwTrack('booking_confirmed',{time:iso,page:PAGE});
+  try{ sessionStorage.setItem('rw_booking',JSON.stringify(result||{start:iso})); }catch(e){}
+  finishBooking(result||{start:iso});
+}
+document.getElementById('btn-book').addEventListener('click',confirmBooking);
+function finishBooking(data){
+  renderBooked(data);
+  bk.done=true;
+  show(B_DONE,1);
+  try{ history.replaceState({rwStep:B_DONE},'','#booked'); }catch(e){}
+  setTimeout(launchConfetti,350);
+}
+function renderBooked(data){
+  const start=data&&data.start?new Date(data.start):null, l=bk.lead||{};
+  const first=String(l.name||'').trim().split(' ')[0];
+  document.getElementById('bk-name').textContent=first?', '+first:'';
+  if(start) fillInvites(start.toISOString());
+  document.getElementById('booked-note').textContent=(l.email?'Invite sent to '+l.email+'. ':'')+"We'll text your Google Meet link before we meet.";
+  // Add-to-calendar: insurance for invites that land in spam (same links as /audit-booking)
+  const ac=document.getElementById('addcal');
+  ac.hidden=!start;
+  if(!start) return;
+  const end=new Date(start.getTime()+30*60000);
+  const z=function(d){ return d.toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,''); };
+  const meet=(data&&typeof data.meetingUrl==='string'&&/^https:\/\/meet\.google\.com\/[A-Za-z0-9-]+$/.test(data.meetingUrl))?data.meetingUrl:'';
+  const g=document.getElementById('addcal-g'), ics=document.getElementById('addcal-ics');
+  g.href='https://calendar.google.com/calendar/render?action=TEMPLATE&text='+encodeURIComponent('Your RevWhisper live audit')+'&dates='+z(start)+'/'+z(end)+
+    '&details='+encodeURIComponent('Your live Airbnb performance audit with RevWhisper, 30 minutes over Google Meet.'+(meet?'\n\nJoin: '+meet:''))+(meet?'&location='+encodeURIComponent(meet):'');
+  ics.href='/api/booking-ics?start='+encodeURIComponent(start.toISOString())+(meet?'&meet='+encodeURIComponent(meet):'');
+  g.onclick=function(){ bkTrack('add_to_calendar',{kind:'google',page:PAGE}); };
+  ics.onclick=function(){ bkTrack('add_to_calendar',{kind:'ics',page:PAGE}); };
+}
+function launchConfetti(){
+  if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const wrap=document.getElementById('confetti'), colors=['#4A6741','#dce6d8','#b3c5ab','#E0DCDA','#8aab7f','#c5d6bf','#6f8f63'];
+  let html='';
+  for(let i=0;i<46;i++){
+    const s=5+Math.random()*6;
+    html+='<i class="confetti" style="left:'+(Math.random()*100).toFixed(1)+'%;width:'+s.toFixed(1)+'px;height:'+s.toFixed(1)+'px;background:'+colors[i%colors.length]+
+      ';border-radius:'+(i%2?'50%':'2px')+';--d:'+(1.7+Math.random()*1.3).toFixed(2)+'s;--x:'+(Math.random()*80-40).toFixed(0)+'px;--r:'+(360+Math.random()*540).toFixed(0)+'deg;animation-delay:'+(Math.random()*.35).toFixed(2)+'s"></i>';
+  }
+  wrap.innerHTML=html;
+  requestAnimationFrame(function(){ wrap.querySelectorAll('.confetti').forEach(function(c){ c.classList.add('go'); }); });
+  setTimeout(function(){ wrap.innerHTML=''; },3800);
+}
+
+/* #book opens the calendar, #booked the confirmation. With a lead from this tab it's the real thing
+   (e.g. a reload mid-booking); without one it's a preview: dummy lead, real availability, and the
+   confirm step is stubbed, so nothing is booked or tracked. */
+function openBookingFromHash(h){
+  const lead=storedLead();
+  introOpen=false; intro.classList.add('out','gone'); app.classList.remove('intro-on');
+  screens.forEach(function(s){ s.classList.remove('cur','in'); });
+  enterBooking(lead||PREVIEW_LEAD,!lead);
+  let t=B_CAL;
+  if(h==='booked'){
+    let saved=null; try{ saved=JSON.parse(sessionStorage.getItem('rw_booking')); }catch(e){}
+    if(saved||!lead){
+      const demo=new Date(); demo.setDate(demo.getDate()+3); demo.setHours(14,0,0,0);
+      renderBooked(saved||{start:demo.toISOString()}); bk.done=true; t=B_DONE;
+      setTimeout(launchConfetti,500);
+    }
+  }
+  current=t; screens[t].classList.add('cur','in');
+  try{ history.replaceState({rwStep:t},'',location.pathname+location.search+hashFor(t)); }catch(e){}
+}
+if(['book','time','confirm','booked'].indexOf(ENTRY_HASH)>-1) openBookingFromHash(ENTRY_HASH);
 
 /* ?preview=N opens straight on question N (1-6), skipping the intro, for design review; ?preview=0 or none shows the intro */
 (function(){
   var n=parseInt(new URLSearchParams(location.search).get('preview'),10);
-  if(!(n>=1&&n<=TOTAL)) return;
+  if(!(n>=1&&n<=TOTAL)||bk.phase) return;
   introOpen=false; intro.classList.add('out','gone'); app.classList.remove('intro-on');
   screens[0].classList.remove('cur','in');
   current=n-1; screens[current].classList.add('cur','in');
