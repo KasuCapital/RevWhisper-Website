@@ -445,13 +445,19 @@ body.kb .scr .pill{display:none}
 .vsl-player iframe,.vsl-facade,.vsl-thumb{position:absolute;top:0;left:0;width:100%;height:100%;border:0;display:block}
 .vsl-facade{padding:0;background:var(--black);cursor:pointer}
 .vsl-thumb{object-fit:cover;transition:transform .5s var(--silk)}
-.vsl-facade::after{content:"";position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at center,rgba(20,19,18,.06) 0%,rgba(20,19,18,.3) 100%)}
-@media(hover:hover){.vsl-facade:hover .vsl-thumb{transform:scale(1.025)}}
-.vsl-play{position:absolute;z-index:1;top:50%;left:50%;width:58px;height:58px;margin:-29px 0 0 -29px;border-radius:50%;background:var(--accent);display:grid;place-items:center;
-  box-shadow:0 6px 22px rgba(20,19,18,.35);transition:transform .25s var(--silk)}
-.vsl-play svg{width:20px;height:20px;margin-left:3px;fill:#fff}
-.vsl-facade:active .vsl-play{transform:scale(.94)}
-.vsl-dur{position:absolute;z-index:1;right:10px;bottom:10px;background:rgba(20,19,18,.72);color:#fff;font-size:11px;font-weight:600;letter-spacing:.03em;padding:3px 8px;border-radius:6px}
+.vsl-facade::after{content:"";position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(180deg,rgba(20,19,18,0) 50%,rgba(20,19,18,.38) 100%)}
+@media(hover:hover){.vsl-facade:hover .vsl-thumb{transform:scale(1.025)}.vsl-facade:hover .vsl-play{transform:scale(1.03)}}
+/* frosted pill, bottom-left, clear of the speaker's face; play circle sits concentric in it (20 − 6 = 14) */
+.vsl-play{position:absolute;z-index:1;left:12px;bottom:12px;display:inline-flex;align-items:center;gap:9px;height:40px;padding:0 14px 0 6px;border-radius:20px;
+  background:rgba(255,255,255,.9);-webkit-backdrop-filter:blur(14px) saturate(1.5);backdrop-filter:blur(14px) saturate(1.5);
+  box-shadow:0 6px 20px -4px rgba(20,19,18,.35);color:var(--black);font-size:13.5px;font-weight:600;letter-spacing:-.005em;white-space:nowrap;
+  transform-origin:left bottom;transition:transform .25s var(--silk)}
+.vsl-play i{width:28px;height:28px;border-radius:50%;background:var(--black);display:grid;place-items:center;flex:0 0 auto}
+.vsl-play i svg{width:11px;height:11px;margin-left:2px;fill:#fff}
+.vsl-play small{font-size:12px;font-weight:500;color:var(--g500);font-variant-numeric:tabular-nums}
+.vsl-facade:active .vsl-play{transform:scale(.96)}
+.vsl-facade:focus-visible{outline:none}
+.vsl-facade:focus-visible .vsl-play{box-shadow:0 0 0 3px var(--accent)}
 .vsl-note{font-size:13px;line-height:1.45;color:var(--g600);text-align:center;margin-top:10px;text-wrap:balance}
 .inv.solo + .legal{margin-top:14px}
 /* booked seal: the check draws itself in */
@@ -759,8 +765,7 @@ body.kb .scr .pill{display:none}
         <div class="vsl-player" id="vsl-player">
           <button class="vsl-facade" id="vsl-facade" type="button" aria-label="Play the video">
             <img class="vsl-thumb" id="vsl-thumb" alt="" width="1280" height="720" decoding="async" fetchpriority="low">
-            <span class="vsl-play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg></span>
-            <span class="vsl-dur" id="vsl-dur"></span>
+            <span class="vsl-play"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg></i>Watch the intro<small id="vsl-dur"></small></span>
           </button>
         </div>
         <p class="vsl-note">Please watch this before our call to get an idea of what we'll be discussing.</p>
@@ -1466,8 +1471,8 @@ function setupVsl(host){
   const v=host||VSL_HOSTS.bryan, player=document.getElementById('vsl-player');
   if(player.dataset.video===v.videoId&&!player.querySelector('iframe')) return;
   player.dataset.video=v.videoId;
-  player.innerHTML='<button class="vsl-facade" id="vsl-facade" type="button" aria-label="Play the video"><img class="vsl-thumb" alt="" width="1280" height="720" decoding="async" src="/images/video/'+v.videoId+'.webp">'+
-    '<span class="vsl-play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="vsl-dur">'+v.dur+'</span></button>';
+  player.innerHTML='<button class="vsl-facade" id="vsl-facade" type="button" aria-label="Play the intro video"><img class="vsl-thumb" alt="" width="1280" height="720" decoding="async" src="/images/video/'+v.videoId+'.webp">'+
+    '<span class="vsl-play"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg></i>Watch the intro<small>'+v.dur+'</small></span></button>';
   player.querySelector('button').onclick=function(){
     const f=document.createElement('iframe');
     f.src='https://www.youtube-nocookie.com/embed/'+v.videoId+'?autoplay=1&rel=0&modestbranding=1&playsinline=1';
