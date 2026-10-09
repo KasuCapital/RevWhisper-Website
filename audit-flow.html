@@ -388,8 +388,8 @@ body.kb .scr .pill{display:none}
 .pv-tag{flex:0 0 auto;font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--g500);border:1px solid var(--line);border-radius:999px;padding:3px 8px;background:#fff}
 .app.booking .segs.form{display:none}
 .app.booking .segs.book{display:flex}
-.calc{margin-top:26px}
-.calc-h{display:grid;grid-template-columns:36px 1fr 36px;align-items:center;margin-bottom:12px}
+.calc{margin-top:24px;background:#fff;border-radius:24px;padding:14px 10px 12px;box-shadow:0 0 0 1px var(--line),var(--sh-card)}
+.calc-h{display:grid;grid-template-columns:36px 1fr 36px;align-items:center;margin:0 2px 10px}
 .calc-m{text-align:center;font-size:16px;font-weight:600;letter-spacing:-.01em}
 .nav-b{width:36px;height:36px;padding:0;border-radius:50%;border:0;background:transparent;color:var(--black);display:grid;place-items:center;cursor:pointer;transition:background-color .2s var(--silk),color .2s}
 .nav-b svg{width:16px;height:16px}
@@ -404,6 +404,8 @@ body.kb .scr .pill{display:none}
 .cd::before{content:"";position:absolute;left:50%;top:50%;width:min(var(--c),100%);aspect-ratio:1;border-radius:50%;border:1.5px solid transparent;z-index:-1;
   transform:translate(-50%,-50%);transition:border-color .2s var(--silk),transform .25s var(--silk)}
 .cd.x{visibility:hidden}
+.cd.today::after{content:"";position:absolute;left:50%;bottom:6px;width:4px;height:4px;margin-left:-2px;border-radius:50%;background:var(--accent)}
+.cd.sel.today::after{background:#fff}
 .cd.ok{color:var(--black);font-weight:600;cursor:pointer}
 @media(hover:hover){.cd.ok:hover::before{border-color:var(--black)}}
 .cd.ok:active::before{transform:translate(-50%,-50%) scale(.9)}
@@ -419,7 +421,7 @@ body.kb .scr .pill{display:none}
 .calc-g.sr{animation:slideR .34s var(--silk) both}
 @keyframes slideL{from{opacity:0;transform:translate3d(18px,0,0)}to{opacity:1;transform:none}}
 @keyframes slideR{from{opacity:0;transform:translate3d(-18px,0,0)}to{opacity:1;transform:none}}
-.calc-tz{font-size:12px;color:var(--g500);text-align:center;padding-top:14px}
+.calc-tz{font-size:12px;color:var(--g500);text-align:center;padding-top:10px;margin-top:8px;border-top:1px solid var(--line)}
 #slot-list .chip span{font-variant-numeric:tabular-nums}
 .tz-note{font-size:12px;color:var(--g500);text-align:center;margin-top:16px}
 .bk-msg{margin-top:16px;padding:12px 14px;border-radius:14px;background:#fbf1f1;color:#8b3a3a;font-size:13px;line-height:1.45;text-align:left}
@@ -467,8 +469,8 @@ a.chip span{white-space:nowrap}
 .scr.in .calc,.scr.in .tz-note,.scr.in .inv.solo,.scr.in .addcal,.scr.in > .legal{animation:rise .55s var(--silk) .13s both}
 .scr.in .addcal{animation-delay:.18s}
 .scr.in > .legal{animation-delay:.22s}
-@media(max-height:700px){ .cd{height:40px;--c:38px} .calc{margin-top:20px} }
-@media(max-height:620px){ .cd{height:36px;--c:34px} .calc-tz{display:none} .calc-h{margin-bottom:6px} }
+@media(max-height:700px){ .cd{height:40px;--c:38px} .cd.today::after{bottom:5px} .calc{margin-top:18px;padding:12px 8px 10px} }
+@media(max-height:620px){ .cd{height:36px;--c:34px} .cd.today::after{bottom:3px} .calc-tz{display:none} .calc-h{margin-bottom:6px} }
 @media(prefers-reduced-motion:reduce){
   .seal svg{stroke-dashoffset:0;animation:none!important}
   .seal::after,.calc-g{animation:none!important}
@@ -1286,9 +1288,10 @@ function renderCalendar(dir){
     const n=i-lead+1;
     if(n<1||n>days){ html+='<span class="cd x"></span>'; continue; }
     const d=new Date(m.getFullYear(),m.getMonth(),n), key=ymd(d);
-    if(!bk.loaded){ html+='<span class="cd" aria-hidden="true">'+n+'</span>'; continue; }
+    const isToday=d.getTime()===today.getTime();
+    if(!bk.loaded){ html+='<span class="cd'+(isToday?' today':'')+'" aria-hidden="true">'+n+'</span>'; continue; }
     const open=d>=today&&d<=bk.end&&!!bk.slotsByDate[key];
-    const cls='cd'+(open?' ok':'')+(key===bk.date?' sel':'');
+    const cls='cd'+(open?' ok':'')+(key===bk.date?' sel':'')+(isToday?' today':'');
     const label=d.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
     html+=open?'<button type="button" class="'+cls+'" data-day="'+key+'" aria-label="'+esc(label)+'"'+(key===bk.date?' aria-pressed="true"':'')+'>'+n+'</button>'
               :'<span class="'+cls+'" aria-hidden="true">'+n+'</span>';
