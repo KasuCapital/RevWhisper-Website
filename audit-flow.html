@@ -404,6 +404,7 @@ body.kb .scr .pill{display:none}
 .cd::before{content:"";position:absolute;left:50%;top:50%;width:min(var(--c),100%);aspect-ratio:1;border-radius:50%;border:1.5px solid transparent;z-index:-1;
   transform:translate(-50%,-50%);transition:border-color .2s var(--silk),transform .25s var(--silk)}
 .cd.x{visibility:hidden}
+.cd.no{color:#b3aeab;text-decoration:line-through;text-decoration-thickness:1.5px;text-decoration-color:currentColor}
 .cd.today::after{content:"";position:absolute;left:50%;bottom:6px;width:4px;height:4px;margin-left:-2px;border-radius:50%;background:var(--accent)}
 .cd.sel.today::after{background:#fff}
 .cd.ok{color:var(--black);font-weight:600;cursor:pointer}
@@ -1291,7 +1292,7 @@ function renderCalendar(dir){
     const isToday=d.getTime()===today.getTime();
     if(!bk.loaded){ html+='<span class="cd'+(isToday?' today':'')+'" aria-hidden="true">'+n+'</span>'; continue; }
     const open=d>=today&&d<=bk.end&&!!bk.slotsByDate[key];
-    const cls='cd'+(open?' ok':'')+(key===bk.date?' sel':'')+(isToday?' today':'');
+    const cls='cd'+(open?' ok':(d>=today?' no':''))+(key===bk.date?' sel':'')+(isToday?' today':'');
     const label=d.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
     html+=open?'<button type="button" class="'+cls+'" data-day="'+key+'" aria-label="'+esc(label)+'"'+(key===bk.date?' aria-pressed="true"':'')+'>'+n+'</button>'
               :'<span class="'+cls+'" aria-hidden="true">'+n+'</span>';
