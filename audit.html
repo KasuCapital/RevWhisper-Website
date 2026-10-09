@@ -30,6 +30,45 @@
 })();
 function rwAttribution(){try{return JSON.parse(localStorage.getItem('rw_attribution')||sessionStorage.getItem('rw_attribution'))||{};}catch(e){return {};}}
 </script>
+<!-- Mobile A/B test (PostHog experiment, flag "audit-flow-mobile"): phones are split 50/50 between
+     this page (control) and the app-style /audit-flow (test), assigned per device. On phones the page
+     stays hidden (max 1.5s) while the flag loads, so test visitors never see this page flash before the
+     redirect. Desktop, tablets, visitors without analytics consent, ?rw_internal=1 browsers and anyone
+     the flag doesn't reach in time see this page and are left out of the test.
+     QA: ?rw_ab=test opens /audit-flow, ?rw_ab=control stays here; neither records an exposure. -->
+<style>html.rw-ab-wait body{visibility:hidden}</style>
+<script>
+(function(){
+  var FLAG='audit-flow-mobile', WAIT=1500;
+  var q=(location.search.match(/[?&]rw_ab=([a-z]+)/)||[])[1];
+  function toTest(){ location.replace('/audit-flow'+location.search+location.hash); }
+  if(q==='test'){ toTest(); return; }
+  if(q==='control'||q==='off') return;
+  var phone=(navigator.userAgentData&&navigator.userAgentData.mobile===true)||
+    /iPhone|iPod|Android.+Mobile|Windows Phone|IEMobile|BlackBerry|Opera Mini/i.test(navigator.userAgent||'');
+  if(!phone) return;
+  var de=document.documentElement, settled=false;
+  de.classList.add('rw-ab-wait');
+  // start fetching PostHog right away (it's otherwise requested only after the page's scripts run)
+  if(/(^|\.)revwhisper\.com$/.test(location.hostname)){
+    var l=document.createElement('link'); l.rel='preload'; l.as='script'; l.href='/ingest/static/array.js'; l.crossOrigin='anonymous';
+    document.head.appendChild(l);
+  }
+  function show(){ if(settled) return; settled=true; de.classList.remove('rw-ab-wait'); }
+  var timer=setTimeout(show,WAIT); // slow or blocked: show the original and stay out of the test
+  document.addEventListener('DOMContentLoaded',function(){
+    var ph=window.posthog;
+    if(!ph||typeof ph.onFeatureFlags!=='function'){ clearTimeout(timer); show(); return; } // no analytics consent
+    ph.onFeatureFlags(function(){
+      if(settled) return; // already showing the original after the timeout: don't enrol
+      clearTimeout(timer);
+      var v=ph.getFeatureFlag(FLAG); // records the exposure for the experiment
+      if(v==='test'){ settled=true; toTest(); return; }
+      show();
+    });
+  });
+})();
+</script>
 <script src="/assets/rw-consent.js?v=2"></script>
 <script defer src="/assets/rw-posthog.js?v=3"></script>
 <!-- GA4. Consent defaults come from /assets/rw-consent.js -->
