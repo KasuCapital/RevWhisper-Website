@@ -176,8 +176,19 @@ img{display:block;max-width:100%}
 .err{display:none;font-size:12.5px;color:var(--red);margin:5px 0 0 4px}
 .inp.error ~ .err,.fld.bad .err{display:block}
 .with-ic{position:relative}
-.with-ic svg{position:absolute;left:15px;top:50%;width:17px;height:17px;transform:translateY(-50%);color:var(--g400);pointer-events:none}
+.with-ic>svg{position:absolute;left:15px;top:50%;width:17px;height:17px;transform:translateY(-50%);color:var(--g400);pointer-events:none}
 .with-ic .inp{padding-left:42px}
+/* Paste: one tap reads the clipboard (iOS shows its own "Paste" bubble). Lives inside the
+   field while it's empty; turns accent once they're back from Airbnb with a link copied. */
+.with-ic.has-pst .inp{padding-right:96px}
+.pst{position:absolute;right:8px;top:50%;transform:translateY(-50%);display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 13px;border:0;border-radius:11px;background:var(--g100);color:var(--black);font:inherit;font-size:13.5px;font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background-color .3s var(--silk),color .3s var(--silk),opacity .25s var(--silk),transform .25s var(--silk)}
+.pst svg{width:15px;height:15px;flex:0 0 auto}
+.pst:active{transform:translateY(-50%) scale(.96)}
+.pst:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.pst[hidden]{display:inline-flex;opacity:0;pointer-events:none;transform:translateY(-50%) scale(.92)}
+.pst.ready{background:var(--accent);color:#fff;animation:pst-nudge .9s var(--silk) .15s 1}
+@keyframes pst-nudge{0%{box-shadow:0 0 0 0 rgba(74,103,65,.35)}100%{box-shadow:0 0 0 10px rgba(74,103,65,0)}}
+@media (prefers-reduced-motion:reduce){.pst{transition:none}.pst.ready{animation:none}}
 .phone{display:flex;gap:8px}
 .phone select{flex:0 0 96px;height:54px;border-radius:16px;border:1px solid var(--line);background:#fff;padding:0 10px;font-size:16px;box-shadow:var(--sh-chip);-webkit-appearance:none;appearance:none;text-align:center}
 .hint{font-size:12px;color:var(--g500);margin:6px 0 0 4px}
@@ -520,12 +531,13 @@ body.kb .scr .pill{display:none}
           <div class="with-ic">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a4 4 0 005.66 0l4-4a4 4 0 10-5.66-5.66l-1.1 1.1M14 10a4 4 0 00-5.66 0l-4 4a4 4 0 105.66 5.66l1.1-1.1"/></svg>
             <input type="url" class="inp" id="airbnb-url" placeholder="Paste your Airbnb link" aria-label="Your Airbnb listing URL or host profile" autocomplete="off" inputmode="url" autocapitalize="off" spellcheck="false" enterkeyhint="next">
+            <button type="button" class="pst" id="paste-url" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/></svg>Paste</button>
           </div>
-          <div class="err">Paste an Airbnb listing or host profile link</div>
+          <div class="err" id="url-err">Paste an Airbnb listing or host profile link</div>
         </div>
         <a class="oab" href="https://www.airbnb.com" target="_blank" rel="noopener" id="open-airbnb-btn">
           <span class="oab-tile"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.001 18.275c-1.353-1.697-2.148-3.184-2.413-4.457-.263-1.027-.16-1.848.291-2.465.477-.71 1.188-1.056 2.121-1.056s1.643.345 2.12 1.063c.446.61.558 1.432.286 2.465-.291 1.298-1.085 2.785-2.412 4.458zm9.601 1.14c-.185 1.246-1.034 2.28-2.2 2.783-2.253.98-4.483-.583-6.392-2.704 3.157-3.951 3.74-7.028 2.385-9.018-.795-1.14-1.933-1.695-3.394-1.695-2.944 0-4.563 2.49-3.927 5.382.37 1.565 1.352 3.343 2.917 5.332-.98 1.085-1.91 1.856-2.732 2.333-.636.344-1.245.558-1.828.609-2.679.399-4.778-2.2-3.825-4.88.132-.345.395-.98.845-1.961l.025-.053c1.464-3.178 3.242-6.79 5.285-10.795l.053-.132.58-1.116c.45-.822.635-1.19 1.351-1.643.346-.21.77-.315 1.246-.315.954 0 1.698.558 2.016 1.007.158.239.345.557.582.953l.558 1.089.08.159c2.041 4.004 3.821 7.608 5.279 10.794l.026.025.533 1.22.318.764c.243.613.294 1.222.213 1.858zm1.22-2.39c-.186-.583-.505-1.271-.9-2.094v-.03c-1.889-4.006-3.642-7.608-5.307-10.844l-.111-.163C15.317 1.461 14.468 0 12.001 0c-2.44 0-3.476 1.695-4.535 3.898l-.081.16c-1.669 3.236-3.421 6.843-5.303 10.847v.053l-.559 1.22c-.21.504-.317.768-.345.847C-.172 20.74 2.611 24 5.98 24c.027 0 .132 0 .265-.027h.372c1.75-.213 3.554-1.325 5.384-3.317 1.829 1.989 3.635 3.104 5.382 3.317h.372c.133.027.239.027.265.027 3.37.003 6.152-3.261 4.802-6.975z"/></svg></span>
-          <span><b>Open Airbnb</b><small>Grab your link and come back.</small></span>
+          <span><b>Open Airbnb</b><small>Copy your link, then tap Paste.</small></span>
           <svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6m4-3h6v6m0-6L10 14"/></svg>
         </a>
       </div>
@@ -745,8 +757,9 @@ function validateStep(step){
   let valid=true;
   if(step===4){
     const url=document.getElementById('airbnb-url');
-    const v=url.value.trim().toLowerCase();
-    const okUrl=!!v&&(v.includes('airbnb.')||v.includes('abnb.me'));
+    const link=rwExtractAirbnb(url.value);
+    if(link) url.value=link;
+    const okUrl=!!link;
     mark(url,okUrl); if(!okUrl) valid=false;
   }
   if(step===5){
@@ -831,6 +844,64 @@ document.addEventListener('keydown',function(e){
   }
 });
 document.querySelectorAll('.inp').forEach(function(i){ i.addEventListener('input',function(){ i.classList.remove('error'); const f=i.closest('.fld'); if(f) f.classList.remove('bad'); }); });
+
+/* Airbnb link: pull the URL out of whatever they paste. The app's Share → Copy gives
+   "Check out this place on Airbnb… https://abnb.me/xyz", so keep just the link. */
+function rwExtractAirbnb(t){
+  const m=String(t||'').match(/(?:https?:\/\/)?(?:[\w-]+\.)*(?:airbnb\.[a-z]{2,}(?:\.[a-z]{2})?|abnb\.me)\/[^\s"'<>]*/i);
+  if(!m) return '';
+  const u=m[0].replace(/[).,!?]+$/,'');
+  return /^https?:\/\//i.test(u)?u:'https://'+u;
+}
+(function(){
+  const url=document.getElementById('airbnb-url'), btn=document.getElementById('paste-url'),
+        wrap=url.parentNode, err=document.getElementById('url-err'), errText=err.textContent;
+  const canRead=!!(navigator.clipboard&&navigator.clipboard.readText);
+  let away=false;
+  function sync(){
+    const show=canRead&&!url.value.trim();
+    btn.hidden=!show;
+    wrap.classList.toggle('has-pst',show);
+    if(!show) btn.classList.remove('ready');
+  }
+  function fill(link,source){
+    url.value=link; err.textContent=errText; mark(url,true); sync();
+    rwTrack('url_paste',{source:source,page:PAGE});
+  }
+  // Native paste (long-press → Paste, ⌘V): swap the share blurb for the bare link
+  url.addEventListener('paste',function(e){
+    const t=(e.clipboardData||window.clipboardData)&&(e.clipboardData||window.clipboardData).getData('text');
+    const link=rwExtractAirbnb(t);
+    if(link&&link!==t.trim()){ e.preventDefault(); fill(link,'native'); }
+  });
+  url.addEventListener('input',function(){ err.textContent=errText; sync(); });
+  url.addEventListener('blur',function(){
+    const link=rwExtractAirbnb(url.value);
+    if(link&&link!==url.value.trim()){ url.value=link; sync(); }
+  });
+  btn.addEventListener('click',function(){
+    navigator.clipboard.readText().then(function(t){
+      const link=rwExtractAirbnb(t);
+      if(link){ fill(link,'button'); return; }
+      err.textContent=t&&t.trim()?"That's not an Airbnb link. Try copying it again.":'No link copied yet. Grab it from Airbnb first.';
+      mark(url,false); btn.classList.remove('ready');
+      rwTrack('url_paste_miss',{empty:!(t&&t.trim()),page:PAGE});
+    }).catch(function(){
+      // Denied or unsupported: drop the button, hand them the field for a normal paste
+      btn.hidden=true; wrap.classList.remove('has-pst'); url.focus();
+    });
+  });
+  // Back from Airbnb with the field still empty: Paste lights up as the obvious next tap
+  document.getElementById('open-airbnb-btn').addEventListener('click',function(){ away=true; rwTrack('open_airbnb',{page:PAGE}); });
+  function back(){
+    if(!away||document.visibilityState!=='visible'||current!==4||url.value.trim()) return;
+    away=false;
+    if(!btn.hidden) btn.classList.add('ready');
+  }
+  document.addEventListener('visibilitychange',back);
+  window.addEventListener('focus',back);
+  sync();
+})();
 
 /* Phone: same live mask + validation as /audit */
 function rwPhoneDigits(v){ return (String(v||'').match(/\d/g)||[]).join(''); }
