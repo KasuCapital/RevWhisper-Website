@@ -388,31 +388,38 @@ body.kb .scr .pill{display:none}
 .pv-tag{flex:0 0 auto;font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--g500);border:1px solid var(--line);border-radius:999px;padding:3px 8px;background:#fff}
 .app.booking .segs.form{display:none}
 .app.booking .segs.book{display:flex}
-.calc{margin-top:22px;background:#fff;border-radius:22px;padding:12px 12px 10px;box-shadow:var(--sh-card),0 0 0 1px rgba(50,48,47,.05)}
-.calc-h{display:flex;align-items:center;justify-content:space-between;padding:2px 2px 10px 6px}
-.calc-m{font-family:var(--heading);font-size:19px;letter-spacing:-.015em}
-.calc-nav{display:flex;gap:6px}
-.nav-b{width:34px;height:34px;border-radius:50%;border:0;background:#fff;box-shadow:0 1px 3px rgba(50,48,47,.08),0 0 0 1px var(--line);display:grid;place-items:center;cursor:pointer;transition:opacity .2s,transform .2s var(--silk)}
-.nav-b svg{width:15px;height:15px}
-.nav-b:active{transform:scale(.92)}
-.nav-b:disabled{opacity:.28;cursor:default;transform:none}
-.calc-w,.calc-g{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
-.calc-w b{font-size:10.5px;font-weight:600;color:var(--g400);text-align:center;letter-spacing:.04em;padding-bottom:6px}
-.cd{position:relative;height:40px;padding:0;border:0;border-radius:10px;background:transparent;font-size:14.5px;font-weight:500;color:var(--g300);display:grid;place-items:center;font-variant-numeric:tabular-nums}
+.calc{margin-top:26px}
+.calc-h{display:grid;grid-template-columns:36px 1fr 36px;align-items:center;margin-bottom:12px}
+.calc-m{text-align:center;font-size:16px;font-weight:600;letter-spacing:-.01em}
+.nav-b{width:36px;height:36px;padding:0;border-radius:50%;border:0;background:transparent;color:var(--black);display:grid;place-items:center;cursor:pointer;transition:background-color .2s var(--silk),color .2s}
+.nav-b svg{width:16px;height:16px}
+.nav-b:disabled{color:var(--g200);cursor:default}
+@media(hover:hover){.nav-b:not(:disabled):hover{background:var(--g100)}}
+.nav-b:not(:disabled):active{background:var(--g100)}
+.calc-w,.calc-g{display:grid;grid-template-columns:repeat(7,1fr)}
+.calc-w b{font-size:12px;font-weight:500;color:var(--g500);text-align:center;padding-bottom:8px}
+.calc-g{row-gap:2px}
+.cd{--c:44px;position:relative;isolation:isolate;height:46px;padding:0;border:0;background:transparent;font:inherit;font-size:15px;font-weight:500;color:#c9c5c2;
+  display:grid;place-items:center;font-variant-numeric:tabular-nums}
+.cd::before{content:"";position:absolute;left:50%;top:50%;width:min(var(--c),100%);aspect-ratio:1;border-radius:50%;border:1.5px solid transparent;z-index:-1;
+  transform:translate(-50%,-50%);transition:border-color .2s var(--silk),transform .25s var(--silk)}
 .cd.x{visibility:hidden}
-.cd.ok{background:#e9f0e5;color:var(--black);font-weight:600;cursor:pointer;transition:background-color .2s var(--silk),color .2s var(--silk),transform .2s var(--silk)}
-.cd.ok:active{transform:scale(.92)}
-@media(hover:hover){.cd.ok:hover{background:#dbe7d4}}
-.cd.sel,.cd.sel:hover{background:var(--black);color:#fff}
-.cd.today::after{content:"";position:absolute;bottom:5px;left:50%;width:4px;height:4px;margin-left:-2px;border-radius:50%;background:currentColor;opacity:.5}
-.cd.sk{background:var(--g100);animation:sk 1.1s ease-in-out infinite}
-.cd:focus-visible,.nav-b:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-@keyframes sk{0%,100%{opacity:.5}50%{opacity:1}}
+.cd.ok{color:var(--black);font-weight:600;cursor:pointer}
+@media(hover:hover){.cd.ok:hover::before{border-color:var(--black)}}
+.cd.ok:active::before{transform:translate(-50%,-50%) scale(.9)}
+.cd.sel{color:#fff}
+.cd.sel::before,.cd.sel:hover::before{background:var(--black);border-color:var(--black);animation:pop .32s var(--silk)}
+@keyframes pop{from{transform:translate(-50%,-50%) scale(.6)}to{transform:translate(-50%,-50%) scale(1)}}
+.cd:focus-visible{outline:none}
+.cd:focus-visible::before{border-color:var(--accent)}
+.nav-b:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.calc-g.loading{animation:sk 1.1s ease-in-out infinite}
+@keyframes sk{0%,100%{opacity:.45}50%{opacity:1}}
 .calc-g.sl{animation:slideL .34s var(--silk) both}
 .calc-g.sr{animation:slideR .34s var(--silk) both}
 @keyframes slideL{from{opacity:0;transform:translate3d(18px,0,0)}to{opacity:1;transform:none}}
 @keyframes slideR{from{opacity:0;transform:translate3d(-18px,0,0)}to{opacity:1;transform:none}}
-.calc-tz{font-size:11.5px;color:var(--g500);text-align:center;padding-top:10px}
+.calc-tz{font-size:12px;color:var(--g500);text-align:center;padding-top:14px}
 #slot-list .chip span{font-variant-numeric:tabular-nums}
 .tz-note{font-size:12px;color:var(--g500);text-align:center;margin-top:16px}
 .bk-msg{margin-top:16px;padding:12px 14px;border-radius:14px;background:#fbf1f1;color:#8b3a3a;font-size:13px;line-height:1.45;text-align:left}
@@ -460,8 +467,8 @@ a.chip span{white-space:nowrap}
 .scr.in .calc,.scr.in .tz-note,.scr.in .inv.solo,.scr.in .addcal,.scr.in > .legal{animation:rise .55s var(--silk) .13s both}
 .scr.in .addcal{animation-delay:.18s}
 .scr.in > .legal{animation-delay:.22s}
-@media(max-height:700px){ .cd{height:36px} .calc{margin-top:18px} }
-@media(max-height:620px){ .cd{height:32px} .calc-tz{display:none} .calc-h{padding-bottom:6px} }
+@media(max-height:700px){ .cd{height:40px;--c:38px} .calc{margin-top:20px} }
+@media(max-height:620px){ .cd{height:36px;--c:34px} .calc-tz{display:none} .calc-h{margin-bottom:6px} }
 @media(prefers-reduced-motion:reduce){
   .seal svg{stroke-dashoffset:0;animation:none!important}
   .seal::after,.calc-g{animation:none!important}
@@ -674,11 +681,9 @@ a.chip span{white-space:nowrap}
       <div class="bk-msg" id="cal-msg" role="alert" hidden></div>
       <div class="calc">
         <div class="calc-h">
-          <span class="calc-m" id="cal-month">&nbsp;</span>
-          <span class="calc-nav">
-            <button class="nav-b" type="button" id="cal-prev" aria-label="Previous month" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
-            <button class="nav-b" type="button" id="cal-next" aria-label="Next month" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
-          </span>
+          <button class="nav-b" type="button" id="cal-prev" aria-label="Previous month" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+          <span class="calc-m" id="cal-month" aria-live="polite">&nbsp;</span>
+          <button class="nav-b" type="button" id="cal-next" aria-label="Next month" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
         </div>
         <div class="calc-w" aria-hidden="true"><b>S</b><b>M</b><b>T</b><b>W</b><b>T</b><b>F</b><b>S</b></div>
         <div class="calc-g" id="cal-grid" aria-label="Open days"></div>
@@ -1166,7 +1171,7 @@ function enterBooking(lead,preview){
   }
   const first=String(lead.name||'').trim().split(' ')[0];
   document.getElementById('bk-pill').textContent=first?'Request received, '+first:'Request received';
-  document.getElementById('cal-tz').textContent='Times shown in your timezone ('+tzShort()+')';
+  document.getElementById('cal-tz').textContent='Times shown in '+tzShort();
   renderCalendar();
   loadSlots();
 }
@@ -1281,14 +1286,15 @@ function renderCalendar(dir){
     const n=i-lead+1;
     if(n<1||n>days){ html+='<span class="cd x"></span>'; continue; }
     const d=new Date(m.getFullYear(),m.getMonth(),n), key=ymd(d);
-    if(!bk.loaded){ html+='<span class="cd sk" style="animation-delay:'+(i%7)*60+'ms"></span>'; continue; }
+    if(!bk.loaded){ html+='<span class="cd" aria-hidden="true">'+n+'</span>'; continue; }
     const open=d>=today&&d<=bk.end&&!!bk.slotsByDate[key];
-    const cls='cd'+(open?' ok':'')+(key===bk.date?' sel':'')+(d.getTime()===today.getTime()?' today':'');
+    const cls='cd'+(open?' ok':'')+(key===bk.date?' sel':'');
     const label=d.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
     html+=open?'<button type="button" class="'+cls+'" data-day="'+key+'" aria-label="'+esc(label)+'"'+(key===bk.date?' aria-pressed="true"':'')+'>'+n+'</button>'
               :'<span class="'+cls+'" aria-hidden="true">'+n+'</span>';
   }
   grid.innerHTML=html;
+  grid.classList.toggle('loading',!bk.loaded);
   if(dir){ grid.classList.remove('sl','sr'); void grid.offsetWidth; grid.classList.add(dir>0?'sl':'sr'); }
 }
 ['cal-prev','cal-next'].forEach(function(id,i){
