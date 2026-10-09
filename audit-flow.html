@@ -458,19 +458,14 @@ body.kb .scr .pill{display:none}
 .vsl-facade:active .vsl-play{transform:scale(.96)}
 .vsl-facade:focus-visible{outline:none}
 .vsl-facade:focus-visible .vsl-play{box-shadow:0 0 0 3px var(--accent)}
-.vsl-note{font-size:13px;line-height:1.45;color:var(--g600);text-align:center;margin-top:10px}
-.vsl-note-in{position:relative;display:inline-block;max-width:272px;text-wrap:balance}
-/* hand-drawn arrow from the note down toward the video; draws itself in once the video appears */
-.vsl-arrow{position:absolute;left:100%;top:-13px;margin-left:4px;width:28px;height:42px;color:var(--accent);overflow:visible;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.vsl-arrow path{stroke-dasharray:1;stroke-dashoffset:1}
+.vsl-note{font-size:13px;line-height:1.45;color:var(--g600);text-align:center;margin-top:10px;text-wrap:balance}
+
 /* booked: the confirmation lands centred, holds a beat, then glides up as the video rises in.
    `translate` (not transform) so it stacks with each element's own entrance animation. */
 .lift{transition:translate .7s var(--silk)}
 .scr.held .lift{translate:0 var(--lift,0px);transition:none}
 .scr:not(.show-vsl) .vsl{opacity:0;visibility:hidden}
 .scr.show-vsl .vsl{animation:rise .6s var(--silk) .12s both}
-.scr.show-vsl .vsl-arrow path{animation:draw .5s var(--silk) .55s forwards}
-.scr.show-vsl .vsl-arrow path + path{animation-duration:.2s;animation-delay:1s}
 .inv.solo + .legal{margin-top:14px}
 /* booked seal: the check draws itself in */
 .seal{position:absolute;left:50%;top:50%;width:96px;height:96px;margin:-48px 0 0 -48px;border-radius:50%;background:var(--accent);display:grid;place-items:center;
@@ -500,7 +495,7 @@ body.kb .scr .pill{display:none}
 @media(max-height:700px){ .cd{height:40px;--c:38px} .cd.today::after{bottom:5px} .calc{margin-top:18px;padding:12px 8px 10px} }
 @media(max-height:620px){ .cd{height:36px;--c:34px} .cd.today::after{bottom:3px} .calc-tz{display:none} .calc-h{margin-bottom:6px} }
 @media(prefers-reduced-motion:reduce){
-  .seal path,.vsl-arrow path{stroke-dashoffset:0;animation:none!important}
+  .seal path{stroke-dashoffset:0;animation:none!important}
   .seal::after,.calc-g{animation:none!important}
 }
 
@@ -779,7 +774,7 @@ body.kb .scr .pill{display:none}
             <span class="vsl-play"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg></i>Watch the intro<small id="vsl-dur"></small></span>
           </button>
         </div>
-        <p class="vsl-note"><span class="vsl-note-in">Please watch this before our call to get an idea of what we'll be discussing.<svg class="vsl-arrow" viewBox="0 0 28 42" aria-hidden="true"><path pathLength="1" d="M1 33C10 36 20 32 21 22C21.5 15 19.6 9 17.5 3"/><path pathLength="1" d="M12.2 7.4L17.3 2.2L22.2 7"/></svg></span></p>
+        <p class="vsl-note">Please watch this before our call to get an idea of what we'll be discussing.</p>
       </div>
     </section>
 
