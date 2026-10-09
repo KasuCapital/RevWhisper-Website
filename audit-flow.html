@@ -139,9 +139,9 @@ img{display:block;max-width:100%}
 .scr{position:absolute;top:0;right:0;bottom:0;left:0;display:none;flex-direction:column;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:8px 20px calc(env(safe-area-inset-bottom,0px) + 20px)}
 .scr::before{content:"";flex:1 1 0;min-height:var(--top-min,32px)}
 .scr::after{content:"";flex:1.35 1 0;min-height:var(--bot-min,28px)}
-.scr.cur{display:flex}
+.scr.cur{display:flex;contain:layout style}
 .scr::-webkit-scrollbar{display:none}
-.scr.out{opacity:0;transform:translate3d(0,-10px,0);transition:opacity .18s var(--silk-out),transform .2s var(--silk-out)}
+.scr.out{opacity:0;transform:translate3d(0,-10px,0);transition:opacity .14s var(--silk-out),transform .16s var(--silk-out)}
 .stage.rev .scr.out{transform:translate3d(0,10px,0)}
 
 /* the illustration gets exactly the height of its visible artwork (JS sets it per screen), so every
@@ -239,18 +239,18 @@ body.kb .scr .pill{display:none}
 @keyframes rise{from{opacity:0;transform:translate3d(0,14px,0)}to{opacity:1;transform:none}}
 @keyframes riseDown{from{opacity:0;transform:translate3d(0,-14px,0)}to{opacity:1;transform:none}}
 @keyframes artIn{from{opacity:0;transform:translate3d(0,10px,0) scale(.94)}to{opacity:1;transform:none}}
-.scr.in .art{animation:artIn .7s var(--silk) both}
-.scr.in .pill{animation:rise .5s var(--silk) .04s both}
-.scr.in .h{animation:rise .55s var(--silk) .07s both}
-.scr.in .sub{animation:rise .55s var(--silk) .1s both}
-.scr.in .choices > *,.scr.in .fields > *{animation:rise .55s var(--silk) both}
-.scr.in .choices > :nth-child(1),.scr.in .fields > :nth-child(1){animation-delay:.13s}
-.scr.in .choices > :nth-child(2),.scr.in .fields > :nth-child(2){animation-delay:.165s}
-.scr.in .choices > :nth-child(3),.scr.in .fields > :nth-child(3){animation-delay:.2s}
-.scr.in .choices > :nth-child(4),.scr.in .fields > :nth-child(4){animation-delay:.235s}
-.scr.in .choices > :nth-child(5){animation-delay:.27s}
-.scr.in .choices > :nth-child(6){animation-delay:.305s}
-.scr.in .foot{animation:rise .55s var(--silk) .26s both}
+.scr.in .art{animation:artIn .6s var(--silk) both}
+.scr.in .pill{animation:rise .45s var(--silk) .03s both}
+.scr.in .h{animation:rise .48s var(--silk) .05s both}
+.scr.in .sub{animation:rise .48s var(--silk) .08s both}
+.scr.in .choices > *,.scr.in .fields > *{animation:rise .48s var(--silk) both}
+.scr.in .choices > :nth-child(1),.scr.in .fields > :nth-child(1){animation-delay:.1s}
+.scr.in .choices > :nth-child(2),.scr.in .fields > :nth-child(2){animation-delay:.13s}
+.scr.in .choices > :nth-child(3),.scr.in .fields > :nth-child(3){animation-delay:.16s}
+.scr.in .choices > :nth-child(4),.scr.in .fields > :nth-child(4){animation-delay:.19s}
+.scr.in .choices > :nth-child(5){animation-delay:.22s}
+.scr.in .choices > :nth-child(6){animation-delay:.25s}
+.scr.in .foot{animation:rise .48s var(--silk) .2s both}
 .stage.rev .scr.in .pill,.stage.rev .scr.in .h,.stage.rev .scr.in .sub,.stage.rev .scr.in .choices > *,.stage.rev .scr.in .fields > *,.stage.rev .scr.in .foot{animation-name:riseDown}
 
 /* ── illustrations ──────────────────────────────────────────
@@ -449,7 +449,7 @@ body.kb .scr .pill{display:none}
 @media(hover:hover){.vsl-facade:hover .vsl-thumb{transform:scale(1.025)}.vsl-facade:hover .vsl-play{transform:scale(1.03)}}
 /* frosted pill, bottom-left, clear of the speaker's face; play circle sits concentric in it (20 − 6 = 14) */
 .vsl-play{position:absolute;z-index:1;left:12px;bottom:12px;display:inline-flex;align-items:center;gap:9px;height:40px;padding:0 14px 0 6px;border-radius:20px;
-  background:rgba(255,255,255,.9);-webkit-backdrop-filter:blur(14px) saturate(1.5);backdrop-filter:blur(14px) saturate(1.5);
+  background:rgba(255,255,255,.95);
   box-shadow:0 6px 20px -4px rgba(20,19,18,.35);color:var(--black);font-size:13.5px;font-weight:600;letter-spacing:-.005em;white-space:nowrap;
   transform-origin:left bottom;transition:transform .25s var(--silk)}
 .vsl-play i{width:28px;height:28px;border-radius:50%;background:var(--black);display:grid;place-items:center;flex:0 0 auto}
@@ -507,7 +507,8 @@ body.kb .scr .pill{display:none}
   .scr.out{transition-duration:.01s}
 }
 </style>
-<script defer src="/assets/phone-validate.js"></script>
+<script>window.rwPhoneLazy=true;</script>
+<script defer src="/assets/phone-validate.js?v=2"></script>
 </head>
 <body>
 <div class="app intro-on" id="app">
@@ -835,6 +836,9 @@ function sizeArt(){
   const room=inner-content-SP.top-SP.bot-SP.gap;
   const k=Math.min(SP.kmax,room/vb.h,(s.clientWidth-40)/320);
   const tiny=k<.42;
+  const key=[tiny,(vb.h*k).toFixed(1),Math.max(k,0).toFixed(3),(-vb.t*k).toFixed(1)].join('|');
+  if(art._sz===key) return; // unchanged: skip the writes (and the style recalc they'd cause)
+  art._sz=key;
   art.classList.toggle('tiny',tiny);
   s.style.setProperty('--top-min',SP.top+'px'); s.style.setProperty('--bot-min',SP.bot+'px');
   art.style.setProperty('--gap',SP.gap+'px');
@@ -843,7 +847,8 @@ function sizeArt(){
   comp.style.setProperty('--oy',(-vb.t*k).toFixed(1)+'px');
 }
 if(window.ResizeObserver){
-  const ro=new ResizeObserver(function(){ sizeArt(); });
+  let roFrame=0;
+  const ro=new ResizeObserver(function(){ if(!roFrame) roFrame=requestAnimationFrame(function(){ roFrame=0; sizeArt(); }); });
   ro.observe(stage);
   // copy and answer blocks change height when fonts land or a field appears (e.g. the door-count field)
   document.querySelectorAll('.scr > :not(.art)').forEach(function(e){ ro.observe(e); });
@@ -874,8 +879,8 @@ function show(to,dir){
     next.classList.add('cur','in');
     sizeArt();
     if(to===B_DONE) stageBooked();
-    setTimeout(function(){ busy=false; },120);
-  },190);
+    setTimeout(function(){ busy=false; },110);
+  },150);
 }
 
 /* Steps live in history, so the phone's back gesture walks back a question instead of
@@ -886,7 +891,10 @@ function go(to){
     if(to<TOTAL) rwTrack('form_step',{step:to,page:PAGE});
     try{ history.pushState({rwStep:to},'',hashFor(to)); }catch(e){}
   }
-  if(to>=4) loadSlots(); // warm the calendar while they paste their link and type their details
+  if(to>=4){ // warm the calendar and the phone check while they paste their link and type their details
+    loadSlots();
+    if(window.rwPhoneLoad) (window.requestIdleCallback||setTimeout)(function(){ rwPhoneLoad(); },{timeout:1200});
+  }
   show(to,to>current?1:-1);
   return true;
 }
@@ -966,7 +974,7 @@ function next(){
 }
 function scheduleAdvance(){
   const from=current;
-  setTimeout(function(){ if(current===from) next(); },200);
+  setTimeout(function(){ if(current===from) next(); },150);
 }
 
 function mark(inp,ok){
@@ -1507,7 +1515,7 @@ function launchConfetti(){
   if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const wrap=document.getElementById('confetti'), colors=['#4A6741','#dce6d8','#b3c5ab','#E0DCDA','#8aab7f','#c5d6bf','#6f8f63'];
   let html='';
-  for(let i=0;i<46;i++){
+  for(let i=0;i<30;i++){
     const s=5+Math.random()*6;
     html+='<i class="confetti" style="left:'+(Math.random()*100).toFixed(1)+'%;width:'+s.toFixed(1)+'px;height:'+s.toFixed(1)+'px;background:'+colors[i%colors.length]+
       ';border-radius:'+(i%2?'50%':'2px')+';--d:'+(1.7+Math.random()*1.3).toFixed(2)+'s;--x:'+(Math.random()*80-40).toFixed(0)+'px;--r:'+(360+Math.random()*540).toFixed(0)+'deg;animation-delay:'+(Math.random()*.35).toFixed(2)+'s"></i>';
@@ -1539,6 +1547,27 @@ function openBookingFromHash(h){
   try{ history.replaceState({rwStep:t},'',location.pathname+location.search+hashFor(t)); }catch(e){}
 }
 if(['book','time','confirm','booked'].indexOf(ENTRY_HASH)>-1) openBookingFromHash(ENTRY_HASH);
+
+(function warmUp(){
+  const idle=window.requestIdleCallback||function(f){ return setTimeout(f,200); };
+  const todo=screens.map(function(s,i){ return i; });
+  function step(){
+    const i=todo.shift(); if(i==null) return decodeAll();
+    const s=screens[i], comp=s.querySelector('.comp');
+    if(comp&&!comp._vb&&!s.classList.contains('cur')){
+      // laid out for an instant (same task, never painted), measured, hidden again
+      s.style.visibility='hidden'; s.classList.add('cur');
+      artBounds(comp);
+      s.classList.remove('cur'); s.style.visibility='';
+    }
+    idle(step,{timeout:1500});
+  }
+  function decodeAll(){
+    document.querySelectorAll('.scr img[src], .intro img[src]').forEach(function(img){ if(img.decode) img.decode().catch(function(){}); });
+  }
+  if(document.readyState==='complete') idle(step,{timeout:1500});
+  else window.addEventListener('load',function(){ idle(step,{timeout:1500}); });
+})();
 
 /* ?preview=N opens straight on question N (1-6), skipping the intro, for design review; ?preview=0 or none shows the intro */
 (function(){

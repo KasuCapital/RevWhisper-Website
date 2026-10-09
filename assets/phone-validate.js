@@ -38,6 +38,10 @@
     var t=e.target;
     if(t&&(t.tagName==='INPUT'||t.tagName==='SELECT'||t.tagName==='TEXTAREA')) load();
   });
-  if(window.requestIdleCallback) requestIdleCallback(load,{timeout:5000});
-  else setTimeout(load,3000);
+  // Pages that call rwPhoneLoad() themselves at the right moment set window.rwPhoneLazy=true
+  // to skip this backstop (keeps the parse out of their opening animation).
+  if(!window.rwPhoneLazy){
+    if(window.requestIdleCallback) requestIdleCallback(load,{timeout:5000});
+    else setTimeout(load,3000);
+  }
 })();
