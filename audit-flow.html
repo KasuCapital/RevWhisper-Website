@@ -1155,7 +1155,7 @@ function submitForm(){
     try{ rwXTrack('auditLead',xParams); }catch(e){}
   }
   fetch(FORM_WEBHOOK_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({event_type:'get_started',payload:data}),keepalive:true}).catch(function(){});
-  if(!INLINE_BOOKING){ // live default until the in-flow calendar is signed off: the separate booking page
+  if(!INLINE_BOOKING){ // fallback: the separate booking page
     var redirect=function(){ window.location.href='/audit-booking'; };
     if(window.rwXReady&&typeof window.rwXReady.then==='function'){
       Promise.race([window.rwXReady,new Promise(function(r){ setTimeout(r,120); })]).then(function(){ fireXLead(); redirect(); }).catch(redirect);
@@ -1177,7 +1177,7 @@ function submitForm(){
 const B_CAL=TOTAL, B_TIME=TOTAL+1, B_CONF=TOTAL+2, B_DONE=TOTAL+3;
 /* Switch: true = qualified leads book right here after submitting; false = they go to /audit-booking
    as before. #book / #booked previews work either way. */
-const INLINE_BOOKING=false;
+const INLINE_BOOKING=true;
 const CAL_SLOTS_ENDPOINT='/api/cal-slots', CAL_BOOKING_ENDPOINT='/api/cal-booking', CAL_FALLBACK_BASE='https://cal.com/team/revwhisper/discovery';
 const PREVIEW_LEAD={name:'Jordan Avery',email:'jordan@example.com',phone:'+1 (512) 555-0199',listings:'1',source:'preview'};
 const bk={lead:null,preview:false,phase:false,done:false,

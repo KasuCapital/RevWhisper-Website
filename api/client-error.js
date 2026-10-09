@@ -9,7 +9,7 @@
 // per-source throttle in _alert.js). Nothing here is trusted beyond being logged and emailed.
 const { sendBookingAlert } = require('./_alert');
 
-const KNOWN_PAGES = new Set(['audit-booking', 'get-started', 'what-to-expect']);
+const KNOWN_PAGES = new Set(['audit-booking', 'get-started', 'what-to-expect', 'audit-flow']);
 const KNOWN_STAGES = new Set(['availability', 'booking', 'render']);
 const MAX_MESSAGE = 500;
 const MAX_DETAIL = 1500;
@@ -73,7 +73,7 @@ module.exports = async function handler(req, res) {
     subject: `🚨 URGENT: RevWhisper /${page} ${stageLabel} failed in a visitor's browser`,
     headline: `🚨 ${stageLabel[0].toUpperCase()}${stageLabel.slice(1)} failed in the browser`,
     summary: `The booking widget on /${page} showed a visitor an error. This came from the page itself, so the API may not have logged anything.`,
-    hint: `Open <code>/${page}${page === 'audit-booking' ? '?preview=calendar' : ''}</code> in a browser and reproduce. ` +
+    hint: `Open <code>/${page}${page === 'audit-booking' ? '?preview=calendar' : page === 'audit-flow' ? '#book' : ''}</code> in a browser and reproduce. ` +
       'A single report on a flaky mobile connection can be noise; two in a row is an outage.'
   });
 
