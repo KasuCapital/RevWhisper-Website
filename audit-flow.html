@@ -439,13 +439,8 @@ body.kb .scr .pill{display:none}
 .inv-t .inv-x{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;color:var(--g500)}
 .inv-x svg{width:13px;height:13px;color:var(--accent);flex:0 0 auto}
 .inv.solo{margin-top:22px;box-shadow:var(--sh-chip),0 0 0 1px var(--line)}
-.addcal{margin-top:18px}
-.addcal .choices{margin-top:8px}
 .h em.line{display:block}
-.addcal-l{font-size:12px;font-weight:500;color:var(--g500);text-align:center}
-.addcal[hidden]{display:none}
-a.chip{text-decoration:none;color:inherit}
-a.chip span{white-space:nowrap}
+.inv.solo + .legal{margin-top:14px}
 /* booked seal: the check draws itself in */
 .seal{position:absolute;left:50%;top:50%;width:96px;height:96px;margin:-48px 0 0 -48px;border-radius:50%;background:var(--accent);display:grid;place-items:center;
   box-shadow:0 16px 34px -12px rgba(74,103,65,.6),0 0 0 9px rgba(74,103,65,.11)}
@@ -467,8 +462,7 @@ a.chip span{white-space:nowrap}
 .confetti{position:absolute;top:-14px;opacity:0;will-change:transform}
 .confetti.go{animation:fall var(--d) cubic-bezier(.22,.6,.36,1) forwards}
 @keyframes fall{0%{opacity:1;transform:translate3d(0,0,0) rotate(0)}85%{opacity:1}100%{opacity:0;transform:translate3d(var(--x),calc(var(--vvh,100vh) + 40px),0) rotate(var(--r))}}
-.scr.in .calc,.scr.in .tz-note,.scr.in .inv.solo,.scr.in .addcal,.scr.in > .legal{animation:rise .55s var(--silk) .13s both}
-.scr.in .addcal{animation-delay:.18s}
+.scr.in .calc,.scr.in .tz-note,.scr.in .inv.solo,.scr.in > .legal{animation:rise .55s var(--silk) .13s both}
 .scr.in > .legal{animation-delay:.22s}
 @media(max-height:700px){ .cd{height:40px;--c:38px} .cd.today::after{bottom:5px} .calc{margin-top:18px;padding:12px 8px 10px} }
 @media(max-height:620px){ .cd{height:36px;--c:34px} .cd.today::after{bottom:3px} .calc-tz{display:none} .calc-h{margin-bottom:6px} }
@@ -743,13 +737,6 @@ a.chip span{white-space:nowrap}
           <span class="inv-d"><small class="js-mon">Oct</small><b class="js-day">16</b></span>
           <span class="inv-t"><b>Your live audit</b><span class="js-when">Thursday · 2:00 PM</span><span class="inv-x"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 10l5-3v10l-5-3M3 7h12v10H3z"/></svg>30 min · Google Meet</span></span>
         </div>
-      <div class="addcal" id="addcal">
-        <p class="addcal-l">Add it to your calendar</p>
-        <div class="choices grid2">
-          <a class="chip" id="addcal-g" target="_blank" rel="noopener"><span>Google</span></a>
-          <a class="chip" id="addcal-ics"><span>Apple · Outlook</span></a>
-        </div>
-      </div>
       <p class="legal" id="booked-note">&nbsp;</p>
     </section>
 
@@ -1431,19 +1418,6 @@ function renderBooked(data){
   document.getElementById('bk-name').textContent=first?', '+first:'';
   if(start) fillInvites(start.toISOString());
   document.getElementById('booked-note').textContent=(l.email?'Invite sent to '+l.email+'. ':'')+"We'll text your Google Meet link before we meet.";
-  // Add-to-calendar: insurance for invites that land in spam (same links as /audit-booking)
-  const ac=document.getElementById('addcal');
-  ac.hidden=!start;
-  if(!start) return;
-  const end=new Date(start.getTime()+30*60000);
-  const z=function(d){ return d.toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,''); };
-  const meet=(data&&typeof data.meetingUrl==='string'&&/^https:\/\/meet\.google\.com\/[A-Za-z0-9-]+$/.test(data.meetingUrl))?data.meetingUrl:'';
-  const g=document.getElementById('addcal-g'), ics=document.getElementById('addcal-ics');
-  g.href='https://calendar.google.com/calendar/render?action=TEMPLATE&text='+encodeURIComponent('Your RevWhisper live audit')+'&dates='+z(start)+'/'+z(end)+
-    '&details='+encodeURIComponent('Your live Airbnb performance audit with RevWhisper, 30 minutes over Google Meet.'+(meet?'\n\nJoin: '+meet:''))+(meet?'&location='+encodeURIComponent(meet):'');
-  ics.href='/api/booking-ics?start='+encodeURIComponent(start.toISOString())+(meet?'&meet='+encodeURIComponent(meet):'');
-  g.onclick=function(){ bkTrack('add_to_calendar',{kind:'google',page:PAGE}); };
-  ics.onclick=function(){ bkTrack('add_to_calendar',{kind:'ics',page:PAGE}); };
 }
 function launchConfetti(){
   if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches) return;
