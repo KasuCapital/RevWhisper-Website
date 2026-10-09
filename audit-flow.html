@@ -102,7 +102,7 @@ img{display:block;max-width:100%}
 
 .app{position:fixed;left:0;right:0;top:0;height:var(--vvh,100dvh);display:flex;flex-direction:column;overflow:hidden;background:#fff;isolation:isolate}
 /* soft sage wash behind the illustration */
-.app::before{content:"";position:absolute;inset:0 0 auto;height:58%;z-index:-1;pointer-events:none;
+.app::before{content:"";position:absolute;top:0;left:0;right:0;height:58%;z-index:-1;pointer-events:none;
   background:linear-gradient(180deg,#f1f5ee 0%,rgba(241,245,238,.6) 55%,rgba(255,255,255,0) 100%)}
 @media(min-width:720px){
   body{background:#ebe7e3}
@@ -124,18 +124,22 @@ img{display:block;max-width:100%}
 /* screens */
 .stage{position:relative;flex:1 1 auto;min-height:0}
 /* one group, sitting at the optical centre: the leftover height splits 1 : 1.35 above/below */
-.scr{position:absolute;inset:0;display:none;flex-direction:column;padding:8px 20px calc(env(safe-area-inset-bottom,0px) + 20px)}
-.scr::before{content:"";flex:1 1 0}
-.scr::after{content:"";flex:1.35 1 0}
+.scr{position:absolute;top:0;right:0;bottom:0;left:0;display:none;flex-direction:column;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:8px 20px calc(env(safe-area-inset-bottom,0px) + 20px)}
+.scr::before{content:"";flex:1 1 0;min-height:var(--top-min,32px)}
+.scr::after{content:"";flex:1.35 1 0;min-height:var(--bot-min,28px)}
 .scr.cur{display:flex}
+.scr::-webkit-scrollbar{display:none}
 .scr.out{opacity:0;transform:translate3d(0,-10px,0);transition:opacity .18s var(--silk-out),transform .2s var(--silk-out)}
 .stage.rev .scr.out{transform:translate3d(0,10px,0)}
 
-/* the illustration takes a share of the screen (not all the leftover room) and gives way first when space runs short */
-.art{flex:0 1 clamp(170px,36vh,320px);min-height:0;position:relative;display:flex;align-items:flex-end;justify-content:center;margin-bottom:22px}
-/* every illustration is a fixed 320x240 composition, scaled to the room it gets (JS sets --k) */
-.comp{position:relative;width:320px;height:240px;flex:0 0 auto;transform:scale(var(--k,1));transform-origin:50% 100%;transition:opacity .2s}
-.art.tiny .comp{opacity:0}
+/* the illustration gets exactly the height of its visible artwork (JS sets it per screen), so every
+   screen has the same margins: min space above, one fixed gap to the heading, min space below */
+.art{flex:0 0 auto;height:var(--ah,180px);position:relative;display:flex;align-items:flex-start;justify-content:center;margin-bottom:var(--gap,34px)}
+/* every illustration is a 320x240 composition, cropped to its visible bounds and scaled (JS sets --k, --oy) */
+.comp{position:relative;width:320px;height:240px;flex:0 0 auto;transform:translate3d(0,var(--oy,0px),0) scale(var(--k,1));transform-origin:50% 0;transition:opacity .2s}
+.art.tiny{height:0;margin-bottom:0}
+.art.tiny .comp{opacity:0;visibility:hidden}
+.art.tiny .comp *{animation:none!important}
 
 .copy{text-align:center;flex:0 0 auto;padding-top:6px}
 .pill{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 12px;border-radius:999px;background:#fff;border:1px solid var(--line);font-size:12.5px;font-weight:500;color:var(--g600);box-shadow:var(--sh-chip)}
@@ -143,7 +147,7 @@ img{display:block;max-width:100%}
 .pill + .h{margin-top:14px}
 .h{font-family:var(--heading);font-weight:400;font-size:clamp(26px,7.4vw,30px);line-height:1.15;letter-spacing:-.022em;margin:0 auto 8px;max-width:340px;text-wrap:balance}
 .h em{font-style:italic;color:var(--accent)}
-.sub{font-size:14.5px;line-height:1.45;color:var(--g500);max-width:310px;margin:0 auto;text-wrap:balance}
+.sub{font-size:14.5px;line-height:1.45;color:var(--g500);max-width:none;margin:0 auto;text-wrap:pretty}
 
 .choices{flex:0 0 auto;margin-top:24px;display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
 .choices.grid3{display:grid;grid-template-columns:repeat(3,1fr)}
@@ -170,12 +174,12 @@ img{display:block;max-width:100%}
 .inp:focus{border-color:var(--black);box-shadow:0 0 0 3px rgba(50,48,47,.08)}
 .inp.error{border-color:var(--red);box-shadow:0 0 0 3px rgba(184,82,82,.1)}
 .err{display:none;font-size:12.5px;color:var(--red);margin:5px 0 0 4px}
-.inp.error ~ .err,.phone:has(.inp.error) ~ .err{display:block}
+.inp.error ~ .err,.fld.bad .err{display:block}
 .with-ic{position:relative}
 .with-ic svg{position:absolute;left:15px;top:50%;width:17px;height:17px;transform:translateY(-50%);color:var(--g400);pointer-events:none}
 .with-ic .inp{padding-left:42px}
 .phone{display:flex;gap:8px}
-.phone select{flex:0 0 96px;height:54px;border-radius:16px;border:1px solid var(--line);background:#fff;padding:0 10px;font-size:15px;box-shadow:var(--sh-chip);-webkit-appearance:none;appearance:none;text-align:center}
+.phone select{flex:0 0 96px;height:54px;border-radius:16px;border:1px solid var(--line);background:#fff;padding:0 10px;font-size:16px;box-shadow:var(--sh-chip);-webkit-appearance:none;appearance:none;text-align:center}
 .hint{font-size:12px;color:var(--g500);margin:6px 0 0 4px}
 
 .oab{display:flex;align-items:center;gap:12px;padding:10px 14px 10px 10px;border-radius:16px;background:#fff;border:1px solid var(--line);box-shadow:var(--sh-chip);text-decoration:none;color:var(--black)}
@@ -215,7 +219,6 @@ body.kb .scr .pill{display:none}
   .inp,.phone select{height:48px}
   .fields{gap:8px;margin-top:12px}
   .choices{margin-top:16px;gap:8px}
-  .art{margin-bottom:14px}
   .cta{height:52px}
 }
 @media(max-height:560px){ .scr .copy .sub{display:none} .pill{height:24px;font-size:11.5px} }
@@ -274,8 +277,25 @@ body.kb .scr .pill{display:none}
 .tw{animation:twinkle 3.2s ease-in-out infinite}
 .tw2{animation:twinkle 3.8s ease-in-out -1.5s infinite}
 
-/* q1: listings in orbit around the offer */
-.orbit{position:absolute;left:50%;top:50%;width:244px;height:156px;margin:-74px 0 0 -122px;border:1.5px dashed rgba(74,103,65,.2);border-radius:50%}
+/* q1: a fanned hand of listing cards, the front one being scanned */
+.fan{position:absolute;top:44px;width:116px;padding:6px 6px 9px;background:#fff;border-radius:18px;box-shadow:var(--sh-card);transform-origin:50% 115%}
+.fan .ph{position:relative;height:100px;border-radius:12px;overflow:hidden;background:var(--g100)}
+.fan .ph img{width:100%;height:100%;object-fit:cover}
+.fan .ln{display:flex;justify-content:space-between;align-items:center;margin:7px 2px 0;font-size:10.5px;font-weight:600;letter-spacing:-.01em;white-space:nowrap}
+.fan .ln span{font-weight:500}
+.fan .mt{display:block;margin:1px 2px 0;font-size:9.5px;color:var(--g500);white-space:nowrap}
+.fan.bl{left:30px;z-index:1;animation:fanL 6.4s ease-in-out infinite}
+.fan.br{left:174px;z-index:1;animation:fanR 6.4s ease-in-out -3.2s infinite}
+.fan.fr{left:102px;top:36px;z-index:2;width:116px;animation:bob 5.2s ease-in-out infinite}
+.fan.bl .ph,.fan.br .ph{filter:saturate(.85)}
+@keyframes fanL{0%,100%{transform:rotate(-10deg) translate3d(-2px,12px,0)}50%{transform:rotate(-13deg) translate3d(-6px,10px,0)}}
+@keyframes fanR{0%,100%{transform:rotate(10deg) translate3d(2px,12px,0)}50%{transform:rotate(13deg) translate3d(6px,10px,0)}}
+.fan .fav{position:absolute;left:6px;top:6px;background:#fff;border-radius:999px;padding:2px 7px;font-size:8.5px;font-weight:600;color:#222;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+/* a soft light sweeps across the front photo: the audit "reading" the listing */
+.fan.fr .ph::after{content:"";position:absolute;top:0;bottom:0;left:-60%;width:45%;
+  background:linear-gradient(100deg,rgba(255,255,255,0),rgba(255,255,255,.55) 50%,rgba(255,255,255,0));
+  animation:sweep 3.6s var(--silk) 1s infinite}
+@keyframes sweep{0%{transform:translateX(0)}55%,100%{transform:translateX(380%)}}
 /* q2: two notifications */
 .note{position:absolute;left:36px;width:248px;display:flex;align-items:center;gap:12px;padding:12px 14px 12px 12px;background:#fff;border-radius:18px;box-shadow:var(--sh-card)}
 .thumb{width:42px;height:42px;border-radius:12px;overflow:hidden;flex:0 0 auto;display:grid;place-items:center}
@@ -301,10 +321,12 @@ body.kb .scr .pill{display:none}
    Three rows of Airbnb-style listing cards drift past (left, right, left) and fade into
    white under the logo, the offer, and one Continue. The rows are compositor-only
    translateX loops over a duplicated track, paused once the intro is gone. */
-.intro{position:absolute;inset:0;z-index:20;background:#fff;display:flex;flex-direction:column;overflow:hidden;
-  transition:opacity .22s var(--silk-out),transform .26s var(--silk-out)}
+.intro{position:absolute;top:0;right:0;bottom:0;left:0;z-index:20;background:#fff;display:flex;flex-direction:column;overflow:hidden;
+  transition:opacity .32s ease,transform .4s var(--silk)}
 .intro.out{opacity:0;transform:translate3d(0,-10px,0);pointer-events:none}
 .intro.gone{display:none}
+/* Q1 waits, invisible, under the welcome screen; its entrance cascade starts as the welcome fades */
+.app.intro-on .scr.cur:not(.in) > *{opacity:0}
 .app.intro-on .top{opacity:0;pointer-events:none}
 .top{transition:opacity .35s var(--silk)}
 .rows{--cw:clamp(98px,19vh,160px);position:relative;flex:1 1 auto;min-height:0;display:flex;flex-direction:column;gap:8px;padding-top:calc(env(safe-area-inset-top,0px) + 16px);overflow:hidden}
@@ -348,7 +370,9 @@ body.kb .scr .pill{display:none}
 @media(prefers-reduced-motion:reduce){ .row{animation:none!important} }
 
 @media(prefers-reduced-motion:reduce){
-  .f1,.f2,.f3,.tw,.tw2{animation:none}
+  .f1,.f2,.f3,.tw,.tw2,.fan,.fan.fr .ph::after{animation:none}
+  .fan.bl{transform:rotate(-10deg) translate3d(-2px,12px,0)}
+  .fan.br{transform:rotate(10deg) translate3d(2px,12px,0)}
   .scr.in *{animation-duration:.01s!important;animation-delay:0s!important}
   .scr.out{transition-duration:.01s}
 }
@@ -381,16 +405,12 @@ body.kb .scr .pill{display:none}
     <section class="scr cur" data-step="0">
       <div class="art"><div class="comp">
         <div class="halo"></div>
-        <div class="orbit"></div>
-        <div class="bub f1" style="left:124px;top:0;width:72px;height:72px"><img src="/images/properties/moonlit-peak.webp" alt=""></div>
-        <div class="bub f2" style="left:22px;top:46px;width:56px;height:56px"><img src="/images/properties/waters-edge.webp" alt=""></div>
-        <div class="bub f3" style="left:242px;top:46px;width:56px;height:56px"><img src="/images/properties/sombrero.webp" alt=""></div>
-        <div class="bub f3" style="left:52px;top:166px;width:62px;height:62px"><img src="/images/properties/ash2-estate.webp" alt=""></div>
-        <div class="bub f1" style="left:206px;top:166px;width:62px;height:62px"><img src="/images/properties/clearwater.webp" alt=""></div>
-        <div class="center"><div class="badge"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span>Free listing audit</div></div>
-        <svg class="spark tw" style="left:92px;top:26px" width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M12 0c1 6.5 5.5 11 12 12-6.5 1-11 5.5-12 12-1-6.5-5.5-11-12-12C6.5 11 11 6.5 12 0z"/></svg>
-        <svg class="spark g tw2" style="left:214px;top:24px" width="13" height="13" viewBox="0 0 24 24"><path fill="currentColor" d="M12 0c1 6.5 5.5 11 12 12-6.5 1-11 5.5-12 12-1-6.5-5.5-11-12-12C6.5 11 11 6.5 12 0z"/></svg>
-        <svg class="spark g tw" style="left:152px;top:206px" width="15" height="15" viewBox="0 0 24 24"><path fill="currentColor" d="M12 0c1 6.5 5.5 11 12 12-6.5 1-11 5.5-12 12-1-6.5-5.5-11-12-12C6.5 11 11 6.5 12 0z"/></svg>
+        <div class="fan bl"><div class="ph"><img src="/images/properties/waters-edge.webp" alt="" width="640" height="480" decoding="async"></div><div class="ln">Water's Edge<span>&#9733; 4.91</span></div><span class="mt">Lakefront &middot; 4 beds</span></div>
+        <div class="fan br"><div class="ph"><img src="/images/flow/fan-clearwater.webp" alt="" width="450" height="300" decoding="async"></div><div class="ln">Clearwater<span>&#9733; 4.87</span></div><span class="mt">Beach house &middot; 5 beds</span></div>
+        <div class="fan fr"><div class="ph"><img src="/images/flow/fan-moonlit.webp" alt="" width="449" height="300" decoding="async"><span class="fav">Guest favorite</span></div><div class="ln">Moonlit Peak<span>&#9733; 4.98</span></div><span class="mt">A-frame &middot; 3 beds</span></div>
+        <svg class="spark tw" style="left:30px;top:40px;z-index:3" width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M12 0c1 6.5 5.5 11 12 12-6.5 1-11 5.5-12 12-1-6.5-5.5-11-12-12C6.5 11 11 6.5 12 0z"/></svg>
+        <svg class="spark g tw2" style="left:290px;top:64px" width="13" height="13" viewBox="0 0 24 24"><path fill="currentColor" d="M12 0c1 6.5 5.5 11 12 12-6.5 1-11 5.5-12 12-1-6.5-5.5-11-12-12C6.5 11 11 6.5 12 0z"/></svg>
+        <svg class="spark g tw" style="left:266px;top:206px" width="15" height="15" viewBox="0 0 24 24"><path fill="currentColor" d="M12 0c1 6.5 5.5 11 12 12-6.5 1-11 5.5-12 12-1-6.5-5.5-11-12-12C6.5 11 11 6.5 12 0z"/></svg>
       </div></div>
       <div class="copy">
         <h1 class="h">How many listings do you <em>have?</em></h1>
@@ -411,7 +431,7 @@ body.kb .scr .pill{display:none}
       <div class="art"><div class="comp">
         <div class="halo"></div>
         <div class="note f1" style="top:44px">
-          <span class="thumb"><img src="/images/properties/1820-house.webp" alt=""></span>
+          <span class="thumb"><img src="/images/flow/thumb-1820.webp" alt="" width="243" height="136" decoding="async" fetchpriority="low"></span>
           <span class="nt"><b>Listing views</b><small>This week</small></span>
           <span class="tag up">▲ Up</span>
         </div>
@@ -439,13 +459,12 @@ body.kb .scr .pill{display:none}
     <section class="scr" data-step="2">
       <div class="art"><div class="comp">
         <div class="halo"></div>
-        <div class="card f1" style="left:26px;top:6px;width:268px">
+        <div class="card f1" style="left:26px;top:30px;width:268px">
           <div class="card-h"><b>Your calendar</b><span class="tag up">Nightly rates</span></div>
           <div class="cal"><b>M</b><b>T</b><b>W</b><b>T</b><b>F</b><b>S</b><b>S</b><i>$142</i><i>$142</i><i>$148</i><i class="md">$171</i><i class="hi">$229</i><i class="hi">$241</i><i>$156</i><i>$139</i><i>$139</i><i>$145</i><i class="md">$168</i><i class="hi">$224</i><i class="hi">$238</i><i>$151</i><i>$136</i><i>$141</i><i class="md">$162</i><i class="md">$176</i><i class="hi">$252</i><i class="hi">$264</i><i>$159</i></div>
         </div>
-        <div class="center" style="top:auto;bottom:0;height:auto"><div class="badge sm f2"><span class="ck acc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span>Priced to your rank</div></div>
-        <svg class="spark tw" style="left:8px;top:30px" width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M12 0c1 6.5 5.5 11 12 12-6.5 1-11 5.5-12 12-1-6.5-5.5-11-12-12C6.5 11 11 6.5 12 0z"/></svg>
-        <svg class="spark g tw2" style="left:298px;top:150px" width="13" height="13" viewBox="0 0 24 24"><path fill="currentColor" d="M12 0c1 6.5 5.5 11 12 12-6.5 1-11 5.5-12 12-1-6.5-5.5-11-12-12C6.5 11 11 6.5 12 0z"/></svg>
+        <svg class="spark tw" style="left:8px;top:48px" width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M12 0c1 6.5 5.5 11 12 12-6.5 1-11 5.5-12 12-1-6.5-5.5-11-12-12C6.5 11 11 6.5 12 0z"/></svg>
+        <svg class="spark g tw2" style="left:298px;top:186px" width="13" height="13" viewBox="0 0 24 24"><path fill="currentColor" d="M12 0c1 6.5 5.5 11 12 12-6.5 1-11 5.5-12 12-1-6.5-5.5-11-12-12C6.5 11 11 6.5 12 0z"/></svg>
       </div></div>
       <div class="copy">
         <h2 class="h">How do you handle pricing <em>right now?</em></h2>
@@ -485,7 +504,7 @@ body.kb .scr .pill{display:none}
       <div class="art"><div class="comp">
         <div class="halo"></div>
         <div class="card f1" style="left:62px;top:0;width:196px;overflow:hidden">
-          <img src="/images/properties/waters-edge.webp" alt="" style="width:100%;height:116px;object-fit:cover">
+          <img src="/images/properties/waters-edge.webp" alt="" width="640" height="480" decoding="async" fetchpriority="low" style="width:100%;height:116px;object-fit:cover">
           <div style="padding:10px 12px 12px"><div style="display:flex;justify-content:space-between;font-size:12.5px;font-weight:600"><span>Your listing</span><span>★ 4.9</span></div><div class="mini">Entire home · 4 guests</div></div>
         </div>
         <div class="center" style="top:auto;bottom:4px;height:auto"><div class="badge sm f2" style="font-weight:500;color:var(--g600)"><span class="ck abnb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a4 4 0 005.66 0l4-4a4 4 0 10-5.66-5.66l-1.1 1.1M14 10a4 4 0 00-5.66 0l-4 4a4 4 0 105.66 5.66l1.1-1.1"/></svg></span>airbnb.com/rooms/…</div></div>
@@ -500,9 +519,9 @@ body.kb .scr .pill{display:none}
         <div class="fld">
           <div class="with-ic">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a4 4 0 005.66 0l4-4a4 4 0 10-5.66-5.66l-1.1 1.1M14 10a4 4 0 00-5.66 0l-4 4a4 4 0 105.66 5.66l1.1-1.1"/></svg>
-            <input type="url" class="inp" id="airbnb-url" placeholder="Paste your Airbnb link" aria-label="Your Airbnb listing URL or host profile" autocomplete="off" inputmode="url" autocapitalize="off" spellcheck="false">
-            <div class="err">Paste an Airbnb listing or host profile link</div>
+            <input type="url" class="inp" id="airbnb-url" placeholder="Paste your Airbnb link" aria-label="Your Airbnb listing URL or host profile" autocomplete="off" inputmode="url" autocapitalize="off" spellcheck="false" enterkeyhint="next">
           </div>
+          <div class="err">Paste an Airbnb listing or host profile link</div>
         </div>
         <a class="oab" href="https://www.airbnb.com" target="_blank" rel="noopener" id="open-airbnb-btn">
           <span class="oab-tile"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.001 18.275c-1.353-1.697-2.148-3.184-2.413-4.457-.263-1.027-.16-1.848.291-2.465.477-.71 1.188-1.056 2.121-1.056s1.643.345 2.12 1.063c.446.61.558 1.432.286 2.465-.291 1.298-1.085 2.785-2.412 4.458zm9.601 1.14c-.185 1.246-1.034 2.28-2.2 2.783-2.253.98-4.483-.583-6.392-2.704 3.157-3.951 3.74-7.028 2.385-9.018-.795-1.14-1.933-1.695-3.394-1.695-2.944 0-4.563 2.49-3.927 5.382.37 1.565 1.352 3.343 2.917 5.332-.98 1.085-1.91 1.856-2.732 2.333-.636.344-1.245.558-1.828.609-2.679.399-4.778-2.2-3.825-4.88.132-.345.395-.98.845-1.961l.025-.053c1.464-3.178 3.242-6.79 5.285-10.795l.053-.132.58-1.116c.45-.822.635-1.19 1.351-1.643.346-.21.77-.315 1.246-.315.954 0 1.698.558 2.016 1.007.158.239.345.557.582.953l.558 1.089.08.159c2.041 4.004 3.821 7.608 5.279 10.794l.026.025.533 1.22.318.764c.243.613.294 1.222.213 1.858zm1.22-2.39c-.186-.583-.505-1.271-.9-2.094v-.03c-1.889-4.006-3.642-7.608-5.307-10.844l-.111-.163C15.317 1.461 14.468 0 12.001 0c-2.44 0-3.476 1.695-4.535 3.898l-.081.16c-1.669 3.236-3.421 6.843-5.303 10.847v.053l-.559 1.22c-.21.504-.317.768-.345.847C-.172 20.74 2.611 24 5.98 24c.027 0 .132 0 .265-.027h.372c1.75-.213 3.554-1.325 5.384-3.317 1.829 1.989 3.635 3.104 5.382 3.317h.372c.133.027.239.027.265.027 3.37.003 6.152-3.261 4.802-6.975z"/></svg></span>
@@ -517,9 +536,9 @@ body.kb .scr .pill{display:none}
     <section class="scr" data-step="5">
       <div class="art"><div class="comp">
         <div class="halo"></div>
-        <div class="bub f1" style="left:62px;top:40px;width:72px;height:72px"><img src="/images/team/bryan.webp" alt=""></div>
-        <div class="bub f2" style="left:116px;top:22px;width:88px;height:88px;z-index:1"><img src="/images/team/marisa.webp" alt=""></div>
-        <div class="bub f3" style="left:186px;top:40px;width:72px;height:72px"><img src="/images/team/nic.webp" alt=""></div>
+        <div class="bub f1" style="left:62px;top:40px;width:72px;height:72px"><img src="/images/team/bryan.webp" alt="" width="322" height="400" decoding="async" fetchpriority="low"></div>
+        <div class="bub f2" style="left:116px;top:22px;width:88px;height:88px;z-index:1"><img src="/images/team/marisa.webp" alt="" width="322" height="400" decoding="async" fetchpriority="low"></div>
+        <div class="bub f3" style="left:186px;top:40px;width:72px;height:72px"><img src="/images/team/nic.webp" alt="" width="322" height="400" decoding="async" fetchpriority="low"></div>
         <div class="center" style="top:136px;height:auto"><div class="badge sm f2"><span class="ck acc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 10l5-3v10l-5-3M3 7h12v10H3z"/></svg></span>Walked through with you, live</div></div>
         <svg class="spark tw" style="left:38px;top:30px" width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M12 0c1 6.5 5.5 11 12 12-6.5 1-11 5.5-12 12-1-6.5-5.5-11-12-12C6.5 11 11 6.5 12 0z"/></svg>
         <svg class="spark g tw2" style="left:272px;top:26px" width="13" height="13" viewBox="0 0 24 24"><path fill="currentColor" d="M12 0c1 6.5 5.5 11 12 12-6.5 1-11 5.5-12 12-1-6.5-5.5-11-12-12C6.5 11 11 6.5 12 0z"/></svg>
@@ -529,12 +548,12 @@ body.kb .scr .pill{display:none}
         <h2 class="h">Last step: <em>your details.</em></h2>
       </div>
       <div class="fields">
-        <div class="fld"><input type="text" class="inp" id="full-name" placeholder="Full name" autocomplete="name" aria-label="Full name"><div class="err">Please enter your name</div></div>
-        <div class="fld"><input type="email" class="inp" id="email" placeholder="Email" autocomplete="email" inputmode="email" aria-label="Email" autocapitalize="off" spellcheck="false"><div class="err">Please enter a valid email</div></div>
+        <div class="fld"><input type="text" class="inp" id="full-name" placeholder="Full name" autocomplete="name" aria-label="Full name" autocapitalize="words" enterkeyhint="next"><div class="err">Please enter your name</div></div>
+        <div class="fld"><input type="email" class="inp" id="email" placeholder="Email" autocomplete="email" inputmode="email" aria-label="Email" autocapitalize="off" spellcheck="false" enterkeyhint="next"><div class="err">Please enter a valid email</div></div>
         <div class="fld">
           <div class="phone">
             <select id="phone-code" aria-label="Country code"><option value="+1">🇺🇸 +1</option><option value="+44">🇬🇧 +44</option><option value="+61">🇦🇺 +61</option><option value="+33">🇫🇷 +33</option><option value="+49">🇩🇪 +49</option><option value="+52">🇲🇽 +52</option><option value="+34">🇪🇸 +34</option><option value="+39">🇮🇹 +39</option><option value="+55">🇧🇷 +55</option></select>
-            <input type="tel" class="inp" id="phone" placeholder="(555) 123-4567" autocomplete="tel" inputmode="tel" maxlength="20" aria-label="Phone number">
+            <input type="tel" class="inp" id="phone" placeholder="(555) 123-4567" autocomplete="tel" inputmode="tel" maxlength="20" aria-label="Phone number" enterkeyhint="go">
           </div>
           <div class="err">Please enter a valid phone number</div>
         </div>
@@ -553,6 +572,8 @@ const FORM_WEBHOOK_ENDPOINT='/api/form-webhook';
 const PAGE='audit-flow';
 const TOTAL=6;
 let current=0, busy=false;
+// spacing every screen shares: min margin above the graphic, below the last control, and graphic → heading
+const SP={top:32,bot:28,gap:34,kmax:1.1};
 const stage=document.getElementById('stage');
 const screens=[].slice.call(document.querySelectorAll('.scr'));
 const backBtn=document.getElementById('back');
@@ -573,16 +594,46 @@ const backBtn=document.getElementById('back');
   fit();
 })();
 
-/* Each illustration is a 320x240 composition scaled to whatever room the screen leaves it.
-   Too little room (small phone, keyboard up) and it steps aside entirely. */
+/* One spacing system for every screen. Each 320x240 composition is cropped to its visible
+   artwork (measured once), then scaled to fit what's left after the copy, answers, the fixed
+   gap to the heading, and the minimum top/bottom margins. The graphic gives way, never the
+   margins; too little room (small phone, keyboard up) and it steps aside entirely. */
+function artBounds(comp){
+  if(comp._vb) return comp._vb;
+  const cr=comp.getBoundingClientRect(), ratio=cr.height/240; if(!ratio) return null;
+  let t=1e9,b=-1e9;
+  comp.querySelectorAll('*').forEach(function(e){
+    if(e.closest('.halo')||e.classList.contains('center')) return;
+    const r=e.getBoundingClientRect(); if(!r.width||!r.height) return;
+    t=Math.min(t,(r.top-cr.top)/ratio); b=Math.max(b,(r.bottom-cr.top)/ratio);
+  });
+  if(b<=t) return null;
+  return (comp._vb={t:Math.max(0,t),h:Math.min(240,b)-Math.max(0,t)});
+}
 function sizeArt(){
   const s=screens[current]; if(!s) return;
   const art=s.querySelector('.art'), comp=art&&art.querySelector('.comp'); if(!comp) return;
-  const k=Math.min(1.22,art.clientHeight/244,(art.clientWidth)/330);
+  const vb=artBounds(comp); if(!vb) return;
+  const cs=getComputedStyle(s), kids=[].slice.call(s.children), first=kids[kids.indexOf(art)+1], last=kids[kids.length-1];
+  const content=last.offsetTop+last.offsetHeight-first.offsetTop;
+  const inner=s.clientHeight-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom);
+  const room=inner-content-SP.top-SP.bot-SP.gap;
+  const k=Math.min(SP.kmax,room/vb.h,(s.clientWidth-40)/320);
+  const tiny=k<.42;
+  art.classList.toggle('tiny',tiny);
+  s.style.setProperty('--top-min',SP.top+'px'); s.style.setProperty('--bot-min',SP.bot+'px');
+  art.style.setProperty('--gap',SP.gap+'px');
+  art.style.setProperty('--ah',tiny?'0px':(vb.h*k).toFixed(1)+'px');
   comp.style.setProperty('--k',Math.max(k,0).toFixed(3));
-  art.classList.toggle('tiny',k<.42);
+  comp.style.setProperty('--oy',(-vb.t*k).toFixed(1)+'px');
 }
-if(window.ResizeObserver){ new ResizeObserver(sizeArt).observe(stage); }
+if(window.ResizeObserver){
+  const ro=new ResizeObserver(function(){ sizeArt(); });
+  ro.observe(stage);
+  // copy and answer blocks change height when fonts land or a field appears (e.g. the door-count field)
+  document.querySelectorAll('.scr > :not(.art)').forEach(function(e){ ro.observe(e); });
+}
+if(document.fonts&&document.fonts.ready) document.fonts.ready.then(sizeArt);
 
 function paintProgress(){
   document.querySelectorAll('.seg').forEach(function(s,i){ s.classList.toggle('on',i<=current); });
@@ -639,13 +690,14 @@ function closeIntro(push){
   if(!introOpen) return;
   introOpen=false;
   if(push){ rwTrack('form_intro_continue',{page:PAGE}); try{ history.pushState({rwStep:0},'','#q1'); }catch(e){} }
+  sizeArt();
   intro.classList.add('out');
+  // Q1 rises in while the welcome is still fading, so the two cross over with no blank beat
   setTimeout(function(){
-    intro.classList.add('gone');
     app.classList.remove('intro-on');
-    const q=screens[current]; q.classList.remove('in'); void q.offsetWidth; q.classList.add('in');
-    sizeArt();
-  },230);
+    screens[current].classList.add('in');
+  },110);
+  setTimeout(function(){ intro.classList.add('gone'); },420);
 }
 function openIntro(){
   if(introOpen) return;
@@ -654,6 +706,7 @@ function openIntro(){
   intro.classList.remove('gone');
   void intro.offsetWidth;
   intro.classList.remove('out');
+  setTimeout(function(){ if(introOpen) screens[current].classList.remove('in'); },420);
 }
 document.getElementById('intro-go').addEventListener('click',function(){ closeIntro(true); });
 try{ history.replaceState({rwStep:-1},'',location.pathname+location.search); }catch(e){}
@@ -684,19 +737,24 @@ function scheduleAdvance(){
   setTimeout(function(){ if(current===from) next(); },200);
 }
 
+function mark(inp,ok){
+  inp.classList.toggle('error',!ok);
+  const f=inp.closest('.fld'); if(f) f.classList.toggle('bad',!ok);
+}
 function validateStep(step){
   let valid=true;
   if(step===4){
     const url=document.getElementById('airbnb-url');
     const v=url.value.trim().toLowerCase();
-    if(!v||!(v.includes('airbnb.')||v.includes('abnb.me'))){url.classList.add('error');valid=false;}else url.classList.remove('error');
+    const okUrl=!!v&&(v.includes('airbnb.')||v.includes('abnb.me'));
+    mark(url,okUrl); if(!okUrl) valid=false;
   }
   if(step===5){
     const name=document.getElementById('full-name'), email=document.getElementById('email'), phone=document.getElementById('phone');
     const pcode=document.getElementById('phone-code').value||'+1';
-    if(!name.value.trim()){name.classList.add('error');valid=false;}else name.classList.remove('error');
-    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())){email.classList.add('error');valid=false;}else email.classList.remove('error');
-    if(!rwPhoneValid(pcode,phone.value)){phone.classList.add('error');valid=false;}else phone.classList.remove('error');
+    const okName=!!name.value.trim(), okEmail=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim()), okPhone=rwPhoneValid(pcode,phone.value);
+    mark(name,okName); mark(email,okEmail); mark(phone,okPhone);
+    if(!(okName&&okEmail&&okPhone)) valid=false;
   }
   return valid;
 }
@@ -764,9 +822,15 @@ document.getElementById('btn-submit').addEventListener('click',submitForm);
 document.addEventListener('keydown',function(e){
   if(e.key!=='Enter') return;
   if(current===4){ e.preventDefault(); next(); }
-  else if(current===5){ e.preventDefault(); submitForm(); }
+  else if(current===5){
+    e.preventDefault();
+    // Enter walks name → email → phone, then submits, the way a native form would
+    const order=['full-name','email','phone'], i=order.indexOf(document.activeElement&&document.activeElement.id);
+    if(i>-1&&i<order.length-1){ document.getElementById(order[i+1]).focus(); return; }
+    submitForm();
+  }
 });
-document.querySelectorAll('.inp').forEach(function(i){ i.addEventListener('input',function(){ i.classList.remove('error'); }); });
+document.querySelectorAll('.inp').forEach(function(i){ i.addEventListener('input',function(){ i.classList.remove('error'); const f=i.closest('.fld'); if(f) f.classList.remove('bad'); }); });
 
 /* Phone: same live mask + validation as /audit */
 function rwPhoneDigits(v){ return (String(v||'').match(/\d/g)||[]).join(''); }
@@ -789,7 +853,7 @@ function rwPhoneValid(code,raw){
 }
 (function(){
   var p=document.getElementById('phone'), c=document.getElementById('phone-code');
-  function mask(){ p.value=rwFormatPhone(c.value,p.value); p.placeholder=c.value==='+1'?'(555) 123-4567':'Phone number'; p.classList.remove('error'); }
+  function mask(){ p.value=rwFormatPhone(c.value,p.value); p.placeholder=c.value==='+1'?'(555) 123-4567':'Phone number'; p.classList.remove('error'); const f=p.closest('.fld'); if(f) f.classList.remove('bad'); }
   p.addEventListener('input',mask); c.addEventListener('change',mask);
   if(RW_IS_CA){ var o=c.querySelector('option[value="+1"]'); if(o) o.textContent='🇨🇦 +1'; }
 })();
@@ -797,6 +861,12 @@ function rwPhoneValid(code,raw){
 /* Submit: identical lead handling to /audit (qualification gate, Meta Lead + CAPI dedupe,
    X, CRM webhook, same destinations), so the A/B compares the form and nothing else. */
 var submitted=false;
+window.addEventListener('pageshow',function(e){
+  if(!e.persisted) return;
+  submitted=false; busy=false;
+  const b=document.getElementById('btn-submit'); if(b) b.disabled=false;
+  sizeArt();
+});
 function submitForm(){
   if(!validateStep(4)){ show(4,-1); return; }
   if(!validateStep(5)) return;
