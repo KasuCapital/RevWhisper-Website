@@ -1292,7 +1292,7 @@ function renderCalendar(dir){
     const isToday=d.getTime()===today.getTime();
     if(!bk.loaded){ html+='<span class="cd'+(isToday?' today':'')+'" aria-hidden="true">'+n+'</span>'; continue; }
     const open=d>=today&&d<=bk.end&&!!bk.slotsByDate[key];
-    const cls='cd'+(open?' ok':(d>=today?' no':''))+(key===bk.date?' sel':'')+(isToday?' today':'');
+    const cls='cd'+(open?' ok':' no')+(key===bk.date?' sel':'')+(isToday?' today':''); // every unavailable day is struck through, past ones included
     const label=d.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
     html+=open?'<button type="button" class="'+cls+'" data-day="'+key+'" aria-label="'+esc(label)+'"'+(key===bk.date?' aria-pressed="true"':'')+'>'+n+'</button>'
               :'<span class="'+cls+'" aria-hidden="true">'+n+'</span>';
