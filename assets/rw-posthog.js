@@ -36,7 +36,7 @@
     /* PostHog's official loader snippet */
     !function(t,e){var o,n,p,r;e.__SV||(window.posthog && window.posthog.__loaded)||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}p||((p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",p.onerror=function(){p=null},(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r));var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],Object.defineProperty(u,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e}}),Object.defineProperty(u.people,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(){return u.toString(1)+".people (stub)"}}),o="init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags onFeatureFlags onSessionId getSurveys getActiveMatchingSurveys renderSurvey identify setPersonProperties reset get_distinct_id get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing is_capturing clear_opt_in_out_capturing debug".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
 
-    window.posthog.init(KEY,{
+    var cfg={
       // First-party proxy (vercel.json rewrites) so ad blockers don't drop events. Local dev has no rewrites.
       api_host:/(^|\.)revwhisper\.com$/.test(location.hostname)?'/ingest':'https://us.i.posthog.com',
       ui_host:'https://us.posthog.com',
@@ -51,7 +51,12 @@
         maskAllInputs:true,
         maskTextFn:function(text){return text.replace(EMAIL,function(m){return '*'.repeat(m.length);}).replace(PHONE,function(m){return '*'.repeat(m.length);});}
       }
-    });
+    };
+    // A page that already settled this browser's device ID before the library loaded (the /audit A/B check
+    // asks the flag endpoint directly, for speed) hands it over, so a new browser gets that same ID.
+    // Only consulted when the library mints a new ID; an existing one is left alone.
+    if(window.rwPhDeviceId)cfg.get_device_id=function(){return window.rwPhDeviceId;};
+    window.posthog.init(KEY,cfg);
 
     var a=attribution(), props={rw_region:(window.rwConsent&&rwConsent.region)||''};
     ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(function(k){if(a[k])props['first_'+k]=a[k];});

@@ -31,7 +31,20 @@
 function rwAttribution(){try{return JSON.parse(localStorage.getItem('rw_attribution')||sessionStorage.getItem('rw_attribution'))||{};}catch(e){return {};}}
 </script>
 <script src="/assets/rw-consent.js?v=2"></script>
-<script defer src="/assets/rw-posthog.js?v=3"></script>
+<script>
+/* Visitors the /audit A/B test sent here: PostHog adopts the device ID the decision was made with, and
+   records the exposure once its flags load (the same ID gives the same variant). */
+(function(){
+  var did=null, flag=null;
+  try{ did=sessionStorage.getItem('rw_ab_did'); flag=sessionStorage.getItem('rw_ab_expose'); sessionStorage.removeItem('rw_ab_expose'); }catch(e){}
+  if(did) window.rwPhDeviceId=did;
+  if(flag) document.addEventListener('DOMContentLoaded',function(){
+    // re-read window.posthog in the callback: the stand-in queue is replaced by the real instance on load
+    var ph=window.posthog; if(ph&&typeof ph.onFeatureFlags==='function') ph.onFeatureFlags(function(){ window.posthog.getFeatureFlag(flag); });
+  });
+})();
+</script>
+<script defer src="/assets/rw-posthog.js?v=4"></script>
 <!-- GA4. Consent defaults come from /assets/rw-consent.js -->
 <script>
 window.dataLayer=window.dataLayer||[];
