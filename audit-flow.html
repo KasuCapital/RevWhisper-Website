@@ -1479,25 +1479,13 @@ function renderBooked(data){
   document.getElementById('bk-name').textContent=first?', '+first:'';
   if(start) fillInvites(start.toISOString());
   document.getElementById('booked-note').textContent=(l.email?'Invite sent to '+l.email+'. ':'')+"We'll text your Google Meet link before we meet.";
-  setupVsl(resolveVslHost(data));
+  setupVsl();
 }
-/* Intro video: the Discovery call is round-robin between Bryan and Nicolas; /api/cal-booking returns
-   the assigned host, so the booked screen shows THEIR video (Bryan's when it can't be told).
+/* Intro video: always Bryan's walkthrough, whichever rep the round-robin assigned the call to.
    Only a self-hosted thumbnail loads until play; YouTube is fetched on tap. */
-const VSL_HOSTS={
-  bryan:{key:'bryan',videoId:'Trovk73GTWc',dur:'4:45'},
-  nick:{key:'nick',videoId:'nS31JRQbJ04',dur:'1:31'}
-};
-function resolveVslHost(b){
-  let s='';
-  if(b&&b.host&&(b.host.email||b.host.name)) s=((b.host.email||'')+' '+(b.host.name||'')).toLowerCase();
-  if(!s&&b&&typeof b.title==='string'){ const m=b.title.match(/between (.+?) and .+/i); if(m) s=m[1].toLowerCase(); } // host segment only
-  if(/bgamble|bryan/.test(s)) return VSL_HOSTS.bryan;
-  if(/nluna|nicolas|nick/.test(s)) return VSL_HOSTS.nick;
-  return null;
-}
-function setupVsl(host){
-  const v=host||VSL_HOSTS.bryan, player=document.getElementById('vsl-player');
+const VSL={key:'bryan',videoId:'Trovk73GTWc',dur:'4:45'};
+function setupVsl(){
+  const v=VSL, player=document.getElementById('vsl-player');
   if(player.dataset.video===v.videoId&&!player.querySelector('iframe')) return;
   player.dataset.video=v.videoId;
   player.innerHTML='<button class="vsl-facade" id="vsl-facade" type="button" aria-label="Play the intro video"><img class="vsl-thumb" alt="" width="1280" height="720" decoding="async" src="/images/video/'+v.videoId+'.webp">'+

@@ -425,14 +425,13 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
   </div>
 
   <!-- Pre-booking VSL — sits BELOW the calendar so picking a time is the first thing on screen.
-       Always Bryan's walkthrough (no host is assigned until the booking lands; the confirmation screen
-       swaps to the assigned host's video). Hidden once booked. -->
+       Always Bryan's walkthrough, here and on the confirmation screen. Hidden once booked. -->
   <section class="pre-vsl" id="pre-vsl">
     <div class="booked-eyebrow">What's included in the call</div>
     <h2 class="pre-vsl-h">See exactly what <em>you're booking</em>.</h2>
     <div class="vsl-host">
       <img class="vsl-host-avatar" src="/images/team/bryan.webp?v=2" alt="Bryan" width="46" height="46" loading="lazy">
-      <div class="vsl-host-copy">Recorded by <strong>Bryan</strong> — a fellow host, and one of the two people who run these audits.</div>
+      <div class="vsl-host-copy">Recorded by <strong>Bryan</strong> — a fellow host, and one of the people who run these audits.</div>
     </div>
     <div class="vsl-player">
       <button class="vsl-facade" type="button" id="pre-vsl-facade" aria-label="Play the video">
@@ -832,7 +831,7 @@ async function confirmBooking(){
   if(PREVIEW==='calendar'){
     // Preview stub: no /api/cal-booking call and no Pixel/CAPI/X events — show the success screen.
     await new Promise(function(r){setTimeout(r,MIN_LOADER_MS);});
-    renderSuccess({start:iso,host:{name:VSL_HOSTS.bryan.name,email:''}});
+    renderSuccess({start:iso,host:{name:'Bryan Gamble',email:''}});
     const pvFrom=current;current++;transitionStep(pvFrom,current,'forward'); // loader → success
     hideBookingChrome();
     setTimeout(function(){var ss=document.getElementById('success-state');if(ss) ss.classList.add('revealed');},50);
@@ -906,57 +905,42 @@ async function confirmBooking(){
   booking.bookingInFlight=false;
 }
 
-/* ── Intro video (VSL) — two placements ──
-   Pre-booking (#pre-vsl, below the calendar): always Bryan's walkthrough — no host is assigned
-   until the booking lands. Post-booking (success screen): the Discovery event is round-robin
-   between Bryan and Nick; /api/cal-booking returns the assigned host ({name,email}) so the
-   confirmation shows THEIR photo and THEIR video, framed as "watch it if you didn't already".
-   If the host can't be determined (shouldn't happen — the booking title carries it as a
-   fallback), we show the video with neutral copy and no photo rather than guessing at a face. */
-var VSL_HOSTS={
-  bryan:{key:'bryan',first:'Bryan',name:'Bryan Gamble',img:'/images/team/bryan.webp?v=2',videoId:'Trovk73GTWc',durBadge:'4:45',durText:'just under 5 minutes'},
-  nick:{key:'nick',first:'Nicolas',name:'Nicolas Luna',img:'/images/team/nic.webp?v=2',videoId:'nS31JRQbJ04',durBadge:'1:31',durText:'90 seconds'}
-};
-var vslActive=null; // host whose video is loaded in the facade (set by setupVsl)
+/* ── Intro video (VSL) — two placements, always Bryan's walkthrough ──
+   Pre-booking (#pre-vsl, below the calendar) and post-booking (success screen). The Discovery
+   event is round-robin across the team; /api/cal-booking returns the assigned host ({name,email}),
+   which only decides the caption: "exactly who you'll be meeting" when it's Bryan, otherwise
+   "one of the hosts who runs these audits". */
+var VSL={key:'bryan',first:'Bryan',img:'/images/team/bryan.webp?v=2',videoId:'Trovk73GTWc',durBadge:'4:45',durText:'just under 5 minutes'};
 
-function resolveVslHost(b){
+function hostIsBryan(b){
   var s='';
   if(b&&b.host&&(b.host.email||b.host.name)) s=((b.host.email||'')+' '+(b.host.name||'')).toLowerCase();
   if(!s&&b&&typeof b.title==='string'){
     // Cal titles bookings "<event> between <host> and <attendee>" — match the HOST segment only,
-    // never the whole title (the attendee's name could contain "bryan"/"nicolas" too).
+    // never the whole title (the attendee's name could contain "bryan" too).
     var m=b.title.match(/between (.+?) and .+/i); if(m) s=m[1].toLowerCase();
   }
-  if(/bgamble|bryan/.test(s)) return VSL_HOSTS.bryan;
-  if(/nluna|nicolas|nick/.test(s)) return VSL_HOSTS.nick;
-  return null;
+  return /bgamble|bryan/.test(s);
 }
 
-function setupVsl(host){
-  var v=host||VSL_HOSTS.bryan; // no confirmed host → neutral copy, default video, no photo
-  vslActive=v;
+function setupVsl(bryanHosts){
+  var v=VSL;
   var thumb=document.getElementById('vsl-thumb');
   if(thumb){
     thumb.src='/images/video/'+v.videoId+'.webp'; // self-hosted, so nothing loads from YouTube until play
   }
   var dur=document.getElementById('vsl-dur'); if(dur) dur.textContent=v.durBadge;
   var row=document.getElementById('vsl-host');
-  if(row&&host){
+  if(row){
     row.hidden=false;
     var img=document.getElementById('vsl-host-img');
-    if(img){img.src=host.img;img.alt=host.first;}
+    if(img){img.src=v.img;img.alt=v.first;}
     var copy=document.getElementById('vsl-host-copy');
-    if(copy) copy.innerHTML='Recorded by <strong>'+host.first+'</strong> — exactly who you’ll be meeting on your call.';
+    if(copy) copy.innerHTML='Recorded by <strong>'+v.first+'</strong> — '+(bryanHosts?'exactly who you’ll be meeting on your call.':'one of the hosts who runs these audits.');
   }
   var note=document.getElementById('vsl-note');
-  if(note){
-    // The pre-booking video is Bryan's, so when Bryan (or the neutral fallback, which plays his
-    // video) is the assigned host it's the SAME video they were shown next to the calendar —
-    // frame it as a catch-up. Nick's is a different video, so it keeps the plain ask.
-    note.innerHTML = v.key==='bryan'
-      ? 'It’s the same walkthrough from the booking page — '+v.durText+' on what’s inside your audit and how the 30 minutes run. <strong>Already watched it? You’re set. If not, please watch it before we talk.</strong>'
-      : 'It’s '+v.durText+' and walks through what’s inside your audit and how the 30 minutes run — so your call starts at your numbers, not the intro. <strong>Please watch it before we talk.</strong>';
-  }
+  // Same video they were shown next to the calendar, so frame it as a catch-up.
+  if(note) note.innerHTML='It’s the same walkthrough from the booking page — '+v.durText+' on what’s inside your audit and how the 30 minutes run. <strong>Already watched it? You’re set. If not, please watch it before we talk.</strong>';
   var facade=document.getElementById('vsl-facade');
   if(facade) facade.onclick=playVsl;
 }
@@ -972,13 +956,13 @@ function playVslIn(container,v,placement){
   rwTrack('vsl_play',{host:v.key,page:'audit-booking',placement:placement});
 }
 
-function playVsl(){ // success-screen facade — the assigned host's video
-  playVslIn(document.querySelector('.step[data-step="4"]'),vslActive||VSL_HOSTS.bryan,'post_booking');
+function playVsl(){ // success-screen facade
+  playVslIn(document.querySelector('.step[data-step="4"]'),VSL,'post_booking');
 }
 
-// Pre-booking facade — always Bryan's walkthrough
+// Pre-booking facade
 var preFacade=document.getElementById('pre-vsl-facade');
-if(preFacade) preFacade.onclick=function(){ playVslIn(document.getElementById('pre-vsl'),VSL_HOSTS.bryan,'pre_booking'); };
+if(preFacade) preFacade.onclick=function(){ playVslIn(document.getElementById('pre-vsl'),VSL,'pre_booking'); };
 
 function renderSuccess(data){
   const desc=document.getElementById('success-desc');
@@ -1018,7 +1002,7 @@ function renderSuccess(data){
     }
     addcal.hidden=false;
   }
-  setupVsl(resolveVslHost(data));
+  setupVsl(hostIsBryan(data));
   applyPropertyCopy();
 }
 
@@ -1036,13 +1020,12 @@ applyPropertyCopy(); // the pre-booking education is visible from page load
 
 /* ?preview=success entry point — fabricates a confirmed slot (3 days out, 2pm local) and
    reveals Step 4 directly. No /api/cal-booking call and no Pixel/CAPI/X events fire.
-   &host=nick|bryan previews that host's photo + video (default bryan); &host=none previews
-   the neutral no-host fallback. */
+   &host=<name> previews a booking assigned to someone other than Bryan (default Bryan); &host=none
+   previews a booking whose host couldn't be read. */
 function previewSuccess(){
   const start=new Date(); start.setDate(start.getDate()+3); start.setHours(14,0,0,0);
-  var pvHost=(new URLSearchParams(location.search)).get('host');
-  var fakeHost=pvHost==='none'?null:(VSL_HOSTS[pvHost]||VSL_HOSTS.bryan);
-  renderSuccess({start:start.toISOString(),host:fakeHost?{name:fakeHost.name,email:''}:null});
+  var pvHost=(new URLSearchParams(location.search)).get('host')||'Bryan Gamble';
+  renderSuccess({start:start.toISOString(),host:pvHost==='none'?null:{name:pvHost,email:''}});
   document.querySelectorAll('.step').forEach(function(s){
     s.classList.remove('active','exit-up','exit-down','enter-from-below','enter-from-above');
   });

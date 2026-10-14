@@ -445,17 +445,12 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 /* Static "what to expect" page — the de-personalized twin of the /audit-booking success
    screen, with the booking flow embedded so a prospect can book directly from here.
    No lead context needed: name/email/phone are collected at the confirm step.
-   ?host=nick swaps in Nick's video + photo (default bryan); ?host=none shows the
-   default video with neutral copy and no photo. */
+   The intro video is always Bryan's; ?host=none hides his photo and caption. */
 
 /* ───────────── Intro video (VSL) ───────────── */
-var VSL_HOSTS={
-  bryan:{key:'bryan',first:'Bryan',img:'/images/team/bryan.webp?v=2',videoId:'Trovk73GTWc',durBadge:'4:45',durText:'just under 5 minutes'},
-  nick:{key:'nick',first:'Nicolas',img:'/images/team/nic.webp?v=2',videoId:'nS31JRQbJ04',durBadge:'1:31',durText:'90 seconds'}
-};
-var qsHost=(new URLSearchParams(location.search)).get('host');
-var vslHost=qsHost==='none'?null:(VSL_HOSTS[qsHost]||VSL_HOSTS.bryan);
-var vslActive=vslHost||VSL_HOSTS.bryan; // neutral fallback still plays the default video
+var VSL={key:'bryan',first:'Bryan',img:'/images/team/bryan.webp?v=2',videoId:'Trovk73GTWc',durBadge:'4:45',durText:'just under 5 minutes'};
+var showHostRow=(new URLSearchParams(location.search)).get('host')!=='none';
+var vslActive=VSL;
 
 (function setupVsl(){
   var v=vslActive;
@@ -465,12 +460,12 @@ var vslActive=vslHost||VSL_HOSTS.bryan; // neutral fallback still plays the defa
   }
   var dur=document.getElementById('vsl-dur'); if(dur) dur.textContent=v.durBadge;
   var row=document.getElementById('vsl-host');
-  if(row&&vslHost){
+  if(row&&showHostRow){
     row.hidden=false;
     var img=document.getElementById('vsl-host-img');
-    if(img){img.src=vslHost.img;img.alt=vslHost.first;}
+    if(img){img.src=v.img;img.alt=v.first;}
     var copy=document.getElementById('vsl-host-copy');
-    if(copy) copy.innerHTML='Recorded by <strong>'+vslHost.first+'</strong> — one of the hosts who runs these audits.';
+    if(copy) copy.innerHTML='Recorded by <strong>'+v.first+'</strong> — one of the hosts who runs these audits.';
   }
   var note=document.getElementById('vsl-note');
   if(note) note.innerHTML='It’s '+v.durText+' and walks through what’s inside your audit and how the 30 minutes run — so your call starts at your numbers, not the intro. <strong>It’s the best place to start.</strong>';
