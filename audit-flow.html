@@ -31,19 +31,6 @@
 function rwAttribution(){try{return JSON.parse(localStorage.getItem('rw_attribution')||sessionStorage.getItem('rw_attribution'))||{};}catch(e){return {};}}
 </script>
 <script src="/assets/rw-consent.js?v=2"></script>
-<script>
-/* Visitors the /audit A/B test sent here: PostHog adopts the device ID the decision was made with, and
-   records the exposure once its flags load (the same ID gives the same variant). */
-(function(){
-  var did=null, flag=null;
-  try{ did=sessionStorage.getItem('rw_ab_did'); flag=sessionStorage.getItem('rw_ab_expose'); sessionStorage.removeItem('rw_ab_expose'); }catch(e){}
-  if(did) window.rwPhDeviceId=did;
-  if(flag) document.addEventListener('DOMContentLoaded',function(){
-    // re-read window.posthog in the callback: the stand-in queue is replaced by the real instance on load
-    var ph=window.posthog; if(ph&&typeof ph.onFeatureFlags==='function') ph.onFeatureFlags(function(){ window.posthog.getFeatureFlag(flag); });
-  });
-})();
-</script>
 <script defer src="/assets/rw-posthog.js?v=4"></script>
 <!-- GA4. Consent defaults come from /assets/rw-consent.js -->
 <script>
@@ -89,7 +76,7 @@ fbq('track', 'PageView');
 <meta name="theme-color" content="#ffffff">
 <title>Free Airbnb Performance Audit | RevWhisper</title>
 <meta name="description" content="Get a free audit of your Airbnb listing's ranking, pricing, and conversion, walked through with you, live.">
-<!-- Paid-only, app-style form variant of /audit (A/B test). Keep it out of the index. -->
+<!-- Paid-only, app-style form: what phones get at /audit (served there by middleware.js). Keep it out of the index. -->
 <meta name="robots" content="noindex, nofollow">
 <meta property="og:title" content="Free Airbnb Performance Audit | RevWhisper">
 <meta property="og:image" content="https://revwhisper.com/images/properties/livingroom-after.webp">
@@ -1113,7 +1100,7 @@ function rwPhoneValid(code,raw){
 })();
 
 /* Submit: identical lead handling to /audit (qualification gate, Meta Lead + CAPI dedupe,
-   X, CRM webhook, same destinations), so the A/B compares the form and nothing else. */
+   X, CRM webhook, same destinations), so the two forms differ in the form and nothing else. */
 var submitted=false;
 window.addEventListener('pageshow',function(e){
   if(!e.persisted) return;
