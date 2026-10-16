@@ -163,8 +163,11 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 .cal-loading{display:flex;align-items:center;justify-content:center;gap:10px;padding:48px 0;color:var(--g500);font-size:13px}
 .cal-spinner{width:18px;height:18px;border:2px solid var(--g200);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.cal-error{padding:16px;border:1.5px solid #f0d4d4;background:#fbf3f3;color:#8b3a3a;border-radius:var(--radius);font-size:13px;margin-bottom:20px;line-height:1.5}
-.cal-error a{color:#8b3a3a;font-weight:600;text-decoration:underline}
+.cal-error{padding:16px;border:1.5px solid var(--g200);background:var(--g50);color:var(--black);border-radius:var(--radius);font-size:13px;margin-bottom:20px;line-height:1.5}
+.cal-error a{color:inherit;font-weight:600;text-decoration:underline}
+.cal-error.ok{border-color:var(--accent-border);background:var(--accent-light);color:#2f4a29}
+#fix-email-wrap{margin-bottom:6px}
+#fix-email-wrap[hidden]{display:none}
 
 /* ── Time slots ── */
 .slot-date-label{font-family:var(--heading);font-size:19px;font-weight:500;color:var(--black);letter-spacing:-.01em;margin-bottom:18px}
@@ -349,6 +352,7 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
           <span>Your audit — <strong id="confirm-when">your selected time</strong></span>
         </div>
         <div id="confirm-error-slot"></div>
+        <div class="book-field" id="fix-email-wrap" hidden><label class="book-field-label" for="fix-email">Email</label><input class="book-phone-input" type="email" id="fix-email" placeholder="you@example.com" autocomplete="email" inputmode="email" autocapitalize="off" spellcheck="false"></div>
         <div class="book-field-hint">We'll text your Google Meet link and a reminder before your audit.</div>
         <button class="btn-confirm" type="button" id="confirm-btn" onclick="confirmBooking()">Confirm my audit <span class="arrow">→</span></button>
         <div class="form-actions"><button class="btn-back" type="button" onclick="prevStep()"><span class="arrow">←</span> Back</button></div>
@@ -652,12 +656,12 @@ function reportClientError(stage,err,serverBody){
     fetch('/api/client-error',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),keepalive:true}).catch(function(){});
   }catch(e){}
 }
-function recoverStaleSlot(){
+function recoverStaleSlot(message){
   booking.bookingInFlight=false;
   booking.loaded=false;booking.loading=false;
   rwTrack('booking_slot_taken',{page:'audit-booking'});
   const fromLoader=current;current=0;transitionStep(fromLoader,current,'backward');
-  showCalError("That time was just booked by someone else. Here are the latest open times — please pick another.",{retry:false});
+  showCalError(message,{retry:false});
   loadSlots();
 }
 
@@ -696,7 +700,7 @@ async function loadSlots(){
   }catch(err){
     console.error('loadSlots failed:',err);
     reportClientError('availability',err);
-    showCalError(err&&err.message?`We couldn't load availability: ${err.message}`:"We couldn't load availability.",{retry:true,fallback:true});
+    showCalError("We couldn't load open times just now.",{retry:true,fallback:true});
     if(grid) grid.innerHTML='';
   }finally{booking.loading=false;}
 }
@@ -807,19 +811,57 @@ function selectSlot(iso,btn){
   const cw=document.getElementById('confirm-when'); if(cw) cw.textContent=when;
   const lw=document.getElementById('loader-when'); if(lw) lw.innerHTML='Confirming <strong>'+esc(when)+'</strong>';
   const errEl=document.getElementById('confirm-error-slot'); if(errEl) errEl.innerHTML='';
-  const cb=document.getElementById('confirm-btn'); if(cb) cb.disabled=false; // re-enable on (re)entry
+  const cb=document.getElementById('confirm-btn'); if(cb){ cb.disabled=false; cb.style.display=''; } // re-enable on (re)entry
   const from=current;current++;transitionStep(from,current,'forward'); // time → confirm
 }
 
-function showConfirmError(message){
+function showConfirmError(message,opts){
   const errEl=document.getElementById('confirm-error-slot'); if(!errEl) return;
-  errEl.innerHTML='<div class="cal-error">'+esc(message)+'</div>';
+  errEl.innerHTML='<div class="cal-error'+(opts&&opts.ok?' ok':'')+'">'+esc(message)+(opts&&opts.fallback?'<div style="margin-top:8px"><a href="#" id="confirm-fallback">Pick a time on Cal.com instead</a></div>':'')+'</div>';
+  const f=document.getElementById('confirm-fallback'); if(f) f.addEventListener('click',function(e){e.preventDefault();fallbackToCalRedirect('booking_error');});
+}
+/* The email Cal couldn't deliver to, corrected in place. Returns false while it still looks wrong. */
+function applyFixedEmail(){
+  const w=document.getElementById('fix-email-wrap'); if(!w||w.hidden) return true;
+  const inp=document.getElementById('fix-email'), v=inp.value.trim();
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){ inp.classList.add('error'); try{ inp.focus(); }catch(e){} return false; }
+  inp.classList.remove('error');
+  booking.lead=Object.assign({},booking.lead,{email:v});
+  try{ const s=JSON.parse(sessionStorage.getItem('rw_audit_lead')||'null'); if(s){ s.email=v; sessionStorage.setItem('rw_audit_lead',JSON.stringify(s)); } }catch(e){}
+  return true;
+}
+/* A booking that didn't go through. The API sorts Cal's rejection into a code and the words to show
+   (body.code / body.message), so no raw error ever reaches the screen. No body means the request
+   never got an answer: the booking may well have gone through, and a second tap finds out (Cal
+   answers already_booked). That happened on 10/9/26. */
+const QUIET_BOOKING_CODES={slot_unavailable:1,already_booked:1,email_invalid:1}; // about this visitor, not an outage
+function bookingFailed(err,body){
+  const code=(body&&body.code)||'network';
+  try{ rwTrack('booking_error',{code:code,page:'audit-booking'}); }catch(e){}
+  if(!QUIET_BOOKING_CODES[code]){ console.error('Booking failed:',err); reportClientError('booking',err,body); }
+  if(code==='slot_unavailable'){ recoverStaleSlot(body.message); return; }
+  booking.bookingInFlight=false;
+  const fromLoader=current;current--;transitionStep(fromLoader,current,'backward'); // loader → confirm
+  setTimeout(function(){
+    const cb2=document.getElementById('confirm-btn');
+    if(code==='already_booked'){ if(cb2) cb2.style.display='none'; const w=document.getElementById('fix-email-wrap'); if(w) w.hidden=true; showConfirmError(body.message,{ok:true}); return; }
+    if(cb2) cb2.disabled=false;
+    if(code==='email_invalid'){
+      const w=document.getElementById('fix-email-wrap'), inp=document.getElementById('fix-email');
+      if(w&&w.hidden){ inp.value=(booking.lead&&booking.lead.email)||''; w.hidden=false; }
+      showConfirmError(body.message);
+      try{ inp.focus(); }catch(e){}
+      return;
+    }
+    showConfirmError((body&&body.message)||"We lost the connection for a moment. Tap Confirm again and we'll make sure your time is locked in.",{fallback:!!(body&&body.fallback)});
+  },450);
 }
 
 /* Confirm step → book the selected slot. Phone was captured on the /audit form and
    travels here via the rw_audit_lead context — it is no longer collected on this page. */
 async function confirmBooking(){
   if(isTransitioning||booking.bookingInFlight) return;
+  if(!applyFixedEmail()) return;
   const ce=document.getElementById('confirm-error-slot'); if(ce) ce.innerHTML='';
   booking.bookingInFlight=true;
   const cbtn=document.getElementById('confirm-btn'); if(cbtn) cbtn.disabled=true;
@@ -844,33 +886,20 @@ async function confirmBooking(){
   var xConversionId=typeof rwXConversionId==='function'?rwXConversionId('audit_call'):'audit_call_'+Date.now();
   var fbp=rwCookie('_fbp'), fbc=rwCookie('_fbc');
   const payload={start:iso,name:l.name,email:l.email,phone:phoneFull,timeZone:booking.timeZone,listings:l.listings,airbnbUrl:l.airbnbUrl,source:l.source||'audit-booking',attribution:l.attribution||{},fbEventId:evId,adConsent:!window.rwConsent||rwConsent.ads,fbp:fbp,fbc:fbc,xConversionId:xConversionId,twclid:l.twclid||(l.attribution&&l.attribution.twclid)||''};
-  let bookingResult=null,bookingError=null,bookingBody=null,shouldFallback=false,slotUnavailable=false;
+  let bookingResult=null,bookingError=null,bookingBody=null;
   try{
     const res=await fetch(CAL_BOOKING_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
     const body=await res.json().catch(()=>({}));
     if(!res.ok||!body.ok){
-      if(body&&body.code==='slot_unavailable'){slotUnavailable=true;}
-      else if(body&&body.fallback){shouldFallback=true;bookingBody=body;}
-      else{const e=new Error((body&&body.error)||`Cal.com returned ${res.status}`);e.serverBody=body;e.status=res.status;throw e;}
+      bookingBody=body&&body.message?body:null;
+      const e=new Error((body&&body.error)||`Cal.com returned ${res.status}`);e.serverBody=body;e.status=res.status;throw e;
     }
     else{ bookingResult=body.booking; }
   }catch(err){ bookingError=err; }
   const elapsed=Date.now()-startedAt;
   if(elapsed<MIN_LOADER_MS){ await new Promise(function(r){setTimeout(r,MIN_LOADER_MS-elapsed);}); }
-  if(slotUnavailable){ recoverStaleSlot(); return; }
-  // Booking didn't go through (Cal.com error/upstream hiccup/network) → keep the customer on
-  // our page, re-enable the button, and let them retry. No off-site redirect.
-  if(shouldFallback||bookingError){
-    console.error('Booking failed:',bookingError||'scheduler_unavailable');
-    reportClientError('booking',bookingError||new Error('scheduler unavailable'),bookingBody);
-    booking.bookingInFlight=false;
-    const fromLoader=current;current--;transitionStep(fromLoader,current,'backward'); // loader → confirm
-    setTimeout(function(){
-      const cb2=document.getElementById('confirm-btn'); if(cb2) cb2.disabled=false;
-      showConfirmError(bookingError&&bookingError.message?`That didn't work: ${bookingError.message}.`:"We couldn't reach the scheduler just now. Please try again in a moment.");
-    },450);
-    return;
-  }
+  // Didn't go through → keep the customer on our page with plain words and a next step.
+  if(bookingError){ bookingFailed(bookingError,bookingBody); return; }
   // Success → fire Call Booked (Schedule). /api/cal-booking fires the same event server-side
   // (CAPI) with this same event_id, so Meta dedupes the browser + server pair into one.
   try{ fbq('track','Schedule',{content_name:'Audit Call Booked',content_category:'Audit'},{eventID:evId}); }catch(e){}

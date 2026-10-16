@@ -607,10 +607,12 @@ body::before{
 }
 @keyframes spin{to{transform:rotate(360deg)}}
 .cal-error{
-  padding:16px;border:1.5px solid #f0d4d4;background:#fbf3f3;color:#8b3a3a;
+  padding:16px;border:1.5px solid var(--g200);background:var(--g50);color:var(--black);
   border-radius:var(--radius);font-size:13px;margin-bottom:20px;line-height:1.5;
 }
-.cal-error a{color:#8b3a3a;font-weight:600;text-decoration:underline}
+.cal-error a{color:inherit;font-weight:600;text-decoration:underline}
+.cal-error.ok{border-color:var(--accent-border);background:var(--accent-light);color:#2f4a29}
+.cal-error .field-input{margin-top:10px}
 
 /* ── Time Slot List ── */
 .slot-shell{margin-bottom:32px}
@@ -1338,13 +1340,13 @@ function showCalError(message, options) {
   if (fbEl) fbEl.addEventListener('click', function(e){ e.preventDefault(); fallbackToCalRedirect('user_chose_fallback'); });
 }
 
-function recoverStaleSlot() {
+function recoverStaleSlot(message) {
   booking.bookingInFlight = false;
   booking.loaded = false; booking.loading = false;
   rwTrack('booking_slot_taken',{page:'get-started'});
   const fromLoader = current; current = 3; // back to the date picker (step 3)
   transitionStep(fromLoader, current, 'backward');
-  showCalError("That time was just booked by someone else. Here are the latest open times — please pick another.", { retry: false, fallback: true });
+  showCalError(message, { retry: false, fallback: true });
   loadSlots();
 }
 
@@ -1416,7 +1418,7 @@ async function loadSlots() {
   } catch (err) {
     console.error('loadSlots failed:', err);
     reportClientError('availability', err);
-    showCalError(err && err.message ? `We couldn't load availability: ${err.message}` : "We couldn't load availability.", { retry: true, fallback: true });
+    showCalError("We couldn't load open times just now.", { retry: true, fallback: true });
     if (grid) grid.innerHTML = '';
   } finally {
     booking.loading = false;
@@ -1529,16 +1531,36 @@ function renderSlots() {
   });
 }
 
-function showSlotError(message) {
+// opts.ok = good news (no Cal.com link); opts.fixEmail = an email box to correct before the next tap.
+function showSlotError(message, opts) {
   const errEl = document.getElementById('slot-error-slot');
   if (!errEl) return;
-  errEl.innerHTML = `<div class="cal-error">${esc(message)} <a href="#" id="slot-fallback">Pick a time on Cal.com instead</a></div>`;
+  const ok = opts && opts.ok, fix = opts && opts.fixEmail;
+  errEl.innerHTML = `<div class="cal-error${ok ? ' ok' : ''}">${esc(message)}${ok || fix ? '' : ' <a href="#" id="slot-fallback">Pick a time on Cal.com instead</a>'}` +
+    (fix ? `<input type="email" class="field-input" id="fix-email" value="${esc((booking.lead && booking.lead.email) || '')}" autocomplete="email" inputmode="email" autocapitalize="off" spellcheck="false" aria-label="Email">` : '') + `</div>`;
   const fb = document.getElementById('slot-fallback');
   if (fb) fb.addEventListener('click', function(e){ e.preventDefault(); fallbackToCalRedirect('booking_error'); });
+  const fe = document.getElementById('fix-email');
+  if (fe) { try { fe.focus(); } catch (e) {} }
 }
+
+/* The email Cal couldn't deliver to, corrected in the box showSlotError put up. False while it
+   still looks wrong. */
+function applyFixedEmail() {
+  const inp = document.getElementById('fix-email');
+  if (!inp) return true;
+  const v = inp.value.trim();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) { inp.classList.add('error'); try { inp.focus(); } catch (e) {} return false; }
+  booking.lead = Object.assign({}, booking.lead, { email: v });
+  return true;
+}
+
+// About this visitor, not an outage, so no ops report.
+const QUIET_BOOKING_CODES = { slot_unavailable: 1, already_booked: 1, email_invalid: 1 };
 
 async function selectSlot(iso, btn) {
   if (booking.bookingInFlight) return;
+  if (!applyFixedEmail()) return;
   booking.bookingInFlight = true;
   booking.selectedSlot = iso;
   rwTrack('select_booking_time',{time:iso,page:'get-started'});
@@ -1580,7 +1602,6 @@ async function selectSlot(iso, btn) {
   let bookingError = null;
   let shouldFallback = false;
   let bookingBody = null;
-  let slotUnavailable = false;
 
   try {
     const res = await fetch(CAL_BOOKING_ENDPOINT, {
@@ -1590,8 +1611,9 @@ async function selectSlot(iso, btn) {
     });
     const body = await res.json().catch(() => ({}));
     if (!res.ok || !body.ok) {
-      if (body && body.code === 'slot_unavailable') { slotUnavailable = true; }
-      else if (body && body.fallback) { shouldFallback = true; bookingBody = body; }
+      // The API sorts Cal's rejection into body.code and the words to show into body.message.
+      bookingBody = body && body.message ? body : null;
+      if (body && body.fallback) { shouldFallback = true; }
       else {
         const e = new Error((body && body.error) || `Cal.com returned ${res.status}`);
         e.serverBody = body; e.status = res.status;
@@ -1603,6 +1625,8 @@ async function selectSlot(iso, btn) {
   } catch (err) {
     bookingError = err;
   }
+  const failCode = (bookingBody && bookingBody.code) || (bookingError ? 'network' : null);
+  if (failCode) { try { rwTrack('booking_error', { code: failCode, page: 'get-started' }); } catch (e) {} }
 
   // Hold the loader on screen for the minimum display time
   const elapsed = Date.now() - startedAt;
@@ -1616,22 +1640,24 @@ async function selectSlot(iso, btn) {
     return;
   }
 
-  if (slotUnavailable) {
-    recoverStaleSlot();
+  if (failCode === 'slot_unavailable') {
+    recoverStaleSlot(bookingBody.message);
     return;
   }
 
   if (bookingError) {
-    console.error('Booking failed:', bookingError);
-    reportClientError('booking', bookingError);
+    if (!QUIET_BOOKING_CODES[failCode]) { console.error('Booking failed:', bookingError); reportClientError('booking', bookingError, bookingBody); }
     booking.bookingInFlight = false;
-    // Slide back to the time picker and surface the error
+    // Slide back to the time picker and say what happened in plain words. No body means the request
+    // never got an answer; it may have booked, and the next tap finds out (Cal says already_booked).
     const fromLoader = current;
     current--;
     transitionStep(fromLoader, current, 'backward');
     setTimeout(function(){
       allBtns.forEach(function(b){ b.disabled = false; });
-      showSlotError(bookingError.message ? `That didn't work: ${bookingError.message}.` : "We couldn't book that slot.");
+      if (failCode === 'already_booked') showSlotError(bookingBody.message, { ok: true });
+      else if (failCode === 'email_invalid') showSlotError(bookingBody.message + ' Then tap your time again.', { fixEmail: true });
+      else showSlotError((bookingBody && bookingBody.message) || "We lost the connection for a moment. Tap your time again and we'll make sure it's locked in.");
     }, 450);
     return;
   }

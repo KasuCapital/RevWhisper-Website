@@ -52,6 +52,8 @@ function installFetch(queue) {
     return next;
   };
 }
+// Booking attempts only: a successful booking also GETs the booking back for its Meet link.
+function postCount() { return fetchCalls.filter(c => c.options.method === 'POST').length; }
 function authHeaderOf(callIdx) {
   const h = (fetchCalls[callIdx] && fetchCalls[callIdx].options.headers) || {};
   return h['Authorization'] || h['authorization'];
@@ -90,7 +92,7 @@ async function run() {
   r = mockRes();
   await booking({ method: 'POST', body: validBody }, r);
   check('booking/happy: 201', r.statusCode === 201 && r.json().ok === true, `got ${r.statusCode}`);
-  check('booking/happy: single upstream call', fetchCalls.length === 1, `calls=${fetchCalls.length}`);
+  check('booking/happy: single booking attempt', postCount() === 1, `posts=${postCount()}`);
   check('booking/happy: sent auth header', authHeaderOf(0) === 'Bearer cal_live_validkey');
   check('booking/happy: legacy eventTypeId (default 5076967)', bodyOf(0).eventTypeId === 5076967 && !bodyOf(0).eventTypeSlug, JSON.stringify({ id: bodyOf(0).eventTypeId, slug: bodyOf(0).eventTypeSlug }));
   check('booking/happy: cal-api-version 2024-06-14', (fetchCalls[0].options.headers || {})['cal-api-version'] === '2024-06-14', JSON.stringify((fetchCalls[0].options.headers || {})['cal-api-version']));
@@ -114,7 +116,7 @@ async function run() {
   r = mockRes();
   await booking({ method: 'POST', body: validBody }, r);
   check('booking/auth-retry: final 201', r.statusCode === 201 && r.json().ok === true, `got ${r.statusCode}`);
-  check('booking/auth-retry: two calls', fetchCalls.length === 2, `calls=${fetchCalls.length}`);
+  check('booking/auth-retry: two booking attempts', postCount() === 2, `posts=${postCount()}`);
   check('booking/auth-retry: 1st had auth', authHeaderOf(0) === 'Bearer cal_live_validkey');
   check('booking/auth-retry: 2nd had NO auth', authHeaderOf(1) === undefined, `got ${authHeaderOf(1)}`);
 
@@ -150,6 +152,32 @@ async function run() {
   r = mockRes();
   await booking({ method: 'POST', body: validBody }, r);
   check('booking/network: 502 fallback', r.statusCode === 502 && r.json().fallback === true);
+  check('booking/network: friendly message', r.json().code === 'unavailable' && /hiccup/.test(r.json().message || ''), JSON.stringify(r.json()));
+
+  // 8b. Every rejection that reached the ops inbox Sept 18 to Oct 16 2026, in Cal's real response
+  //     shape. Each needs its own customer code, a friendly message with no raw Cal text, and an
+  //     ops alert only when it really is an outage.
+  const calErr = (msg) => ({ status: 'error', path: '/v2/bookings', error: { code: 'HttpException', message: msg, details: msg } });
+  const realWorld = [
+    { name: 'out-of-bounds (slot inside 2h notice)', status: 400, msg: 'booking_time_out_of_bounds_error', code: 'slot_unavailable', alert: false },
+    { name: 'in the past (canary reply)', status: 400, msg: 'Attempting to book a meeting in the past.', code: 'slot_unavailable', alert: false },
+    { name: 'booker limit (already booked)', status: 400, msg: 'booker_limit_exceeded_error_reschedule', code: 'already_booked', alert: false },
+    { name: 'booker limit, no reschedule', status: 400, msg: 'booker_limit_exceeded_error', code: 'already_booked', alert: false },
+    { name: 'email domain cannot receive mail', status: 400, msg: 'email_domain_cannot_receive_mail', code: 'email_invalid', alert: false },
+    { name: 'no hosts free', status: 409, msg: 'no_available_users_found_error', code: 'slot_unavailable', alert: false },
+    { name: 'corrupt booking field (outage)', status: 400, msg: '4.required - Required', code: 'unavailable', alert: true }
+  ];
+  for (const t of realWorld) {
+    alerts.length = 0;
+    installFetch([fakeResponse(t.status, calErr(t.msg))]);
+    r = mockRes();
+    await booking({ method: 'POST', body: { ...validBody, phone: '' } }, r);
+    const j = r.json() || {};
+    check(`booking/${t.name}: code ${t.code}`, j.code === t.code, JSON.stringify(j));
+    check(`booking/${t.name}: ${t.alert ? 'ops alerted' : 'no ops alert'}`, (alerts.length === 1) === t.alert && j.alerted === t.alert, JSON.stringify(alerts));
+    check(`booking/${t.name}: friendly message`, typeof j.message === 'string' && j.message.length > 20 && !/_error|_mail|exceeded|required/i.test(j.message), j.message);
+    check(`booking/${t.name}: raw error kept for logs`, j.error === t.msg, j.error);
+  }
 
   // 9. Metadata limits: huge airbnbUrl + nested object + 60 attribution keys
   const bigAttr = {};
@@ -200,7 +228,7 @@ async function run() {
   r = mockRes();
   await booking({ method: 'POST', body: validBody }, r);
   check('booking/phone-retry: final 201', r.statusCode === 201 && r.json().ok === true, `got ${r.statusCode}`);
-  check('booking/phone-retry: two calls', fetchCalls.length === 2, `calls=${fetchCalls.length}`);
+  check('booking/phone-retry: two booking attempts', postCount() === 2, `posts=${postCount()}`);
   check('booking/phone-retry: 1st call included phone', bodyOf(0).responses.smsReminderNumber === '+15551234567');
   check('booking/phone-retry: 2nd call dropped phone', bodyOf(1).responses.smsReminderNumber === undefined && bodyOf(1).responses.attendeePhoneNumber === undefined);
   delete process.env.CAL_API_KEY;

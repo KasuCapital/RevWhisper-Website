@@ -13,7 +13,9 @@ const MAX_RANGE_DAYS = 60;
 // only our own guard against pathological requests and must never be a reason a customer can't book.
 const RANGE_TOLERANCE_MS = 24 * 60 * 60 * 1000;
 const UPSTREAM_TIMEOUT_MS = 10000;
-const CACHE_OK = 'public, max-age=60, stale-while-revalidate=300';
+// Kept short: on a quiet site a 5-minute stale window meant the first visitor after a lull could be
+// offered a time that had already slid inside Cal's 2-hour minimum notice.
+const CACHE_OK = 'public, max-age=60, stale-while-revalidate=60';
 
 const { sendBookingAlert } = require('./_alert');
 

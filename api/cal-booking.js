@@ -116,6 +116,38 @@ function extractMessage(b) {
   return '';
 }
 
+// What the customer reads when a booking fails. Every booking page shows `message` from the response
+// and never the raw Cal.com text, so this is the one place the copy lives.
+const CUSTOMER_MESSAGES = {
+  slot_unavailable: 'Sorry, that time is no longer available. Here are the latest open times. Please pick another one.',
+  already_booked: 'Good news: you already have an audit call booked with us. Check your inbox for the confirmation email. You can reschedule from there if you need a different time.',
+  email_invalid: "We couldn't send a confirmation to that email address. Please check it for typos and try again.",
+  rate_limited: 'Our scheduler is busy for a moment. Please try again in a minute.',
+  unavailable: 'Our scheduler is having a hiccup. Please try again in a moment.'
+};
+
+// Sort a Cal.com rejection into what it means for the customer, and whether ops should be paged.
+// Only the last bucket is an outage. The others are about this one visitor, and every one of them has
+// emailed a false "bookings are FAILING" alarm before (Sept 18 to Oct 16, 2026):
+//  - slot_unavailable: someone took the time, or it slid inside the event type's 2-hour minimum
+//    notice while the visitor was still filling in the form (booking_time_out_of_bounds_error).
+//    "in the past" also lands here; it is the canary's expected reply.
+//  - already_booked: the event type allows one upcoming call per person. This also catches a retry
+//    after a dropped connection where the first attempt had in fact booked them.
+//  - email_invalid: Cal checks the address can receive mail (email_domain_cannot_receive_mail).
+function classifyFailure(status, message) {
+  const m = String(message || '').toLowerCase();
+  if (/booker_limit_exceeded|already_signed_up/.test(m)) return { code: 'already_booked', alert: false, fallback: false };
+  if (status === 409 || /out_of_bounds|in the past|already has|not available|no_available|no available|already booked|no longer available|fully booked|slot.*unavailable|hosts?_unavailable|restriction_schedule|seats_full|not_enough_available_seats|booking limit reached|limit_reached/.test(m)) {
+    return { code: 'slot_unavailable', alert: false, fallback: false };
+  }
+  if (/email/.test(m) && /cannot_receive|invalid|undeliverable|disposable|blocked/.test(m)) return { code: 'email_invalid', alert: false, fallback: false };
+  if (status === 429) return { code: 'rate_limited', alert: true, fallback: true };
+  // Config/parse errors like 4.required, 5xx, broken auth, timeouts. Cal's own booking page kept
+  // working through the June 4.required outage, so it is always offered as the way out.
+  return { code: 'unavailable', alert: true, fallback: true };
+}
+
 // The Google Meet URL for the booking. Verified live: the legacy booking response puts the location
 // TYPE in `location` ("integrations:google:meet") and the real URL in `references[].meetingUrl`
 // (both a google_meet_video and a google_calendar reference carry it), present immediately with no
@@ -265,36 +297,22 @@ module.exports = async function handler(req, res) {
     console.error('cal-booking upstream error:', attempt.err && attempt.err.name, attempt.err && attempt.err.message);
     // `alerted` tells the widget ops already got an email, so it skips its own /api/client-error report.
     const alertResult = isCanary ? null : await sendBookingAlert({ source: 'live booking', reason: 'Could not reach Cal.com (network/timeout)', detail: (attempt.err && attempt.err.message) || 'network error' });
-    return sendJson(res, 502, { error: 'Unable to reach Cal.com right now.', fallback: true, alerted: !!(alertResult && alertResult.ok) });
+    return sendJson(res, 502, { error: 'Unable to reach Cal.com right now.', code: 'unavailable', message: CUSTOMER_MESSAGES.unavailable, fallback: true, alerted: !!(alertResult && alertResult.ok) });
   }
 
   const { status, body: upstreamBody } = attempt;
 
   if (status < 200 || status >= 300) {
     console.error('cal-booking non-OK', status, JSON.stringify(upstreamBody));
-    const message = extractMessage(upstreamBody) || 'Cal.com rejected the booking.';
-    const lower = message.toLowerCase();
-    // The slot was taken between load and booking (concurrent/ad-load race). Redirecting to
-    // Cal.com wouldn't help — the client should refresh availability and let them re-pick.
-    const slotGone = status === 409 ||
-      /already has|not available|no_available|no available|already booked|no longer available|fully booked|slot.*unavailable/.test(lower);
-    // Transient/infra/throttle/auth: Cal.com's own booking page may still work → offer fallback.
-    const fallback = !slotGone && (status === 401 || status === 403 || status === 408 || status === 429 || status >= 500);
-    // Alert on SYSTEMIC failures only. A taken slot is a normal race; "in the past" only comes from
-    // a malformed/synthetic request (the UI never sends a past slot) — neither means an outage.
-    // Everything else (config/parse errors like 4.required, 5xx, broken auth, throttling) does.
-    const benign = slotGone || /in the past/i.test(lower);
+    // `error` stays Cal's raw text for logs and the canary; pages show `message` instead.
+    const error = extractMessage(upstreamBody) || 'Cal.com rejected the booking.';
+    const { code, alert, fallback } = classifyFailure(status, error);
     let alerted = false;
-    if (!isCanary && !benign) {
-      const r = await sendBookingAlert({ source: 'live booking', status, reason: 'Cal.com rejected the booking', detail: message });
+    if (!isCanary && alert) {
+      const r = await sendBookingAlert({ source: 'live booking', status, reason: 'Cal.com rejected the booking', detail: error });
       alerted = !!(r && r.ok);
     }
-    return sendJson(res, status, {
-      error: message,
-      code: slotGone ? 'slot_unavailable' : undefined,
-      fallback,
-      alerted
-    });
+    return sendJson(res, status, { error, code, message: CUSTOMER_MESSAGES[code], fallback, alerted });
   }
 
   const data = upstreamBody && upstreamBody.data ? upstreamBody.data : null;

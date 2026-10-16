@@ -425,7 +425,10 @@ body.kb .scr .pill{display:none}
 .calc-tz{font-size:12px;color:var(--g500);text-align:center;padding-top:10px;margin-top:8px;border-top:1px solid var(--line)}
 #slot-list .chip span{font-variant-numeric:tabular-nums}
 .tz-note{font-size:12px;color:var(--g500);text-align:center;margin-top:16px}
-.bk-msg{margin-top:16px;padding:12px 14px;border-radius:14px;background:#fbf1f1;color:#8b3a3a;font-size:13px;line-height:1.45;text-align:left}
+.bk-msg{margin-top:16px;padding:12px 14px;border-radius:14px;background:var(--g100);color:var(--black);font-size:13px;line-height:1.45;text-align:left}
+.bk-msg.ok{background:var(--accent-light);color:#2f4a29}
+.fix-email{margin-top:12px}
+.fix-email[hidden]{display:none}
 .bk-msg a{color:inherit;font-weight:600}
 .bk-msg[hidden]{display:none}
 /* invite card: in the confirm illustration and as a row on the booked screen */
@@ -745,6 +748,7 @@ body.kb .scr .pill{display:none}
         <h2 class="h">Confirm your <em>live audit.</em></h2>
       </div>
       <div class="bk-msg" id="confirm-msg" role="alert" hidden></div>
+      <div class="fld fix-email" id="fix-email-wrap" hidden><input type="email" class="inp" id="fix-email" placeholder="Email" autocomplete="email" inputmode="email" aria-label="Email" autocapitalize="off" spellcheck="false" enterkeyhint="done"><div class="err">Please enter a valid email</div></div>
       <div class="foot">
         <button class="cta" type="button" id="btn-book"><span class="spin" aria-hidden="true"></span><span class="lbl">Confirm my audit</span> <svg class="arw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
         <p class="legal" id="confirm-note">&nbsp;</p>
@@ -1190,7 +1194,7 @@ const CAL_SLOTS_ENDPOINT='/api/cal-slots', CAL_BOOKING_ENDPOINT='/api/cal-bookin
 const PREVIEW_LEAD={name:'Jordan Avery',email:'jordan@example.com',phone:'+1 (512) 555-0199',listings:'1',source:'preview'};
 const bk={lead:null,preview:false,phase:false,done:false,
   tz:(function(){ try{ return Intl.DateTimeFormat().resolvedOptions().timeZone||'UTC'; }catch(e){ return 'UTC'; } })(),
-  slotsByDate:{},loaded:false,loading:null,start:null,end:null,month:null,date:null,slot:null,inFlight:false};
+  slotsByDate:{},loaded:false,loadedAt:0,loading:null,start:null,end:null,month:null,date:null,slot:null,inFlight:false};
 function bkTrack(e,p){ if(!bk.preview) rwTrack(e,p); } // a preview never reaches analytics
 function esc(v){ return String(v==null?'':v).replace(/[&<>"']/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
 function ymd(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
@@ -1210,13 +1214,18 @@ function enterBooking(lead,preview){
   document.getElementById('bk-pill').textContent=first?'Request received, '+first:'Request received';
   document.getElementById('cal-tz').textContent='Times shown in '+tzShort();
   renderCalendar();
-  loadSlots();
+  loadSlots(Date.now()-bk.loadedAt>SLOTS_FRESH_MS);
 }
 
 /* Availability: one 60-day fetch, started as soon as they reach the link step, so the calendar is
-   usually ready before they submit. Absolute 60×24h window (see /audit-booking: DST-safe). */
-function loadSlots(){
-  if(bk.loaded) return Promise.resolve();
+   usually ready before they submit. Absolute 60×24h window (see /audit-booking: DST-safe).
+   Times go stale while they type their details: Cal won't book a slot less than 2 hours out, and on
+   10/16/26 a visitor picked an 11:00 slot loaded at 8:53 and confirmed at 9:01. So a fetch older than
+   SLOTS_FRESH_MS is redone when the calendar opens (`refresh`), keeping the old times on screen until
+   the new ones land. */
+const SLOTS_FRESH_MS=3*60*1000;
+function loadSlots(refresh){
+  if(bk.loaded&&!refresh) return Promise.resolve();
   if(bk.loading) return bk.loading;
   const start=new Date(); start.setHours(0,0,0,0);
   const end=new Date(start.getTime()+60*24*60*60*1000);
@@ -1234,9 +1243,9 @@ function loadSlots(){
       const arr=data[k];
       if(Array.isArray(arr)&&arr.length) bk.slotsByDate[k]=arr.map(function(it){ return typeof it==='string'?it:(it&&it.start)||null; }).filter(Boolean);
     });
-    bk.loaded=true;
+    bk.loaded=true; bk.loadedAt=Date.now();
   }).catch(function(err){
-    if(bk.preview){ bk.slotsByDate=demoSlots(); bk.loaded=true; return; } // local preview without the API
+    if(bk.preview){ bk.slotsByDate=demoSlots(); bk.loaded=true; bk.loadedAt=Date.now(); return; } // local preview without the API
     bk.loadError=err;
     reportClientError('availability',err);
   }).then(function(){
@@ -1246,8 +1255,7 @@ function loadSlots(){
       if(first&&(!bk.month||!monthOpen(bk.month))) bk.month=first;
       if(!Object.keys(bk.slotsByDate).length) calMsg("We don't have open times in the next 60 days right now. Please try again shortly.",{retry:true});
     }else if(bk.phase){
-      const e=bk.loadError;
-      calMsg(e&&e.message?"We couldn't load availability: "+e.message:"We couldn't load availability.",{retry:true,fallback:true});
+      calMsg("We couldn't load open times just now.",{retry:true,fallback:true});
     }
     if(bk.phase) renderCalendar();
   });
@@ -1272,7 +1280,7 @@ function calMsg(text,opts){
   el.hidden=false;
   sizeArt();
 }
-document.getElementById('cal-msg').addEventListener('click',function(e){
+function msgLinks(e){
   const a=e.target.closest('a[data-act]'); if(!a) return;
   e.preventDefault();
   if(a.dataset.act==='retry'){ calMsg(''); bk.loaded=false; bk.loadError=null; renderCalendar(); loadSlots(); }
@@ -1281,7 +1289,9 @@ document.getElementById('cal-msg').addEventListener('click',function(e){
     try{ bkTrack('booking_fallback',{reason:'user_chose_fallback',page:PAGE}); }catch(err){}
     location.href=CAL_FALLBACK_BASE+'?'+new URLSearchParams({name:l.name||'',email:l.email||'',phone:l.phone||''}).toString();
   }
-});
+}
+document.getElementById('cal-msg').addEventListener('click',msgLinks);
+document.getElementById('confirm-msg').addEventListener('click',msgLinks);
 /* Failures only this browser saw (the API alerts ops itself when IT fails and says alerted:true). */
 function reportClientError(stage,err,serverBody){
   try{
@@ -1378,18 +1388,62 @@ function selectSlot(iso){
   const l=bk.lead||{};
   document.getElementById('confirm-note').textContent=l.email?'Your calendar invite goes to '+l.email+'.':'';
   confirmMsg('');
-  const b=document.getElementById('btn-book'); b.disabled=false; b.classList.remove('loading');
+  const b=document.getElementById('btn-book'); b.disabled=false; b.classList.remove('loading'); b.style.display='';
   b.querySelector('.lbl').textContent='Confirm my audit';
 }
-function confirmMsg(text){
+function confirmMsg(text,opts){
   const el=document.getElementById('confirm-msg');
-  el.textContent=text||''; el.hidden=!text; sizeArt();
+  el.classList.toggle('ok',!!(opts&&opts.ok));
+  el.innerHTML=text?esc(text)+(opts&&opts.fallback?'<br><a href="#" data-act="cal">Pick a time on Cal.com instead</a>':''):'';
+  el.hidden=!text; sizeArt();
+}
+/* The email Cal couldn't deliver to, corrected in place. Returns false while it still looks wrong. */
+function applyFixedEmail(){
+  const w=document.getElementById('fix-email-wrap'); if(w.hidden) return true;
+  const inp=document.getElementById('fix-email'), v=inp.value.trim();
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){ inp.classList.add('error'); try{ inp.focus(); }catch(e){} sizeArt(); return false; }
+  inp.classList.remove('error');
+  bk.lead=Object.assign({},bk.lead,{email:v});
+  try{ const s=JSON.parse(sessionStorage.getItem('rw_audit_lead')||'null'); if(s){ s.email=v; sessionStorage.setItem('rw_audit_lead',JSON.stringify(s)); } }catch(e){}
+  document.getElementById('confirm-note').textContent='Your calendar invite goes to '+v+'.';
+  return true;
+}
+/* A booking that didn't go through. The API sorts Cal's rejection into a code and the words to show
+   (body.code / body.message), so no raw error ever reaches the screen. No body at all means the
+   request never got an answer: the booking may well have gone through, and a second tap finds out
+   (Cal answers already_booked). That happened on 10/9/26. */
+const QUIET_BOOKING_CODES={slot_unavailable:1,already_booked:1,email_invalid:1}; // about this visitor, not an outage
+function bookingFailed(err,body){
+  const code=(body&&body.code)||'network';
+  const btn=document.getElementById('btn-book');
+  btn.disabled=false; btn.classList.remove('loading'); btn.querySelector('.lbl').textContent='Confirm my audit';
+  bkTrack('booking_error',{code:code,page:PAGE});
+  if(!QUIET_BOOKING_CODES[code]) reportClientError('booking',err,body);
+  if(code==='slot_unavailable'){ // gone while they decided: fresh times, back on the calendar
+    bkTrack('booking_slot_taken',{page:PAGE});
+    bk.loaded=false; bk.slot=null; bk.date=null;
+    show(B_CAL,-1);
+    try{ history.replaceState({rwStep:B_CAL},'','#book'); }catch(e){}
+    calMsg(body.message);
+    renderCalendar(); loadSlots();
+    return;
+  }
+  if(code==='already_booked'){ btn.style.display='none'; document.getElementById('fix-email-wrap').hidden=true; confirmMsg(body.message,{ok:true}); return; }
+  if(code==='email_invalid'){
+    const w=document.getElementById('fix-email-wrap'), inp=document.getElementById('fix-email');
+    if(w.hidden){ inp.value=(bk.lead&&bk.lead.email)||''; w.hidden=false; }
+    confirmMsg(body.message);
+    try{ inp.focus(); }catch(e){}
+    return;
+  }
+  confirmMsg((body&&body.message)||"We lost the connection for a moment. Tap Confirm again and we'll make sure your time is locked in.",{fallback:!!(body&&body.fallback)});
 }
 
 /* Book it. Mirrors /audit-booking: Meta Schedule (browser + CAPI share one event id), Google Ads
    Call Booked for gclid leads, X auditCallBooked; a taken slot sends them back to fresh times. */
 async function confirmBooking(){
   if(busy||bk.inFlight||!bk.slot) return;
+  if(!applyFixedEmail()) return;
   bk.inFlight=true; confirmMsg('');
   const btn=document.getElementById('btn-book');
   btn.disabled=true; btn.classList.add('loading'); btn.querySelector('.lbl').textContent='Locking in your time…';
@@ -1405,31 +1459,16 @@ async function confirmBooking(){
   const payload={start:iso,name:l.name,email:l.email,phone:l.phone||'',timeZone:bk.tz,listings:l.listings,airbnbUrl:l.airbnbUrl,
     source:l.source||PAGE,attribution:l.attribution||{},fbEventId:evId,adConsent:!window.rwConsent||rwConsent.ads,
     fbp:rwCookie('_fbp'),fbc:rwCookie('_fbc'),xConversionId:xConversionId,twclid:l.twclid||(l.attribution&&l.attribution.twclid)||''};
-  let result=null, err=null, body=null, taken=false;
+  let result=null, err=null, body=null;
   try{
     const res=await fetch(CAL_BOOKING_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
     body=await res.json().catch(function(){ return {}; });
     if(res.ok&&body.ok) result=body.booking;
-    else if(body&&body.code==='slot_unavailable') taken=true;
     else{ err=new Error((body&&body.error)||('Cal.com returned '+res.status)); err.serverBody=body; err.status=res.status; }
-  }catch(e){ err=e; }
+  }catch(e){ err=e; body=null; }
   await settle();
   bk.inFlight=false;
-  if(taken){ // someone else got there first: fresh times, back on the calendar
-    bkTrack('booking_slot_taken',{page:PAGE});
-    bk.loaded=false; bk.slot=null; bk.date=null;
-    show(B_CAL,-1);
-    try{ history.replaceState({rwStep:B_CAL},'','#book'); }catch(e){}
-    calMsg('That time was just booked by someone else. Here are the latest open times. Please pick another.');
-    renderCalendar(); loadSlots();
-    return;
-  }
-  if(err||!result&&body&&body.fallback){
-    reportClientError('booking',err||new Error('scheduler unavailable'),body);
-    btn.disabled=false; btn.classList.remove('loading'); btn.querySelector('.lbl').textContent='Confirm my audit';
-    confirmMsg(err&&err.message?"That didn't work: "+err.message+'. Please try again.':"We couldn't reach the scheduler just now. Please try again in a moment.");
-    return;
-  }
+  if(err) return bookingFailed(err,body&&body.message?body:null);
   try{ fbq('track','Schedule',{content_name:'Audit Call Booked',content_category:'Audit'},{eventID:evId}); }catch(e){}
   if(rwHasGclid()){
     try{
