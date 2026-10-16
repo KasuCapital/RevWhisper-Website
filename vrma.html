@@ -5,25 +5,33 @@
 <!-- Warm the two heavy third-party origins before their loaders fire below -->
 <link rel="preconnect" href="https://connect.facebook.net">
 <link rel="preconnect" href="https://www.googletagmanager.com">
-<!-- Attribution tracking (cookie-free) -->
+<script>
+// /vrma: every visitor came from the VRMA campaign. Any UTM missing from the URL is filled with the
+// campaign default (URL values always win) and written back into the address bar before the
+// attribution capture below, GA4, PostHog and Meta read it. rwAttributionForce makes the capture
+// always overwrite, so an older paid touch from another campaign can't claim the lead.
+(function(){
+  var VRMA_DEFAULTS={utm_source:'meta',utm_medium:'paid',utm_campaign:'vrma-2026',utm_content:'RW-VRMA'};
+  var params=new URLSearchParams(window.location.search),filled=false;
+  Object.keys(VRMA_DEFAULTS).forEach(function(f){if(!params.get(f)){params.set(f,VRMA_DEFAULTS[f]);filled=true;}});
+  if(filled){try{history.replaceState(history.state,'',window.location.pathname+'?'+params.toString()+window.location.hash);}catch(e){}}
+  window.rwAttributionForce=true;
+})();
+</script>
+<!-- ATTRIBUTION:START -->
+<!-- Attribution capture (cookie-free): a lead carries its UTMs and ad click IDs into the CRM.
+     One copy for every page. Edit _partials/attribution.html, then run node scripts/sync-partials.mjs. -->
 <script>
 (function(){
   var key='rw_attribution';
   var TTL=7776000000; // 90 days — keep the last paid touch across tabs/sessions
   var params=new URLSearchParams(window.location.search);
-  var utmFields=['utm_source','utm_medium','utm_campaign','utm_term','utm_content'];
-  var clickFields=['fbclid','gclid','ttclid','twclid','msclkid','li_fat_id'];
+  var utmFields=['utm_source','utm_medium','utm_campaign','utm_term','utm_content','utm_id'];
+  // gbraid/wbraid: Google's iOS click IDs, sent in place of gclid. Keep in sync with CLICK_IDS in /assets/rw-consent.js.
+  var clickFields=['fbclid','gclid','gbraid','wbraid','ttclid','twclid','msclkid','li_fat_id'];
   var trackedFields=utmFields.concat(clickFields);
-  // /vrma: every visitor came from the VRMA campaign. Any UTM missing from the URL is
-  // filled with the campaign default (URL values always win), written back into the
-  // address bar before GA4/PostHog/Meta read it, and attribution is always overwritten so an
-  // older paid touch from another campaign can't claim the lead.
-  // Attio's utm_campaign column is fed from utm_content, so that one carries the VRMA code.
-  var VRMA_DEFAULTS={utm_source:'meta',utm_medium:'paid',utm_campaign:'vrma-2026',utm_content:'RW-VRMA'};
-  var filled=false;
-  Object.keys(VRMA_DEFAULTS).forEach(function(f){if(!params.get(f)){params.set(f,VRMA_DEFAULTS[f]);filled=true;}});
-  if(filled){try{history.replaceState(history.state,'',window.location.pathname+'?'+params.toString()+window.location.hash);}catch(e){}}
-  var hasTracked=true;
+  // A page sets window.rwAttributionForce before this runs when every visit must be recorded (/vrma does).
+  var hasTracked=!!window.rwAttributionForce||trackedFields.some(function(f){return params.has(f);});
   function rwGet(k){try{return localStorage.getItem(k)||sessionStorage.getItem(k);}catch(e){try{return sessionStorage.getItem(k);}catch(e2){return null;}}}
   function rwSet(k,v){try{localStorage.setItem(k,v);}catch(e){try{sessionStorage.setItem(k,v);}catch(e2){}}}
   var prev=null;try{prev=JSON.parse(rwGet(key));}catch(e){prev=null;}
@@ -35,11 +43,53 @@
     data.landing_page=window.location.pathname;
     data.arrived_at=new Date().toISOString();
     rwSet(key,JSON.stringify(data));
+    prev=data;
   }
+  // This page's copy, kept in memory. Facebook's and Instagram's in-app browsers can lose storage
+  // while the page is still open (the visitor switches apps to copy their Airbnb link, comes back,
+  // submits), which sent those leads to the CRM with no UTMs at all.
+  var atLoad=prev||{};
+
+  // One label for where the lead came from, filled in even when the link carried no UTMs.
+  function channel(a){
+    var s=String(a.utm_source||'').toLowerCase(), m=String(a.utm_medium||'').toLowerCase();
+    var r=String(a.referrer||'').toLowerCase();
+    var paid=/cpc|ppc|paid|display|retarget|^ads?$/.test(m);
+    if(/^(meta|facebook|fb|instagram|ig|threads)$/.test(s))return paid?'meta-ads':'meta-organic';
+    if(a.gclid||a.gbraid||a.wbraid||(/google/.test(s)&&paid))return 'google-ads';
+    if(a.msclkid||(/bing|microsoft/.test(s)&&paid))return 'microsoft-ads';
+    // Meta adds fbclid to every Facebook/Instagram link. Without UTMs it's an ad click whose URL
+    // parameters didn't come through, or an organic post or message.
+    if(a.fbclid)return 'meta';
+    if(a.twclid||/^(x|twitter)$/.test(s))return 'x';
+    if(a.ttclid||s==='tiktok')return 'tiktok';
+    if(a.li_fat_id||s==='linkedin')return 'linkedin';
+    if(s)return s; // any other tagged link: email, partner, conference...
+    if(!r||r==='direct')return 'direct';
+    if(/(^|\.)revwhisper\.com$/.test(r))return 'unknown'; // record started mid-visit, the entry point wasn't seen
+    if(/(^|\.)(google|bing|duckduckgo|yahoo|ecosia|brave|baidu|yandex)\.[a-z.]+$/.test(r))return 'organic-search';
+    if(/(^|\.)(facebook|instagram|threads|linkedin|reddit|youtube|tiktok|pinterest|twitter|x)\.(com|net)$|^(t\.co|lnkd\.in)$/.test(r))return 'social';
+    return 'referral';
+  }
+
+  // What every form sends as `attribution`: the stored record, or this page's in-memory copy when
+  // storage was lost, plus `channel`.
+  window.rwAttribution=function(){
+    var a=null;
+    try{a=JSON.parse(localStorage.getItem(key));}catch(e){}
+    if(!a||!a.arrived_at){try{a=JSON.parse(sessionStorage.getItem(key));}catch(e){}}
+    if(!a||!a.arrived_at)a=atLoad;
+    var out={};
+    for(var k in a){if(Object.prototype.hasOwnProperty.call(a,k))out[k]=a[k];}
+    out.channel=channel(out);
+    // Opt-in regions without ad consent: no click IDs leave the browser (same rule as /assets/rw-consent.js).
+    if(window.rwConsent&&rwConsent.optIn&&!rwConsent.ads)clickFields.forEach(function(f){delete out[f];});
+    return out;
+  };
 })();
-function rwAttribution(){try{return JSON.parse(localStorage.getItem('rw_attribution')||sessionStorage.getItem('rw_attribution'))||{};}catch(e){return {};}}
 </script>
-<script src="/assets/rw-consent.js?v=2"></script>
+<!-- ATTRIBUTION:END -->
+<script src="/assets/rw-consent.js?v=3"></script>
 <script defer src="/assets/rw-posthog.js?v=3"></script>
 <!-- GA4. Consent defaults come from /assets/rw-consent.js -->
 <script>

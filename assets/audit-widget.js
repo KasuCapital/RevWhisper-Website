@@ -39,9 +39,10 @@ var fsActive=false, fsEntering=false, fsScrollY=0, fsExitVia='';
    failure can never break the form. */
 function track(e,p){ try{ if(typeof rwTrack==='function') rwTrack(e,p||{}); }catch(err){} }
 
-/* rwAttribution() lives in audit.html's head. The homepage writes the same
-   rw_attribution record but doesn't define the reader, so define it here. */
+/* rwAttribution() comes from the shared head partial (_partials/attribution.html). It also covers
+   storage lost mid-visit and adds `channel`. The fallback only runs on a page without the partial. */
 function attribution(){
+  if(typeof window.rwAttribution==='function') return window.rwAttribution();
   try{ return JSON.parse(localStorage.getItem('rw_attribution')||sessionStorage.getItem('rw_attribution'))||{}; }
   catch(e){ return {}; }
 }

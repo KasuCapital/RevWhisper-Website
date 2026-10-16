@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // sync-partials.mjs — propagate _partials/*.html into target pages between
 // matching <!-- NAME:START --> / <!-- NAME:END --> markers. Idempotent.
-// Run after editing _partials/header.html or _partials/footer.html.
+// Run after editing any file in _partials/.
 
 import { readFileSync, writeFileSync, readdirSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
@@ -16,6 +16,9 @@ const PARTIALS = [
   // Landing-page sections (10/3/26): proof band + client results, shared across paid LPs.
   { name: 'LP-PROOF', file: '_partials/lp-proof.html' },
   { name: 'LP-RESULTS', file: '_partials/lp-results.html' },
+  // UTM + click-ID capture (10/16/26). allPages: synced into every page that has the markers,
+  // not just TARGETS, so no landing page can drift from the copy the forms rely on.
+  { name: 'ATTRIBUTION', file: '_partials/attribution.html', allPages: true },
 ];
 
 // Pages that should ship the shared partials. Anything not listed here is left alone.
@@ -46,6 +49,19 @@ function discoverBlogPosts() {
   return entries
     .filter(f => f.endsWith('.html') && f !== 'index.html' && f !== '_template.html')
     .map(f => `blog/${f}`);
+}
+
+// Every page an allPages partial can live in: top-level pages, blog posts, and build shells.
+function discoverAllPages() {
+  const list = (dir, keep) => {
+    try { return readdirSync(join(ROOT, dir)).filter(keep).map(f => (dir === '.' ? f : `${dir}/${f}`)); }
+    catch { return []; }
+  };
+  return [
+    ...list('.', f => f.endsWith('.html')),
+    ...list('blog', f => f.endsWith('.html')),
+    ...list('scripts', f => f.endsWith('.shell.html')),
+  ];
 }
 
 function readPartial(rel) {
@@ -92,14 +108,21 @@ function syncFile(rel, partials) {
 }
 
 function main() {
-  const partials = PARTIALS.map(p => ({ name: p.name, body: readPartial(p.file) }));
+  const partials = PARTIALS.map(p => ({ name: p.name, body: readPartial(p.file), allPages: !!p.allPages }));
   const targets = [...TARGETS, ...discoverBlogPosts()];
+  const everywhere = partials.filter(p => p.allPages);
+  const others = discoverAllPages().filter(rel => !targets.includes(rel));
   let changed = 0;
   for (const rel of targets) {
     const r = syncFile(rel, partials);
     if (r.changed) changed++;
   }
-  console.log(`\n${changed} file(s) updated · ${targets.length - changed} unchanged`);
+  for (const rel of others) {
+    const r = syncFile(rel, everywhere);
+    if (r.changed) changed++;
+  }
+  const total = targets.length + others.length;
+  console.log(`\n${changed} file(s) updated · ${total - changed} unchanged`);
 }
 
 main();

@@ -104,7 +104,8 @@
   // attribution script saves them to rw_attribution before this file runs, so in opt-in
   // regions without ad consent they are pulled out of storage and held in memory for this
   // page only, then written back if the visitor accepts.
-  var CLICK_IDS=['fbclid','gclid','ttclid','twclid','msclkid','li_fat_id'];
+  // Keep in sync with clickFields in _partials/attribution.html.
+  var CLICK_IDS=['fbclid','gclid','gbraid','wbraid','ttclid','twclid','msclkid','li_fat_id'];
   var heldClickIds=null;
   function scrubClickIds(){
     if(!optIn||state.ads)return;
