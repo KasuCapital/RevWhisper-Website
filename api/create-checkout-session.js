@@ -220,6 +220,15 @@ module.exports = async function handler(req, res) {
     );
   }
 
+  if (!useSubscriptionMode) {
+    // Payment mode makes no Stripe Customer by default, so the card is not kept.
+    // Create one and save the card to it, so the monthly subscription can be started
+    // on that card once optimization is done (agreement §3.3). Subscription mode
+    // already does both, and Stripe rejects customer_creation there.
+    params.set('customer_creation', 'always');
+    params.set('payment_intent_data[setup_future_usage]', 'off_session');
+  }
+
   params.set('metadata[email]', email);
   params.set('metadata[plan]', plan);
   params.set('metadata[listing_count]', String(listingCount));
