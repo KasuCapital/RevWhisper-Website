@@ -1,0 +1,1412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- ATTRIBUTION:START -->
+<!-- Attribution capture (cookie-free): a lead carries its UTMs and ad click IDs into the CRM.
+     One copy for every page. Edit _partials/attribution.html, then run node scripts/sync-partials.mjs. -->
+<script>
+(function(){
+  var key='rw_attribution';
+  var TTL=7776000000; // 90 days — keep the last paid touch across tabs/sessions
+  var params=new URLSearchParams(window.location.search);
+  var utmFields=['utm_source','utm_medium','utm_campaign','utm_term','utm_content','utm_id'];
+  // gbraid/wbraid: Google's iOS click IDs, sent in place of gclid. Keep in sync with CLICK_IDS in /assets/rw-consent.js.
+  var clickFields=['fbclid','gclid','gbraid','wbraid','ttclid','twclid','msclkid','li_fat_id'];
+  var trackedFields=utmFields.concat(clickFields);
+  // A page sets window.rwAttributionForce before this runs when every visit must be recorded (/vrma does).
+  var hasTracked=!!window.rwAttributionForce||trackedFields.some(function(f){return params.has(f);});
+  function rwGet(k){try{return localStorage.getItem(k)||sessionStorage.getItem(k);}catch(e){try{return sessionStorage.getItem(k);}catch(e2){return null;}}}
+  function rwSet(k,v){try{localStorage.setItem(k,v);}catch(e){try{sessionStorage.setItem(k,v);}catch(e2){}}}
+  var prev=null;try{prev=JSON.parse(rwGet(key));}catch(e){prev=null;}
+  var fresh=prev&&prev.arrived_at&&((Date.now()-new Date(prev.arrived_at).getTime())<TTL);
+  if(hasTracked||!fresh){
+    var data={};
+    trackedFields.forEach(function(f){if(params.get(f))data[f]=params.get(f);});
+    try{data.referrer=document.referrer?new URL(document.referrer).hostname:'direct';}catch(e){data.referrer=document.referrer||'direct';}
+    data.landing_page=window.location.pathname;
+    data.arrived_at=new Date().toISOString();
+    rwSet(key,JSON.stringify(data));
+    prev=data;
+  }
+  // This page's copy, kept in memory. Facebook's and Instagram's in-app browsers can lose storage
+  // while the page is still open (the visitor switches apps to copy their Airbnb link, comes back,
+  // submits), which sent those leads to the CRM with no UTMs at all.
+  var atLoad=prev||{};
+
+  // One label for where the lead came from, filled in even when the link carried no UTMs.
+  function channel(a){
+    var s=String(a.utm_source||'').toLowerCase(), m=String(a.utm_medium||'').toLowerCase();
+    var r=String(a.referrer||'').toLowerCase();
+    var paid=/cpc|ppc|paid|display|retarget|^ads?$/.test(m);
+    if(/^(meta|facebook|fb|instagram|ig|threads)$/.test(s))return paid?'meta-ads':'meta-organic';
+    if(a.gclid||a.gbraid||a.wbraid||(/google/.test(s)&&paid))return 'google-ads';
+    if(a.msclkid||(/bing|microsoft/.test(s)&&paid))return 'microsoft-ads';
+    // Meta adds fbclid to every Facebook/Instagram link. Without UTMs it's an ad click whose URL
+    // parameters didn't come through, or an organic post or message.
+    if(a.fbclid)return 'meta';
+    if(a.twclid||/^(x|twitter)$/.test(s))return 'x';
+    if(a.ttclid||s==='tiktok')return 'tiktok';
+    if(a.li_fat_id||s==='linkedin')return 'linkedin';
+    if(s)return s; // any other tagged link: email, partner, conference...
+    if(!r||r==='direct')return 'direct';
+    if(/(^|\.)revwhisper\.com$/.test(r))return 'unknown'; // record started mid-visit, the entry point wasn't seen
+    if(/(^|\.)(google|bing|duckduckgo|yahoo|ecosia|brave|baidu|yandex)\.[a-z.]+$/.test(r))return 'organic-search';
+    if(/(^|\.)(facebook|instagram|threads|linkedin|reddit|youtube|tiktok|pinterest|twitter|x)\.(com|net)$|^(t\.co|lnkd\.in)$/.test(r))return 'social';
+    return 'referral';
+  }
+
+  // What every form sends as `attribution`: the stored record, or this page's in-memory copy when
+  // storage was lost, plus `channel`.
+  window.rwAttribution=function(){
+    var a=null;
+    try{a=JSON.parse(localStorage.getItem(key));}catch(e){}
+    if(!a||!a.arrived_at){try{a=JSON.parse(sessionStorage.getItem(key));}catch(e){}}
+    if(!a||!a.arrived_at)a=atLoad;
+    var out={};
+    for(var k in a){if(Object.prototype.hasOwnProperty.call(a,k))out[k]=a[k];}
+    out.channel=channel(out);
+    // Opt-in regions without ad consent: no click IDs leave the browser (same rule as /assets/rw-consent.js).
+    if(window.rwConsent&&rwConsent.optIn&&!rwConsent.ads)clickFields.forEach(function(f){delete out[f];});
+    return out;
+  };
+})();
+</script>
+<!-- ATTRIBUTION:END -->
+<script src="/assets/rw-consent.js?v=3"></script>
+<script defer src="/assets/rw-posthog.js?v=4"></script>
+<!-- GA4. Consent defaults come from /assets/rw-consent.js -->
+<script>
+window.dataLayer=window.dataLayer||[];
+function gtag(){dataLayer.push(arguments);}
+gtag('js',new Date());
+gtag('config','G-Y1FYZ5849B');
+(window.rwConsent?rwConsent.whenAllowed:function(f){f();})(function(){var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-Y1FYZ5849B';document.head.appendChild(s);});
+function rwTrack(e,p){gtag('event',e,p||{});}
+</script>
+<!-- Meta Pixel — PageView only. NOTE: Lead fires on form submit (submitForm), never on page load. -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+(window.rwConsent?rwConsent.whenAdsAllowed:function(g){g()})(function(){s.parentNode.insertBefore(t,s)})}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+if(window.rwConsent&&!rwConsent.ads)fbq('consent','revoke');
+fbq('init', '959022406709300');
+fbq('track', 'PageView');
+</script>
+<!-- End Meta Pixel -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>Your Listing Check | RevWhisper</title>
+<!-- Where a disqualified /audit lead goes after the contact form: ten short strategy videos, a score,
+     their live listing report (RevWhisper Growth Hub, read through /api/listing-report) and the onboarding
+     offer, which hands off to /checkout-form. Not linked yet: the live forms still send unqualified leads to
+     /audit-report-coming. Reads the lead from sessionStorage.rw_audit_lead (set by the /audit forms), or
+     from ?name=&email=&listing= when opened directly. ?review=1 adds a screen picker; ?review=1&report=<id>
+     loads any finished Growth Hub report. Tracking: GA4 + PostHog events (listing_check_*), Meta
+     ListingCheckStart / ListingCheckComplete, all behind rw-consent. -->
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="/icons/favicon-light.svg" type="image/svg+xml">
+<link rel="preload" href="/fonts/lora-normal-400-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/lora-italic-400-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/dm-sans-normal-300-700.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:'Lora';font-style:normal;font-weight:400 700;font-display:swap;src:url(/fonts/lora-normal-400-700.woff2) format('woff2')}
+@font-face{font-family:'Lora';font-style:italic;font-weight:400 700;font-display:swap;src:url(/fonts/lora-italic-400-700.woff2) format('woff2')}
+@font-face{font-family:'DM Sans';font-style:normal;font-weight:300 700;font-display:swap;src:url(/fonts/dm-sans-normal-300-700.woff2) format('woff2')}
+@font-face{font-family:'DM Mono';font-style:normal;font-weight:400;font-display:swap;src:url(/fonts/dm-mono-400.woff2) format('woff2')}
+@font-face{font-family:'DM Mono';font-style:normal;font-weight:500;font-display:swap;src:url(/fonts/dm-mono-500.woff2) format('woff2')}
+
+/* ── /listing-check ───────────────────────────────────────────────────────────
+   One page, two skins, so it continues whichever form the visitor just finished:
+   phones get the /audit-flow look (white app, sage wash, round back button, dark
+   segmented progress, 16px chips that fill Dune when picked, Dune CTA); 720px and up
+   gets the /audit form-card look (sage backdrop, white card, uppercase green eyebrow,
+   option cards that fill sage, green Continue, bordered Back). From 1000px the video
+   screens split: video left, question card right, so nothing scrolls on a laptop.
+   Screens change in two beats (old fades out, then the new one cascades in), so two
+   questions are never on screen together and nothing visible moves. */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#32302F;--accent:#4A6741;--accent-dark:#3C5535;--accent-light:#dce6d8;--accent-border:#b3c5ab;--accent-wash:#eef3ec;
+  --terra:#8B4A3E;--terra-wash:#f6ecea;--terra-line:#e3c9c3;--gold:#9B7B3A;--gold-wash:#f5efe2;--gold-line:#e6d9b8;--red:#B85252;
+  --g50:#faf9f8;--g100:#f3f1ef;--g200:#E0DCDA;--g300:#ccc8c5;--g400:#a39e9b;--g500:#706b68;--g600:#58534f;
+  --line:rgba(50,48,47,.11);
+  --heading:'Lora','Georgia',serif;--body:'DM Sans',system-ui,'Helvetica Neue',sans-serif;--mono:'DM Mono',ui-monospace,'SF Mono',Menlo,monospace;
+  --silk:cubic-bezier(.16,1,.3,1);--silk-out:cubic-bezier(.4,0,1,1);--back:cubic-bezier(.34,1.56,.64,1);
+  --sh-chip:0 1px 2px rgba(50,48,47,.04),0 1px 1px rgba(50,48,47,.02);
+  --sh-card:0 1px 2px rgba(50,48,47,.06),0 14px 30px -10px rgba(50,48,47,.22);
+  --sh:0 4px 16px rgba(50,48,47,.07),0 2px 6px rgba(50,48,47,.04);
+  --sh-lg:0 16px 48px rgba(50,48,47,.1),0 4px 12px rgba(50,48,47,.05);
+  --bar-h:60px;
+}
+html{-webkit-text-size-adjust:100%;scrollbar-gutter:stable}  /* a scrollbar appearing mid-screen must not shift the layout */
+body{font-family:var(--body);color:var(--black);background:#fff;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;min-height:100vh;overflow-x:hidden}
+/* soft sage wash at the top, as on /audit-flow */
+body::before{content:"";position:fixed;left:0;right:0;top:0;height:60vh;z-index:-1;pointer-events:none;
+  background:linear-gradient(180deg,#f1f5ee 0%,rgba(241,245,238,.6) 50%,rgba(255,255,255,0) 100%)}
+button,input,textarea,select{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:0}
+img,video{display:block;max-width:100%}
+.sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+[data-focus]:focus{outline:none}
+
+/* ── top bar: back (or the mark) + segmented progress, one segment per strategy ── */
+.bar{position:sticky;top:0;z-index:40;padding-top:env(safe-area-inset-top,0px);transition:background-color .25s,box-shadow .25s}
+body.scrolled .bar{background:rgba(255,255,255,.9);-webkit-backdrop-filter:saturate(1.4) blur(14px);backdrop-filter:saturate(1.4) blur(14px);box-shadow:0 1px 0 var(--line)}
+.bar-in{display:flex;align-items:center;gap:12px;height:var(--bar-h);padding:0 18px;max-width:1300px;margin:0 auto}
+.back{width:36px;height:36px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(50,48,47,.08),0 0 0 1px var(--line);display:grid;place-items:center;flex:0 0 auto}
+.back svg{width:16px;height:16px}
+.back[hidden]{display:none}
+.brand{display:flex;align-items:center;gap:9px;flex:0 0 auto}
+.brand .lm{width:36px;height:36px;display:grid;place-items:center;color:var(--accent)}
+.brand .lm svg{width:26px;height:26px}
+.brand .ln{display:none;font-family:var(--heading);font-size:19px;letter-spacing:-.015em}
+.back:not([hidden]) + .brand{display:none}
+.segs{flex:1;display:flex;gap:5px;transition:opacity .3s var(--silk)}
+.segs.off{opacity:0}
+.seg{flex:1;height:3px;border-radius:3px;background:rgba(50,48,47,.1);overflow:hidden}
+.seg i{display:block;height:100%;background:var(--black);border-radius:3px;transform:scaleX(0);transform-origin:left;transition:transform .5s var(--silk)}
+.seg.on i{transform:scaleX(1)}
+.rchip{display:none}
+
+/* ── screens ── */
+.stage{padding:10px 20px calc(env(safe-area-inset-bottom,0px) + 36px)}
+.scr{width:100%;max-width:560px;margin:0 auto}
+.scr.out{opacity:0;transform:translate3d(0,-8px,0);transition:opacity .16s var(--silk-out),transform .18s var(--silk-out);pointer-events:none}
+.scr.rev.out{transform:translate3d(0,8px,0)}
+@keyframes rise{from{opacity:0;transform:translate3d(0,12px,0)}to{opacity:1;transform:none}}
+@keyframes riseDown{from{opacity:0;transform:translate3d(0,-12px,0)}to{opacity:1;transform:none}}
+.scr.in .rv{animation:rise .46s var(--silk) both}
+.scr.in.rev .rv{animation-name:riseDown}
+.split{display:flex;flex-direction:column;gap:22px}
+.col{min-width:0}
+
+/* ── video ── */
+.media{min-width:0}
+.frame{position:relative;aspect-ratio:16/9;border-radius:16px;overflow:hidden;background:#fff;box-shadow:var(--sh-card);isolation:isolate;cursor:pointer;-webkit-mask-image:-webkit-radial-gradient(white,black)}
+.media.cream .frame{background:#f9f7f5}
+.frame video{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;background:transparent}
+.frame::after{content:"";position:absolute;top:0;right:0;bottom:0;left:0;border-radius:inherit;box-shadow:inset 0 0 0 1px var(--line);pointer-events:none;z-index:4}
+/* a soft veil while it's paused or finished, so the button reads */
+.frame::before{content:"";position:absolute;top:0;right:0;bottom:0;left:0;z-index:1;background:rgba(255,255,255,.42);opacity:0;transition:opacity .3s var(--silk);pointer-events:none}
+.media[data-state=paused] .frame::before,.media[data-state=ended] .frame::before,.media[data-state=idle] .frame::before{opacity:1}
+.vprog{position:absolute;left:0;right:0;bottom:0;height:3px;z-index:3;background:rgba(50,48,47,.06)}
+.vprog i{display:block;height:100%;background:var(--accent);transform:scaleX(0);transform-origin:left}
+.vbig,.vsound,.verr{position:absolute;z-index:2;opacity:0;pointer-events:none;transition:opacity .25s var(--silk),transform .25s var(--silk)}
+.vbig{left:50%;top:50%;width:64px;height:64px;margin:-32px 0 0 -32px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;box-shadow:0 8px 22px rgba(74,103,65,.3);transform:scale(.9)}
+.vbig svg{width:24px;height:24px}
+.vbig .ic-play{margin-left:3px}
+.vbig .ic-replay{display:none}
+.media[data-state=idle] .vbig,.media[data-state=paused] .vbig,.media[data-state=ended] .vbig{opacity:1;pointer-events:auto;transform:none}
+.media[data-state=ended] .vbig .ic-play{display:none}
+.media[data-state=ended] .vbig .ic-replay{display:block}
+.vsound{top:8px;right:8px;display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px 0 10px;border-radius:999px;background:rgba(50,48,47,.9);color:#fff;font-size:12.5px;font-weight:600;box-shadow:0 4px 14px rgba(50,48,47,.22);transform:translateY(-4px)}
+.vsound svg{width:15px;height:15px}
+@media(min-width:720px){.vsound{top:12px;right:12px;height:34px;padding:0 14px 0 11px;font-size:13px}.vsound svg{width:16px;height:16px}}
+.media[data-state=muted] .vsound{opacity:1;pointer-events:auto;transform:none}
+.verr{top:0;right:0;bottom:0;left:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:var(--g50);font-size:15px;color:var(--terra);text-align:center;padding:16px}
+.verr button{font-size:14px;font-weight:600;color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+.media[data-state=error] .verr{opacity:1;pointer-events:auto}
+/* timed captions under the strategy videos (the other three have them burned in) */
+.vcap{display:flex;justify-content:center;align-items:flex-start;min-height:58px;margin-top:12px;padding:0 4px}
+.vcap span{background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:var(--sh-chip);padding:8px 14px;font-size:14.5px;font-weight:500;line-height:1.4;text-align:center;opacity:0;transform:translateY(3px);transition:opacity .15s ease,transform .2s var(--silk)}
+.vcap span.on{opacity:1;transform:none}
+.link{font-size:13.5px;font-weight:500;color:var(--accent);text-decoration:underline;text-underline-offset:3px;padding:6px 0}
+
+/* ── phones: heading, then the video, then the question and the button ── */
+.lead-m{text-align:left}
+.lead-m .h,.op-head .h{text-wrap:pretty}   /* left-aligned titles fill the line; balance left them looking narrow */
+.lead-m .h.t{font-size:clamp(25px,6.9vw,28px);line-height:1.16;letter-spacing:-.024em}
+@media(max-width:719px){
+  .lg-only{display:none!important}
+  .split{gap:0}
+  .split > * + *{margin-top:var(--sg,20px)}
+  .qcard .lg-only + .lede{margin-top:0}
+  .qcard .lchip{display:none}   /* first screen: the listing chip is desktop only, so the screen fits */
+  .qcard .opts{margin-top:0}
+  /* captions ride the video's lower edge, like the burned-in ones on the other videos, so no empty slot under it */
+  .media{position:relative}
+  .vcap{position:absolute;left:10px;right:10px;bottom:12px;min-height:0;margin:0;padding:0;z-index:3;pointer-events:none}
+  .vcap span{font-size:12.5px;line-height:1.35;padding:6px 11px;border-radius:10px;box-shadow:0 2px 10px rgba(50,48,47,.14)}
+}
+@media(min-width:720px){.lead-m{display:none}}
+
+/* ── the question card (phones: no card chrome, centred, as /audit-flow) ── */
+.qcard{text-align:left}
+.kick{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:500;color:var(--accent);margin-bottom:8px}
+.kick svg{width:14px;height:14px;color:var(--accent);flex:0 0 auto}
+.h{font-family:var(--heading);font-weight:400;font-size:clamp(30px,8.4vw,34px);line-height:1.1;letter-spacing:-.026em;text-wrap:balance}
+.h em{font-style:italic;color:var(--accent)}
+.h.q{font-size:clamp(21px,5.7vw,23px);line-height:1.3;letter-spacing:-.015em}
+.lede{font-size:16px;line-height:1.55;color:var(--g500);margin-top:10px;text-wrap:pretty}
+
+.opts{display:flex;flex-direction:column;gap:10px;margin-top:20px;text-align:left}
+.opt{position:relative;display:block;cursor:pointer}
+.opt input{position:absolute;opacity:0;pointer-events:none}
+.ob{position:relative;display:flex;align-items:center;gap:12px;min-height:58px;padding:11px 16px 11px 18px;border-radius:16px;background:#fff;border:1px solid var(--line);box-shadow:var(--sh-chip);
+  transition:background-color .2s var(--silk),border-color .2s var(--silk),color .2s var(--silk),transform .25s var(--silk),box-shadow .25s}
+.ot{position:relative;flex:1;min-width:0}
+.ot b{display:block;font-size:16px;font-weight:500;letter-spacing:-.005em;line-height:1.3}
+.ot small{display:block;font-size:13.5px;line-height:1.35;color:var(--g500);margin-top:2px;transition:color .2s}
+.od{position:relative;flex:0 0 auto;width:20px;height:20px;border-radius:50%;border:1.5px solid var(--g300);transition:border-color .2s,background-color .2s,box-shadow .2s}
+.opt:active .ob{background:var(--g50)}
+.opt input:checked + .ob{background:var(--black);border-color:var(--black);color:#fff}
+.opt input:checked + .ob small{color:rgba(255,255,255,.72)}
+.opt input:checked + .ob .od{border-color:#fff;background:#fff;box-shadow:inset 0 0 0 5px var(--black)}
+.opt input:focus-visible + .ob{outline:2px solid var(--accent);outline-offset:2px}
+@media(hover:hover){.opt:hover .ob{border-color:var(--g300)}.opt input:checked + .ob{border-color:var(--black)}}
+
+/* the optional note appears once an answer is picked (phones: no height animation) */
+.note{display:grid;grid-template-rows:0fr;opacity:0;transform:translate3d(0,6px,0);transition:opacity .3s var(--silk),transform .3s var(--silk);text-align:left}
+.note.on{grid-template-rows:1fr;opacity:1;transform:none}
+.note-in{overflow:hidden;min-height:0;padding:0 3px 3px}
+.nl{display:block;font-size:13px;font-weight:600;color:var(--g600);margin:18px 0 6px 2px}
+.optl{font-weight:400;color:var(--g400);margin-left:4px}
+.note textarea{display:block;width:100%;min-height:86px;resize:vertical;border-radius:16px;border:1px solid var(--line);background:#fff;padding:12px 14px;font-size:16px;line-height:1.45;box-shadow:var(--sh-chip);outline:none;transition:border-color .2s,box-shadow .2s;-webkit-appearance:none;appearance:none}
+.note textarea::placeholder{color:var(--g400)}
+.note textarea:focus{border-color:var(--black);box-shadow:0 0 0 3px rgba(50,48,47,.08)}
+
+.acts{display:flex;gap:10px;margin-top:22px}
+.cta{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:56px;padding:0 20px;border-radius:18px;background:var(--black);color:#fff;font-size:16px;font-weight:600;letter-spacing:-.005em;
+  box-shadow:0 1px 2px rgba(50,48,47,.2),0 10px 24px -8px rgba(50,48,47,.45);transition:opacity .25s var(--silk),box-shadow .25s,transform .25s var(--back),background-color .2s}
+.cta:active:not(:disabled){background:#45423f}
+.cta:disabled{opacity:.3;box-shadow:none;cursor:not-allowed}
+.cta svg{width:16px;height:16px;flex:0 0 auto}
+.bk{display:none}
+
+.lchip{display:flex;align-items:center;gap:12px;margin:16px 0 0;padding:10px 14px 10px 10px;border-radius:16px;background:#fff;border:1px solid var(--line);box-shadow:var(--sh-chip);text-align:left}
+.lchip .tile{width:34px;height:34px;border-radius:10px;background:#FF385C;display:grid;place-items:center;flex:0 0 auto}
+.lchip .tile svg{width:18px;height:18px;fill:#fff}
+.lchip .lt{min-width:0}
+.lchip b{display:block;font-size:13.5px;font-weight:600}
+.lchip small{display:block;font-size:13px;color:var(--g500);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* ── score ── */
+.panel{text-align:left}
+.score{display:flex;align-items:baseline;gap:14px;margin:4px 0 18px}
+.score .big{font-family:var(--mono);font-size:64px;line-height:1;color:var(--accent)}
+.score .of{font-family:var(--heading);font-size:22px;letter-spacing:-.01em}
+.meter{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;margin:0 0 22px}
+.meter i{height:10px;border-radius:5px;background:var(--g200);transform:scaleX(0);transform-origin:left;animation:grow .45s var(--silk) forwards}
+.meter i.yes{background:var(--accent)}.meter i.partly{background:var(--gold)}.meter i.no{background:var(--terra)}
+@keyframes grow{to{transform:scaleX(1)}}
+.tally{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff;margin:0 0 22px}
+.tally div{padding:14px 16px;border-right:1px solid var(--line)}
+.tally div:last-child{border-right:0}
+.tally b{display:block;font-family:var(--mono);font-weight:400;font-size:28px;line-height:1.15}
+.tally span{font-size:14px;color:var(--g500)}
+.body{font-size:16px;line-height:1.6;color:var(--g600)}
+.h3{font-family:var(--heading);font-weight:400;font-size:22px;letter-spacing:-.01em;margin:26px 0 10px}
+.gaps{list-style:none;border-top:1px solid var(--line)}
+.gaps li{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--line);font-size:16px;line-height:1.4}
+.tag{flex:none;font-size:12.5px;font-weight:500;padding:3px 10px;border-radius:999px;border:1px solid var(--g200);color:var(--g500);background:#fff;white-space:nowrap}
+.tag.no{border-color:var(--terra-line);color:var(--terra);background:var(--terra-wash)}
+.tag.partly{border-color:var(--gold-line);color:var(--gold);background:var(--gold-wash)}
+
+/* ── report ── */
+.rload{border:1px solid var(--line);border-radius:16px;background:#fff;box-shadow:var(--sh-chip);padding:22px;margin-top:22px}
+.rbar{height:6px;background:var(--g100);border-radius:3px;overflow:hidden}
+.rbar b{display:block;height:100%;width:100%;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform 2.2s cubic-bezier(.4,0,.2,1)}
+.rload ol{list-style:none;margin-top:16px}
+.rload li{display:flex;align-items:center;gap:12px;padding:8px 0;color:var(--g500);font-size:16px;transition:color .3s}
+.rload li.done{color:var(--black)}
+.rload li i{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--g300);flex:none;display:grid;place-items:center;transition:background-color .3s,border-color .3s}
+.rload li i svg{width:12px;height:12px;color:#fff;opacity:0;transition:opacity .2s}
+.rload li.done i{background:var(--accent);border-color:var(--accent)}
+.rload li.done i svg{opacity:1}
+.hero{background:var(--black);color:#fff;border-radius:18px;padding:24px;margin:16px 0 18px}
+.hero .lab{font-size:14px;color:#cfcac6}
+.hero .big{font-family:var(--mono);font-size:clamp(40px,11vw,52px);line-height:1.1;margin:6px 0 2px}
+.hero .sub{font-family:var(--heading);font-size:22px;margin-bottom:12px}
+.hero p{font-size:16px;line-height:1.5;color:#d9d5d2}
+.rsec{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--sh-chip);padding:18px;margin-bottom:14px}
+.rsec h3{font-family:var(--heading);font-weight:400;font-size:22px;letter-spacing:-.01em;margin-bottom:6px}
+.rsec .find{font-size:16px;line-height:1.55;color:var(--g600);margin-bottom:14px}
+.ties{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.tie{font-size:12.5px;border:1px solid var(--g200);border-radius:999px;padding:3px 10px;color:var(--g500)}
+.tie.no{border-color:var(--terra-line);color:var(--terra)}
+.tie.partly{border-color:var(--gold-line);color:var(--gold)}
+.tie.yes{border-color:var(--accent-border);color:var(--accent)}
+.rtable{overflow-x:auto;border:1px solid var(--line);border-radius:12px;max-width:100%;-webkit-overflow-scrolling:touch}
+.rtable table{border-collapse:collapse;width:100%;min-width:520px;font-size:14px}
+.rtable th,.rtable td{padding:9px 6px;text-align:center;border-bottom:1px solid var(--line)}
+.rtable thead th{font-weight:500;color:var(--g500);font-size:12.5px}
+.rtable tbody th{text-align:left;font-weight:500;white-space:nowrap;padding-left:12px}
+.rtable td{font-family:var(--mono);font-size:13.5px}
+.rtable td.p1{background:var(--accent-wash);color:var(--accent)}
+.rtable td.pn{background:var(--terra-wash);color:var(--terra)}
+.rtable tr:last-child th,.rtable tr:last-child td{border-bottom:0}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--g500);margin-top:8px}
+.legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px;background:var(--c);box-shadow:inset 0 0 0 1px var(--line)}
+.cals{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.cal{border:1px solid var(--line);border-radius:12px;padding:10px}
+.cal h4{font-size:14px;font-weight:600;margin-bottom:6px}
+.cal .g{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cal .g span{aspect-ratio:1;border-radius:4px;font-family:var(--mono);font-size:10px;display:flex;align-items:center;justify-content:center;color:var(--g500)}
+.cal .g .wd{font-family:var(--body);aspect-ratio:auto}
+.cal .g .bk2{background:var(--g100);color:#b8b2ae}
+.cal .g .op{background:var(--terra-wash);color:var(--terra);font-weight:500;box-shadow:inset 0 0 0 1px var(--terra-line)}
+.cal .g .pa{opacity:.3}
+/* the listing itself, from Growth Hub's scrape */
+.lcard{display:flex;gap:14px;align-items:center;margin:4px 0 16px}
+.lcard img{flex:0 0 auto;width:96px;height:72px;border-radius:12px;object-fit:cover;background:var(--g100);box-shadow:var(--sh-chip)}
+.lcard > div{min-width:0}
+.lcard .h{font-size:clamp(22px,6vw,26px);line-height:1.18}
+.lcard p{font-size:14px;color:var(--g500);margin-top:4px}
+.lcard p.star{color:var(--black);font-weight:500}
+/* how far guests scroll */
+.vgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:6px 0 12px}
+.vgrid div{border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.vgrid b{display:block;font-family:var(--mono);font-weight:400;font-size:28px;line-height:1.1}
+.vgrid span{display:block;font-size:13.5px;color:var(--g500);margin-top:2px}
+.reach{height:8px;border-radius:4px;background:var(--g100);overflow:hidden;margin-bottom:12px}
+.reach i{display:block;height:100%;border-radius:4px;background:var(--accent)}
+.fn{font-size:12.5px;color:var(--g400);margin-top:-6px;margin-bottom:2px}
+.full{display:inline-block;margin:6px 0 4px;font-size:15px;font-weight:500;color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+/* the single-listing field (the form's link was a host profile or not a listing) */
+.ask{margin-top:18px;text-align:left}
+.ask label{display:block;font-size:13px;font-weight:600;color:var(--g600);margin:0 0 6px 2px}
+.lurl{width:100%;height:52px;border-radius:14px;border:1px solid var(--line);background:#fff;padding:0 14px;font-size:16px;box-shadow:var(--sh-chip);outline:none;-webkit-appearance:none;appearance:none}
+.lurl:focus{border-color:var(--black);box-shadow:0 0 0 3px rgba(50,48,47,.08)}
+.ask-hint{font-size:13.5px;color:var(--g500);margin:6px 2px 0}
+.ask-hint.bad{color:var(--terra)}
+.op-term{font-size:13px;color:var(--g500);text-align:right}
+
+/* ── offer: a sales page. The plan and the price are on the first screen (the price button is
+   pinned on phones, a sticky card on desktop); the plan, timeline, video, proof and FAQ follow
+   for whoever wants more. The price button still reveals in three beats: appear, strike $998, turn green. ── */
+.op-head{text-align:left}
+.op-sub{font-size:16px;line-height:1.5;color:var(--g500);margin-top:8px;text-wrap:pretty}
+.offer{text-align:left;container:offer/inline-size}
+.op-card{margin-top:18px;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--sh-card);padding:18px 18px 16px}
+.op-k{font-size:11.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+.op-list{list-style:none;display:grid;gap:10px}
+.op-list li{display:flex;gap:10px;align-items:flex-start;font-size:15.5px;line-height:1.4}
+.op-list li svg{flex:0 0 auto;width:20px;height:20px;padding:4px;margin-top:0;border-radius:50%;background:var(--accent-light);color:var(--accent)}
+.op-month{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:14.5px;color:var(--g600)}
+.tbd{font-size:13px;color:var(--g500);border:1px dashed var(--g300);border-radius:8px;padding:4px 10px;white-space:nowrap}
+.paybar{margin-top:16px}
+.pricebtn{display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:12px;width:100%;border:1.5px solid var(--g200);background:#fff;color:var(--black);border-radius:16px;padding:20px 22px;text-align:left;cursor:default;pointer-events:none;opacity:0;transform:translateY(12px);
+  transition:opacity .45s var(--silk),transform .45s var(--silk),background-color .45s var(--silk),border-color .45s var(--silk),color .45s var(--silk),box-shadow .45s var(--silk)}
+.offer.s1 .pricebtn{opacity:1;transform:none}
+.pb-k{display:block;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--g500);transition:color .45s}
+.pb-prices{display:flex;align-items:baseline;gap:14px;margin-top:4px}
+.pb-was{position:relative;font-family:var(--mono);font-size:28px;color:var(--black);transition:color .45s}
+.pb-was i{position:absolute;left:-6%;top:52%;height:3px;width:0;background:var(--terra);border-radius:2px;transform:rotate(-14deg);transform-origin:left center;transition:width .4s var(--silk)}
+.offer.s2 .pb-was i{width:112%}
+.offer.s2 .pb-was{color:var(--g400)}
+.pb-now{font-family:var(--mono);font-size:50px;line-height:1;color:var(--accent);opacity:0;transform:translateY(-14px);transition:opacity .4s var(--silk) .2s,transform .4s var(--silk) .2s,color .45s}
+.offer.s2 .pb-now{opacity:1;transform:none}
+.pb-go{display:inline-flex;align-items:center;gap:8px;font-size:17px;font-weight:600;white-space:nowrap;opacity:0;transform:translateX(-8px);transition:opacity .4s var(--silk) .15s,transform .4s var(--silk) .15s}
+.pb-go svg{width:17px;height:17px}
+.offer.s3 .pricebtn{background:var(--accent);border-color:var(--accent);color:#fff;cursor:pointer;pointer-events:auto;box-shadow:0 10px 28px rgba(74,103,65,.28)}
+.offer.s3 .pricebtn:active{background:var(--accent-dark)}
+.offer.s3 .pb-k{color:rgba(255,255,255,.75)}
+.offer.s3 .pb-was{color:rgba(255,255,255,.6)}
+.offer.s3 .pb-was i{background:#fff}
+.offer.s3 .pb-now{color:#fff}
+.offer.s3 .pb-go{opacity:1;transform:none}
+.pricebtn:disabled{cursor:default}
+.op-trust{display:flex;align-items:center;justify-content:center;gap:6px;font-size:12px;color:var(--g500);margin-top:9px}
+.op-trust svg{width:12px;height:12px;color:var(--accent)}
+.op-sec{margin-top:36px}
+.op-sec > h2{font-family:var(--heading);font-weight:400;font-size:24px;letter-spacing:-.015em;line-height:1.2}
+.op-note{font-size:15px;line-height:1.5;color:var(--g500);margin-top:4px}
+.op-sec > h2 + .media{margin-top:14px}
+/* your plan, built from their answers */
+.plan{margin-top:14px;background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.pl-g{font-size:11.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--g500);padding:12px 16px 6px;background:var(--g50);border-bottom:1px solid var(--line)}
+.plan ul{list-style:none}
+.plan li{display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--line);font-size:15px;line-height:1.35}
+.pl-n{flex:0 0 auto;width:24px;height:24px;border-radius:50%;background:var(--g100);color:var(--g600);display:grid;place-items:center;font-family:var(--mono);font-size:12px;font-weight:500}
+.pl-t{flex:1;min-width:0}
+.pl-keep{display:flex;align-items:center;gap:10px;padding:12px 16px;font-size:14.5px;color:var(--g600)}
+.pl-keep svg{flex:0 0 auto;width:20px;height:20px;padding:4px;border-radius:50%;background:var(--accent-light);color:var(--accent)}
+/* how it works, with real dates */
+.tl{list-style:none;margin-top:14px;position:relative}
+.tl::before{content:"";position:absolute;left:5px;top:10px;bottom:14px;width:2px;background:var(--g200)}
+.tl li{position:relative;padding:0 0 18px 26px}
+.tl li:last-child{padding-bottom:0}
+.tl li::before{content:"";position:absolute;left:0;top:5px;width:12px;height:12px;border-radius:50%;background:#fff;border:2px solid var(--accent)}
+.tl li:first-child::before{background:var(--accent)}
+.tl-d{display:block;font-family:var(--mono);font-size:12.5px;color:var(--accent);letter-spacing:.02em}
+.tl b{display:block;font-size:16px;font-weight:600;margin-top:1px}
+.tl span.tl-x{display:block;font-size:15px;line-height:1.45;color:var(--g500);margin-top:2px}
+/* proof: two real listings near their size */
+.proof{display:grid;gap:12px;margin-top:14px}
+.pf{display:flex;gap:14px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px;box-shadow:var(--sh-chip)}
+.pf img{flex:0 0 auto;width:88px;height:88px;border-radius:12px;object-fit:cover}
+.pf-b{flex:1;min-width:0}
+.pf-b b{display:block;font-size:15.5px;font-weight:600}
+.pf-b small{display:block;font-size:13px;color:var(--g500)}
+.pf-up{display:flex;align-items:baseline;gap:8px;margin-top:6px}
+.pf-up strong{font-family:var(--mono);font-weight:500;font-size:22px;color:var(--accent)}
+.pf-up span{font-size:13px;color:var(--g500)}
+.pf-was{font-family:var(--mono);font-size:13.5px;color:var(--g600);margin-top:2px}
+.pf-src{font-size:13px;line-height:1.5;color:var(--g500);margin-top:10px}
+.pf-src a{color:var(--accent);font-weight:500}
+/* faq */
+.faq{margin-top:12px;border-top:1px solid var(--line)}
+.faq details{border-bottom:1px solid var(--line)}
+.faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:15px 2px;font-size:16px;font-weight:500}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"";flex:0 0 auto;width:9px;height:9px;border-right:2px solid var(--g400);border-bottom:2px solid var(--g400);transform:translateY(-3px) rotate(45deg);transition:transform .25s var(--silk)}
+.faq details[open] summary::after{transform:translateY(2px) rotate(-135deg);border-color:var(--accent)}
+.faq p{font-size:15.5px;line-height:1.55;color:var(--g600);padding:0 2px 16px}
+.op-foot{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:22px;font-size:13.5px;color:var(--g500)}
+.op-foot svg{width:15px;height:15px;color:var(--accent)}
+.tail{justify-content:center;margin-top:18px}
+.tail:empty{display:none}
+details.data{margin-top:22px;font-size:14px}
+details.data summary{cursor:pointer;color:var(--accent);font-weight:500}
+details.data pre{margin-top:10px;background:var(--g50);border:1px solid var(--line);border-radius:10px;padding:14px;font-family:var(--mono);font-size:12px;line-height:1.5;overflow-x:auto;white-space:pre}
+
+/* ── review mode (?review=1) ── */
+.review{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 12px);transform:translateX(-50%);z-index:60;display:flex;gap:6px;align-items:center;padding:6px;border-radius:14px;background:rgba(50,48,47,.94);box-shadow:0 10px 30px rgba(50,48,47,.3);max-width:calc(100vw - 24px)}
+.review button,.review select{height:32px;border-radius:9px;padding:0 10px;background:rgba(255,255,255,.12);color:#fff;font-size:13px;font-weight:500;border:0;white-space:nowrap}
+.review select{min-width:0;max-width:200px}
+.review select option{color:var(--black)}
+body.reviewing .stage{padding-bottom:96px}
+
+/* ── 720px and up: the /audit form-card skin ─────────────────────────────── */
+@media(min-width:720px){
+  :root{--bar-h:68px}
+  body{background:linear-gradient(180deg,#f6f8f4,#fff) 0 0/100% 620px no-repeat,#fff}
+  body::before{height:640px;background:radial-gradient(ellipse 55% 60% at 50% 0%,rgba(74,103,65,.1),rgba(74,103,65,0) 72%)}
+  .bar-in{display:grid;grid-template-columns:1fr minmax(0,280px) 1fr;padding:0 32px}
+  .back{display:none!important}
+  .back:not([hidden]) + .brand,.brand{display:flex}
+  .brand .ln{display:block}
+  .brand .lm{width:30px;height:30px}
+  .segs{width:100%}
+  .seg i{background:var(--accent)}
+  .rchip{display:flex;align-items:center;justify-self:end;gap:9px;font-size:12.5px;font-weight:500;color:var(--g500);transition:opacity .3s var(--silk)}
+  .rchip.off{opacity:0}
+  .rchip i{display:block;width:54px;height:4px;border-radius:2px;background:var(--g200);overflow:hidden}
+  .rchip i b{display:block;height:100%;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .6s var(--silk)}
+
+  .stage{padding:clamp(20px,4vh,48px) 32px 64px}
+  .scr{max-width:640px}
+  .scr.wide{max-width:680px}
+  .scr.mid{max-width:760px}
+
+  .qcard{text-align:left;background:#fff;border-radius:16px;box-shadow:var(--sh-lg);padding:28px 28px 24px}
+  .kick{min-height:0;padding:0;border:0;background:none;box-shadow:none;border-radius:0;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .kick svg{width:12px;height:12px}
+  .h{font-size:clamp(28px,3vw,34px);line-height:1.13}
+  .h.q{font-size:clamp(22px,2.1vw,25px);line-height:1.28}
+  .lede{font-size:16px;font-weight:300;line-height:1.65}
+
+  .opts{margin-top:22px}
+  .ob{min-height:0;padding:14px 18px;gap:13px;border-radius:8px;border:1.5px solid var(--g200);box-shadow:none;overflow:hidden}
+  .ob::before{content:"";position:absolute;top:0;right:0;bottom:0;left:0;z-index:0;background:var(--accent-light);opacity:0;transform:scaleX(0);transform-origin:left;transition:opacity .35s,transform .4s var(--silk)}
+  .ot,.od{z-index:1}  /* order:-1 would otherwise paint the dot under the fill */
+  .ot b{font-size:15.5px}
+  .ot small{font-size:13.5px}
+  .od{order:-1;width:18px;height:18px}
+  .opt:active .ob{background:#fff}
+  .opt input:checked + .ob{background:#fff;border-color:var(--accent);color:var(--accent);box-shadow:0 0 0 1.5px var(--accent)}
+  .opt input:checked + .ob::before{opacity:1;transform:scaleX(1)}
+  .opt input:checked + .ob small{color:var(--g600)}
+  .opt input:checked + .ob .od{border-color:var(--accent);background:var(--accent);box-shadow:inset 0 0 0 3.5px #fff}
+  .note{transition:grid-template-rows .38s var(--silk),opacity .3s var(--silk),transform .3s var(--silk)}
+  .note textarea{border-radius:8px;border:1.5px solid var(--g200);box-shadow:none;font-size:15px}
+  .note textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(74,103,65,.1)}
+
+  .acts{margin-top:24px}
+  .cta{min-height:0;padding:15px 28px;border-radius:8px;background:var(--accent);font-size:15px;font-weight:500;letter-spacing:.01em;box-shadow:none}
+  .cta:active:not(:disabled){background:var(--accent-dark);transform:scale(.98)}
+  .cta svg{transition:transform .25s var(--silk)}
+  .bk{display:inline-flex;align-items:center;gap:6px;padding:15px 16px;border-radius:8px;border:1.5px solid var(--g200);color:var(--g500);font-size:13px;transition:border-color .25s,color .25s}
+  .bk svg{width:14px;height:14px}
+
+  .lchip{margin:20px 0 0;border-radius:10px;box-shadow:none;border:1.5px solid var(--g200)}
+  .lurl{height:50px;border-radius:8px;border:1.5px solid var(--g200);box-shadow:none;font-size:15px}
+  .lurl:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(74,103,65,.1)}
+
+  .panel{background:#fff;border-radius:16px;box-shadow:var(--sh-lg);padding:32px}
+  .frame{border-radius:14px}
+  .hero{padding:28px}
+  .rsec{padding:22px 24px;box-shadow:none}
+  .tail{justify-content:flex-start}
+  .scr[data-k=offer]{max-width:640px}
+  .op-head .h{font-size:clamp(30px,3.2vw,38px)}
+  .op-card{border-radius:16px;box-shadow:var(--sh-lg);padding:24px}
+  .op-sec > h2{font-size:26px}
+}
+/* hover only where there is a mouse, so a tap never leaves a card lifted */
+@media(min-width:720px) and (hover:hover){
+  .opt:hover .ob{border-color:var(--g300);transform:translateY(-2px);box-shadow:var(--sh)}
+  .opt input:checked + .ob,.opt:hover input:checked + .ob{border-color:var(--accent);transform:none;box-shadow:0 0 0 1.5px var(--accent)}
+  .cta:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 22px rgba(74,103,65,.26)}
+  .cta:hover:not(:disabled) svg{transform:translateX(3px)}
+  .bk:hover{border-color:var(--g300);color:var(--black)}
+  .offer.s3 .pricebtn:hover{background:var(--accent-dark)}
+}
+/* 1000px and up: video screens split, video left, card right */
+@media(min-width:1000px){
+  .scr.wide{max-width:1240px}
+  .scr.wide .split{display:grid;grid-template-columns:minmax(0,1.62fr) minmax(340px,1fr);gap:36px;align-items:start}
+  .scr.wide .vcap{min-height:48px}
+  /* offer: content left, the plan card sticky on the right, so price and button never leave the screen */
+  .scr[data-k=offer]{max-width:1120px}
+  .op{display:grid;grid-template-columns:minmax(0,1fr) 380px;column-gap:56px;align-items:start}
+  .op > *{grid-column:1}
+  .op > .op-card{grid-column:2;grid-row:1 / span 12;position:sticky;top:calc(var(--bar-h) + 20px);margin-top:4px}
+  .op-head{text-align:left}
+  .op .op-sec:first-of-type{margin-top:28px}
+}
+@container offer (min-width:440px){
+  .pricebtn{flex-direction:row;align-items:center;gap:18px}
+}
+@media(max-width:559px){
+  .pb-now{font-size:44px}
+}
+/* ── phones: every screen fits on one screen and its button is pinned to the bottom ──
+   The report and the offer scroll under it. Nothing holding a pinned button may carry a
+   transform (that re-anchors position:fixed to itself), so on phones the outgoing screen
+   fades without moving and the offer card doesn't rise in. --kb lifts the bar above the
+   on-screen keyboard. */
+@media(max-width:719px){
+  :root{--bar-h:56px}
+  /* Content starts at the top. The button sits right after it and sticks to the bottom of the screen
+     only when the page is longer than the screen (report). The offer's price bar stays pinned. */
+  body{--foot:24px}
+  body[data-k=offer]{--foot:110px}
+  .stage{padding:14px 20px calc(env(safe-area-inset-bottom,0px) + var(--foot))}
+  /* strategy screens: tapping an answer is the action, so no Next button and no note on phones */
+  body[data-k=strat] .acts,body[data-k=strat] .note{display:none}
+  .scr.out,.scr.rev.out{transform:none}
+  .opts,.qcard .opts{gap:8px}
+  .ob{min-height:52px;padding:8px 16px 8px 18px}
+  .ot b{font-size:15.5px}
+  .ot small{font-size:13px}
+  .acts:not(.tail){position:sticky;bottom:0;z-index:30;margin:24px -20px 0;padding:12px 20px calc(env(safe-area-inset-bottom,0px) + 12px);background:linear-gradient(180deg,rgba(255,255,255,0) 0,#fff 12px)}
+  .paybar{position:fixed;left:0;right:0;bottom:var(--kb,0px);z-index:30;padding:16px 16px calc(env(safe-area-inset-bottom,0px) + 12px);background:linear-gradient(180deg,rgba(255,255,255,0) 0,#fff 16px);pointer-events:none}
+  .offer{container-type:normal}
+  .scr.in .offer.rv{animation:none}
+  .paybar .pricebtn{flex-direction:row;align-items:center;gap:10px;padding:12px 16px}
+  .paybar .pb-k{font-size:10.5px}
+  .paybar .pb-prices{gap:8px;margin-top:2px}
+  .paybar .pb-was{font-size:17px}
+  .paybar .pb-now{font-size:30px}
+  .paybar .pb-go{font-size:15px}
+  .paybar{margin:0;padding-top:14px;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 8px)}
+  .paybar .op-trust{margin-top:6px}
+  .scr[data-k=offer]{padding-bottom:24px}
+  /* score: the three tally boxes become a one-line legend under the meter */
+  .score{margin-bottom:12px}
+  .score .big{font-size:56px}
+  .meter{margin-bottom:12px}
+  .tally{display:flex;gap:18px;border:0;border-radius:0;background:none;overflow:visible;margin-bottom:14px}
+  .tally div{display:flex;align-items:baseline;gap:6px;padding:0;border:0}
+  .tally b{font-size:20px}
+  .h3{margin:16px 0 4px}
+  .gaps li{padding:10px 0;font-size:15.5px}
+}
+/* short phone screens (in-app browsers with their toolbars) */
+@media(max-width:719px) and (max-height:700px){
+  .lead-m .h.t{font-size:20px}
+  .split{--sg:12px}
+  .ob{min-height:46px;padding:6px 14px 6px 16px}
+  .ot small{font-size:12.5px}
+  .body,.lede{font-size:15px;line-height:1.5}
+}
+@media(max-width:719px) and (max-height:640px){
+  .lead-m .kick{display:none}   /* first screen: the thank-you line */
+  .op-head .kick{display:none}
+  .op-head .h{font-size:25px}
+  .op-sub{font-size:14.5px;margin-top:4px}
+  .op-card{margin-top:12px;padding:14px 16px 12px}
+  .op-k{margin-bottom:8px}
+  .op-list{gap:6px}
+  .op-list li{font-size:14.5px}
+  .op-month{margin-top:10px;padding-top:9px}
+  .panel .body{display:none}   /* score: the reassurance line */
+}
+@media(max-width:719px) and (max-height:580px){
+  .lead-m .h{font-size:26px}
+  .lead-m .h.t{font-size:22px}
+  .score .big{font-size:46px}
+  .score{margin-bottom:8px}
+  .op-sub{display:none}
+  .ot small{display:none}      /* "How this works" already explains Yes vs Partly */
+  .ob{min-height:44px}
+  :root{--bar-h:50px}
+  .lead-m .h.t{font-size:19px}
+  .split{--sg:10px}
+  .opts,.qcard .opts{gap:6px}
+  .acts:not(.tail){margin-top:16px}
+}
+/* 720px and up: long screens keep their button in view while scrolling */
+@media(min-width:720px){
+  .scr[data-k=report] > .acts,.panel > .acts{position:sticky;bottom:0;z-index:5;padding:14px 0 18px;margin-bottom:-18px;background:linear-gradient(180deg,rgba(255,255,255,0),#fff 22px)}
+}
+@media(prefers-reduced-motion:reduce){
+  .scr.in .rv,.meter i{animation:none!important;opacity:1;transform:none}
+  .scr.out{transition:none}
+  .note,.pricebtn,.pb-now,.pb-go,.pb-was i,.rbar b,.seg i,.rchip i b{transition:none!important}
+}
+</style>
+</head>
+<body>
+<header class="bar">
+  <div class="bar-in">
+    <div style="display:flex;align-items:center;gap:12px">
+      <button class="back" id="back" type="button" aria-label="Back" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <div class="brand"><span class="lm"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="ln">RevWhisper</span></div>
+    </div>
+    <div class="segs" id="segs" aria-hidden="true"></div>
+    <div class="rchip off" id="rchip" aria-hidden="true"><span id="rchip-t">Building your report</span><i><b id="rchip-b"></b></i></div>
+  </div>
+</header>
+<main class="stage" id="stage"></main>
+
+<script>
+(function(){
+'use strict';
+
+/* ── content (from the team's Listing Check) ── */
+var V='/images/video/listing-check/';
+var VID={how:'framework.62b97781',offer:'analyst.c83bae1d'};
+var STRATS=[
+ {t:"We measure real demand before touching price",f:'s01-demand.63c1618a',d:28,
+  q:"Before you lower a price, do you check how many guests are searching those dates?"},
+ {t:"We price against the listings guests actually see",f:'s02-comp-set.239ff712',d:34,
+  q:"Do you check which listings guests see for your open dates, and price against them?"},
+ {t:"Our strategy changes with lead time",f:'s03-lead-time.83349b09',d:33,
+  q:"Do you know your market's booking window, and price differently inside and outside it?"},
+ {t:"We use targeted promotions, not base-rate cuts",f:'s04-promotions.e23ab2a7',d:31,
+  q:"When a near-term date is still open, do you use a date-specific promotion instead of lowering your rate?"},
+ {t:"We target the group size that's actually searching",f:'s05-group-size.d83770c7',d:27,
+  q:"Have you checked where you rank for smaller groups, not just your max guest count?"},
+ {t:"Our stay rules change with lead time and season",f:'s06-stay-rules.1714d56a',d:28,
+  q:"Do your minimum-stay rules change by season and by how close the date is?"},
+ {t:"We engineer the click",f:'s07-photos.fdaf0377',d:29,
+  q:"Do you track your click-through rate and change your cover photo or photo order based on it?"},
+ {t:"We make sure you show up in every filter you qualify for",f:'s08-filters.04aceda0',d:39,
+  q:"Have you audited every amenity and filter on your listing in the last few months?"},
+ {t:"We run a strategy by channel, not just Airbnb",f:'s09-channels.8afa8395',d:28,
+  q:"Are you actively using VRBO's performance tools or other channels, or mostly relying on Airbnb?"},
+ {t:"We measure every change, every other day",f:'s10-measure.6043ff46',d:29,
+  q:"Do you review your pricing, ranking and click-through together, at least every week?"}
+];
+/* captions timed to each strategy voiceover: [start seconds, line], e = when the last line clears */
+var CAPT={"0":{"c":[[0.43,"Before we change a rate,"],[1.48,"we look at search impression volume:"],[3.52,"how many guests are actually searching your market"],[5.43,"for a specific date range and group size."],[7.9,"If nobody is searching those dates yet,"],[9.78,"cutting the price doesn't create demand."],[11.69,"It just gives away margin."],[13.25,"When searches start climbing, that's when we compete."],[16.24,"Most pricing tools can't see this,"],[17.77,"so they cut rates on"],[18.96,"dates nobody is looking at."]],"e":21.03},"1":{"c":[[0.43,"For any date and group size,"],[1.78,"Airbnb shows about 18 listings on page one."],[5.13,"That's the real competition for near-term bookings,"],[7.33,"not the market average."],[8.76,"We build the comp set from homes"],[10.14,"that are genuinely comparable to yours,"],[12.41,"on guest count and amenities, not just bedroom count,"],[15.4,"and price to win against the"],[16.49,"properties guests are actually seeing."],[18.61,"Pricing tools group you with every similar"],[20.49,"home in the market by bed count,"],[22.32,"regardless of its visibility or booking pace,"],[24.74,"and follow one curve."]],"e":26.51},"2":{"c":[[0.25,"Every market has a lead time,"],[1.77,"the window when most guests book."],[3.36,"Inside that window we fight"],[5.07,"for visibility on open dates. Outside it,"],[7.82,"we hold or raise rates on high-demand dates,"],[10.22,"because ranking first early only means"],[11.9,"selling your best nights cheap."],[13.68,"On peak dates,"],[14.76,"we often let cheaper competitors book out first"],[17.06,"so yours sells at a better rate."],[18.89,"Automated tools tend to do the opposite:"],[21.18,"high pricing very far out,"],[22.63,"then a sharp cut right before arrival."]],"e":25.37},"3":{"c":[[0.22,"When a date needs a push"],[1.29,"to capture a reservation or visibility,"],[3.49,"we don't drop the base rate."],[4.71,"We apply a custom date-range promotion directly"],[7.41,"on the back end of Airbnb and"],[9.26,"VRBO for that specific date range,"],[11.63,"start small,"],[12.59,"and check where the listing lands"],[13.61,"in search before going further."],[15.52,"Guests see a strikethrough price, which lifts click-through,"],[18.3,"and your base rate stays intact for"],[20.19,"the dates that don't need help."]],"e":22.23},"4":{"c":[[0.43,"Every guest count is its own search."],[2.03,"A home that sleeps 12 often ranks well"],[4.55,"for 12 and is invisible for 6,"],[6.79,"and most near-term searches are smaller groups."],[9.46,"Large groups book far out. Smaller groups book close in."],[13.02,"We track your rank at several"],[14.25,"guest counts and shift the target"],[15.89,"as the date gets closer,"],[17.37,"so you're competing in the"],[18.4,"searches most likely to book."]],"e":20.35},"5":{"c":[[0.45,"Minimum-stay rules shouldn't be set once and left."],[3.08,"We run longer minimums far"],[4.36,"out and in peak season,"],[5.44,"when demand can carry them,"],[6.91,"and shorten them as dates get"],[8.32,"close or in the off-season,"],[10.03,"so gaps between bookings still sell."],[12.15,"We match the market's typical"],[13.39,"stay length by lead time,"],[14.87,"adjust around holidays,"],[16.71,"and keep the calendar open far enough ahead"],[18.58,"to catch early bookers at a higher rate."]],"e":21.05},"6":{"c":[[0.44,"Most guests search on their phone"],[1.86,"and decide from the cover photo"],[3.28,"and the first few images."],[4.28,"We enhance your existing photos for lighting,"],[6.97,"color and angles, with no new shoot costs,"],[9.89,"then rebuild the order so the first"],[11.43,"five tell the story right away and"],[13.38,"the rest keep guests engaged."],[15.28,"We swap images seasonally and"],[16.8,"watch click-through against your baseline."],[18.93,"When it drops, we change the photo."]],"e":21.47},"7":{"c":[[0.46,"Guests filter for hot tubs, pools, pets,"],[3.17,"game rooms and views."],[4.56,"If an amenity isn't tagged in your listing settings,"],[7.06,"you're invisible in that search."],[8.77,"We audit every amenity,"],[10.23,"rewrite the title around what guests"],[12.0,"filter for most in your market,"],[13.82,"update the back-end listing details,"],[15.83,"and use review replies to reinforce"],[17.58,"the features guests mention most."],[18.96,"When a guest selects a filter,"],[21.03,"your first image often changes,"],[22.38,"so we improve the photos"],[23.92,"of every filterable amenity too."],[25.39,"We'll also tell you when a small change,"],[27.94,"like allowing pets,"],[29.22,"opens up a larger part of the market."]],"e":31.63},"8":{"c":[[0.44,"VRBO charges less commission and offers"],[2.56,"sponsored placement where you pay only"],[4.22,"when a booking comes through,"],[5.38,"not per click."],[6.64,"We also use VRBO to test which"],[8.71,"cover image wins at the same price,"],[10.98,"then carry the winner over"],[11.98,"to Airbnb and other channels."],[13.75,"Your listing performs better everywhere when each channel"],[16.85,"is worked for what it does best."]],"e":19.05},"9":{"c":[[0.42,"All of this only works if"],[1.61,"someone is watching it together."],[2.92,"A rate change can move you"],[4.39,"three pages in either direction."],[6.31,"A new photo can lift clicks or drop them."],[8.64,"A dedicated analyst reviews your pricing,"],[10.93,"ranking and conversion roughly every other day,"],[13.73,"and you get a monthly report comparing you"],[15.35,"to last year and to your current market."],[17.6,"Pricing, photos and visibility are never handled in isolation."]],"e":21.83}};
+var ANS=[
+ {v:'yes',l:'Yes',s:'Regularly, and I check the results'},
+ {v:'partly',l:'Partly',s:"Sometimes, or I don't track it"},
+ {v:'no',l:'Not yet',s:''}
+];
+var NOTE={
+ yes:{l:'What do you do today?',p:'How often you do it, what you use, and how you check it worked.'},
+ partly:{l:'What do you do now?',p:'What you do now, and what gets in the way of doing more.'},
+ no:{l:'Anything you want to add?',p:'What you do instead, or anything you want us to know.'}
+};
+var STEPS=[{k:'how'}].concat(STRATS.map(function(_,n){return {k:'strat',n:n};}),[{k:'score'},{k:'report'},{k:'offer'}]);
+
+var IC={
+ arrow:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
+ back:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>',
+ check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>',
+ play:'<svg class="ic-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.14v13.72a1 1 0 0 0 1.52.85l10.6-6.86a1 1 0 0 0 0-1.7L9.52 4.29A1 1 0 0 0 8 5.14z" fill="currentColor"/></svg>',
+ replay:'<svg class="ic-replay" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>',
+ lock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>',
+ home:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>',
+ muted:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M23 9l-6 6M17 9l6 6"/></svg>',
+ airbnb:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.001 18.275c-1.353-1.697-2.148-3.184-2.413-4.457-.263-1.027-.16-1.848.291-2.465.477-.71 1.188-1.056 2.121-1.056s1.643.345 2.12 1.063c.446.61.558 1.432.286 2.465-.291 1.298-1.085 2.785-2.412 4.458zm9.601 1.14c-.185 1.246-1.034 2.28-2.2 2.783-2.253.98-4.483-.583-6.392-2.704 3.157-3.951 3.74-7.028 2.385-9.018-.795-1.14-1.933-1.695-3.394-1.695-2.944 0-4.563 2.49-3.927 5.382.37 1.565 1.352 3.343 2.917 5.332-.98 1.085-1.91 1.856-2.732 2.333-.636.344-1.245.558-1.828.609-2.679.399-4.778-2.2-3.825-4.88.132-.345.395-.98.845-1.961l.025-.053c1.464-3.178 3.242-6.79 5.285-10.795l.053-.132.58-1.116c.45-.822.635-1.19 1.351-1.643.346-.21.77-.315 1.246-.315.954 0 1.698.558 2.016 1.007.158.239.345.557.582.953l.558 1.089.08.159c2.041 4.004 3.821 7.608 5.279 10.794l.026.025.533 1.22.318.764c.243.613.294 1.222.213 1.858zm1.22-2.39c-.186-.583-.505-1.271-.9-2.094v-.03c-1.889-4.006-3.642-7.608-5.307-10.844l-.111-.163C15.317 1.461 14.468 0 12.001 0c-2.44 0-3.476 1.695-4.535 3.898l-.081.16c-1.669 3.236-3.421 6.843-5.303 10.847v.053l-.559 1.22c-.21.504-.317.768-.345.847C-.172 20.74 2.611 24 5.98 24c.027 0 .132 0 .265-.027h.372c1.75-.213 3.554-1.325 5.384-3.317 1.829 1.989 3.635 3.104 5.382 3.317h.372c.133.027.239.027.265.027 3.37.003 6.152-3.261 4.802-6.975z"/></svg>'
+};
+
+var qs=new URLSearchParams(location.search);
+var REVIEW=qs.has('review');
+var RM=window.matchMedia?matchMedia('(prefers-reduced-motion: reduce)'):{matches:false};
+var stage=document.getElementById('stage');
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function firstName(n){return String(n||'').trim().split(/\s+/)[0]||'';}
+function shortUrl(u){return String(u||'').replace(/^https?:\/\//i,'').replace(/^www\./i,'').split(/[?#]/)[0].replace(/\/$/,'');}
+function fmt(n){return Number(n).toLocaleString('en-US');}
+
+/* ── state: kept in sessionStorage so a reload (or an in-app browser that drops the tab) resumes ── */
+var KEY='rw_listing_check';
+function readLead(){
+  var l=null;try{l=JSON.parse(sessionStorage.getItem('rw_audit_lead')||'null');}catch(e){}
+  l=l||{};
+  return {name:l.name||qs.get('name')||'',email:l.email||qs.get('email')||'',phone:l.phone||qs.get('phone')||'',
+    url:l.airbnbUrl||qs.get('listing')||'',listings:l.listings||'',revenue:l.revenue||'',submittedAt:l.submittedAt||''};
+}
+function fresh(lead){return {v:2,i:0,lead:lead,strat:[null,null,null,null,null,null,null,null,null,null],notes:['','','','','','','','','',''],report:null,log:[]};}
+function load(){
+  var lead=readLead(),s=null;
+  try{s=JSON.parse(sessionStorage.getItem(KEY)||'null');}catch(e){}
+  // a new form submission starts a new check; a reload of the same one picks up where it left off
+  if(s&&s.v===2&&s.lead&&(s.lead.submittedAt||'')===lead.submittedAt&&Array.isArray(s.strat)&&!qs.has('restart'))return s;
+  return fresh(lead);
+}
+var S=load();
+var saveT=0;
+function save(){clearTimeout(saveT);try{sessionStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+function saveSoon(){clearTimeout(saveT);saveT=setTimeout(save,400);}
+function counts(){var c={yes:0,partly:0,no:0};S.strat.forEach(function(a){if(a)c[a]++;});return c;}
+function name(st){
+  if(st.k==='strat')return 'Strategy '+(st.n+1)+': '+STRATS[st.n].t;
+  return {how:'The ten things',score:'Score',report:'Listing report',offer:'Your plan and checkout'}[st.k];
+}
+/* what the team will receive once this is wired to the CRM */
+function payload(){
+  var reached=0;S.log.forEach(function(l){for(var i=0;i<STEPS.length;i++)if(name(STEPS[i])===l.screen&&i>reached)reached=i;});
+  var answers={};STRATS.forEach(function(s,n){answers[(n+1)+'. '+s.t]=S.notes[n]?{answer:S.strat[n],note:S.notes[n]}:S.strat[n];});
+  return {lead:S.lead,score:counts(),answers:answers,furthestScreen:name(STEPS[Math.max(reached,S.i)]),screenLog:S.log};
+}
+window.rwListingCheck={payload:payload};
+function track(e,p){try{if(typeof window.rwTrack==='function')window.rwTrack(e,p||{});}catch(x){}}
+function fbCustom(e,p){try{if(typeof window.fbq==='function')window.fbq('trackCustom',e,p||{});}catch(x){}}
+
+/* ── the offer: standard plan through the existing /checkout-form (its rep-link path writes the
+   $500/mo, 3-month-then-month-to-month terms into the service agreement and charges onboarding only) ── */
+var PRICE={was:996,now:498,monthly:500,term:3};
+function checkoutUrl(){
+  var q=new URLSearchParams({plan:'enterprise',monthly_cost:String(PRICE.monthly),term_months:String(PRICE.term),onboarding_fee:String(PRICE.now),listing_count:'1'});
+  if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(S.lead.email||''))q.set('email',S.lead.email);
+  return '/checkout-form?'+q.toString();
+}
+
+/* ── the live listing report (RevWhisper Growth Hub) ──
+   The visitor's browser starts the report as soon as they land: Growth Hub's public create-analysis
+   endpoint allows revwhisper.com and rate-limits per visitor, then emails the finished report.
+   /api/listing-report reads it back here. A report takes about two minutes and the check takes
+   longer, so it's usually ready by the report screen. Only a single listing link is accepted. */
+var GH='https://app.revwhisper.com';
+var RKEY='rw_listing_check_report';
+var REPORT_WAIT_MS=75000;   // on the report screen, how long to wait before saying it'll be emailed
+function listingIdFrom(u){
+  var t=String(u||'').trim();if(!t)return null;
+  if(!/^https?:\/\//i.test(t))t='https://'+t;
+  var x;try{x=new URL(t);}catch(e){return null;}
+  if(!/(^|\.)airbnb\.[a-z]{2,3}(\.[a-z]{2})?$/i.test(x.hostname))return null;
+  var m=x.pathname.match(/^\/rooms\/(?:plus\/)?(\d{1,20})\/?$/);
+  return m?m[1]:null;
+}
+// The form's revenue band ("Under $40k", "$40k–$70k", "CA$55k+") as one number for Growth Hub's upside model.
+function revenueFrom(band){
+  var t=String(band||'').replace(/,/g,'');
+  var nums=(t.match(/\d+(\.\d+)?\s*[kKmM]?/g)||[]).map(function(v){var n=parseFloat(v);if(/k/i.test(v))n*=1e3;else if(/m/i.test(v))n*=1e6;return n;}).filter(function(n){return n>0;});
+  if(!nums.length)return 30000;
+  if(/under|less|below/i.test(t))return Math.round(nums[0]*0.75);
+  if(nums.length>1)return Math.round((nums[0]+nums[1])/2);
+  return Math.round(nums[0]);
+}
+function reportData(){
+  try{var r=JSON.parse(sessionStorage.getItem(RKEY)||'null');return r&&S.report&&r.id===S.report.id?r.data:null;}catch(e){return null;}
+}
+function keepReport(data){try{sessionStorage.setItem(RKEY,JSON.stringify({id:S.report.id,data:data}));}catch(e){}}
+function startReport(){
+  var id=listingIdFrom(S.lead.url),r=S.report;
+  if(!id||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(S.lead.email||''))return;
+  // already started (or Growth Hub already rejected this exact link: wait for a new one)
+  if(r&&r.listing===id&&(r.id||r.error==='listing'||(r.pending&&Date.now()-r.at<60000)))return;
+  S.report={listing:id,pending:true,at:Date.now()};save();
+  var body={email:S.lead.email,airbnbUrl:'https://www.airbnb.com/rooms/'+id,revenue:revenueFrom(S.lead.revenue),reportType:'ranking',
+    attribution:Object.assign({},typeof window.rwAttribution==='function'?window.rwAttribution():{},{source:'listing-check'})};
+  if(S.lead.name)body.fullName=S.lead.name;
+  if(S.lead.phone)body.phone=S.lead.phone;
+  var at=S.report.at;
+  fetch(GH+'/api/public/create-analysis',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
+    .then(function(res){return res.json().catch(function(){return {};}).then(function(j){return {status:res.status,j:j};});})
+    .then(function(x){
+      var pid=x.j&&x.j.analysis&&x.j.analysis.publicId;
+      S.report=pid?{listing:id,id:String(pid),at:at}:{listing:id,error:x.status===400?'listing':'failed',at:at};
+      save();
+      track(pid?'listing_check_report_started':'listing_check_report_failed',{reason:pid?'':S.report.error,status:x.status});
+      if(STEPS[S.i].k==='report'){RS=null;render(1);}
+    })
+    .catch(function(){S.report={listing:id,error:'failed',at:at};save();track('listing_check_report_failed',{reason:'network'});if(STEPS[S.i].k==='report'){RS=null;render(1);}});
+}
+function fetchReport(cb){
+  if(!S.report||!S.report.id)return cb(null);
+  fetch('/api/listing-report?id='+encodeURIComponent(S.report.id),{cache:'no-store'})
+    .then(function(r){return r.json();})
+    .then(function(j){if(j&&j.status==='ready')keepReport(j);cb(j);})
+    .catch(function(){cb(null);});
+}
+// Report screen state: ready | loading | slow (still building, it'll be emailed) | listing (re-ask) | none
+var RS=null,pollT=0,waitFrom=0;
+function reportState(){
+  if(reportData())return 'ready';
+  var r=S.report;
+  if(r&&r.error==='listing')return 'listing';
+  if(!r||r.error||!r.id&&!r.pending)return 'none';
+  return RS==='slow'?'slow':'loading';
+}
+function waitForReport(){
+  clearTimeout(pollT);
+  if(STEPS[S.i].k!=='report')return;
+  fetchReport(function(j){
+    if(STEPS[S.i].k!=='report')return;
+    if(j&&j.status==='ready'){track('listing_check_report',{state:'ready',wait_ms:Date.now()-waitFrom});RS='ready';render(1);return;}
+    if(RS!=='slow'&&Date.now()-waitFrom>REPORT_WAIT_MS){track('listing_check_report',{state:'slow'});RS='slow';render(1);}
+    pollT=setTimeout(waitForReport,4000);
+  });
+}
+
+
+/* ── history: each screen is a history entry, so the phone's back swipe steps back a screen ── */
+function hashOf(i){var st=STEPS[i];return i===0?'':'#'+(st.k==='strat'?'s'+(st.n+1):st.k);}
+function indexOfHash(h){h=String(h||'');if(!h||h==='#')return 0;for(var i=0;i<STEPS.length;i++)if(hashOf(i)===h)return i;return -1;}
+function urlOf(i){return location.pathname+location.search+hashOf(i);}
+var busy=false;
+function go(to,o){
+  o=o||{};
+  if(to<0||to>=STEPS.length||busy)return;
+  var dir=to>=S.i?1:-1,d=(history.state&&history.state.d)||0;
+  S.i=to;save();
+  if(o.replace)try{history.replaceState({lc:to,d:d},'',urlOf(to));}catch(e){}
+  else try{history.pushState({lc:to,d:d+1},'',urlOf(to));}catch(e){}
+  render(dir);
+}
+function back(){
+  if(S.i<=0)return;
+  if(history.state&&history.state.d>0)history.back();
+  else go(S.i-1,{replace:true});
+}
+window.addEventListener('popstate',function(e){
+  var t=e.state&&typeof e.state.lc==='number'?e.state.lc:indexOfHash(location.hash);
+  if(t<0)t=0;
+  if(t===S.i)return;
+  var dir=t>S.i?1:-1;
+  busy=false;S.i=t;save();render(dir);
+});
+
+/* ── the one video element: moved from screen to screen. Once a tap has let it play with
+   sound, every later video keeps sound (iOS grants that per element, not per page). ── */
+var PV=document.createElement('video');
+PV.setAttribute('playsinline','');PV.setAttribute('webkit-playsinline','');PV.playsInline=true;
+PV.preload='auto';PV.setAttribute('disablepictureinpicture','');PV.setAttribute('disableremoteplayback','');
+var cur=null,curBar=null,curCap=null,capLast=null,raf=0,blessed=false;
+function setV(s){if(cur)cur.setAttribute('data-state',s);}
+function vState(){return cur?cur.getAttribute('data-state'):'';}
+PV.addEventListener('playing',function(){setV(PV.muted?'muted':'playing');loop();});
+PV.addEventListener('pause',function(){
+  tick();
+  // a pause left over from the previous screen's video lands while the new one is still loading: ignore it
+  if(!cur||PV.ended||vState()==='loading')return;
+  setV('paused');
+});
+PV.addEventListener('ended',function(){tick();setV('ended');track('listing_check_video_complete',{video:(PV.getAttribute('data-src')||'').split('/').pop().split('.')[0]});});
+PV.addEventListener('volumechange',function(){if(cur&&!PV.paused)setV(PV.muted?'muted':'playing');});
+PV.addEventListener('error',function(){if(cur&&PV.getAttribute('src'))setV('error');});
+function loop(){
+  if(raf)return;
+  var f=function(){raf=0;tick();if(!PV.paused&&PV.isConnected)raf=requestAnimationFrame(f);};
+  raf=requestAnimationFrame(f);
+}
+function tick(){
+  if(!cur)return;
+  if(curBar&&PV.duration)curBar.style.transform='scaleX('+Math.min(1,PV.currentTime/PV.duration).toFixed(4)+')';
+  if(!curCap)return;
+  var C=CAPT[cur.getAttribute('data-n')],t=PV.currentTime,txt='';
+  if(C&&!PV.paused&&t<C.e){for(var j=0;j<C.c.length;j++){if(C.c[j][0]<=t)txt=C.c[j][1];else break;}}
+  if(txt!==capLast){capLast=txt;if(txt){curCap.textContent=txt;curCap.classList.add('on');}else curCap.classList.remove('on');}
+}
+function mountMedia(el){
+  var m=el.querySelector('.media');
+  cur=m;capLast=null;
+  if(!m){PV.pause();if(PV.parentNode)PV.parentNode.removeChild(PV);curBar=curCap=null;return;}
+  curBar=m.querySelector('.vprog i');curCap=m.querySelector('.vcap span');
+  var src=m.getAttribute('data-src');
+  setV('loading');
+  m.querySelector('.frame').insertBefore(PV,m.querySelector('.frame').firstChild);
+  if(m.getAttribute('data-poster'))PV.setAttribute('poster',m.getAttribute('data-poster'));else PV.removeAttribute('poster');
+  if(PV.getAttribute('data-src')!==src){PV.setAttribute('data-src',src);PV.src=src;}
+  else{try{PV.currentTime=0;}catch(e){}}
+  if(RM.matches||m.hasAttribute('data-hold')){setV('idle');return;}   // reduced motion, or below the fold: wait for a tap
+  startV();
+  prefetchNext();
+}
+function startV(){
+  var m=cur;if(!m)return;
+  PV.muted=false;
+  var p=PV.play();
+  if(!p||!p.then)return;
+  p.then(function(){if(cur===m)setV(PV.muted?'muted':'playing');}).catch(function(err){
+    if(cur!==m||(err&&err.name==='AbortError'))return;
+    // sound isn't allowed yet: play muted (the captions carry it) and offer sound
+    PV.muted=true;
+    var p2=PV.play();
+    if(p2&&p2.then)p2.then(function(){if(cur===m)setV('muted');}).catch(function(){if(cur===m)setV('idle');});
+  });
+}
+function playNow(){
+  if(PV.ended)try{PV.currentTime=0;}catch(e){}
+  PV.muted=false;
+  var p=PV.play();
+  if(p&&p.catch)p.catch(function(){PV.muted=true;PV.play().catch(function(){setV('idle');});});
+}
+function soundOn(){try{PV.currentTime=0;}catch(e){}playNow();}
+function vToggle(){
+  var s=vState();
+  if(s==='muted')return soundOn();
+  if(s==='error')return retry();
+  if(PV.paused)playNow();else PV.pause();
+}
+function retry(){if(!cur)return;var src=cur.getAttribute('data-src');setV('loading');PV.setAttribute('data-src',src);PV.src=src;startV();}
+// The first tap anywhere lets this element play with sound from then on, without changing what it's doing now.
+function bless(){
+  if(blessed)return;blessed=true;
+  var wasPaused=PV.paused,wasMuted=PV.muted;
+  try{PV.muted=false;var p=PV.play();if(p&&p.catch)p.catch(function(){});if(wasPaused)PV.pause();PV.muted=wasMuted;}catch(e){}
+}
+['touchend','click','keydown'].forEach(function(t){document.addEventListener(t,bless,{capture:true,passive:true});});
+var prefetched={};
+function srcFor(st){if(!st)return '';if(st.k==='strat')return V+STRATS[st.n].f+'.mp4';return VID[st.k]?V+VID[st.k]+'.mp4':'';}
+function prefetchNext(){
+  var src=srcFor(STEPS[S.i+1]);if(!src||prefetched[src])return;
+  var c=navigator.connection;if(c&&(c.saveData||/(^|-)2g$/.test(c.effectiveType||'')))return;
+  prefetched[src]=1;
+  setTimeout(function(){try{fetch(src,{priority:'low'}).then(function(r){return r.blob();}).catch(function(){});}catch(e){}},2500);
+}
+
+/* ── screens ── */
+function media(kind,n){
+  var strat=kind==='strat',f=strat?STRATS[n].f:VID[kind];
+  // the offer's video sits below the fold: it waits for a tap and shows a still until then
+  var hold=kind==='offer'?' data-hold="1" data-poster="'+V+'analyst-poster.c83bae1d.jpg"':'';
+  return '<div class="media'+(kind==='offer'?'':' rv')+(strat?'':' cream')+'" data-src="'+V+f+'.mp4"'+(strat?' data-n="'+n+'"':'')+hold+' data-state="loading">'+
+    '<div class="frame" data-act="vtoggle">'+
+      '<div class="vprog"><i></i></div>'+
+      '<button class="vbig" type="button" data-act="vplay" aria-label="Play video">'+IC.play+IC.replay+'</button>'+
+      '<button class="vsound" type="button" data-act="sound">'+IC.muted+'Tap for sound</button>'+
+      '<div class="verr">This video couldn\'t load.<button type="button" data-act="vretry">Try again</button></div>'+
+    '</div>'+
+    (strat?'<div class="vcap" aria-hidden="true"><span></span></div>':'')+
+  '</div>';
+}
+/* Phones read top to bottom: heading, video, question, button. This heading block is phones only;
+   from 720px the same heading sits in the card (marked .lg-only) beside or under the video. */
+function lead(inner){return '<div class="lead-m rv">'+inner+'</div>';}
+function backBtn(){return S.i>0?'<button class="bk" type="button" data-act="back">'+IC.back+'Back</button>':'';}
+function acts(label,disabled){return '<div class="acts rv">'+backBtn()+'<button class="cta" type="button" data-act="next"'+(disabled?' disabled':'')+'>'+label+IC.arrow+'</button></div>';}
+// Asked when the form's link isn't a single listing (a host profile, a search page, a typo)
+function listingAsk(label){
+  return '<div class="ask rv"><label for="lurl">'+label+'</label>'+
+    '<input class="lurl" id="lurl" type="url" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="airbnb.com/rooms/12345678" value="'+esc(S.lead.url)+'">'+
+    '<p class="ask-hint" id="lurl-msg">Paste the link to one listing, not your host profile.</p></div>';
+}
+// Reads the listing field; returns true when it holds a single listing (and saves it), else shows why not
+function takeListing(){
+  var el=document.getElementById('lurl');if(!el)return true;
+  var id=listingIdFrom(el.value);
+  if(!id){
+    var msg=document.getElementById('lurl-msg');
+    msg.textContent=/users\/show|\/user\//i.test(el.value)?'That\'s a host profile. Open the one listing you want checked and paste its link.':'Paste the link to one Airbnb listing. It looks like airbnb.com/rooms/12345678.';
+    msg.classList.add('bad');el.focus();track('listing_check_listing_rejected',{});return false;
+  }
+  S.lead.url='https://www.airbnb.com/rooms/'+id;S.report=null;save();startReport();return true;
+}
+// The first screen: people land here straight from the audit form, so it says what this is
+function vHow(){
+  var L=S.lead,first=firstName(L.name);
+  var kick=first?IC.check+'Thanks, '+esc(first)+'. Your request is in.':'',h='See how your listing scores on the <em>10 things</em> we do';
+  return '<div class="split">'+
+    lead((kick?'<p class="kick">'+kick+'</p>':'')+'<h1 class="h" tabindex="-1" data-focus>'+h+'</h1>')+
+    media('how')+'<div class="col"><div class="qcard">'+
+    (kick?'<p class="kick rv lg-only">'+kick+'</p>':'')+
+    '<h1 class="h rv lg-only" tabindex="-1" data-focus>'+h+'</h1>'+
+    '<p class="lede rv">Watch a short video on each one, then tap the answer that fits. Your score and your listing report come at the end.</p>'+
+    (listingIdFrom(L.url)
+      ?'<div class="lchip rv"><span class="tile">'+IC.airbnb+'</span><span class="lt"><b>Your listing</b><small>'+esc(shortUrl(L.url))+'</small></span></div>'
+      :listingAsk('Your Airbnb listing link'))+
+    acts('Start the check')+
+  '</div></div></div>';
+}
+function vStrat(n){
+  var s=STRATS[n],a=S.strat[n],nt=NOTE[a||'yes'];
+  return '<div class="split">'+
+    lead('<h2 class="h t" tabindex="-1" data-focus>'+esc(s.q)+'</h2>')+   // phones: just the question on top
+    media('strat',n)+'<div class="col"><div class="qcard">'+
+    '<h2 class="sr">'+esc(s.t)+'</h2>'+   // the video's own title card says it
+    '<p class="kick rv lg-only">Strategy '+(n+1)+' of 10</p>'+
+    '<h3 class="h q rv lg-only" id="q" tabindex="-1" data-focus>'+esc(s.q)+'</h3>'+
+    '<div class="opts rv" role="radiogroup" aria-labelledby="q">'+ANS.map(function(x){
+      return '<label class="opt"><input type="radio" name="ans" value="'+x.v+'"'+(a===x.v?' checked':'')+'><span class="ob"><span class="ot"><b>'+x.l+'</b>'+(x.s?'<small>'+x.s+'</small>':'')+'</span><span class="od"></span></span></label>';
+    }).join('')+'</div>'+
+    '<div class="note'+(a?' on rv':'')+'"><div class="note-in"><label class="nl" for="nt"><span class="nl-t">'+nt.l+'</span><span class="optl">Optional</span></label>'+
+      '<textarea id="nt" rows="3" placeholder="'+esc(nt.p)+'"'+(a?'':' tabindex="-1"')+'>'+esc(S.notes[n])+'</textarea></div></div>'+
+    acts(n===9?'See my score':'Next strategy',!a&&!REVIEW)+
+  '</div></div></div>';
+}
+function vScore(){
+  var c=counts(),first=firstName(S.lead.name);
+  // the three biggest gaps, "Not yet" before "Partly", so the screen fits without scrolling
+  var rank={no:0,partly:1};
+  var gaps=STRATS.map(function(s,n){return {t:s.t,a:S.strat[n],n:n};}).filter(function(g){return g.a!=='yes';})
+    .sort(function(x,y){return ((x.a in rank?rank[x.a]:2)-(y.a in rank?rank[y.a]:2))||x.n-y.n;}).slice(0,3);
+  var tag=function(a){return a==='no'?'<span class="tag no">Not yet</span>':a==='partly'?'<span class="tag partly">Partly</span>':'<span class="tag">Not answered</span>';};
+  return '<div class="panel">'+
+    '<p class="kick rv">Your score'+(first?', '+esc(first):'')+'</p>'+
+    '<div class="score rv"><span class="big" data-count="'+c.yes+'">'+c.yes+'</span><span class="of" tabindex="-1" data-focus>of 10 done fully</span></div>'+
+    '<div class="meter rv" aria-hidden="true">'+S.strat.map(function(a,k){return '<i class="'+(a||'')+'" style="animation-delay:'+(.45+k*.07).toFixed(2)+'s"></i>';}).join('')+'</div>'+
+    '<div class="tally rv"><div><b data-count="'+c.yes+'" style="color:var(--accent)">'+c.yes+'</b><span>Yes</span></div><div><b data-count="'+c.partly+'" style="color:var(--gold)">'+c.partly+'</b><span>Partly</span></div><div><b data-count="'+c.no+'" style="color:var(--terra)">'+c.no+'</b><span>Not yet</span></div></div>'+
+    '<p class="body rv">That\'s normal. These take hands-on attention every week. The ones you marked partly or not yet are exactly where we\'d start on your listing.</p>'+
+    (gaps.length
+      ?'<h3 class="h3 rv">Where we\'d start</h3><ul class="gaps rv">'+gaps.map(function(g){return '<li><span>'+esc(g.t)+'</span>'+tag(g.a)+'</li>';}).join('')+'</ul>'
+      :'<p class="body rv" style="margin-top:12px">You marked all ten. Your report will show whether the results match.</p>')+
+    acts('Get my listing report')+
+  '</div>';
+}
+function ties(nums){
+  return '<div class="ties">'+nums.map(function(n){var a=S.strat[n-1],lab=a==='yes'?'Yes':a==='partly'?'Partly':a==='no'?'Not yet':'Not answered';
+    return '<span class="tie '+(a||'')+'" title="'+esc(STRATS[n-1].t)+'">Strategy '+n+': '+lab+'</span>';}).join('')+'</div>';
+}
+function shortDate(iso){var d=new Date(iso+'T12:00:00');return isNaN(d)?iso:d.toLocaleDateString('en-US',{month:'short',day:'numeric'});}
+function vReport(){
+  var state=reportState(),L=S.lead;
+  if(state==='loading'){
+    return '<div class="panel">'+
+      '<p class="kick rv">Almost there</p>'+
+      '<h2 class="h rv" tabindex="-1" data-focus>Finishing your <em>listing report</em></h2>'+
+      '<p class="lede rv">We started building this when you started the check.</p>'+
+      '<div class="rload rv"><div class="rbar"><b></b></div><ol>'+
+        ['Pulling your search rank by date','Checking your open nights for the next 3 months','Measuring how far guests scroll to find you'].map(function(t){return '<li><i>'+IC.check+'</i>'+t+'</li>';}).join('')+
+      '</ol></div></div>';
+  }
+  if(state==='listing'){
+    return '<div class="panel">'+
+      '<p class="kick rv">One more thing</p>'+
+      '<h2 class="h rv" tabindex="-1" data-focus>Which listing should we <em>check?</em></h2>'+
+      '<p class="lede rv">We couldn\'t read that link as a single Airbnb listing.</p>'+
+      listingAsk('Your Airbnb listing link')+
+      acts('Build my report')+'</div>';
+  }
+  if(state!=='ready'){
+    var email=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(L.email||'')?esc(L.email):'';
+    var link=S.report&&S.report.id?'<a class="full rv" href="'+GH+'/report/'+encodeURIComponent(S.report.id)+'" target="_blank" rel="noopener">Open your report when it\'s ready</a>':'';
+    return '<div class="panel">'+
+      '<p class="kick rv">Your listing report</p>'+
+      '<h2 class="h rv" tabindex="-1" data-focus>'+(state==='slow'?'Still building your <em>report</em>':'Your report is <em>on its way</em>')+'</h2>'+
+      '<p class="lede rv">'+(state==='slow'?'It usually takes a couple of minutes. ':'')+(email?'We\'ll email it to '+email+' as soon as it\'s done.':'We\'ll send it as soon as it\'s done.')+'</p>'+
+      link+acts('See how we fix this')+'</div>';
+  }
+  var D=reportData(),li=D.listing||{},vac=D.vacancy,vis=D.visibility||{},prim=(D.primary&&D.primary.windows)||[],small=D.small;
+  var meta=[li.location,li.bedrooms?li.bedrooms+(li.bedrooms===1?' bedroom':' bedrooms'):'',li.guests?'sleeps '+li.guests:''].filter(Boolean).map(esc).join(' &middot; ');
+  var hero='';
+  if(vac&&vac.open90){
+    hero=vac.value90!=null
+      ?'<div class="hero rv"><div class="lab">Open nights over the next 3 months</div><div class="big" data-count="'+vac.value90+'">$'+fmt(vac.value90)+'</div><div class="sub">still unbooked</div><p>'+vac.open90+' nights open at about $'+fmt(vac.adr)+' a night'+(vac.adrSource==='market'?', the average rate in your market.':', your rate in Airbnb search.')+'</p></div>'
+      :'<div class="hero rv"><div class="lab">Over the next 3 months</div><div class="big">'+vac.open90+' nights</div><div class="sub">still unbooked</div></div>';
+  }
+  // where you rank: one row per group size, page one in green
+  var g=D.primary.guests,P1=function(w){return w.pos&&w.pos<=18;};
+  var byDate={};if(small)small.windows.forEach(function(w){byDate[w.in]=w;});
+  var cell=function(w){return w&&w.pos?'<td class="'+(w.pos<=18?'p1':'pn')+'">#'+w.pos+'</td>':'<td class="pn" title="Not in the results we checked">&ndash;</td>';};
+  var rows='<tr><th>'+(g?g+' guests':'Your listing')+'</th>'+prim.map(cell).join('')+'</tr>'+
+    (small?'<tr><th>'+small.guests+' guests</th>'+prim.map(function(w){return cell(byDate[w.in]);}).join('')+'</tr>':'');
+  var p1=prim.filter(P1).length,n=prim.length,find;
+  if(!n)find='';
+  else if(!prim.some(function(w){return w.pos;}))find='We didn\'t find your listing in the first '+(vis.deepest||'')+' results for any of the '+n+' dates we searched.';
+  else{
+    find='At '+g+' guests you\'re on page one for '+(p1===n?'all '+n:p1+' of '+n)+' dates.';
+    if(small){
+      var sw=prim.map(function(w){return byDate[w.in];}).filter(Boolean),sp=sw.filter(P1).length;
+      find+=' At '+small.guests+' guests, '+(sp===sw.length?'all '+sw.length:sp+' of '+sw.length)+'.';
+      if(sp<p1)find+=' Smaller groups make up most of the near-term searches.';
+    }
+  }
+  var rank=n?'<section class="rsec rv"><h3>Where you rank by date</h3><p class="find">'+find+'</p>'+
+    '<div class="rtable"><table><thead><tr><th></th>'+prim.map(function(w){return '<th>'+shortDate(w.in)+'</th>';}).join('')+'</tr></thead><tbody>'+rows+'</tbody></table></div>'+
+    '<div class="legend"><span style="--c:var(--accent-wash)">Page one</span><span style="--c:var(--terra-wash)">Page two or lower</span></div>'+ties([2,3,5])+'</section>':'';
+  // how far guests scroll: Growth Hub's reach curve
+  var seen='';
+  if(vis.avgPosition){
+    seen='<section class="rsec rv"><h3>How far guests scroll to find you</h3>'+
+      '<div class="vgrid"><div><b>#'+vis.avgPosition+'</b><span>your average spot'+(vis.page>1?', page '+vis.page:', page one')+'</span></div><div><b>'+vis.reachPct+'%</b><span>of searching guests scroll that far</span></div></div>'+
+      '<div class="reach" aria-hidden="true"><i style="width:'+Math.max(4,vis.reachPct)+'%"></i></div>'+
+      '<p class="find">'+(vis.ahead>0?vis.ahead+' listings rank ahead of you on average':'You\'re at the top of the results')+(vis.foundPct<100?', and you showed up in '+vis.foundPct+'% of our searches.':'.')+'</p>'+
+      '<p class="fn">Reach is estimated from published search-scroll research. Airbnb doesn\'t share this data.</p>'+ties([5,7,8])+'</section>';
+  }else if(vis.searches){
+    seen='<section class="rsec rv"><h3>How far guests scroll to find you</h3><p class="find">Your listing didn\'t appear in the first '+vis.deepest+' results for any of the '+vis.searches+' searches we ran.</p>'+ties([5,7,8])+'</section>';
+  }
+  // open nights for the next 3 months
+  var cal='';
+  if(D.calendar&&D.calendar.days){
+    var start=new Date(D.calendar.start+'T12:00:00'),days=D.calendar.days,open=0,wk=0,months=[],k;
+    for(k=0;k<days.length;k++){if(days[k]==='1'){open++;var dw=new Date(start.getTime()+k*864e5).getDay();if(dw===5||dw===6)wk++;}}
+    var end=new Date(start.getTime()+(days.length-1)*864e5),mm=new Date(start.getFullYear(),start.getMonth(),1);
+    while(mm<=end){
+      var dim=new Date(mm.getFullYear(),mm.getMonth()+1,0).getDate(),cells=['S','M','T','W','T','F','S'].map(function(d){return '<span class="wd">'+d+'</span>';}).join('');
+      for(k=0;k<mm.getDay();k++)cells+='<span></span>';
+      for(var dd=1;dd<=dim;dd++){var j=Math.round((new Date(mm.getFullYear(),mm.getMonth(),dd,12)-start)/864e5),c=j>=0&&j<days.length?days[j]:'';cells+='<span class="'+(c==='1'?'op':c==='0'?'bk2':'pa')+'">'+dd+'</span>';}
+      months.push('<div class="cal"><h4>'+mm.toLocaleString('en-US',{month:'long'})+'</h4><div class="g">'+cells+'</div></div>');
+      mm=new Date(mm.getFullYear(),mm.getMonth()+1,1);
+    }
+    cal='<section class="rsec rv"><h3>Your open nights</h3><p class="find">'+(open?'You have '+open+' open nights in the next 3 months, and '+wk+' of them are Fridays or Saturdays.':'Your calendar is fully booked for the next 3 months.')+'</p>'+
+      '<div class="cals">'+months.join('')+'</div><div class="legend"><span style="--c:var(--terra-wash)">Open</span><span style="--c:var(--g100)">Booked</span></div>'+ties([3,6])+'</section>';
+  }
+  return '<p class="kick rv">Your listing report</p>'+
+    '<div class="lcard rv">'+(li.photo?'<img src="'+esc(li.photo)+'" alt="" width="96" height="72" referrerpolicy="no-referrer">':'')+
+      '<div><h2 class="h" tabindex="-1" data-focus>'+esc(li.title||'Your listing')+'</h2>'+(meta?'<p>'+meta+'</p>':'')+
+      (li.rating?'<p class="star">&#9733; '+li.rating+(li.reviews?' ('+li.reviews+')':'')+'</p>':'')+'</div></div>'+
+    hero+rank+seen+cal+
+    '<a class="full rv" href="'+esc(D.reportUrl)+'" target="_blank" rel="noopener">See your full report</a>'+
+    acts('See how we fix this');
+}
+function vOffer(){
+  var first=firstName(S.lead.name);
+  var rows=STRATS.map(function(s,n){return {t:s.t,a:S.strat[n]||'no',n:n};});
+  var notYet=rows.filter(function(r){return r.a==='no';}),partly=rows.filter(function(r){return r.a==='partly';}),yes=rows.length-notYet.length-partly.length;
+  var gaps=notYet.length+partly.length;
+  var h=gaps===0?'We\'ll keep all <em>ten</em> running':gaps===1?'We\'ll close your <em>last gap</em>':'We\'ll close your <em>'+gaps+' gaps</em>';
+  var day=function(k){return new Date(Date.now()+k*864e5).toLocaleDateString('en-US',{month:'short',day:'numeric'});};
+  var row=function(r){return '<li><b class="pl-n">'+(r.n+1)+'</b><span class="pl-t">'+esc(r.t)+'</span>'+(r.a==='no'?'<span class="tag no">Not yet</span>':'<span class="tag partly">Partly</span>')+'</li>';};
+  var tick=function(t){return '<li>'+IC.check+'<span>'+t+'</span></li>';};
+  var faq=function(q,a){return '<details><summary>'+q+'</summary><p>'+a+'</p></details>';};
+  // their own nightly rate from the report: what the monthly fee is worth in nights
+  var D=reportData(),adr=D&&D.vacancy&&D.vacancy.adrSource==='own'?D.vacancy.adr:0,be=adr?Math.max(1,Math.round(PRICE.monthly/adr*10)/10):0;
+  return '<div class="op">'+
+    '<header class="op-head rv">'+
+      '<p class="kick">'+IC.check+'Your plan'+(first?', '+esc(first):'')+'</p>'+
+      '<h2 class="h" tabindex="-1" data-focus>'+h+'</h2>'+
+      '<p class="op-sub">You scored '+yes+' of 10. '+(gaps?'Your analyst takes over the rest':'Your analyst keeps all ten running')+', and you keep the guests and the cleaning.</p>'+
+    '</header>'+
+    // the offer at a glance; on phones its price button is the pinned bar, on desktop the card is sticky
+    '<aside class="op-card offer rv" aria-label="What you get">'+
+      '<p class="op-k">Done-for-you revenue management</p>'+
+      '<ul class="op-list">'+
+        tick('A dedicated analyst on your listing every other day')+
+        tick('Pricing, ranking, photos and listing copy, handled')+
+        tick('A monthly report against last year and your market')+
+        tick('Live in about 8 days. You just add us as a co-host')+
+      '</ul>'+
+      '<div class="op-month"><span>Then <b>$'+PRICE.monthly+'</b>/mo</span><span class="op-term">'+(be?'About '+be+' nights a month at your rate':PRICE.term+' months, then month to month')+'</span></div>'+
+      '<div class="paybar"><button class="pricebtn" type="button" data-act="checkout"><span class="pb-left"><span class="pb-k">Onboarding</span><span class="pb-prices"><span class="pb-was">$'+PRICE.was+'<i></i></span><span class="pb-now">$'+PRICE.now+'</span></span></span><span class="pb-go">Start onboarding'+IC.arrow+'</span></button>'+
+        '<p class="op-trust">'+IC.lock+'Secure checkout with Stripe</p></div>'+
+    '</aside>'+
+    '<section class="op-sec rv"><h2>What your analyst does</h2>'+media('offer')+'</section>'+
+    '<section class="op-sec rv"><h2>Hosts your size</h2>'+
+      '<div class="proof">'+
+        '<article class="pf"><img src="/images/listing-check/proof-bears-tale.jpg" alt="A Bear\'s Tale cabin at sunset" width="400" height="225" loading="lazy"><div class="pf-b"><b>A Bear\'s Tale</b><small>2 BR cabin, Pigeon Forge, TN</small>'+
+          '<div class="pf-up"><strong>+33%</strong><span>2026 bookings vs last year</span></div><div class="pf-was">$32.6K &rarr; $43.3K</div></div></article>'+
+        '<article class="pf"><img src="/images/listing-check/proof-gulfstream.jpg" alt="Gulfstream Villa pool at golden hour" width="400" height="266" loading="lazy"><div class="pf-b"><b>Gulfstream Villa</b><small>3 BR, Gulf Coast, FL</small>'+
+          '<div class="pf-up"><strong>+31%</strong><span>since we took over</span></div><div class="pf-was">$31.0K &rarr; $40.7K</div></div></article>'+
+      '</div>'+
+      '<p class="pf-src">Revenue on the books as of July 2026, against the same point last year. Source: PriceLabs. <a href="/case-study">See all case studies</a></p></section>'+
+    '<section class="op-sec rv"><h2>Your plan</h2><p class="op-note">Built from your answers in the check.</p>'+
+      '<div class="plan">'+
+        (notYet.length?'<p class="pl-g">First</p><ul>'+notYet.map(row).join('')+'</ul>':'')+
+        (partly.length?'<p class="pl-g">Then</p><ul>'+partly.map(row).join('')+'</ul>':'')+
+        (yes?'<p class="pl-keep">'+IC.check+(yes===1?'The one you already do, we keep running':'The '+yes+' you already do, we keep running')+'</p>':'')+
+      '</div></section>'+
+    '<section class="op-sec rv"><h2>How it works</h2>'+
+      '<ol class="tl">'+
+        '<li><span class="tl-d">Today</span><b>Add us as a co-host</b><span class="tl-x">Through Airbnb\'s own permissions, so you never share a password. It\'s the only thing we need from you.</span></li>'+
+        '<li><span class="tl-d">'+day(1)+' to '+day(3)+'</span><b>Your listing gets rebuilt</b><span class="tl-x">Photos re-ordered, copy rewritten, amenities completed. Bookings already on your calendar aren\'t touched.</span></li>'+
+        '<li><span class="tl-d">By '+day(8)+'</span><b>Pricing goes live</b><span class="tl-x">Priced against the listings guests actually see for your dates.</span></li>'+
+        '<li><span class="tl-d">Every other day</span><b>Your analyst works the gaps</b><span class="tl-x">Pricing, ranking and clicks reviewed together, with a monthly report on what changed.</span></li>'+
+      '</ol></section>'+
+    '<section class="op-sec rv"><h2>Questions</h2><div class="faq">'+
+      faq('What does it cost each month?','$'+PRICE.monthly+' a month per listing, after the one-time onboarding.')+
+      faq('What do you need from me?','Add us as a co-host on Airbnb. You never share a password, and that\'s the only thing we need.')+
+      faq('Do you take over guests or cleaning?','No. Guests, cleaning, maintenance and day-to-day operations stay with you. We handle pricing, ranking and the listing itself.')+
+      faq('I already use PriceLabs or Smart Pricing. Do I need this?','Pricing tools price you against the market average. We price against the listings guests actually see for your dates, and we also work your ranking and photos, which no pricing tool does.')+
+      faq('Will it affect bookings I already have?','No. Bookings already on your calendar stay exactly as they are.')+
+      faq('How long do I commit for?','The first '+PRICE.term+' months are a set term. After that it\'s month to month, and you can cancel with 30 days\' notice.')+
+    '</div></section>'+
+    '<p class="op-foot rv">'+IC.home+'Built by hosts, for hosts</p>'+
+    (REVIEW?'<details class="data rv"><summary>What the team receives from this submission</summary><pre>'+esc(JSON.stringify(payload(),null,2))+'</pre></details>':'')+
+    '<div class="acts tail">'+backBtn()+(REVIEW?'<button class="link" type="button" data-act="restart">Start over</button>':'')+'</div>'+
+  '</div>';
+}
+function view(st){
+  if(st.k==='how')return vHow();
+  if(st.k==='strat')return vStrat(st.n);
+  if(st.k==='score')return vScore();
+  if(st.k==='report')return vReport();
+  return vOffer();
+}
+var WIDE={how:1,strat:1,offer:1};
+
+/* ── two-beat screen change: the old screen fades out in place, then the new one cascades in ── */
+var swapT=0;
+function render(dir){
+  var st=STEPS[S.i],old=stage.querySelector('.scr');
+  clearTimeout(swapT);
+  if(old&&dir&&!RM.matches){
+    busy=true;
+    old.classList.add('out');if(dir<0)old.classList.add('rev');
+    if(old.contains(PV))PV.pause();
+    swapT=setTimeout(function(){mount(st,dir);},190);
+  }else mount(st,dir);
+}
+function mount(st,dir){
+  if(PV.parentNode)PV.pause();
+  stage.textContent='';
+  window.scrollTo(0,0);
+  var el=document.createElement('section');
+  el.className='scr in'+(WIDE[st.k]?' wide':'')+(st.k==='report'&&reportState()==='ready'?' mid':'')+(dir<0?' rev':'');
+  el.setAttribute('data-k',st.k);
+  el.innerHTML=view(st);
+  stage.appendChild(el);
+  el.querySelectorAll('.rv').forEach(function(n,k){n.style.animationDelay=Math.min(.04+k*.05,.42).toFixed(2)+'s';});
+  chrome();
+  mountMedia(el);
+  afterMount(st,el);
+  var f=[].filter.call(el.querySelectorAll('[data-focus]'),function(n){return n.offsetParent!==null;})[0];
+  if(f&&dir)try{f.focus({preventScroll:true});}catch(e){}
+  S.log.push({screen:name(st),at:new Date().toISOString()});save();
+  track('listing_check_screen',{screen:st.k==='strat'?'strategy_'+(st.n+1):st.k,step:S.i+1});
+  busy=false;
+}
+var segs=document.getElementById('segs');
+segs.innerHTML=STRATS.map(function(){return '<span class="seg"><i></i></span>';}).join('');
+function chrome(){
+  var st=STEPS[S.i],k=st.k;
+  document.body.setAttribute('data-k',k);
+  var upto=k==='strat'?st.n:(k==='score'||k==='report'||k==='offer'?9:-1);
+  Array.prototype.forEach.call(segs.children,function(g,j){g.classList.toggle('on',j<=upto);});
+  document.getElementById('back').hidden=S.i===0;
+  // "Building your report": the report is on its way while they answer
+  var ri=STEPS.length-2,si=STEPS.length-3,chip=document.getElementById('rchip');
+  chip.classList.toggle('off',S.i===0||S.i>=ri);
+  document.getElementById('rchip-t').textContent=S.i>=si?'Report almost ready':'Building your report';
+  document.getElementById('rchip-b').style.transform='scaleX('+(S.i>=si?.96:(S.i/si)*.9).toFixed(3)+')';
+  if(REVIEW){var sel=document.getElementById('jump');if(sel)sel.value=String(S.i);}
+}
+function countUp(el,to,dur,delay,prefix){
+  if(RM.matches)return;
+  el.textContent=(prefix||'')+'0';
+  var t0=performance.now()+delay;
+  var f=function(t){var p=Math.min(1,Math.max(0,(t-t0)/dur)),e=1-Math.pow(1-p,3);el.textContent=(prefix||'')+fmt(Math.round(to*e));if(p<1)requestAnimationFrame(f);};
+  requestAnimationFrame(f);
+}
+function afterMount(st,el){
+  if(st.k==='score'){
+    el.querySelectorAll('[data-count]').forEach(function(n,k){countUp(n,+n.getAttribute('data-count'),k===0?900:700,k===0?350:600);});
+    var c=counts();track('listing_check_score',{yes:c.yes,partly:c.partly,no:c.no});fbCustom('ListingCheckComplete',{score:c.yes});
+    fetchReport(function(){});   // warm the report while they read their score
+  }
+  if(st.k==='report'){
+    var state=reportState();
+    if(state==='loading'){
+      // the bar picks up from how long the report has been building (about two and a half minutes in all)
+      if(!waitFrom||RS===null)waitFrom=Date.now();
+      var bar=el.querySelector('.rbar b'),lis=el.querySelectorAll('.rload li'),age=Date.now()-((S.report&&S.report.at)||Date.now()),total=150000;
+      var frac=Math.min(.92,age/total);
+      if(bar){bar.style.transition='none';bar.style.transform='scaleX('+frac.toFixed(3)+')';
+        if(bar.animate&&!RM.matches)bar.animate([{transform:'scaleX('+frac.toFixed(3)+')'},{transform:'scaleX(.96)'}],{duration:Math.max(4000,total-age),easing:'linear',fill:'forwards'});}
+      [.25,.55,.85].forEach(function(t,k){var due=t*total-age;if(due<=0){if(lis[k])lis[k].classList.add('done');}else setTimeout(function(){if(lis[k])lis[k].classList.add('done');},due);});
+      waitForReport();
+    }else if(state==='ready'){
+      var big=el.querySelector('.hero .big[data-count]');if(big)countUp(big,+big.getAttribute('data-count'),1100,400,'$');
+    }else if(state==='slow'){waitForReport();}
+    track('listing_check_report_view',{state:state});
+  }
+  if(st.k==='offer'){
+    var o=el.querySelector('.offer');
+    if(RM.matches)o.classList.add('s1','s2','s3');
+    else{setTimeout(function(){o.classList.add('s1');},300);setTimeout(function(){o.classList.add('s2');},800);setTimeout(function(){o.classList.add('s3');},1350);}
+  }
+}
+
+/* ── actions ── */
+function next(){
+  var st=STEPS[S.i];
+  if(st.k==='how'){if(!takeListing())return;track('listing_check_start',{});fbCustom('ListingCheckStart');}
+  if(st.k==='report'&&reportState()==='listing'){if(takeListing()){RS=null;render(1);}return;}
+  if(st.k==='strat'&&!S.strat[st.n]&&!REVIEW)return;
+  go(S.i+1);
+}
+function checkout(btn){
+  track('listing_check_checkout_click',{score:counts().yes});
+  btn.disabled=true;btn.querySelector('.pb-go').innerHTML='Opening checkout'+IC.arrow;
+  setTimeout(function(){location.href=checkoutUrl();},150);   // a beat for the event to leave
+}
+function restart(){
+  try{sessionStorage.removeItem(KEY);}catch(e){}
+  S=fresh(readLead());save();go(0,{replace:true});
+}
+var PHONE=window.matchMedia?matchMedia('(max-width:719px)'):{matches:false};
+stage.addEventListener('click',function(e){
+  // phones: an answer tap is the action. The click lands on the radio itself whether the label text or the
+  // radio was tapped, so this runs once; a short beat lets the dark fill register before the screen changes.
+  if(e.target.name==='ans'&&PHONE.matches&&STEPS[S.i].k==='strat'){
+    var at=S.i;setTimeout(function(){if(S.i===at)go(at+1);},320);
+    return;
+  }
+  var a=e.target.closest('[data-act]');if(!a||!stage.contains(a))return;
+  switch(a.getAttribute('data-act')){
+    case 'next':next();break;
+    case 'back':back();break;
+    case 'vtoggle':vToggle();break;
+    case 'vplay':playNow();break;
+    case 'sound':soundOn();break;
+    case 'vretry':retry();break;
+    case 'checkout':checkout(a);break;
+    case 'restart':restart();break;
+  }
+});
+stage.addEventListener('change',function(e){
+  var t=e.target,st=STEPS[S.i];
+  if(t.name!=='ans'||st.k!=='strat')return;
+  S.strat[st.n]=t.value;save();
+  track('listing_check_answer',{strategy:st.n+1,answer:t.value});
+  var note=stage.querySelector('.note'),ta=note.querySelector('textarea');
+  note.querySelector('.nl-t').textContent=NOTE[t.value].l;ta.placeholder=NOTE[t.value].p;ta.removeAttribute('tabindex');
+  note.classList.add('on');
+  stage.querySelector('[data-act=next]').disabled=false;
+});
+stage.addEventListener('input',function(e){
+  var t=e.target;
+  if(t.id==='nt'){S.notes[STEPS[S.i].n]=t.value;saveSoon();}
+});
+document.getElementById('back').addEventListener('click',back);
+window.addEventListener('scroll',function(){document.body.classList.toggle('scrolled',window.scrollY>4);},{passive:true});
+// phones: how much the on-screen keyboard covers, so the pinned button can sit on top of it
+if(window.visualViewport){
+  var vv=window.visualViewport,kb=function(){document.documentElement.style.setProperty('--kb',Math.max(0,Math.round(window.innerHeight-vv.height-vv.offsetTop))+'px');};
+  vv.addEventListener('resize',kb);vv.addEventListener('scroll',kb);
+}
+
+/* ── review mode: jump to any screen, fill sample answers ── */
+if(REVIEW){
+  var rb=document.createElement('div');rb.className='review';
+  rb.innerHTML='<button type="button" data-r="prev">Prev</button><select id="jump" aria-label="Jump to screen">'+
+    STEPS.map(function(st,i){return '<option value="'+i+'">'+(i+1)+'. '+esc(name(st))+'</option>';}).join('')+
+    '</select><button type="button" data-r="next">Next</button><button type="button" data-r="fill">Fill sample</button>';
+  document.body.appendChild(rb);document.body.classList.add('reviewing');
+  rb.addEventListener('click',function(e){
+    var b=e.target.closest('[data-r]');if(!b)return;var r=b.getAttribute('data-r');
+    if(r==='prev')go(S.i-1);
+    if(r==='next')go(S.i+1);
+    if(r==='fill'){
+      S.lead={name:'Sam',email:S.lead.email||'sam@example.com',phone:'905-555-0142',url:S.lead.url||'airbnb.com/rooms/12345678',listings:'1',revenue:S.lead.revenue||'',submittedAt:S.lead.submittedAt};
+      S.strat=['partly','no','no','yes','no','partly','no','partly','no','partly'];
+      save();render(0);
+    }
+  });
+  document.getElementById('jump').addEventListener('change',function(){go(+this.value);});
+  document.addEventListener('keydown',function(e){
+    if(/INPUT|SELECT|TEXTAREA/.test(e.target.tagName))return;
+    if(e.key==='ArrowRight')go(S.i+1);
+    if(e.key==='ArrowLeft')go(S.i-1);
+  });
+}
+
+/* ── start: resume where they were, or the screen in the URL when reviewing ── */
+var at=S.i||0;
+if(REVIEW){
+  var hi=indexOfHash(location.hash);if(hi>=0)at=hi;
+  var rid=qs.get('report');if(rid&&/^[A-Za-z0-9_-]{8,32}$/.test(rid)){S.report={listing:'review',id:rid,at:Date.now()-150000};save();}
+}
+startReport();
+S.i=at;
+try{history.replaceState({lc:at,d:0},'',urlOf(at));}catch(e){}
+render(0);
+})();
+</script>
+</body>
+</html>

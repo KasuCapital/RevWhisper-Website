@@ -5,10 +5,14 @@
 // 2. Phones on /audit get the app-style form (/audit-flow) at the same URL. It's served here, before the
 //    page loads, so there's no redirect or blank-screen wait and ad links keep working unchanged.
 //    Desktop and tablets keep the original /audit; ?classic=1 shows the original on a phone.
+//    /unqualified (the preview of the unqualified-lead flow) does the same with /unqualified-flow.
 // Every other page is served unchanged.
 export const config = {
   matcher: ['/((?!api/|ingest/|assets/|images/|icons/|fonts/|_vercel/|.*\\.[a-zA-Z0-9]{2,5}$).*)', '/(.*\\.html)']
 };
+
+// Pages with an app-style phone version served at the same URL
+const PHONE_PAGES = { '/audit': '/audit-flow', '/unqualified': '/unqualified-flow' };
 
 // Same phone test the site uses in the browser: tablets (iPad, Android without "Mobile") aren't phones
 const PHONE_UA = /iPhone|iPod|Android.+Mobile|Windows Phone|IEMobile|BlackBerry|Opera Mini/i;
@@ -28,8 +32,9 @@ export default function middleware(request) {
   } catch (e) {}
   try {
     const url = new URL(request.url);
-    if (url.pathname === '/audit' && !url.searchParams.has('classic') && isPhone(request)) {
-      url.pathname = '/audit-flow';
+    const phonePage = PHONE_PAGES[url.pathname];
+    if (phonePage && !url.searchParams.has('classic') && isPhone(request)) {
+      url.pathname = phonePage;
       headers['x-middleware-rewrite'] = url.toString();
       return new Response(null, { headers });
     }
