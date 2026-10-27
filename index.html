@@ -181,6 +181,8 @@ document.addEventListener('DOMContentLoaded',function(){
 <noscript><link rel="stylesheet" href="/assets/footer.css"></noscript>
 <link rel="preload" href="/assets/home-redesign.css" as="style">
 <link rel="stylesheet" href="/assets/home-redesign.css">
+<link rel="stylesheet" href="/assets/rw-vsl.css?v=1">
+<script defer src="/assets/rw-vsl.js?v=1"></script>
 
 <script defer src="/assets/header.js"></script>
 <!-- X Pixel base code + audit conversion helper -->
@@ -353,7 +355,9 @@ document.addEventListener('DOMContentLoaded',function(){
      audit form on the right, with the listing photo in a separate band below. Bryan's
      direction: one CTA only (the form), headline and copy on the left with the form
      beside them, and the listing photo moved down into the "What we are" section.
-     Grid: desktop  copy | form    mobile  copy → form. -->
+     Bryan's intro video (10/27/26) sits under the copy, beside the form.
+     Grid: desktop  copy | form    mobile  copy → form → video.
+                    video | form -->
 <section class="rd-hero" id="top" aria-labelledby="rd-hero-title">
   <div class="w rd-hero-grid">
     <div class="rd-hero-copy">
@@ -504,6 +508,25 @@ document.addEventListener('DOMContentLoaded',function(){
           </div>
         </div>
       </div>
+    </div>
+    <div class="rd-hero-vsl rd-up rd-d3">
+<!-- VSL:START -->
+<!-- Bryan's intro video (10/27/26): the phone /audit welcome screen's player, shared.
+     Look: /assets/rw-vsl.css · behaviour + tracking (vsl_play / vsl_progress / vsl_fullscreen): /assets/rw-vsl.js -->
+<div class="rv" data-state="idle">
+  <div class="rv-frame">
+    <video playsinline webkit-playsinline preload="none" disableremoteplayback poster="/images/video/audit-vsl-poster.aabb1ad8.webp" width="1280" height="720">
+      <source src="/images/video/audit-vsl.0e6b05a0.mp4" type="video/mp4">
+    </video>
+    <button class="rv-hit" type="button" aria-label="Play Bryan's video with sound">
+      <span class="rv-cap"><span class="rv-disc" aria-hidden="true"><svg class="i-play" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg><svg class="i-again" viewBox="0 0 24 24" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></span><span class="rv-tx"><small class="rv-time">2:11 · Click to watch with sound</small></span></span>
+    </button>
+    <span class="rv-prog" aria-hidden="true"><i></i></span>
+    <span class="rv-spin" aria-hidden="true"></span>
+    <button class="rv-fs" type="button" aria-label="Watch full screen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+  </div>
+</div>
+<!-- VSL:END -->
     </div>
   </div>
 </section>

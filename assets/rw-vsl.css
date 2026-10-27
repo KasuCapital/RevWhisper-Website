@@ -1,0 +1,69 @@
+/* ── Bryan's intro video (10/27/26) ───────────────────────────────────────────
+   Shared by desktop /audit, the four Google Ads landing pages and the homepage.
+   The same player as the phone /audit welcome screen (audit-flow.html .iv-*): poster,
+   sage play disc and one line of text; nothing plays until the visitor clicks.
+   Markup: _partials/vsl.html (synced by scripts/sync-partials.mjs). Behaviour: rw-vsl.js. */
+.rv{--rv-ease:cubic-bezier(.16,1,.3,1);position:relative;z-index:1;border-radius:18px;
+  box-shadow:0 1px 2px rgba(50,48,47,.05),0 14px 32px -16px rgba(50,48,47,.28)}
+.rv-frame{position:relative;aspect-ratio:16/9;border-radius:18px;overflow:hidden;isolation:isolate;
+  background:#2b2927 url(/images/video/audit-vsl-poster.aabb1ad8.webp) center/cover no-repeat}
+.rv-frame video{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;display:block}
+.rv-hit{position:absolute;top:0;right:0;bottom:0;left:0;z-index:2;border:0;padding:0;margin:0;background:transparent;cursor:pointer;text-align:left;color:#fff;font:inherit}
+.rv-hit::after{content:"";position:absolute;top:0;left:0;right:0;bottom:0;z-index:-1;background:linear-gradient(180deg,rgba(20,19,18,0) 42%,rgba(20,19,18,.66) 100%);transition:opacity .3s var(--rv-ease)}
+.rv-cap{position:absolute;left:18px;right:18px;bottom:18px;display:flex;align-items:center;gap:14px;transition:opacity .22s var(--rv-ease),transform .3s var(--rv-ease)}
+.rv-disc{position:relative;width:56px;height:56px;border-radius:50%;background:var(--accent,#4A6741);display:grid;place-items:center;flex:0 0 auto;transition:transform .25s var(--rv-ease)}
+.rv-disc svg{grid-area:1/1;width:20px;height:20px;fill:#fff}
+.rv-disc .i-play{margin-left:3px}
+.rv-disc .i-again{display:none;fill:none;stroke:#fff;width:21px;height:21px}
+.rv[data-state=ended] .rv-disc .i-again{display:block}
+.rv[data-state=ended] .rv-disc .i-play{display:none}
+/* a slow ring off the disc while it waits for its first click */
+.rv-disc::after{content:"";position:absolute;top:-6px;left:-6px;right:-6px;bottom:-6px;border-radius:50%;border:2px solid rgba(255,255,255,.55);opacity:0;pointer-events:none}
+.rv[data-state=idle] .rv-disc::after{animation:rvRing 2.6s ease-out 1s infinite}
+.rv-hit:active .rv-disc{transform:scale(.94)}
+@media(hover:hover){.rv-hit:hover .rv-disc{transform:scale(1.05)}}
+.rv-hit:focus-visible{outline:none}
+.rv-hit:focus-visible .rv-disc{box-shadow:0 0 0 3px #fff}
+.rv-tx{min-width:0;text-shadow:0 1px 8px rgba(20,19,18,.35);transition:opacity .2s var(--rv-ease)}
+.rv-time{display:block;font-size:15px;font-weight:600;line-height:1.3;letter-spacing:-.005em;color:#fff;font-variant-numeric:tabular-nums}
+/* paused: the disc only, so no text sits on the video's own captions */
+.rv[data-state=paused] .rv-tx{opacity:0}
+.rv[data-state=paused] .rv-hit::after{opacity:.55}
+.rv[data-state=playing] .rv-hit::after,.rv[data-state=playing] .rv-cap{opacity:0}
+.rv[data-state=playing] .rv-cap{transform:translate3d(0,6px,0)}
+/* progress hairline + full-screen button, once it has started */
+.rv-prog{position:absolute;left:0;right:0;bottom:0;z-index:3;height:3px;background:rgba(255,255,255,.26);pointer-events:none;opacity:0;transition:opacity .3s}
+.rv-prog i{display:block;height:100%;background:#fff;transform:scaleX(0);transform-origin:left}
+.rv-fs{position:absolute;top:10px;right:10px;z-index:4;width:34px;height:34px;border-radius:50%;border:0;padding:0;background:rgba(20,19,18,.5);color:#fff;display:grid;place-items:center;cursor:pointer;
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .25s var(--rv-ease)}
+.rv-fs svg{width:15px;height:15px}
+.rv-fs:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.rv:not([data-state=idle]) .rv-prog,.rv:not([data-state=idle]) .rv-fs{opacity:1}
+.rv:not([data-state=idle]) .rv-fs{pointer-events:auto}
+.rv-spin{position:absolute;left:50%;top:50%;z-index:3;width:36px;height:36px;margin:-18px 0 0 -18px;border-radius:50%;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;pointer-events:none;opacity:0;transition:opacity .2s;animation:rvSpin .8s linear infinite}
+.rv.buffering .rv-spin{opacity:1}
+@keyframes rvRing{0%{opacity:.9;transform:scale(1)}100%{opacity:0;transform:scale(1.45)}}
+@keyframes rvSpin{to{transform:rotate(360deg)}}
+@media(max-width:640px){
+  .rv,.rv-frame{border-radius:16px}
+  .rv-cap{left:14px;right:14px;bottom:14px;gap:12px}
+  .rv-disc{width:50px;height:50px}
+  .rv-disc svg{width:18px;height:18px}
+  .rv-time{font-size:14px}
+}
+@media(max-width:380px){ .rv-cap{left:12px;right:12px;bottom:12px;gap:10px} .rv-disc{width:46px;height:46px} }
+@media(prefers-reduced-motion:reduce){ .rv-disc::after{animation:none!important} }
+
+/* ── /audit + Google LPs: centred headline, then video | form ───────────────────
+   The form keeps its place in the first screen; the video takes the left of the row.
+   Below 960px the two stack, form first, so the first question still leads. */
+.hero-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,520px);gap:40px;align-items:center;max-width:1064px;margin:0 auto}
+.hero-row .rv{grid-column:1;grid-row:1}
+.hero-row .form-glow{grid-column:2;grid-row:1;max-width:none;margin:0}
+@media(max-width:959px){
+  .hero-row{grid-template-columns:minmax(0,560px);justify-content:center;gap:28px}
+  .hero-row .rv,.hero-row .form-glow{grid-column:1}
+  .hero-row .form-glow{grid-row:1}
+  .hero-row .rv{grid-row:2}
+}
+@media(max-width:640px){ .hero-row{gap:22px} }

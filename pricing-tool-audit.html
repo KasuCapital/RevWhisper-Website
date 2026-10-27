@@ -810,6 +810,8 @@ body.rw-fs .fc-title{display:none}
 }
 </style>
 <link rel="stylesheet" href="/assets/lp-sections.css?v=4">
+<link rel="stylesheet" href="/assets/rw-vsl.css?v=1">
+<script defer src="/assets/rw-vsl.js?v=1"></script>
 <link rel="stylesheet" href="/assets/fonts.css">
 <script defer src="/assets/phone-validate.js"></script>
 </head>
@@ -852,6 +854,25 @@ body.rw-fs .fc-title{display:none}
 
     <!-- multi-step lead form — centered focal point -->
     <div class="fs-scrim" id="fs-scrim" aria-hidden="true"></div>
+    <!-- Video | form (one column, form first, below 960px) -->
+    <div class="hero-row">
+<!-- VSL:START -->
+<!-- Bryan's intro video (10/27/26): the phone /audit welcome screen's player, shared.
+     Look: /assets/rw-vsl.css · behaviour + tracking (vsl_play / vsl_progress / vsl_fullscreen): /assets/rw-vsl.js -->
+<div class="rv" data-state="idle">
+  <div class="rv-frame">
+    <video playsinline webkit-playsinline preload="none" disableremoteplayback poster="/images/video/audit-vsl-poster.aabb1ad8.webp" width="1280" height="720">
+      <source src="/images/video/audit-vsl.0e6b05a0.mp4" type="video/mp4">
+    </video>
+    <button class="rv-hit" type="button" aria-label="Play Bryan's video with sound">
+      <span class="rv-cap"><span class="rv-disc" aria-hidden="true"><svg class="i-play" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg><svg class="i-again" viewBox="0 0 24 24" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></span><span class="rv-tx"><small class="rv-time">2:11 · Click to watch with sound</small></span></span>
+    </button>
+    <span class="rv-prog" aria-hidden="true"><i></i></span>
+    <span class="rv-spin" aria-hidden="true"></span>
+    <button class="rv-fs" type="button" aria-label="Watch full screen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+  </div>
+</div>
+<!-- VSL:END -->
     <div class="form-glow">
     <div class="form-card" id="audit-form">
         <div class="fc-title">
@@ -1008,6 +1029,7 @@ body.rw-fs .fc-title{display:none}
         </div>
       </div>
     </div><!-- /.form-glow -->
+    </div><!-- /.hero-row -->
   </div>
 </section>
 
