@@ -6,6 +6,8 @@ Disallow: /docs/
 Disallow: /service-agreement.md
 Disallow: /blog/HOW_TO_CREATE_A_BLOG_POST.md
 Disallow: /blog/_template
+Disallow: /blog/_post-template
+Disallow: /blog/_scheduled/
 
 # Conversion-flow pages (intentionally not indexed)
 Disallow: /checkout

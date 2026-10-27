@@ -1,5 +1,45 @@
 # How to Create a New Blog Post
 
+## New posts (from October 2026): use `_post-template.html`
+
+New posts use `blog/_post-template.html`, which matches the blog drafts design. Its
+layout lives in `/assets/blog-post.css`, its hero graphics and figures in
+`/assets/blog-graphics.css`, and the Replay button in `/assets/blog-post.js`.
+Every published post uses this format, so any existing post is a working example.
+
+1. `cp blog/_post-template.html blog/your-post-slug.html`, then delete its `noindex` line.
+2. Fill in every `EDIT` comment, in page order: tag pills, title and one-line description;
+   byline ("By Marisa @ RevWhisper · Last updated [date]"); a 2 to 3 sentence answer box;
+   the hero graphic; question headings, figures with captions and comparison tables;
+   the "From RevWhisper's data" box; "Choose RevWhisper if / Choose [alternative] if";
+   the "Who is RevWhisper for?" facts block (keep as is); FAQ, related reading and the
+   free audit CTA. Then remove the `EDIT` comments.
+3. Keep the hero markup between `<!-- HERO:START -->` and `<!-- HERO:END -->`: the
+   `/blog` index copies it as the post's card thumbnail.
+4. Update both JSON-LD blocks: Article (author "Marisa @ RevWhisper", `datePublished`,
+   `dateModified` equal to the "Last updated" date) and FAQPage (same questions and
+   answers as the page).
+5. `node scripts/render-blog-hero.mjs your-post-slug` saves the hero as
+   `images/blog/your-post-slug.png` for og:image and twitter:image.
+6. Add the post to the top of `posts.js` with `updated`, `hero: true`, `image` and
+   `author: "Marisa @ RevWhisper"` (see the first entry), then run
+   `node scripts/build-blog-index.mjs`. It updates `/blog` and the blog section of
+   `sitemap.xml` for you.
+7. To schedule it, also set `publish` in `posts.js` to the go-live time with its UTC
+   offset, e.g. `"2026-11-03T09:00:00-05:00"` for 9 a.m. Eastern in winter
+   (`-04:00` in summer). Run the build and push as usual: until that time the post's
+   URL redirects to `/blog` and it isn't on `/blog` or in the sitemap; at that time
+   `middleware.js` switches them over by itself. Rerun the build whenever you change
+   `posts.js`.
+
+Never publish draft-only material: rank numbers, search volumes, target phrases, gold
+placeholder boxes or "What changed" notes. Copy rules: no em dashes, and the scale
+credential is "over 100 hosts", never a listing count. Link only to published pages.
+
+The rest of this guide covers the original template, `_template.html`.
+
+---
+
 ## Quick Steps
 
 1. Copy the template
@@ -131,7 +171,7 @@ to crawlers). After editing `posts.js`, run:
 node scripts/build-blog-index.mjs
 ```
 
-Then add the new post's URL to `sitemap.xml` with today's date as `<lastmod>`.
+It also rewrites the blog section of `sitemap.xml`, so there's no sitemap entry to add by hand.
 
 ---
 
@@ -179,7 +219,6 @@ These exist because an audit found all posts were link islands with no freshness
 - [ ] `dateModified` present in Article JSON-LD
 - [ ] Title ≤60 chars, meta description ≤155 chars, og:image is a real raster file
 - [ ] `node scripts/build-blog-index.mjs` run
-- [ ] `sitemap.xml` entry added with today's `<lastmod>`
 
 ---
 

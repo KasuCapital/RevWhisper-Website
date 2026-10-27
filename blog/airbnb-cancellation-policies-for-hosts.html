@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- ATTRIBUTION:START -->
+<!-- Attribution capture (cookie-free): a lead carries its UTMs and ad click IDs into the CRM.
+     One copy for every page. Edit _partials/attribution.html, then run node scripts/sync-partials.mjs. -->
+<script>
+(function(){
+  var key='rw_attribution';
+  var TTL=7776000000; // 90 days — keep the last paid touch across tabs/sessions
+  var params=new URLSearchParams(window.location.search);
+  var utmFields=['utm_source','utm_medium','utm_campaign','utm_term','utm_content','utm_id'];
+  // gbraid/wbraid: Google's iOS click IDs, sent in place of gclid. Keep in sync with CLICK_IDS in /assets/rw-consent.js.
+  var clickFields=['fbclid','gclid','gbraid','wbraid','ttclid','twclid','msclkid','li_fat_id'];
+  var trackedFields=utmFields.concat(clickFields);
+  // A page sets window.rwAttributionForce before this runs when every visit must be recorded (/vrma does).
+  var hasTracked=!!window.rwAttributionForce||trackedFields.some(function(f){return params.has(f);});
+  function rwGet(k){try{return localStorage.getItem(k)||sessionStorage.getItem(k);}catch(e){try{return sessionStorage.getItem(k);}catch(e2){return null;}}}
+  function rwSet(k,v){try{localStorage.setItem(k,v);}catch(e){try{sessionStorage.setItem(k,v);}catch(e2){}}}
+  var prev=null;try{prev=JSON.parse(rwGet(key));}catch(e){prev=null;}
+  var fresh=prev&&prev.arrived_at&&((Date.now()-new Date(prev.arrived_at).getTime())<TTL);
+  if(hasTracked||!fresh){
+    var data={};
+    trackedFields.forEach(function(f){if(params.get(f))data[f]=params.get(f);});
+    try{data.referrer=document.referrer?new URL(document.referrer).hostname:'direct';}catch(e){data.referrer=document.referrer||'direct';}
+    data.landing_page=window.location.pathname;
+    data.arrived_at=new Date().toISOString();
+    rwSet(key,JSON.stringify(data));
+    prev=data;
+  }
+  // This page's copy, kept in memory. Facebook's and Instagram's in-app browsers can lose storage
+  // while the page is still open (the visitor switches apps to copy their Airbnb link, comes back,
+  // submits), which sent those leads to the CRM with no UTMs at all.
+  var atLoad=prev||{};
+
+  // One label for where the lead came from, filled in even when the link carried no UTMs.
+  function channel(a){
+    var s=String(a.utm_source||'').toLowerCase(), m=String(a.utm_medium||'').toLowerCase();
+    var r=String(a.referrer||'').toLowerCase();
+    var paid=/cpc|ppc|paid|display|retarget|^ads?$/.test(m);
+    if(/^(meta|facebook|fb|instagram|ig|threads)$/.test(s))return paid?'meta-ads':'meta-organic';
+    if(a.gclid||a.gbraid||a.wbraid||(/google/.test(s)&&paid))return 'google-ads';
+    if(a.msclkid||(/bing|microsoft/.test(s)&&paid))return 'microsoft-ads';
+    // Meta adds fbclid to every Facebook/Instagram link. Without UTMs it's an ad click whose URL
+    // parameters didn't come through, or an organic post or message.
+    if(a.fbclid)return 'meta';
+    if(a.twclid||/^(x|twitter)$/.test(s))return 'x';
+    if(a.ttclid||s==='tiktok')return 'tiktok';
+    if(a.li_fat_id||s==='linkedin')return 'linkedin';
+    if(s)return s; // any other tagged link: email, partner, conference...
+    if(!r||r==='direct')return 'direct';
+    if(/(^|\.)revwhisper\.com$/.test(r))return 'unknown'; // record started mid-visit, the entry point wasn't seen
+    if(/(^|\.)(google|bing|duckduckgo|yahoo|ecosia|brave|baidu|yandex)\.[a-z.]+$/.test(r))return 'organic-search';
+    if(/(^|\.)(facebook|instagram|threads|linkedin|reddit|youtube|tiktok|pinterest|twitter|x)\.(com|net)$|^(t\.co|lnkd\.in)$/.test(r))return 'social';
+    return 'referral';
+  }
+
+  // What every form sends as `attribution`: the stored record, or this page's in-memory copy when
+  // storage was lost, plus `channel`.
+  window.rwAttribution=function(){
+    var a=null;
+    try{a=JSON.parse(localStorage.getItem(key));}catch(e){}
+    if(!a||!a.arrived_at){try{a=JSON.parse(sessionStorage.getItem(key));}catch(e){}}
+    if(!a||!a.arrived_at)a=atLoad;
+    var out={};
+    for(var k in a){if(Object.prototype.hasOwnProperty.call(a,k))out[k]=a[k];}
+    out.channel=channel(out);
+    // Opt-in regions without ad consent: no click IDs leave the browser (same rule as /assets/rw-consent.js).
+    if(window.rwConsent&&rwConsent.optIn&&!rwConsent.ads)clickFields.forEach(function(f){delete out[f];});
+    return out;
+  };
+})();
+</script>
+<!-- ATTRIBUTION:END -->
+<script src="/assets/rw-consent.js?v=3"></script>
+<script defer src="/assets/rw-posthog.js?v=3"></script>
+<!-- GA4. Consent defaults come from /assets/rw-consent.js -->
+<script>
+window.dataLayer=window.dataLayer||[];
+function gtag(){dataLayer.push(arguments);}
+gtag('js',new Date());
+gtag('config','G-Y1FYZ5849B');
+(window.rwConsent?rwConsent.whenAllowed:function(f){f();})(function(){var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-Y1FYZ5849B';document.head.appendChild(s);});
+function rwTrack(e,p){gtag('event',e,p||{});}
+</script>
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+(window.rwConsent?rwConsent.whenAdsAllowed:function(g){g()})(function(){s.parentNode.insertBefore(t,s)})}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+if(window.rwConsent&&!rwConsent.ads)fbq('consent','revoke');
+fbq('init', '959022406709300');
+fbq('track', 'PageView');
+</script>
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+  document.addEventListener('click',function(e){
+    var el=e.target.closest('a,button');
+    if(!el)return;
+    var txt=(el.textContent||'').replace(/\s+/g,' ').trim().toLowerCase();
+    if(txt.indexOf('book your free strategy call')!==-1||txt.indexOf('book a call')!==-1||txt.indexOf('book a free strategy call')!==-1){
+      fbq('track','Lead',{content_name:'Book Strategy Call'});
+    }else if(txt.indexOf('check my search ranking')!==-1){
+      fbq('track','Lead',{content_name:'Check Search Ranking'});
+    }
+  });
+});
+</script>
+<!-- End Meta Pixel -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Airbnb Cancellation Policies for Hosts | RevWhisper Blog</title>
+<meta name="description" content="Airbnb retired Strict and added Limited. What each policy pays you when a guest cancels, which one fits your calendar, and how to change it.">
+<link rel="canonical" href="https://revwhisper.com/blog/airbnb-cancellation-policies-for-hosts">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Airbnb Cancellation Policies for Hosts | RevWhisper Blog">
+<meta property="og:description" content="Airbnb retired Strict and added Limited. What each policy pays you when a guest cancels, which one fits your calendar, and how to change it.">
+<meta property="og:url" content="https://revwhisper.com/blog/airbnb-cancellation-policies-for-hosts">
+<meta property="og:site_name" content="RevWhisper">
+<meta property="og:image" content="https://revwhisper.com/images/blog/airbnb-cancellation-policies-for-hosts.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="675">
+<meta property="article:published_time" content="2026-10-28">
+<meta property="article:modified_time" content="2026-10-28">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Airbnb Cancellation Policies for Hosts | RevWhisper Blog">
+<meta name="twitter:description" content="Airbnb retired Strict and added Limited. What each policy pays you when a guest cancels, which one fits your calendar, and how to change it.">
+<meta name="twitter:image" content="https://revwhisper.com/images/blog/airbnb-cancellation-policies-for-hosts.png">
+
+<link rel="icon" href="/icons/favicon-light.svg" type="image/svg+xml" media="(prefers-color-scheme: light)">
+<link rel="icon" href="/icons/favicon-dark.svg" type="image/svg+xml" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/icons/favicon-light.svg" type="image/svg+xml">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Airbnb Cancellation Policies for Hosts: Flexible, Moderate, Limited and Firm",
+  "description": "Airbnb retired Strict and added Limited. What each policy pays you when a guest cancels, which one fits your calendar, and how to change it.",
+  "image": "https://revwhisper.com/images/blog/airbnb-cancellation-policies-for-hosts.png",
+  "datePublished": "2026-10-28",
+  "dateModified": "2026-10-28",
+  "author": {
+    "@type": "Person",
+    "name": "Marisa @ RevWhisper",
+    "url": "https://revwhisper.com"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "RevWhisper",
+    "url": "https://revwhisper.com",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://revwhisper.com/icons/favicon-light.svg"
+    }
+  },
+  "mainEntityOfPage": "https://revwhisper.com/blog/airbnb-cancellation-policies-for-hosts"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What are Airbnb's cancellation policies in 2026?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Flexible, Moderate, Limited and Firm for stays under 28 nights, plus a separate long-term policy for 28 nights or more."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is Airbnb's Strict policy still available?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Not for new selection. Airbnb retired it for bookings from October 1, 2025 and moved most Strict listings to Firm. It's now invitation-only."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the strictest Airbnb cancellation policy?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Firm: full refund until 30 days before check-in, 50% from 7 to 30 days out, nothing inside 7 days."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I change my Airbnb cancellation policy after a booking?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You can change it for future bookings. Existing reservations keep the policy they were booked under."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do all Airbnb bookings get free cancellation?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Every policy includes a 24-hour free cancellation window for bookings made at least 7 days before check-in."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which policy does RevWhisper recommend?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It depends on how fast your dates refill. RevWhisper sets the policy with your pricing and minimum stays for each season."
+      }
+    }
+  ]
+}
+</script>
+<link rel="stylesheet" href="/assets/fonts.css">
+<link rel="stylesheet" href="/assets/blog-post.css">
+<link rel="stylesheet" href="/assets/blog-graphics.css">
+<link rel="stylesheet" href="/assets/header.css">
+<script defer src="/assets/header.js"></script>
+<link rel="stylesheet" href="/assets/footer.css">
+<script defer src="/assets/blog-post.js"></script>
+<!-- X Pixel base code -->
+<script src="/assets/x-pixel-base.js?v=2"></script>
+<!-- End X Pixel base code -->
+</head>
+<body>
+
+
+<!-- HEADER:START -->
+<nav class="float-bar" id="float-bar" aria-label="Primary">
+  <a href="/" class="fb-logo">
+    <div class="lm"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24" fill="none" aria-hidden="true"><path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <span class="ln">RevWhisper</span>
+  </a>
+
+  <div class="fb-links" id="fb-links">
+
+    <!-- Services dropdown -->
+    <div class="fb-dropdown" data-dropdown>
+      <button class="fb-link fb-dropdown-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="fb-menu-services">
+        Services
+        <svg class="fb-chevron" viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="fb-menu" id="fb-menu-services">
+
+        <!-- Listing Optimization: document with text lines -->
+        <a href="/airbnb-listing-optimization" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/>
+              <path d="M14 2v4a2 2 0 0 0 2 2h4"/>
+              <path d="M10 9H8"/>
+              <path d="M16 13H8"/>
+              <path d="M16 17H8"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Listing Optimization</span>
+            </span>
+            <span class="fb-menu-desc">Title, description, and amenities tuned for conversion</span>
+          </span>
+        </a>
+
+        <!-- Revenue Management: stacked coins / database cylinder -->
+        <a href="/revenue-management" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <ellipse cx="12" cy="5" rx="9" ry="3"/>
+              <path d="M3 5v14a9 3 0 0 0 18 0V5"/>
+              <path d="M3 12a9 3 0 0 0 18 0"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Revenue Management</span>
+            </span>
+            <span class="fb-menu-desc">Dynamic pricing, minimum stays, seasonal strategy</span>
+          </span>
+        </a>
+
+        <!-- Photo Optimization: photo frame with sun + mountains -->
+        <a href="/photoediting" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              <circle cx="9" cy="9" r="2"/>
+              <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Photo Optimization</span>
+            </span>
+            <span class="fb-menu-desc">Cover photos, photo order, professional editing</span>
+          </span>
+        </a>
+
+      </div>
+    </div>
+
+    <!-- Resources dropdown -->
+    <div class="fb-dropdown" data-dropdown>
+      <button class="fb-link fb-dropdown-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="fb-menu-resources">
+        Resources
+        <svg class="fb-chevron" viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="fb-menu" id="fb-menu-resources">
+
+        <!-- Blog: notebook with binding + text lines -->
+        <a href="/blog" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="4" y="2" width="16" height="20" rx="2"/>
+              <path d="M2 6h4"/>
+              <path d="M2 10h4"/>
+              <path d="M2 14h4"/>
+              <path d="M2 18h4"/>
+              <path d="M9.5 8h5"/>
+              <path d="M9.5 12H16"/>
+              <path d="M9.5 16H14"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Blog</span>
+            </span>
+            <span class="fb-menu-desc">Strategies, data, and host insights</span>
+          </span>
+        </a>
+
+        <!-- Case Studies: open book -->
+        <a href="/case-study" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 7v14"/>
+              <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Case Studies</span>
+            </span>
+            <span class="fb-menu-desc">Real revenue lifts from real listings</span>
+          </span>
+        </a>
+
+        <!-- Free Listing Audit: clean magnifying glass -->
+        <a href="/#audit-form" class="fb-menu-item js-to-audit">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="10.5" cy="10.5" r="6.5"/>
+              <path d="m15.5 15.5 4 4"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Free Listing Audit</span>
+            </span>
+            <span class="fb-menu-desc">Ranking, pricing and conversion, walked through live</span>
+          </span>
+        </a>
+      </div>
+    </div>
+
+    <a href="/get-started" class="fb-link fb-link--mobile-cta">Book a Strategy Call</a>
+  </div>
+
+  <a href="/get-started" class="fb-cta">Book a Strategy Call</a>
+  <button class="fb-hamburger" id="fb-hamburger" aria-label="Toggle navigation" aria-expanded="false">
+    <span class="fb-ham-line"></span>
+    <span class="fb-ham-line"></span>
+    <span class="fb-ham-line"></span>
+  </button>
+</nav>
+<!-- HEADER:END -->
+
+<main class="post">
+  <a href="/blog" class="post-back">&larr; Back to Blog</a>
+
+  <div class="post-tags">
+    <span class="post-tag">Policy Guide</span>
+    <span class="post-tag">Booking Settings</span>
+  </div>
+  <h1>Airbnb Cancellation Policies for Hosts: Flexible, Moderate, Limited and Firm</h1>
+  <p class="post-dek">Airbnb retired Strict and added Limited. What each policy pays you when a guest cancels, which one fits your calendar, and how to change it.</p>
+
+  <p class="post-byline"><span class="by">By Marisa @ RevWhisper</span><span>Last updated <time datetime="2026-10-28">October 28, 2026</time></span></p>
+
+  <div class="post-answer">
+    <p>Airbnb hosts now choose between four standard cancellation policies for stays under 28 nights: Flexible, Moderate, Limited and Firm, after Airbnb retired Strict for new selection on October 1, 2025. Firm is the strictest you can pick, with a full refund up to 30 days before check-in, and Limited sits in the middle at 14 days. Choose by how fast your cancelled dates refill: dates that rebook quickly suit Flexible or Moderate, and dates that stay empty suit Limited or Firm.</p>
+  </div>
+
+  <figure class="post-hero">
+    <div class="hx" role="img" aria-label="Airbnb's four cancellation policies and their full refund windows: Flexible until 1 day before check-in, Moderate 5 days, Limited 14 days and Firm 30 days. A guest who cancels 10 days out pays 50% on Limited or Firm and nothing on Moderate. Strict was retired in October 2025.">
+<!-- HERO:START -->
+<div class="in site"><div class="hrow" style="width:92cqw;align-items:stretch"><div class="a pop modal" style="width:44cqw;flex:none;--d:0.20s"><div class="mh">Cancellation policy</div><div class="a slideR prow" style="--d:0.30s"><span>Flexible</span><b class="num">Full refund until 1 day before</b></div><div class="a slideR prow" style="--d:0.40s"><span>Moderate</span><b class="num">Full refund until 5 days before</b></div><div class="a slideR prow" style="--d:0.50s"><span>Limited</span><b class="num">Full refund until 14 days before</b></div><div class="a slideR prow" style="--d:0.60s"><span>Firm</span><b class="num">Full refund until 30 days before</b></div><div class="rbtn">Save policy</div></div><div class="ss"><div class="a slideR ssi g" style="--d:0.60s"><span>Guest cancels 10 days out</span><b class="num">50%</b><i>of nights paid on Limited or Firm</i></div><div class="a slideR ssi" style="--d:0.75s"><span>Same cancellation on Moderate</span><b class="num">$0</b><i>full refund to the guest</i></div><div class="a slideR ssi" style="--d:0.90s"><span>Strict</span><b class="num">Retired</b><i>moved to Firm, Oct 2025</i></div></div></div><span class="a fade hcap" style="--d:1.4s">Refund windows from Airbnb's policies for stays under 28 nights</span></div>
+<!-- HERO:END -->
+    </div>
+  </figure>
+
+  <article class="post-body">
+    <h2>What are Airbnb's cancellation policies for hosts?</h2>
+    <div class="tablewrap"><table><thead><tr><th>Policy</th><th>Full refund until</th><th>If the guest cancels later</th></tr></thead><tbody><tr><td>Flexible</td><td>24 hours before check-in</td><td>You're paid for nights stayed plus one more night</td></tr><tr><td>Moderate</td><td>5 days before check-in</td><td>Nights stayed, one more night and 50% of unspent nights</td></tr><tr><td>Limited</td><td>14 days before check-in</td><td>50% of all nights from 7 to 14 days out; 100% inside 7 days</td></tr><tr><td>Firm</td><td>30 days before check-in</td><td>50% of all nights from 7 to 30 days out; 100% inside 7 days</td></tr></tbody></table></div><p>Every policy also has a 24-hour free cancellation window for bookings made at least 7 days before check-in. Stays of 28 nights or more use your separate long-term policy. Sources: Airbnb's Help Center and host resources, and channel manager summaries of the October 2025 changes.</p>
+    <figure class="viz"><div class="vt">The four standard policies</div><div class="v-grid"><div class="gc"><b>Flexible</b><span>Full refund until 24 hours before check-in</span></div><div class="gc"><b>Moderate</b><span>Full refund until 5 days before</span></div><div class="gc"><b>Limited</b><span>Full refund until 14 days before; 50% from 7 to 14 days</span></div><div class="gc"><b>Firm</b><span>Full refund until 30 days before; 50% from 7 to 30 days</span></div></div><figcaption>For stays under 28 nights, from Airbnb's October 2025 policy update.</figcaption></figure>
+    <h2>What happened to Airbnb's Strict cancellation policy?</h2>
+    <p>Airbnb stopped offering Strict for bookings made on or after October 1, 2025, and moved listings on Strict to Firm unless the host opted out before that date. It's now invitation-only. Super Strict 30 and Super Strict 60 were retired too: they stopped being available for new listings on June 15, 2026, and most listings on them moved to Firm on September 15, 2026.</p><p class="mistake"><strong>Common mistake:</strong> Assuming a listing still runs on Strict. Check the policy shown in your listing settings, since most were moved to Firm.</p>
+    <h2>What is the Limited cancellation policy on Airbnb?</h2>
+    <p>Limited is the new middle option, added for bookings from October 1, 2025. Guests get a full refund until 14 days before check-in, 50% back between 7 and 14 days, and nothing inside 7 days. It gives hosts more protection than Moderate without the 30-day window of Firm.</p>
+    <h2>What does each policy pay me if a guest cancels?</h2>
+    <div class="tablewrap"><table><thead><tr><th>Guest cancels</th><th>Flexible</th><th>Moderate</th><th>Limited</th><th>Firm</th></tr></thead><tbody><tr><td>20 days before check-in</td><td>$0</td><td>$0</td><td>$0</td><td>50% of nights</td></tr><tr><td>10 days before check-in</td><td>$0</td><td>$0</td><td>50% of nights</td><td>50% of nights</td></tr><tr><td>3 days before check-in</td><td>$0</td><td>One night plus 50% of the rest</td><td>100% of nights</td><td>100% of nights</td></tr></tbody></table></div><p>Payouts are before <a href="/blog/airbnb-host-fee-squeeze-pricing-math">Airbnb's host fee</a>, and refunds of taxes and fees follow Airbnb's rules for each policy.</p>
+    <h2>Which Airbnb cancellation policy is best for hosts?</h2>
+    <p>The one that matches how fast your dates refill. In busy markets where a cancelled weekend rebooks in days, Flexible or Moderate win more bookings and cost you little. Airbnb has said 40% of guests prioritize free cancellation when they book. Where cancelled dates stay empty, such as large homes, peak holiday weeks and seasonal markets, Limited or Firm protect revenue.</p><blockquote class="tip"><strong>Pro tip:</strong> <a href="/blog/reserve-now-pay-later-revenue-strategy">Reserve Now, Pay Later</a> only appears on Flexible and Moderate listings, according to Hostfully's 2026 guide. If you use Limited or Firm, guests can't choose it on your listing.</blockquote>
+    <figure class="viz"><div class="vt">Which policy fits your dates</div><div class="v-cmp"><div class="vc l"><div class="vch">Flexible or Moderate</div><ul><li>Cancelled dates rebook within days</li><li>Busy markets and new listings</li><li>Reserve Now, Pay Later shows on your listing</li></ul></div><div class="vc r"><div class="vch">Limited or Firm</div><ul><li>Cancelled dates stay empty</li><li>Large homes and holiday weeks</li><li>Seasonal markets with long booking windows</li></ul></div></div><figcaption>Pick by how fast a cancelled date refills.</figcaption></figure>
+    <h2>Should my cancellation policy change by season?</h2>
+    <p>It can. A ski home might run Firm through holiday weeks and Moderate in mud season, and a beach house might do the opposite. Check how far ahead each season books: the longer the booking window, the more a strict policy protects. RevWhisper sets the policy together with <a href="/revenue-management">pricing and minimum stays</a> for each season.</p>
+    <h2>How do I change my cancellation policy on Airbnb?</h2>
+    <p>Open the listing in your Airbnb host account, go to its policies or booking settings, and choose a new cancellation policy. The change applies to new bookings only; existing reservations keep the policy they were booked under.</p>
+    <h2>What happens when the host cancels?</h2>
+    <p>Host cancellations carry their own fees and can block dates on your calendar, and they count against Superhost status, which requires a cancellation rate under 1%. Set a policy you can live with rather than cancelling guests later.</p>
+
+    <div class="choose">
+      <div class="ch rw"><h3>Choose RevWhisper if</h3><ul><li>You want policy, pricing and minimum stays set together for each season</li><li>You want pricing, rank and listing work done for you</li></ul></div>
+      <div class="ch"><h3>Choose Flexible or Moderate if</h3><ul><li>Your dates rebook within days</li><li>You're building reviews on a new listing</li><li>You want Reserve Now, Pay Later on your listing</li></ul></div>
+      <div class="ch"><h3>Choose Limited if</h3><ul><li>You want a 14-day buffer without the 30-day window</li><li>You were on Strict and want something close</li></ul></div>
+      <div class="ch"><h3>Choose Firm if</h3><ul><li>Your dates stay empty if a guest cancels</li><li>You own a large home or book holiday weeks far ahead</li></ul></div>
+    </div>
+
+    <section class="post-facts">
+      <h2>Who is RevWhisper for, and what does it include?</h2>
+      <p>RevWhisper is a done-for-you Airbnb revenue management and listing optimization service. It is for owners who want a team to run their pricing, search ranking and listing content, from 2-bedroom cabins to 20-guest estates, for hosts in New York, Florida, Tennessee, Arizona, North Carolina, Texas, Pennsylvania, New Hampshire and Georgia.</p>
+      <p>The service includes:</p>
+      <ul>
+        <li>Daily pricing managed in PriceLabs, set against a comp set of the listings guests actually compare</li>
+        <li>Minimum stay, gap night and last-minute rules</li>
+        <li>Search rank tracking on every open date, every day</li>
+        <li>Title, description, amenity and photo order optimization, including photo editing</li>
+        <li>Monthly performance reporting</li>
+      </ul>
+      <p><strong>Pricing:</strong> a flat monthly retainer per listing. RevWhisper does not take a percentage of gross revenue. <strong>Scale:</strong> over 100 hosts. <strong>Results:</strong> a 27% average revenue lift within 90 days. <strong>Free listing audit:</strong> a live 30-minute call with a RevWhisper strategist that shows where your listing ranks on every open date, why views aren't turning into bookings, and what to change first. <a href="/#audit-form">Book the free listing audit</a>. No account access is required.</p>
+    </section>
+
+    <section class="post-faq">
+      <h2>Frequently asked questions</h2>
+      <h3>What are Airbnb's cancellation policies in 2026?</h3>
+      <p>Flexible, Moderate, Limited and Firm for stays under 28 nights, plus a separate long-term policy for 28 nights or more.</p>
+      <h3>Is Airbnb's Strict policy still available?</h3>
+      <p>Not for new selection. Airbnb retired it for bookings from October 1, 2025 and moved most Strict listings to Firm. It's now invitation-only.</p>
+      <h3>What is the strictest Airbnb cancellation policy?</h3>
+      <p>Firm: full refund until 30 days before check-in, 50% from 7 to 30 days out, nothing inside 7 days.</p>
+      <h3>Can I change my Airbnb cancellation policy after a booking?</h3>
+      <p>You can change it for future bookings. Existing reservations keep the policy they were booked under.</p>
+      <h3>Do all Airbnb bookings get free cancellation?</h3>
+      <p>Every policy includes a 24-hour free cancellation window for bookings made at least 7 days before check-in.</p>
+      <h3>Which policy does RevWhisper recommend?</h3>
+      <p>It depends on how fast your dates refill. RevWhisper sets the policy with your pricing and minimum stays for each season.</p>
+    </section>
+
+    <nav class="post-related" aria-label="Related reading">
+      <h2>Related reading</h2>
+      <ul>
+        <li><a href="/blog/reserve-now-pay-later-revenue-strategy">Reserve Now, Pay Later Hit Over 70% Adoption. Here's How It Changes Your Revenue Strategy.</a></li>
+        <li><a href="/blog/airbnb-checkout-instructions-2026-house-rules">Airbnb Checkout Instructions That Follow the New 2026 House Rules</a></li>
+        <li><a href="/blog/airbnb-host-fee-squeeze-pricing-math">The 15.5% Fee Squeeze: How Airbnb's New Host Fee Changes Your Pricing Math</a></li>
+        <li><a href="/#audit-form">Get your free listing audit</a></li>
+      </ul>
+    </nav>
+  </article>
+
+  <aside class="post-cta">
+    <h2>Want to see where your listing ranks?</h2>
+    <p>We pull up your listing live on a free 30-minute call and show you where it ranks for every open date, why views aren't turning into bookings, and what to change first.</p>
+    <a class="post-cta-btn" href="/#audit-form">Get your free listing audit</a>
+  </aside>
+</main>
+
+<!-- FOOTER:START -->
+<footer class="site-footer">
+  <div class="w">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">
+          <div class="lm">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24" fill="none" aria-hidden="true">
+              <path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="#32302F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="#32302F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="footer-logo-name">RevWhisper</span>
+        </div>
+        <p class="footer-tag">A revenue intelligence team that layers into your Airbnb listing to accelerate performance and maximize earnings.</p>
+        <p class="footer-tag footer-address">501 East Kennedy Boulevard, Tampa, FL 33602 (Space 15&ndash;144)</p>
+        <div class="footer-socials">
+          <a href="https://x.com/RevWhisper" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+          <a href="https://www.instagram.com/rev.whisper/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          </a>
+          <a href="https://www.facebook.com/groups/airbnblistingoptimization" target="_blank" rel="noopener noreferrer" aria-label="Facebook Group">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <p class="footer-col-title">Explore</p>
+        <a href="/" class="footer-link">Home</a>
+        <a href="/airbnb-listing-optimization" class="footer-link">Listing Optimization</a>
+        <a href="/revenue-management" class="footer-link">Revenue Management</a>
+        <a href="/photoediting" class="footer-link">Photo Editing</a>
+        <a href="/case-study" class="footer-link">Case Study</a>
+        <a href="/blog" class="footer-link">Blog</a>
+        <a href="/get-started" class="footer-link">Book a Strategy Call</a>
+      </div>
+      <div class="footer-col">
+        <p class="footer-col-title">Resources</p>
+        <a href="/#audit-form" class="footer-link js-to-audit">Free Listing Audit</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 MCO CORP d/b/a RevWhisper. All rights reserved.</span>
+      <nav class="footer-legal" aria-label="Legal">
+        <a href="/privacy">Privacy Policy</a>
+        <a href="/terms">Terms of Service</a>
+      </nav>
+      <span>Stop Guessing. Start Whispering.</span>
+    </div>
+  </div>
+</footer>
+<!-- FOOTER:END -->
+
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
