@@ -12,6 +12,10 @@
   gap:22px 48px;align-items:start}
 .rd-hero-copy{display:flex;flex-direction:column;gap:20px;min-width:0}
 .rd-hero-form{min-width:0}
+.rd-hero-grid{grid-template-areas:"copy form" "vsl form"}
+.rd-hero-copy{grid-area:copy}
+.rd-hero-form{grid-area:form;align-self:center}
+.rd-hero-vsl{grid-area:vsl;min-width:0;margin-top:6px}
 .rd-hero-copy .eyebrow{margin-bottom:0}
 .rd-hero-h1{font-family:var(--heading);font-weight:400;font-size:clamp(38px,4.6vw,56px);line-height:1.08;letter-spacing:-.02em;color:var(--black);margin:0}
 .rd-hero-h1 em{font-style:italic;color:var(--accent)}
@@ -26,7 +30,8 @@
 
 @media(max-width:960px){
   .rd-hero{padding-top:112px}
-  .rd-hero-grid{grid-template-columns:1fr;gap:32px}
+  .rd-hero-grid{grid-template-columns:1fr;gap:32px;grid-template-areas:"copy" "form" "vsl"}
+  .rd-hero-vsl{margin-top:0}
 }
 
 /* Compiled design body ─────────────────────────────────────────────────────── */

@@ -323,7 +323,9 @@ const fcOpen = formSrc.indexOf('<div class="form-card" id="audit-form">');
 if (fcOpen < 0) throw new Error('Could not find .form-card#audit-form in scripts/home-redesign.form.html');
 const formCard = slice(formSrc, fcOpen).replace('id="audit-form">', 'id="audit-form" data-fullscreen>');
 
-const heroHtml = read('scripts/home-redesign.hero.html').replace('<!--FORM-->', () => formCard);
+const heroHtml = read('scripts/home-redesign.hero.html')
+  .replace('<!--FORM-->', () => formCard)
+  .replace('<!--VSL-->', () => read('_partials/vsl.html').trimEnd());
 
 let content = [wrapperOpenTag, heroHtml, ...ordered, '</div>'].join('\n\n');
 content = siteButtons(content);
@@ -335,6 +337,8 @@ content = pseudoAndEvents(content);
 content = wheelA11y(content);
 content = bakeTemplates(content);
 content = assetsAndLayout(content);
+// Wording fixed on the live page after the design was exported (b0db040); keep it on rebuilds.
+content = content.replace(/one point per scrape day/g, 'one point per tracking day');
 
 /* ── 5. Stylesheet ────────────────────────────────────────────────────────── */
 // The design's own globals would fight the site's: html/body are home.css's job, and its
