@@ -33,8 +33,13 @@
   <!-- BLOG-SITEMAP:START -->
   <url>
     <loc>https://revwhisper.com/blog</loc>
-    <lastmod>2026-10-27</lastmod>
+    <lastmod>2026-10-28</lastmod>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://revwhisper.com/blog/airbnb-cancellation-policies-for-hosts</loc>
+    <lastmod>2026-10-28</lastmod>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://revwhisper.com/blog/airbnb-checkout-instructions-2026-house-rules</loc>
