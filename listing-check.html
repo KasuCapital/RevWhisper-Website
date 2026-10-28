@@ -396,6 +396,10 @@ body.scrolled .bar{background:rgba(255,255,255,.9);-webkit-backdrop-filter:satur
 .op-list{list-style:none;display:grid;gap:10px}
 .op-list li{display:flex;gap:10px;align-items:flex-start;font-size:15.5px;line-height:1.4}
 .op-list li svg{flex:0 0 auto;width:20px;height:20px;padding:4px;margin-top:0;border-radius:50%;background:var(--accent-light);color:var(--accent)}
+/* the onboarding areas: name, then one line on what it covers */
+.op-on{font-size:14px;font-weight:600;color:var(--g600);margin:-4px 0 10px}
+.op-steps li b{display:block;font-size:15px;font-weight:600;line-height:1.3;color:var(--black)}
+.op-steps li small{display:block;font-size:13.5px;line-height:1.4;color:var(--g500);margin-top:1px}
 .op-month{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:14.5px;color:var(--g600)}
 .tbd{font-size:13px;color:var(--g500);border:1px dashed var(--g300);border-radius:8px;padding:4px 10px;white-space:nowrap}
 .paybar{margin-top:16px}
@@ -568,6 +572,23 @@ body.reviewing .stage{padding-bottom:96px}
   .op > .op-card{grid-column:2;grid-row:1 / span 12;position:sticky;top:calc(var(--bar-h) + 20px);margin-top:4px}
   .op-head{text-align:left}
   .op .op-sec:first-of-type{margin-top:28px}
+}
+/* laptop heights: the sticky plan card lists all of onboarding, so it tightens up to keep the price button on screen */
+@media(min-width:1000px) and (max-height:900px){
+  .op{grid-template-columns:minmax(0,1fr) 400px;column-gap:48px}
+  .op-card{padding:18px 20px 16px}
+  .op-k,.op-on{margin-bottom:8px}
+  .op-steps{gap:7px}
+  .op-steps li b{font-size:14.5px}
+  .op-steps li small{font-size:13px;line-height:1.35}
+  .op-month{margin-top:10px;padding-top:9px}
+  .paybar{margin-top:12px}
+  .op-card .pricebtn{flex-direction:row;align-items:center;gap:10px;padding:14px 18px}
+  .op-card .pb-k{font-size:11px}
+  .op-card .pb-prices{gap:10px;margin-top:2px}
+  .op-card .pb-was{font-size:19px}
+  .op-card .pb-now{font-size:36px}
+  .op-card .pb-go{font-size:15.5px}
 }
 @container offer (min-width:440px){
   .pricebtn{flex-direction:row;align-items:center;gap:18px}
@@ -1207,36 +1228,41 @@ function vOffer(){
   var first=firstName(S.lead.name);
   var rows=STRATS.map(function(s,n){return {t:s.t,a:S.strat[n]||'no',n:n};});
   var notYet=rows.filter(function(r){return r.a==='no';}),partly=rows.filter(function(r){return r.a==='partly';}),yes=rows.length-notYet.length-partly.length;
-  var gaps=notYet.length+partly.length;
-  var h=gaps===0?'We\'ll keep all <em>ten</em> running':gaps===1?'We\'ll close your <em>last gap</em>':'We\'ll close your <em>'+gaps+' gaps</em>';
   var day=function(k){return new Date(Date.now()+k*864e5).toLocaleDateString('en-US',{month:'short',day:'numeric'});};
   var row=function(r){return '<li><b class="pl-n">'+(r.n+1)+'</b><span class="pl-t">'+esc(r.t)+'</span>'+(r.a==='no'?'<span class="tag no">Not yet</span>':'<span class="tag partly">Partly</span>')+'</li>';};
-  var tick=function(t){return '<li>'+IC.check+'<span>'+t+'</span></li>';};
+  var step=function(t,x){return '<li>'+IC.check+'<span><b>'+t+'</b><small>'+x+'</small></span></li>';};
   var faq=function(q,a){return '<details><summary>'+q+'</summary><p>'+a+'</p></details>';};
   // their own nightly rate from the report: what the monthly fee is worth in nights
   var D=reportData(),adr=D&&D.vacancy&&D.vacancy.adrSource==='own'?D.vacancy.adr:0,be=adr?Math.max(1,Math.round(PRICE.monthly/adr*10)/10):0;
   return '<div class="op">'+
     '<header class="op-head rv">'+
       '<p class="kick">'+IC.check+'Your plan'+(first?', '+esc(first):'')+'</p>'+
-      '<h2 class="h" tabindex="-1" data-focus>'+h+'</h2>'+
-      '<p class="op-sub">You scored '+yes+' of 10. '+(gaps?'Your analyst takes over the rest':'Your analyst keeps all ten running')+', and you keep the guests and the cleaning.</p>'+
+      '<h2 class="h" tabindex="-1" data-focus>Here\'s exactly what you\'re <em>signing up for</em></h2>'+
+      '<p class="op-sub">You scored '+yes+' of 10. Onboarding takes 7 days, then your analyst manages your listing\'s performance. Guests and cleaning stay with you.</p>'+
     '</header>'+
-    // the offer at a glance; on phones its price button is the pinned bar, on desktop the card is sticky
+    // the offer at a glance: exactly what onboarding delivers. On phones its price button is the pinned bar, on desktop the card is sticky
     '<aside class="op-card offer rv" aria-label="What you get">'+
-      '<p class="op-k">Done-for-you revenue management</p>'+
-      '<ul class="op-list">'+
-        tick('A dedicated analyst on your listing every other day')+
-        tick('Pricing, ranking, photos and listing copy, handled')+
-        tick('A monthly report against last year and your market')+
-        tick('Live in about 8 days. You just add us as a co-host')+
+      '<p class="op-k">Done-for-you performance management</p>'+
+      '<p class="op-on">Your 7-day onboarding covers five areas:</p>'+
+      '<ul class="op-list op-steps">'+
+        step('Search rank baseline','Your current position across 60 to 90 days of open dates, tracked by guest configuration.')+
+        step('Rules and settings optimization','Account-level adjustments that directly affect visibility.')+
+        step('Listing enhancements','Copy, title, meta tags, amenities, photos and completeness scoring.')+
+        step('Image improvements','Upgrades to photo quality, selection and sequencing. Airbnb first, then VRBO.')+
+        step('Pricing strategy and rules','A dynamic pricing structure built around a true competitive set.')+
+        step('Implementation','Our team executes every approved change to your account, listing and pricing setup, in about 2 days depending on the volume of changes.')+
       '</ul>'+
       '<div class="op-month"><span>Then <b>$'+PRICE.monthly+'</b>/mo</span><span class="op-term">'+(be?'About '+be+(be===1?' night':' nights')+' a month at your rate':PRICE.term+' months, then month to month')+'</span></div>'+
       '<div class="paybar"><button class="pricebtn" type="button" data-act="checkout"><span class="pb-left"><span class="pb-k">Onboarding</span><span class="pb-prices"><span class="pb-was">$'+PRICE.was+'<i></i></span><span class="pb-now">$'+PRICE.now+'</span></span></span><span class="pb-go">Start onboarding'+IC.arrow+'</span></button>'+
         '<p class="op-trust">'+IC.lock+'Secure checkout with Stripe</p></div>'+
     '</aside>'+
     '<section class="op-sec rv"><h2>What your analyst does</h2>'+media('offer')+'</section>'+
-    '<section class="op-sec rv"><h2>Hosts your size</h2>'+
+    '<section class="op-sec rv"><h2>Client performance</h2>'+
       '<div class="proof">'+
+        '<article class="pf"><img src="/images/properties/cards/moonlit-peak.webp" alt="Moonlit Peak, a lakefront A-frame at dusk" width="400" height="300" loading="lazy"><div class="pf-b"><b>Moonlit Peak</b><small>4 BR lakefront, Pocono Mountains, PA</small>'+
+          '<div class="pf-up"><strong>+61%</strong><span>2026 bookings vs last year</span></div><div class="pf-was">$77.4K &rarr; $125.0K</div></div></article>'+
+        '<article class="pf"><img src="/images/properties/cards/waters-edge.webp" alt="Waters Edge Hideaway chalet on a winter evening" width="400" height="300" loading="lazy"><div class="pf-b"><b>Waters Edge Hideaway</b><small>5 BR, Pocono Mountains, PA</small>'+
+          '<div class="pf-up"><strong>+38%</strong><span>2026 bookings vs last year</span></div><div class="pf-was">$75.1K &rarr; $103.3K</div></div></article>'+
         '<article class="pf"><img src="/images/listing-check/proof-bears-tale.jpg" alt="A Bear\'s Tale cabin at sunset" width="400" height="225" loading="lazy"><div class="pf-b"><b>A Bear\'s Tale</b><small>2 BR cabin, Pigeon Forge, TN</small>'+
           '<div class="pf-up"><strong>+33%</strong><span>2026 bookings vs last year</span></div><div class="pf-was">$32.6K &rarr; $43.3K</div></div></article>'+
         '<article class="pf"><img src="/images/listing-check/proof-gulfstream.jpg" alt="Gulfstream Villa pool at golden hour" width="400" height="266" loading="lazy"><div class="pf-b"><b>Gulfstream Villa</b><small>3 BR, Gulf Coast, FL</small>'+
