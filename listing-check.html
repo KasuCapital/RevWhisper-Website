@@ -788,11 +788,13 @@ function checkoutUrl(){
 /* ── the live listing report (RevWhisper Growth Hub) ──
    The visitor's browser starts the report as soon as they land: Growth Hub's public create-analysis
    endpoint allows revwhisper.com and rate-limits per visitor, then emails the finished report.
-   /api/listing-report reads it back here. A report takes about two minutes and the check takes
-   longer, so it's usually ready by the report screen. Only a single listing link is accepted. */
+   /api/listing-report reads it back here once Growth Hub's 15-page check is done: about 10 seconds
+   for the first pass and usually under a minute in all (instant when the listing was reported in
+   the last day). The check takes minutes, so it's ready by the report screen unless something
+   went wrong. Only a single listing link is accepted. */
 var GH='https://app.revwhisper.com';
 var RKEY='rw_listing_check_report';
-var REPORT_WAIT_MS=75000;   // on the report screen, how long to wait before saying it'll be emailed
+var REPORT_WAIT_MS=45000;   // on the report screen, how long to wait before saying it'll be emailed
 function listingIdFrom(u){
   var t=String(u||'').trim();if(!t)return null;
   if(!/^https?:\/\//i.test(t))t='https://'+t;
@@ -817,8 +819,9 @@ function keepReport(data){try{sessionStorage.setItem(RKEY,JSON.stringify({id:S.r
 function startReport(){
   var id=listingIdFrom(S.lead.url),r=S.report;
   if(!id||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(S.lead.email||''))return;
-  // already started (or Growth Hub already rejected this exact link: wait for a new one)
-  if(r&&r.listing===id&&(r.id||r.error==='listing'||(r.pending&&Date.now()-r.at<60000)))return;
+  // already started (or Growth Hub already rejected this exact link: wait for a new one;
+  // a start that failed is retried at most once a minute, as they move through the check)
+  if(r&&r.listing===id&&(r.id||r.error==='listing'||((r.pending||r.error==='failed')&&Date.now()-r.at<60000)))return;
   S.report={listing:id,pending:true,at:Date.now()};save();
   var body={email:S.lead.email,airbnbUrl:'https://www.airbnb.com/rooms/'+id,revenue:revenueFrom(S.lead.revenue),reportType:'ranking',
     attribution:Object.assign({},typeof window.rwAttribution==='function'?window.rwAttribution():{},{source:'listing-check'})};
@@ -1097,13 +1100,21 @@ function vReport(){
       listingAsk('Your Airbnb listing link')+
       acts('Build my report')+'</div>';
   }
+  if(state==='none'){
+    // no report exists (the start failed, or no email): nothing will be emailed, so don't say so
+    return '<div class="panel">'+
+      '<p class="kick rv">Your listing report</p>'+
+      '<h2 class="h rv" tabindex="-1" data-focus>We couldn\'t start your <em>report</em></h2>'+
+      '<p class="lede rv">'+(S.report&&S.report.error==='failed'?'Our report service didn\'t answer. We\'ll try again while you finish up here.':'It needs the email and the Airbnb listing link from the form.')+'</p>'+
+      acts('See how we fix this')+'</div>';
+  }
   if(state!=='ready'){
     var email=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(L.email||'')?esc(L.email):'';
     var link=S.report&&S.report.id?'<a class="full rv" href="'+GH+'/report/'+encodeURIComponent(S.report.id)+'" target="_blank" rel="noopener">Open your report when it\'s ready</a>':'';
     return '<div class="panel">'+
       '<p class="kick rv">Your listing report</p>'+
       '<h2 class="h rv" tabindex="-1" data-focus>'+(state==='slow'?'Still building your <em>report</em>':'Your report is <em>on its way</em>')+'</h2>'+
-      '<p class="lede rv">'+(state==='slow'?'It usually takes a couple of minutes. ':'')+(email?'We\'ll email it to '+email+' as soon as it\'s done.':'We\'ll send it as soon as it\'s done.')+'</p>'+
+      '<p class="lede rv">'+(state==='slow'?'This one is taking longer than usual. ':'')+(email?'We\'ll email it to '+email+' as soon as it\'s done.':'We\'ll send it as soon as it\'s done.')+'</p>'+
       link+acts('See how we fix this')+'</div>';
   }
   var D=reportData(),li=D.listing||{},vac=D.vacancy,vis=D.visibility||{},prim=(D.primary&&D.primary.windows)||[],small=D.small;
@@ -1258,6 +1269,7 @@ function render(dir){
 }
 function mount(st,dir){
   if(PV.parentNode)PV.pause();
+  if(S.report&&S.report.error==='failed')startReport();
   stage.textContent='';
   window.scrollTo(0,0);
   var el=document.createElement('section');
@@ -1307,9 +1319,9 @@ function afterMount(st,el){
   if(st.k==='report'){
     var state=reportState();
     if(state==='loading'){
-      // the bar picks up from how long the report has been building (about two and a half minutes in all)
+      // the bar picks up from how long the report has been building (about a minute in all)
       if(!waitFrom||RS===null)waitFrom=Date.now();
-      var bar=el.querySelector('.rbar b'),lis=el.querySelectorAll('.rload li'),age=Date.now()-((S.report&&S.report.at)||Date.now()),total=150000;
+      var bar=el.querySelector('.rbar b'),lis=el.querySelectorAll('.rload li'),age=Date.now()-((S.report&&S.report.at)||Date.now()),total=60000;
       var frac=Math.min(.92,age/total);
       if(bar){bar.style.transition='none';bar.style.transform='scaleX('+frac.toFixed(3)+')';
         if(bar.animate&&!RM.matches)bar.animate([{transform:'scaleX('+frac.toFixed(3)+')'},{transform:'scaleX(.96)'}],{duration:Math.max(4000,total-age),easing:'linear',fill:'forwards'});}

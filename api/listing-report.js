@@ -11,6 +11,12 @@
 // the upstream URL, and the upstream host is fixed. Nothing else from the request is forwarded.
 // Per-IP rate limit (the page polls every few seconds while the report builds).
 //
+// Timing: Growth Hub marks a report complete on its first pass (about 10 seconds, 6 pages of
+// search results), then a deep pass re-checks buried dates across all 15 pages and stamps
+// rankings_finalized_at (usually within a minute). Its own report page shows "Checking all 15
+// pages" until then; here the report stays pending until then, so a first-pass "not found" is
+// never shown or cached.
+//
 // Responses: { status: 'pending' } while the report is building (Growth Hub answers 404 until it
 // is complete), { status: 'ready', ... } once done, { status: 'error' } if Growth Hub can't be read.
 
@@ -23,6 +29,20 @@ const UPSTREAM_TIMEOUT_MS = 9000;
 const PAGE_SIZE = 18;
 const MAX_RESULTS = 15 * PAGE_SIZE;
 const PHOTO_HOST = /^https:\/\/[a-z0-9.-]*muscache\.com\//i;
+// Past this, a report still missing rankings_finalized_at isn't getting its deep pass
+// (Growth Hub src/app/report/[id]/page.tsx DEEP_CHECK_WAIT_MS)
+const DEEP_CHECK_WAIT_MS = 10 * 60 * 1000;
+
+function deepCheckDone(row) {
+  if (row.rankings_finalized_at) return true;
+  const completed = Date.parse(row.completed_at || '');
+  return !Number.isFinite(completed) || Date.now() - completed > DEEP_CHECK_WAIT_MS;
+}
+
+// The listing's own market; levels for an extra search market carry `market`.
+function ownLevels(row) {
+  return (Array.isArray(row.occupancy_levels) ? row.occupancy_levels : []).filter((l) => l && !l.market);
+}
 
 function sendJson(res, statusCode, payload, cacheControl) {
   res.statusCode = statusCode;
@@ -158,8 +178,7 @@ function summarize(row, id) {
 
   // The smallest finished group size below the primary one (Growth Hub adds max-2 / max-4 levels).
   let small = null;
-  const levels = Array.isArray(row.occupancy_levels) ? row.occupancy_levels : [];
-  for (const level of levels) {
+  for (const level of ownLevels(row)) {
     const g = num(level && level.guests);
     if (!g || level.status !== 'complete' || !Array.isArray(level.rankings) || !level.rankings.length) continue;
     if (primaryGuests && g >= primaryGuests) continue;
@@ -229,9 +248,11 @@ module.exports = async function handler(req, res) {
   } catch (err) {
     return sendJson(res, 502, { status: 'error' });
   }
-  if (!row || row.status !== 'complete') return sendJson(res, 200, { status: 'pending' });
+  if (!row || row.status !== 'complete' || !deepCheckDone(row)) return sendJson(res, 200, { status: 'pending' });
+  // Smaller group sizes are ranked after the deep pass; don't let the CDN hold a summary without them.
+  const levelsPending = ownLevels(row).some((l) => l.status === 'processing');
   try {
-    return sendJson(res, 200, summarize(row, id), 'public, max-age=60, s-maxage=600');
+    return sendJson(res, 200, summarize(row, id), levelsPending ? 'no-store' : 'public, max-age=60, s-maxage=600');
   } catch (err) {
     console.error('listing-report summarize failed', err);
     return sendJson(res, 502, { status: 'error' });
