@@ -1150,7 +1150,7 @@ function vReport(){
     seen='<section class="rsec rv"><h3>How far guests scroll to find you</h3>'+
       '<div class="vgrid"><div><b>#'+vis.avgPosition+'</b><span>your average spot'+(vis.page>1?', page '+vis.page:', page one')+'</span></div><div><b>'+vis.reachPct+'%</b><span>of searching guests scroll that far</span></div></div>'+
       '<div class="reach" aria-hidden="true"><i style="width:'+Math.max(4,vis.reachPct)+'%"></i></div>'+
-      '<p class="find">'+(vis.ahead>0?vis.ahead+' listings rank ahead of you on average':'You\'re at the top of the results')+(vis.foundPct<100?', and you showed up in '+vis.foundPct+'% of our searches.':'.')+'</p>'+
+      '<p class="find">'+(vis.ahead>0?vis.ahead+(vis.ahead===1?' listing ranks':' listings rank')+' ahead of you on average':'You\'re at the top of the results')+(vis.foundPct<100?', and you showed up in '+vis.foundPct+'% of our searches.':'.')+'</p>'+
       '<p class="fn">Reach is estimated from published search-scroll research. Airbnb doesn\'t share this data.</p>'+ties([5,7,8])+'</section>';
   }else if(vis.searches){
     seen='<section class="rsec rv"><h3>How far guests scroll to find you</h3><p class="find">Your listing didn\'t appear in the first '+vis.deepest+' results for any of the '+vis.searches+' searches we ran.</p>'+ties([5,7,8])+'</section>';
@@ -1205,7 +1205,7 @@ function vOffer(){
         tick('A monthly report against last year and your market')+
         tick('Live in about 8 days. You just add us as a co-host')+
       '</ul>'+
-      '<div class="op-month"><span>Then <b>$'+PRICE.monthly+'</b>/mo</span><span class="op-term">'+(be?'About '+be+' nights a month at your rate':PRICE.term+' months, then month to month')+'</span></div>'+
+      '<div class="op-month"><span>Then <b>$'+PRICE.monthly+'</b>/mo</span><span class="op-term">'+(be?'About '+be+(be===1?' night':' nights')+' a month at your rate':PRICE.term+' months, then month to month')+'</span></div>'+
       '<div class="paybar"><button class="pricebtn" type="button" data-act="checkout"><span class="pb-left"><span class="pb-k">Onboarding</span><span class="pb-prices"><span class="pb-was">$'+PRICE.was+'<i></i></span><span class="pb-now">$'+PRICE.now+'</span></span></span><span class="pb-go">Start onboarding'+IC.arrow+'</span></button>'+
         '<p class="op-trust">'+IC.lock+'Secure checkout with Stripe</p></div>'+
     '</aside>'+
