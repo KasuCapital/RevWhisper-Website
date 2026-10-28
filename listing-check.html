@@ -375,7 +375,6 @@ body.scrolled .bar{background:rgba(255,255,255,.9);-webkit-backdrop-filter:satur
 .reach{height:8px;border-radius:4px;background:var(--g100);overflow:hidden;margin-bottom:12px}
 .reach i{display:block;height:100%;border-radius:4px;background:var(--accent)}
 .fn{font-size:12.5px;color:var(--g400);margin-top:-6px;margin-bottom:2px}
-.full{display:inline-block;margin:6px 0 4px;font-size:15px;font-weight:500;color:var(--accent);text-decoration:underline;text-underline-offset:3px}
 /* the single-listing field (the form's link was a host profile or not a listing) */
 .ask{margin-top:18px;text-align:left}
 .ask label{display:block;font-size:13px;font-weight:600;color:var(--g600);margin:0 0 6px 2px}
@@ -787,14 +786,15 @@ function checkoutUrl(){
 
 /* ── the live listing report (RevWhisper Growth Hub) ──
    The visitor's browser starts the report as soon as they land: Growth Hub's public create-analysis
-   endpoint allows revwhisper.com and rate-limits per visitor, then emails the finished report.
+   endpoint allows revwhisper.com and rate-limits per visitor. delivery:'embedded' tells Growth Hub
+   this page shows the report itself: no report email and no CRM webhook.
    /api/listing-report reads it back here once Growth Hub's 15-page check is done: about 10 seconds
    for the first pass and usually under a minute in all (instant when the listing was reported in
    the last day). The check takes minutes, so it's ready by the report screen unless something
    went wrong. Only a single listing link is accepted. */
 var GH='https://app.revwhisper.com';
 var RKEY='rw_listing_check_report';
-var REPORT_WAIT_MS=45000;   // on the report screen, how long to wait before saying it'll be emailed
+var REPORT_WAIT_MS=45000;   // on the report screen, how long to wait before saying it's taking longer
 function listingIdFrom(u){
   var t=String(u||'').trim();if(!t)return null;
   if(!/^https?:\/\//i.test(t))t='https://'+t;
@@ -823,7 +823,7 @@ function startReport(){
   // a start that failed is retried at most once a minute, as they move through the check)
   if(r&&r.listing===id&&(r.id||r.error==='listing'||((r.pending||r.error==='failed')&&Date.now()-r.at<60000)))return;
   S.report={listing:id,pending:true,at:Date.now()};save();
-  var body={email:S.lead.email,airbnbUrl:'https://www.airbnb.com/rooms/'+id,revenue:revenueFrom(S.lead.revenue),reportType:'ranking',
+  var body={email:S.lead.email,airbnbUrl:'https://www.airbnb.com/rooms/'+id,revenue:revenueFrom(S.lead.revenue),reportType:'ranking',delivery:'embedded',
     attribution:Object.assign({},typeof window.rwAttribution==='function'?window.rwAttribution():{},{source:'listing-check'})};
   if(S.lead.name)body.fullName=S.lead.name;
   if(S.lead.phone)body.phone=S.lead.phone;
@@ -846,7 +846,7 @@ function fetchReport(cb){
     .then(function(j){if(j&&j.status==='ready')keepReport(j);cb(j);})
     .catch(function(){cb(null);});
 }
-// Report screen state: ready | loading | slow (still building, it'll be emailed) | listing (re-ask) | none
+// Report screen state: ready | loading | slow (still building, keeps checking) | listing (re-ask) | none
 var RS=null,pollT=0,waitFrom=0;
 function reportState(){
   if(reportData())return 'ready';
@@ -1101,7 +1101,7 @@ function vReport(){
       acts('Build my report')+'</div>';
   }
   if(state==='none'){
-    // no report exists (the start failed, or no email): nothing will be emailed, so don't say so
+    // no report exists (the start failed, or no email)
     return '<div class="panel">'+
       '<p class="kick rv">Your listing report</p>'+
       '<h2 class="h rv" tabindex="-1" data-focus>We couldn\'t start your <em>report</em></h2>'+
@@ -1109,13 +1109,12 @@ function vReport(){
       acts('See how we fix this')+'</div>';
   }
   if(state!=='ready'){
-    var email=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(L.email||'')?esc(L.email):'';
-    var link=S.report&&S.report.id?'<a class="full rv" href="'+GH+'/report/'+encodeURIComponent(S.report.id)+'" target="_blank" rel="noopener">Open your report when it\'s ready</a>':'';
+    // still building after the wait: the screen keeps checking and shows it here when it lands
     return '<div class="panel">'+
       '<p class="kick rv">Your listing report</p>'+
-      '<h2 class="h rv" tabindex="-1" data-focus>'+(state==='slow'?'Still building your <em>report</em>':'Your report is <em>on its way</em>')+'</h2>'+
-      '<p class="lede rv">'+(state==='slow'?'This one is taking longer than usual. ':'')+(email?'We\'ll email it to '+email+' as soon as it\'s done.':'We\'ll send it as soon as it\'s done.')+'</p>'+
-      link+acts('See how we fix this')+'</div>';
+      '<h2 class="h rv" tabindex="-1" data-focus>Still building your <em>report</em></h2>'+
+      '<p class="lede rv">This one is taking longer than usual. It\'ll show up right here as soon as it\'s ready.</p>'+
+      acts('See how we fix this')+'</div>';
   }
   var D=reportData(),li=D.listing||{},vac=D.vacancy,vis=D.visibility||{},prim=(D.primary&&D.primary.windows)||[],small=D.small;
   var meta=[li.location,li.bedrooms?li.bedrooms+(li.bedrooms===1?' bedroom':' bedrooms'):'',li.guests?'sleeps '+li.guests:''].filter(Boolean).map(esc).join(' &middot; ');
@@ -1177,7 +1176,6 @@ function vReport(){
       '<div><h2 class="h" tabindex="-1" data-focus>'+esc(li.title||'Your listing')+'</h2>'+(meta?'<p>'+meta+'</p>':'')+
       (li.rating?'<p class="star">&#9733; '+li.rating+(li.reviews?' ('+li.reviews+')':'')+'</p>':'')+'</div></div>'+
     hero+rank+seen+cal+
-    '<a class="full rv" href="'+esc(D.reportUrl)+'" target="_blank" rel="noopener">See your full report</a>'+
     acts('See how we fix this');
 }
 function vOffer(){

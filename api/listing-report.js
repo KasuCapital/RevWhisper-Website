@@ -169,7 +169,7 @@ function calendar(availability) {
   return { start, days: out };
 }
 
-function summarize(row, id) {
+function summarize(row) {
   const raw = row.raw_listing && typeof row.raw_listing === 'object' ? row.raw_listing : {};
   const primary = Array.isArray(row.ranking_by_date) ? row.ranking_by_date : [];
   const availability = Array.isArray(raw.availability) ? raw.availability : [];
@@ -191,7 +191,6 @@ function summarize(row, id) {
 
   return {
     status: 'ready',
-    reportUrl: `${GROWTH_HUB}/report/${id}`,
     listing: {
       title: text(raw.title || row.listing_title, 140),
       photo,
@@ -252,7 +251,7 @@ module.exports = async function handler(req, res) {
   // Smaller group sizes are ranked after the deep pass; don't let the CDN hold a summary without them.
   const levelsPending = ownLevels(row).some((l) => l.status === 'processing');
   try {
-    return sendJson(res, 200, summarize(row, id), levelsPending ? 'no-store' : 'public, max-age=60, s-maxage=600');
+    return sendJson(res, 200, summarize(row), levelsPending ? 'no-store' : 'public, max-age=60, s-maxage=600');
   } catch (err) {
     console.error('listing-report summarize failed', err);
     return sendJson(res, 502, { status: 'error' });
