@@ -106,7 +106,8 @@ fbq('track', 'PageView');
      their live listing report (RevWhisper Growth Hub, read through /api/listing-report) and the onboarding
      offer, which hands off to /checkout-form. Not linked yet: the live forms still send unqualified leads to
      /audit-report-coming. Reads the lead from sessionStorage.rw_audit_lead (set by the /audit forms), or
-     from ?name=&email=&listing= when opened directly. ?review=1 adds a screen picker; ?review=1&report=<id>
+     from ?name=&email=&listing= when opened directly; a listing link or email still missing is asked for on
+     the first screen, since the report needs both. ?review=1 adds a screen picker; ?review=1&report=<id>
      loads any finished Growth Hub report. Tracking: GA4 + PostHog events (listing_check_*), Meta
      ListingCheckStart / ListingCheckComplete, all behind rw-consent. -->
 <meta name="robots" content="noindex, nofollow">
@@ -739,6 +740,7 @@ function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return
 function firstName(n){return String(n||'').trim().split(/\s+/)[0]||'';}
 function shortUrl(u){return String(u||'').replace(/^https?:\/\//i,'').replace(/^www\./i,'').split(/[?#]/)[0].replace(/\/$/,'');}
 function fmt(n){return Number(n).toLocaleString('en-US');}
+function emailOk(v){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(v||''));}   // the same check Growth Hub runs
 
 /* ── state: kept in sessionStorage so a reload (or an in-app browser that drops the tab) resumes ── */
 var KEY='rw_listing_check';
@@ -780,7 +782,7 @@ function fbCustom(e,p){try{if(typeof window.fbq==='function')window.fbq('trackCu
 var PRICE={was:996,now:498,monthly:500,term:3};
 function checkoutUrl(){
   var q=new URLSearchParams({plan:'enterprise',monthly_cost:String(PRICE.monthly),term_months:String(PRICE.term),onboarding_fee:String(PRICE.now),listing_count:'1'});
-  if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(S.lead.email||''))q.set('email',S.lead.email);
+  if(emailOk(S.lead.email))q.set('email',S.lead.email);
   return '/checkout-form?'+q.toString();
 }
 
@@ -818,7 +820,7 @@ function reportData(){
 function keepReport(data){try{sessionStorage.setItem(RKEY,JSON.stringify({id:S.report.id,data:data}));}catch(e){}}
 function startReport(){
   var id=listingIdFrom(S.lead.url),r=S.report;
-  if(!id||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(S.lead.email||''))return;
+  if(!id||!emailOk(S.lead.email))return;
   // already started (or Growth Hub already rejected this exact link: wait for a new one;
   // a start that failed is retried at most once a minute, as they move through the check)
   if(r&&r.listing===id&&(r.id||r.error==='listing'||((r.pending||r.error==='failed')&&Date.now()-r.at<60000)))return;
@@ -851,7 +853,8 @@ var RS=null,pollT=0,waitFrom=0;
 function reportState(){
   if(reportData())return 'ready';
   var r=S.report;
-  if(r&&r.error==='listing')return 'listing';
+  // Growth Hub rejected the link, or there's no listing link or email to start one with: ask for what's missing
+  if(r&&r.error==='listing'||!r&&!(listingIdFrom(S.lead.url)&&emailOk(S.lead.email)))return 'listing';
   if(!r||r.error||!r.id&&!r.pending)return 'none';
   return RS==='slow'?'slow':'loading';
 }
@@ -1003,22 +1006,41 @@ function media(kind,n){
 function lead(inner){return '<div class="lead-m rv">'+inner+'</div>';}
 function backBtn(){return S.i>0?'<button class="bk" type="button" data-act="back">'+IC.back+'Back</button>':'';}
 function acts(label,disabled){return '<div class="acts rv">'+backBtn()+'<button class="cta" type="button" data-act="next"'+(disabled?' disabled':'')+'>'+label+IC.arrow+'</button></div>';}
+var LINK_HINT='Paste the link to one listing, not your host profile.',MAIL_HINT='We use it to build your listing report, which you\'ll see right here.';
 // Asked when the form's link isn't a single listing (a host profile, a search page, a typo)
 function listingAsk(label){
   return '<div class="ask rv"><label for="lurl">'+label+'</label>'+
     '<input class="lurl" id="lurl" type="url" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="airbnb.com/rooms/12345678" value="'+esc(S.lead.url)+'">'+
-    '<p class="ask-hint" id="lurl-msg">Paste the link to one listing, not your host profile.</p></div>';
+    '<p class="ask-hint" id="lurl-msg">'+LINK_HINT+'</p></div>';
 }
-// Reads the listing field; returns true when it holds a single listing (and saves it), else shows why not
-function takeListing(){
-  var el=document.getElementById('lurl');if(!el)return true;
-  var id=listingIdFrom(el.value);
-  if(!id){
-    var msg=document.getElementById('lurl-msg');
-    msg.textContent=/users\/show|\/user\//i.test(el.value)?'That\'s a host profile. Open the one listing you want checked and paste its link.':'Paste the link to one Airbnb listing. It looks like airbnb.com/rooms/12345678.';
-    msg.classList.add('bad');el.focus();track('listing_check_listing_rejected',{});return false;
+// Asked when there's no email from the form (someone opened the check from a direct link); the report needs one
+function emailAsk(){
+  return '<div class="ask rv"><label for="lmail">Your email</label>'+
+    '<input class="lurl" id="lmail" type="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" placeholder="you@example.com" value="'+esc(S.lead.email)+'">'+
+    '<p class="ask-hint" id="lmail-msg">'+MAIL_HINT+'</p></div>';
+}
+// Reads the asked-for fields (listing link, email); returns true when each one shown is valid (and saves them), else shows why not
+function takeLead(){
+  var u=document.getElementById('lurl'),m=document.getElementById('lmail');
+  if(!u&&!m)return true;
+  var id=u?listingIdFrom(u.value):null,mail=m?m.value.trim():'',bad=null;
+  // each field's hint turns into its error, and back once that field is fixed
+  var hint=function(el,text,isBad){var h=document.getElementById(el.id+'-msg');h.textContent=text;h.classList.toggle('bad',isBad);};
+  if(u){
+    if(id)hint(u,LINK_HINT,false);
+    else{
+      hint(u,/users\/show|\/user\//i.test(u.value)?'That\'s a host profile. Open the one listing you want checked and paste its link.':'Paste the link to one Airbnb listing. It looks like airbnb.com/rooms/12345678.',true);
+      bad=u;track('listing_check_listing_rejected',{});
+    }
   }
-  S.lead.url='https://www.airbnb.com/rooms/'+id;S.report=null;save();startReport();return true;
+  if(m){
+    if(emailOk(mail))hint(m,MAIL_HINT,false);
+    else{hint(m,'Enter your email, like name@example.com.',true);bad=bad||m;}
+  }
+  if(bad){bad.focus();return false;}
+  if(u)S.lead.url='https://www.airbnb.com/rooms/'+id;
+  if(m)S.lead.email=mail;
+  S.report=null;save();startReport();return true;
 }
 // The first screen: people land here straight from the audit form, so it says what this is and what's ahead
 function vHow(){
@@ -1038,6 +1060,7 @@ function vHow(){
     (listingIdFrom(L.url)
       ?'<div class="lchip rv"><span class="tile">'+IC.airbnb+'</span><span class="lt"><b>Your listing</b><small>'+esc(shortUrl(L.url))+'</small></span></div>'
       :listingAsk('Your Airbnb listing link'))+
+    (emailOk(L.email)?'':emailAsk())+
     acts('Start the audit')+
   '</div></div></div>';
 }
@@ -1093,19 +1116,21 @@ function vReport(){
       '</ol></div></div>';
   }
   if(state==='listing'){
+    var rejected=!!(S.report&&S.report.error==='listing'),needLink=rejected||!listingIdFrom(L.url),needMail=!emailOk(L.email);
     return '<div class="panel">'+
       '<p class="kick rv">One more thing</p>'+
-      '<h2 class="h rv" tabindex="-1" data-focus>Which listing should we <em>check?</em></h2>'+
-      '<p class="lede rv">We couldn\'t read that link as a single Airbnb listing.</p>'+
-      listingAsk('Your Airbnb listing link')+
+      '<h2 class="h rv" tabindex="-1" data-focus>'+(needLink?'Which listing should we <em>check?</em>':'Add your email to build your <em>report</em>')+'</h2>'+
+      '<p class="lede rv">'+(rejected?'We couldn\'t read that link as a single Airbnb listing.':needLink?'Paste the link to the one listing you want checked.':'It takes about a minute and shows up right here.')+'</p>'+
+      (needLink?listingAsk('Your Airbnb listing link'):'')+
+      (needMail?emailAsk():'')+
       acts('Build my report')+'</div>';
   }
   if(state==='none'){
-    // no report exists (the start failed, or no email)
+    // the start failed (Growth Hub didn't answer); it's retried as they move through the check
     return '<div class="panel">'+
       '<p class="kick rv">Your listing report</p>'+
       '<h2 class="h rv" tabindex="-1" data-focus>We couldn\'t start your <em>report</em></h2>'+
-      '<p class="lede rv">'+(S.report&&S.report.error==='failed'?'Our report service didn\'t answer. We\'ll try again while you finish up here.':'It needs the email and the Airbnb listing link from the form.')+'</p>'+
+      '<p class="lede rv">Our report service didn\'t answer. We\'ll try again while you finish up here.</p>'+
       acts('See how we fix this')+'</div>';
   }
   if(state!=='ready'){
@@ -1340,8 +1365,8 @@ function afterMount(st,el){
 /* ── actions ── */
 function next(){
   var st=STEPS[S.i];
-  if(st.k==='how'){if(!takeListing())return;track('listing_check_start',{});fbCustom('ListingCheckStart');}
-  if(st.k==='report'&&reportState()==='listing'){if(takeListing()){RS=null;render(1);}return;}
+  if(st.k==='how'){if(!takeLead())return;track('listing_check_start',{});fbCustom('ListingCheckStart');}
+  if(st.k==='report'&&reportState()==='listing'){if(takeLead()){RS=null;render(1);}return;}
   if(st.k==='strat'&&!S.strat[st.n]&&!REVIEW)return;
   go(S.i+1);
 }
@@ -1387,6 +1412,10 @@ stage.addEventListener('change',function(e){
 stage.addEventListener('input',function(e){
   var t=e.target;
   if(t.id==='nt'){S.notes[STEPS[S.i].n]=t.value;saveSoon();}
+});
+// Enter in the listing or email field submits, like the button
+stage.addEventListener('keydown',function(e){
+  if(e.key==='Enter'&&(e.target.id==='lurl'||e.target.id==='lmail')){e.preventDefault();next();}
 });
 document.getElementById('back').addEventListener('click',back);
 window.addEventListener('scroll',function(){document.body.classList.toggle('scrolled',window.scrollY>4);},{passive:true});
