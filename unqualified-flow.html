@@ -370,9 +370,10 @@ body.kb .scr .pill{display:none}
 .scr.in .bars i{animation:grow 1s var(--silk) .15s both}
 
 /* ── Intro: a welcome screen before the first question ─────────────────────────
-   Three rows of Airbnb-style listing cards drift past (left, right, left) and fade into
-   white under the logo, the offer, and one Continue. The rows are compositor-only
-   translateX loops over a duplicated track, paused once the intro is gone. */
+   Two rows of Airbnb-style listing cards drift past (left, right) and fade into white under
+   Bryan's video, the offer, and one Continue. The rows are compositor-only translateX loops
+   over a duplicated track, paused once the intro is gone. The video sits where the logo used
+   to, over the fade, and never starts on its own: a tap starts it from the top, with sound. */
 .intro{position:absolute;top:0;right:0;bottom:0;left:0;z-index:20;background:#fff;display:flex;flex-direction:column;overflow:hidden;
   transition:opacity .32s ease,transform .4s var(--silk)}
 .intro.out{opacity:0;transform:translate3d(0,-10px,0);pointer-events:none}
@@ -382,12 +383,13 @@ body.kb .scr .pill{display:none}
 .app.intro-on .top{opacity:0;pointer-events:none}
 .top{transition:opacity .35s var(--silk)}
 .rows{--cw:clamp(98px,19vh,160px);position:relative;flex:1 1 auto;min-height:0;display:flex;flex-direction:column;gap:8px;padding-top:calc(env(safe-area-inset-top,0px) + 16px);overflow:hidden}
-.rows::after{content:"";position:absolute;left:0;right:0;bottom:0;height:62%;pointer-events:none;
-  background:linear-gradient(180deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.55) 38%,rgba(255,255,255,.9) 70%,#fff 100%)}
+/* the fade is solid white for the bottom 100px (the video's 64px overlap plus a margin) and climbs from
+   there, so the video always sits on clean white, whatever the phone's height */
+.rows::after{content:"";position:absolute;left:0;right:0;top:0;bottom:0;pointer-events:none;
+  background:linear-gradient(0deg,#fff 100px,rgba(255,255,255,.88) calc(100px + 10%),rgba(255,255,255,.5) calc(100px + 26%),rgba(255,255,255,.15) calc(100px + 40%),rgba(255,255,255,0) calc(100px + 50%))}
 .row{display:flex;width:max-content;gap:8px;will-change:transform}
 .row.l{animation:rowL 46s linear infinite}
 .row.r{animation:rowR 52s linear infinite}
-.row.l2{animation:rowL 58s linear infinite}
 @keyframes rowL{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}
 @keyframes rowR{from{transform:translate3d(-50%,0,0)}to{transform:translate3d(0,0,0)}}
 .intro.gone .row{animation-play-state:paused}
@@ -397,29 +399,69 @@ body.kb .scr .pill{display:none}
 .lc-fav{position:absolute;left:8px;top:8px;background:#fff;border-radius:999px;padding:3px 8px;font-size:9.5px;font-weight:600;color:#222;box-shadow:0 1px 3px rgba(0,0,0,.12);white-space:nowrap}
 .lc-heart{position:absolute;right:8px;top:8px;width:19px;height:19px}
 .intro-body{position:relative;flex:0 0 auto;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 22px calc(env(safe-area-inset-bottom,0px) + 20px)}
-.logo{width:78px;height:78px;border-radius:50%;background:#fff;display:grid;place-items:center;margin-top:-46px;position:relative;z-index:1;
-  box-shadow:0 1px 2px rgba(50,48,47,.06),0 12px 30px -8px rgba(50,48,47,.25)}
-.logo img{width:42px;height:42px}
-.intro-h{font-family:var(--heading);font-weight:400;font-size:clamp(27px,7.8vw,32px);line-height:1.13;letter-spacing:-.022em;margin:18px auto 10px;max-width:340px;text-wrap:balance}
+.intro-h{font-family:var(--heading);font-weight:400;font-size:clamp(27px,7.8vw,32px);line-height:1.13;letter-spacing:-.022em;margin:22px auto 10px;max-width:340px;text-wrap:balance}
 .intro-h em{font-style:italic;color:var(--accent)}
 .intro-sub{font-size:15px;line-height:1.5;color:var(--g500);max-width:340px;text-wrap:pretty}
 .intro-meta{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:16px;font-size:12.5px;font-weight:500;color:var(--g600)}
 .intro-meta span{display:inline-flex;align-items:center;gap:5px}
 .intro-meta svg{width:14px;height:14px;color:var(--accent)}
-.intro-body .cta{margin-top:auto}
 .intro-gap{flex:0 0 24px}
+@media(max-height:680px){ .intro-sub{font-size:14px} .intro-h{margin-top:18px} .intro-meta{margin-top:12px} .intro-gap{flex-basis:20px} }
 @media(max-height:600px){ .lc-fav{display:none} }
-@media(max-height:620px){ .intro-sub{font-size:14px} .intro-meta{display:none} .intro-h{margin-top:12px} }
+@media(max-height:620px){ .intro-sub{display:none} .intro-h{margin-bottom:0} }
+@media(max-height:540px){ .intro-meta{display:none} }
 @keyframes introIn{from{opacity:0;transform:translate3d(0,14px,0)}to{opacity:1;transform:none}}
 @keyframes rowsIn{from{opacity:0}to{opacity:1}}
-@keyframes logoIn{from{opacity:0;transform:translate3d(0,8px,0) scale(.86)}to{opacity:1;transform:none}}
 .intro .rows{animation:rowsIn .8s ease-out both}
-.intro .logo{animation:logoIn .7s var(--silk) .15s both}
+@media(prefers-reduced-motion:reduce){ .row{animation:none!important} }
+.intro .iv{animation:artIn .7s var(--silk) .12s both}
 .intro .intro-h{animation:introIn .6s var(--silk) .22s both}
 .intro .intro-sub{animation:introIn .6s var(--silk) .27s both}
 .intro .intro-meta{animation:introIn .6s var(--silk) .32s both}
 .intro .cta{animation:introIn .6s var(--silk) .38s both}
-@media(prefers-reduced-motion:reduce){ .row{animation:none!important} }
+
+/* the video: 16:9, rounded, over the bottom of the rows. Before it plays, a dark fade along the bottom
+   carries a big sage play button and its length, bottom-left and clear of Bryan's face */
+.iv{position:relative;z-index:1;flex:0 0 auto;align-self:stretch;margin:-64px -8px 0;border-radius:20px;box-shadow:0 1px 2px rgba(50,48,47,.05),0 10px 24px -12px rgba(50,48,47,.22)}
+.iv-frame{position:relative;aspect-ratio:16/9;border-radius:20px;overflow:hidden;isolation:isolate;
+  background:#2b2927 url(/images/video/audit-vsl-poster.aabb1ad8.webp) center/cover no-repeat}
+.iv-frame video{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;display:block}
+.iv-hit{position:absolute;top:0;right:0;bottom:0;left:0;z-index:2;border:0;padding:0;background:transparent;cursor:pointer;text-align:left;color:#fff}
+.iv-hit::after{content:"";position:absolute;top:0;left:0;right:0;bottom:0;z-index:-1;background:linear-gradient(180deg,rgba(20,19,18,0) 38%,rgba(20,19,18,.68) 100%);transition:opacity .3s var(--silk)}
+.iv-cap{position:absolute;left:14px;right:14px;bottom:14px;display:flex;align-items:center;gap:12px;transition:opacity .22s var(--silk),transform .3s var(--silk)}
+.iv-disc{position:relative;width:50px;height:50px;border-radius:50%;background:var(--accent);display:grid;place-items:center;flex:0 0 auto;transition:transform .25s var(--silk)}
+.iv-disc svg{grid-area:1/1;width:18px;height:18px;fill:#fff}
+.iv-disc .i-play{margin-left:3px}
+.iv-disc .i-again{display:none;fill:none;stroke:#fff;width:19px;height:19px}
+.iv[data-state=ended] .iv-disc .i-again{display:block}
+.iv[data-state=ended] .iv-disc .i-play{display:none}
+/* a slow ring invites the first tap (nothing plays until it comes) */
+.iv-disc::after{content:"";position:absolute;top:-6px;left:-6px;right:-6px;bottom:-6px;border-radius:50%;border:2px solid rgba(255,255,255,.55);opacity:0;pointer-events:none}
+.iv[data-state=idle] .iv-disc::after{animation:ring 2.6s ease-out 1s infinite}
+.iv-hit:active .iv-disc{transform:scale(.94)}
+@media(hover:hover){.iv-hit:hover .iv-disc{transform:scale(1.05)}}
+.iv-hit:focus-visible{outline:none}
+.iv-hit:focus-visible .iv-disc{box-shadow:0 0 0 3px #fff}
+.iv-tx{min-width:0;display:flex;flex-direction:column;gap:2px;text-shadow:0 1px 8px rgba(20,19,18,.35);transition:opacity .2s var(--silk)}
+.iv-tx small{font-size:14px;font-weight:600;line-height:1.3;letter-spacing:-.005em;color:#fff;font-variant-numeric:tabular-nums}
+/* paused mid-video: just the button, so no text sits on top of the burned-in captions */
+.iv[data-state=paused] .iv-tx{opacity:0}
+.iv[data-state=paused] .iv-hit::after{opacity:.55}
+.iv[data-state=playing] .iv-hit::after,.iv[data-state=playing] .iv-cap{opacity:0}
+.iv[data-state=playing] .iv-cap{transform:translate3d(0,6px,0)}
+@media(max-width:380px){ .iv-cap{left:12px;right:12px;bottom:12px;gap:10px} .iv-disc{width:46px;height:46px} }
+@media(prefers-reduced-motion:reduce){ .iv-disc::after{animation:none!important} }
+/* once it's started: progress hairline, full-screen button, and a ring while it buffers */
+.iv-prog{position:absolute;left:0;right:0;bottom:0;z-index:3;height:3px;background:rgba(255,255,255,.26);pointer-events:none;opacity:0;transition:opacity .3s}
+.iv-prog i{display:block;height:100%;background:#fff;transform:scaleX(0);transform-origin:left}
+.iv-fs{position:absolute;top:9px;right:9px;z-index:4;width:32px;height:32px;border-radius:50%;border:0;padding:0;background:rgba(20,19,18,.5);color:#fff;display:grid;place-items:center;cursor:pointer;
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .25s var(--silk)}
+.iv-fs svg{width:15px;height:15px}
+.iv-fs:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.iv:not([data-state=idle]) .iv-prog,.iv:not([data-state=idle]) .iv-fs{opacity:1}
+.iv:not([data-state=idle]) .iv-fs{pointer-events:auto}
+.iv-spin{position:absolute;left:50%;top:50%;z-index:3;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;pointer-events:none;opacity:0;transition:opacity .2s;animation:spin .8s linear infinite}
+.iv.buffering .iv-spin{opacity:1}
 
 /* ── Booking: the same shell after a qualified submit (calendar → time → confirm → booked) ──
    Calendar cells borrow the Q3 illustration's language: sage = open, black = chosen. Corners are
@@ -555,11 +597,23 @@ body.kb .scr .pill{display:none}
 </head>
 <body>
 <div class="app intro-on" id="app">
-  <!-- Intro: welcome screen before question 1 (rows filled by JS) -->
+  <!-- Intro: welcome screen before question 1 (rows filled by JS); Bryan's video waits for a tap -->
   <section class="intro" id="intro" aria-labelledby="intro-h">
-    <div class="rows" aria-hidden="true"><div class="row l"></div><div class="row r"></div><div class="row l2"></div></div>
+    <div class="rows" aria-hidden="true"><div class="row l"></div><div class="row r"></div></div>
     <div class="intro-body">
-      <div class="logo"><img src="/icons/favicon-light.svg" alt="RevWhisper" width="42" height="42"></div>
+      <div class="iv" id="iv" data-state="idle">
+        <div class="iv-frame">
+          <video id="intro-vsl" playsinline webkit-playsinline preload="metadata" disableremoteplayback poster="/images/video/audit-vsl-poster.aabb1ad8.webp" width="1280" height="720">
+            <source src="/images/video/audit-vsl.0e6b05a0.mp4" type="video/mp4">
+          </video>
+          <button class="iv-hit" id="iv-hit" type="button" aria-label="Play Bryan's video with sound">
+            <span class="iv-cap"><span class="iv-disc" aria-hidden="true"><svg class="i-play" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg><svg class="i-again" viewBox="0 0 24 24" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></span><span class="iv-tx"><small id="iv-time">2:11 · Tap to watch with sound</small></span></span>
+          </button>
+          <span class="iv-prog" aria-hidden="true"><i id="iv-prog"></i></span>
+          <span class="iv-spin" aria-hidden="true"></span>
+          <button class="iv-fs" id="iv-fs" type="button" aria-label="Watch full screen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+        </div>
+      </div>
       <h1 class="intro-h" id="intro-h">Find out what's costing you <em>bookings</em></h1>
       <p class="intro-sub">A free audit of your Airbnb's ranking, pricing, and listing, walked through with you live.</p>
       <div class="intro-meta"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>2 minutes</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>Free</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>No commitment</span></div>
@@ -954,15 +1008,77 @@ let introOpen=true;
     return '<div class="lc"><div class="lc-ph"><img src="/images/flow/'+c[0]+'.webp" alt="" loading="eager" decoding="async">'+(c[1]?'<span class="lc-fav">Guest favorite</span>':'')+heart+'</div>'+
       '</div>';
   }
-  const order=[[0,1,2,3,4,5,6,7],[8,9,10,11,0,3,6,1],[5,7,2,9,4,11,8,10]];
+  const order=[[0,1,2,3,4,5,6,7],[8,9,10,11,0,3,6,1]];
   document.querySelectorAll('.row').forEach(function(r,i){
     const set=order[i].map(function(j){ return card(L[j]); }).join('');
     r.innerHTML=set+set; // two copies: translating by -50% loops seamlessly
   });
 })();
+/* ── Intro video ── Nothing plays until the visitor taps: the first tap starts it from the top, with sound.
+   A tap on the picture pauses or resumes; full screen hands off to the phone's own player, which turns
+   landscape for the on-screen graphics. Leaving the welcome pauses it. */
+const vsl=(function(){
+  const v=document.getElementById('intro-vsl'), box=document.getElementById('iv'), hit=document.getElementById('iv-hit');
+  const time=document.getElementById('iv-time'), bar=document.getElementById('iv-prog');
+  let raf=0, quart=0, started=false;
+  const fmt=function(s){ s=Math.max(0,Math.round(s||0)); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); };
+  const total=function(){ return isFinite(v.duration)&&v.duration>0?v.duration:131; };
+  function state(s){
+    box.dataset.state=s;
+    // the caption is hidden while it plays, so its words only ever change out of sight
+    if(s==='idle') time.textContent=fmt(total())+' · Tap to watch with sound';
+    else if(s==='paused') time.textContent=fmt(v.currentTime)+' / '+fmt(total())+' · Tap to resume';
+    else if(s==='ended') time.textContent='Watch again · '+fmt(total());
+    hit.setAttribute('aria-label',s==='playing'?'Pause the video':s==='paused'?'Resume the video':s==='ended'?'Watch the video again':"Play Bryan's video with sound");
+  }
+  function paint(){
+    bar.style.transform='scaleX('+Math.min(1,v.currentTime/total())+')';
+    raf=v.paused?0:requestAnimationFrame(paint);
+  }
+  function play(){
+    v.muted=false; state('playing');
+    if(v.readyState<3) box.classList.add('buffering');
+    const p=v.play();
+    if(p&&p.catch) p.catch(function(e){ if(e&&e.name==='NotAllowedError'){ box.classList.remove('buffering'); state(started&&v.currentTime>0?'paused':'idle'); } });
+  }
+  hit.addEventListener('click',function(){
+    if(!started){ started=true; rwTrack('vsl_play',{page:PAGE,placement:'intro'}); }
+    if(v.ended){ try{ v.currentTime=0; }catch(e){} play(); return; }
+    if(v.paused) play(); else v.pause();
+  });
+  document.getElementById('iv-fs').addEventListener('click',function(){
+    if(v.paused) play();
+    rwTrack('vsl_fullscreen',{page:PAGE,placement:'intro'});
+    try{
+      if(v.webkitEnterFullscreen) v.webkitEnterFullscreen(); // iPhone: the native player
+      else if(v.requestFullscreen) v.requestFullscreen().then(function(){
+        if(screen.orientation&&screen.orientation.lock) screen.orientation.lock('landscape').catch(function(){});
+      }).catch(function(){});
+    }catch(e){}
+  });
+  document.addEventListener('fullscreenchange',function(){
+    if(!document.fullscreenElement&&screen.orientation&&screen.orientation.unlock) try{ screen.orientation.unlock(); }catch(e){}
+  });
+  v.addEventListener('loadedmetadata',function(){ if(box.dataset.state==='idle') time.textContent=fmt(total())+' · Tap to watch with sound'; });
+  v.addEventListener('playing',function(){ box.classList.remove('buffering'); state('playing'); if(!raf) raf=requestAnimationFrame(paint); });
+  v.addEventListener('pause',function(){ if(!v.ended&&v.currentTime<total()-.3) state('paused'); });
+  v.addEventListener('waiting',function(){ if(!v.paused) box.classList.add('buffering'); });
+  v.addEventListener('canplay',function(){ if(!v.paused) box.classList.remove('buffering'); });
+  v.addEventListener('timeupdate',function(){
+    const q=Math.floor(v.currentTime/total()*4);
+    if(q>quart&&q<4){ quart=q; rwTrack('vsl_progress',{pct:q*25,page:PAGE,placement:'intro'}); }
+  });
+  v.addEventListener('ended',function(){
+    box.classList.remove('buffering'); state('ended'); bar.style.transform='scaleX(1)';
+    if(quart<4){ quart=4; rwTrack('vsl_progress',{pct:100,page:PAGE,placement:'intro'}); }
+  });
+  document.addEventListener('visibilitychange',function(){ if(document.hidden&&!v.paused) v.pause(); });
+  return { leave:function(){ if(!v.paused) v.pause(); } };
+})();
 function closeIntro(push){
   if(!introOpen) return;
   introOpen=false;
+  vsl.leave();
   if(push){ rwTrack('form_intro_continue',{page:PAGE}); try{ history.pushState({rwStep:0},'','#q1'); }catch(e){} }
   sizeArt();
   intro.classList.add('out');

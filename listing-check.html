@@ -227,7 +227,7 @@ body.scrolled .bar{background:rgba(255,255,255,.9);-webkit-backdrop-filter:satur
   .lg-only{display:none!important}
   .split{gap:0}
   .split > * + *{margin-top:var(--sg,20px)}
-  .qcard .lg-only + .lede{margin-top:0}
+  .qcard .lg-only + .lede,.qcard .lg-only + .steps{margin-top:0}
   .qcard .lchip{display:none}   /* first screen: the listing chip is desktop only, so the screen fits */
   .qcard .opts{margin-top:0}
   /* captions ride the video's lower edge, like the burned-in ones on the other videos, so no empty slot under it */
@@ -353,6 +353,13 @@ body.scrolled .bar{background:rgba(255,255,255,.9);-webkit-backdrop-filter:satur
 .cal .g .bk2{background:var(--g100);color:#b8b2ae}
 .cal .g .op{background:var(--terra-wash);color:var(--terra);font-weight:500;box-shadow:inset 0 0 0 1px var(--terra-line)}
 .cal .g .pa{opacity:.3}
+/* first screen: what they're about to do */
+.steps{list-style:none;display:grid;gap:10px;text-align:left}
+.steps li{display:flex;gap:12px;align-items:flex-start}
+.steps li > b{flex:0 0 auto;width:24px;height:24px;margin-top:1px;border-radius:50%;background:var(--accent-light);color:var(--accent);display:grid;place-items:center;font-family:var(--mono);font-size:12.5px;font-weight:500}
+.steps strong{display:block;font-size:15.5px;font-weight:600;line-height:1.35}
+.steps span{display:block;font-size:14px;line-height:1.45;color:var(--g500);margin-top:1px}
+.qcard .lg-only + .steps{margin-top:18px}
 /* the listing itself, from Growth Hub's scrape */
 .lcard{display:flex;gap:14px;align-items:center;margin:4px 0 16px}
 .lcard img{flex:0 0 auto;width:96px;height:72px;border-radius:12px;object-fit:cover;background:var(--g100);box-shadow:var(--sh-chip)}
@@ -580,8 +587,8 @@ body.reviewing .stage{padding-bottom:96px}
   body{--foot:24px}
   body[data-k=offer]{--foot:110px}
   .stage{padding:14px 20px calc(env(safe-area-inset-bottom,0px) + var(--foot))}
-  /* strategy screens: tapping an answer is the action, so no Next button and no note on phones */
-  body[data-k=strat] .acts,body[data-k=strat] .note{display:none}
+  /* strategy screens: the Next button appears once they've answered (with the note), never as a grey placeholder */
+  body[data-k=strat] .scr:not(.answered) .acts{display:none}
   .scr.out,.scr.rev.out{transform:none}
   .opts,.qcard .opts{gap:8px}
   .ob{min-height:52px;padding:8px 16px 8px 18px}
@@ -619,6 +626,8 @@ body.reviewing .stage{padding-bottom:96px}
   .body,.lede{font-size:15px;line-height:1.5}
 }
 @media(max-width:719px) and (max-height:640px){
+  .steps span{display:none}   /* first screen: the step titles carry it */
+  .lead-m .h{font-size:27px}
   .lead-m .kick{display:none}   /* first screen: the thank-you line */
   .op-head .kick{display:none}
   .op-head .h{font-size:25px}
@@ -779,11 +788,13 @@ function checkoutUrl(){
 /* ── the live listing report (RevWhisper Growth Hub) ──
    The visitor's browser starts the report as soon as they land: Growth Hub's public create-analysis
    endpoint allows revwhisper.com and rate-limits per visitor, then emails the finished report.
-   /api/listing-report reads it back here. A report takes about two minutes and the check takes
-   longer, so it's usually ready by the report screen. Only a single listing link is accepted. */
+   /api/listing-report reads it back here once Growth Hub's 15-page check is done: about 10 seconds
+   for the first pass and usually under a minute in all (instant when the listing was reported in
+   the last day). The check takes minutes, so it's ready by the report screen unless something
+   went wrong. Only a single listing link is accepted. */
 var GH='https://app.revwhisper.com';
 var RKEY='rw_listing_check_report';
-var REPORT_WAIT_MS=75000;   // on the report screen, how long to wait before saying it'll be emailed
+var REPORT_WAIT_MS=45000;   // on the report screen, how long to wait before saying it'll be emailed
 function listingIdFrom(u){
   var t=String(u||'').trim();if(!t)return null;
   if(!/^https?:\/\//i.test(t))t='https://'+t;
@@ -808,8 +819,9 @@ function keepReport(data){try{sessionStorage.setItem(RKEY,JSON.stringify({id:S.r
 function startReport(){
   var id=listingIdFrom(S.lead.url),r=S.report;
   if(!id||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(S.lead.email||''))return;
-  // already started (or Growth Hub already rejected this exact link: wait for a new one)
-  if(r&&r.listing===id&&(r.id||r.error==='listing'||(r.pending&&Date.now()-r.at<60000)))return;
+  // already started (or Growth Hub already rejected this exact link: wait for a new one;
+  // a start that failed is retried at most once a minute, as they move through the check)
+  if(r&&r.listing===id&&(r.id||r.error==='listing'||((r.pending||r.error==='failed')&&Date.now()-r.at<60000)))return;
   S.report={listing:id,pending:true,at:Date.now()};save();
   var body={email:S.lead.email,airbnbUrl:'https://www.airbnb.com/rooms/'+id,revenue:revenueFrom(S.lead.revenue),reportType:'ranking',
     attribution:Object.assign({},typeof window.rwAttribution==='function'?window.rwAttribution():{},{source:'listing-check'})};
@@ -1008,20 +1020,25 @@ function takeListing(){
   }
   S.lead.url='https://www.airbnb.com/rooms/'+id;S.report=null;save();startReport();return true;
 }
-// The first screen: people land here straight from the audit form, so it says what this is
+// The first screen: people land here straight from the audit form, so it says what this is and what's ahead
 function vHow(){
   var L=S.lead,first=firstName(L.name);
-  var kick=first?IC.check+'Thanks, '+esc(first)+'. Your request is in.':'',h='See how your listing scores on the <em>10 things</em> we do';
+  var kick=first?IC.check+'Thanks, '+esc(first)+'. Your request is in.':'',h='First, a quick audit of <em>how you run</em> your listing';
+  var steps=[
+    ['Watch 10 short videos','One per strategy we run on every listing.'],
+    ['Tell us what you do today','Yes, partly or not yet, plus an optional note.'],
+    ['Get your score and listing report','Built from your Airbnb listing as you go.']
+  ];
   return '<div class="split">'+
     lead((kick?'<p class="kick">'+kick+'</p>':'')+'<h1 class="h" tabindex="-1" data-focus>'+h+'</h1>')+
     media('how')+'<div class="col"><div class="qcard">'+
     (kick?'<p class="kick rv lg-only">'+kick+'</p>':'')+
     '<h1 class="h rv lg-only" tabindex="-1" data-focus>'+h+'</h1>'+
-    '<p class="lede rv">Watch a short video on each one, then tap the answer that fits. Your score and your listing report come at the end.</p>'+
+    '<ol class="steps rv">'+steps.map(function(x,i){return '<li><b>'+(i+1)+'</b><div><strong>'+x[0]+'</strong><span>'+x[1]+'</span></div></li>';}).join('')+'</ol>'+
     (listingIdFrom(L.url)
       ?'<div class="lchip rv"><span class="tile">'+IC.airbnb+'</span><span class="lt"><b>Your listing</b><small>'+esc(shortUrl(L.url))+'</small></span></div>'
       :listingAsk('Your Airbnb listing link'))+
-    acts('Start the check')+
+    acts('Start the audit')+
   '</div></div></div>';
 }
 function vStrat(n){
@@ -1083,13 +1100,21 @@ function vReport(){
       listingAsk('Your Airbnb listing link')+
       acts('Build my report')+'</div>';
   }
+  if(state==='none'){
+    // no report exists (the start failed, or no email): nothing will be emailed, so don't say so
+    return '<div class="panel">'+
+      '<p class="kick rv">Your listing report</p>'+
+      '<h2 class="h rv" tabindex="-1" data-focus>We couldn\'t start your <em>report</em></h2>'+
+      '<p class="lede rv">'+(S.report&&S.report.error==='failed'?'Our report service didn\'t answer. We\'ll try again while you finish up here.':'It needs the email and the Airbnb listing link from the form.')+'</p>'+
+      acts('See how we fix this')+'</div>';
+  }
   if(state!=='ready'){
     var email=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(L.email||'')?esc(L.email):'';
     var link=S.report&&S.report.id?'<a class="full rv" href="'+GH+'/report/'+encodeURIComponent(S.report.id)+'" target="_blank" rel="noopener">Open your report when it\'s ready</a>':'';
     return '<div class="panel">'+
       '<p class="kick rv">Your listing report</p>'+
       '<h2 class="h rv" tabindex="-1" data-focus>'+(state==='slow'?'Still building your <em>report</em>':'Your report is <em>on its way</em>')+'</h2>'+
-      '<p class="lede rv">'+(state==='slow'?'It usually takes a couple of minutes. ':'')+(email?'We\'ll email it to '+email+' as soon as it\'s done.':'We\'ll send it as soon as it\'s done.')+'</p>'+
+      '<p class="lede rv">'+(state==='slow'?'This one is taking longer than usual. ':'')+(email?'We\'ll email it to '+email+' as soon as it\'s done.':'We\'ll send it as soon as it\'s done.')+'</p>'+
       link+acts('See how we fix this')+'</div>';
   }
   var D=reportData(),li=D.listing||{},vac=D.vacancy,vis=D.visibility||{},prim=(D.primary&&D.primary.windows)||[],small=D.small;
@@ -1244,12 +1269,14 @@ function render(dir){
 }
 function mount(st,dir){
   if(PV.parentNode)PV.pause();
+  if(S.report&&S.report.error==='failed')startReport();
   stage.textContent='';
   window.scrollTo(0,0);
   var el=document.createElement('section');
   el.className='scr in'+(WIDE[st.k]?' wide':'')+(st.k==='report'&&reportState()==='ready'?' mid':'')+(dir<0?' rev':'');
   el.setAttribute('data-k',st.k);
   el.innerHTML=view(st);
+  if(st.k==='strat'&&S.strat[st.n])el.classList.add('answered');
   stage.appendChild(el);
   el.querySelectorAll('.rv').forEach(function(n,k){n.style.animationDelay=Math.min(.04+k*.05,.42).toFixed(2)+'s';});
   chrome();
@@ -1292,9 +1319,9 @@ function afterMount(st,el){
   if(st.k==='report'){
     var state=reportState();
     if(state==='loading'){
-      // the bar picks up from how long the report has been building (about two and a half minutes in all)
+      // the bar picks up from how long the report has been building (about a minute in all)
       if(!waitFrom||RS===null)waitFrom=Date.now();
-      var bar=el.querySelector('.rbar b'),lis=el.querySelectorAll('.rload li'),age=Date.now()-((S.report&&S.report.at)||Date.now()),total=150000;
+      var bar=el.querySelector('.rbar b'),lis=el.querySelectorAll('.rload li'),age=Date.now()-((S.report&&S.report.at)||Date.now()),total=60000;
       var frac=Math.min(.92,age/total);
       if(bar){bar.style.transition='none';bar.style.transform='scaleX('+frac.toFixed(3)+')';
         if(bar.animate&&!RM.matches)bar.animate([{transform:'scaleX('+frac.toFixed(3)+')'},{transform:'scaleX(.96)'}],{duration:Math.max(4000,total-age),easing:'linear',fill:'forwards'});}
@@ -1331,12 +1358,6 @@ function restart(){
 }
 var PHONE=window.matchMedia?matchMedia('(max-width:719px)'):{matches:false};
 stage.addEventListener('click',function(e){
-  // phones: an answer tap is the action. The click lands on the radio itself whether the label text or the
-  // radio was tapped, so this runs once; a short beat lets the dark fill register before the screen changes.
-  if(e.target.name==='ans'&&PHONE.matches&&STEPS[S.i].k==='strat'){
-    var at=S.i;setTimeout(function(){if(S.i===at)go(at+1);},320);
-    return;
-  }
   var a=e.target.closest('[data-act]');if(!a||!stage.contains(a))return;
   switch(a.getAttribute('data-act')){
     case 'next':next();break;
@@ -1358,6 +1379,12 @@ stage.addEventListener('change',function(e){
   note.querySelector('.nl-t').textContent=NOTE[t.value].l;ta.placeholder=NOTE[t.value].p;ta.removeAttribute('tabindex');
   note.classList.add('on');
   stage.querySelector('[data-act=next]').disabled=false;
+  var scr=stage.querySelector('.scr');if(scr)scr.classList.add('answered');
+  // phones: bring the note up above the Next button, which only appears once they've answered
+  if(PHONE.matches)requestAnimationFrame(function(){
+    var bar=stage.querySelector('.acts'),over=note.getBoundingClientRect().bottom-(window.innerHeight-(bar?bar.getBoundingClientRect().height:0))+8;
+    if(over>0)window.scrollBy({top:over,behavior:RM.matches?'auto':'smooth'});
+  });
 });
 stage.addEventListener('input',function(e){
   var t=e.target;
