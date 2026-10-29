@@ -1,0 +1,65 @@
+<!-- Video A/B test on /audit (10/29/26). PostHog experiments "audit-vsl-phone" (the phone page, audit-flow.html)
+     and "audit-vsl-desktop" (desktop and tablets, audit.html); each page names its flag in <html data-vsl-ab>.
+     Assigned once per device, 50/50: test keeps Bryan's video, control gets the page as it was before the video
+     (html.rw-vsl-off). The decision asks PostHog's flag endpoint directly the moment the page starts (~0.2s through
+     /ingest) instead of waiting for the full library; the page stays hidden until the answer (max 1.5s) with its
+     entrance animations held, so nothing changes or plays out of sight. The library then loads with the same device
+     ID and records the exposure once its own flags agree.
+     Outside the test, with the video: no analytics consent, team (rw_internal) browsers, no answer within 1.5s.
+     QA: ?rw_ab=test / ?rw_ab=control force a version without recording an exposure.
+     One copy for both pages. Edit _partials/vsl-ab.html, then run node scripts/sync-partials.mjs. -->
+<style>html.rw-ab-wait body{visibility:hidden}html.rw-ab-wait body *{animation-play-state:paused!important}</style>
+<script>
+(function(){
+  var de=document.documentElement, FLAG=de.getAttribute('data-vsl-ab'), WAIT=1500;
+  var TOKEN='phc_nfYFyU95DAZp2fvS3qZf6P5v8vJ2oH8SAGLomz9eqrLE';
+  if(!FLAG) return;
+  function noVideo(){ de.classList.add('rw-vsl-off'); }
+  var q=(location.search.match(/[?&]rw_ab=([a-z]+)/)||[])[1];
+  if(q==='control'){ noVideo(); return; }
+  if(q==='test'||q==='off') return;
+  if(!window.fetch) return;
+  if(!window.rwConsent||!rwConsent.analytics) return; // PostHog is told nothing without analytics consent
+  var internal=null; try{ internal=localStorage.getItem('rw_internal'); }catch(e){}
+  if(/[?&]rw_internal=1/.test(location.search)||(internal==='1'&&!/[?&]rw_internal=0/.test(location.search))) return;
+
+  // The device ID PostHog buckets on: this browser's existing one, or a new one the library will adopt
+  var PK='ph_'+TOKEN+'_posthog', did=null, distinct=null;
+  try{ var p=JSON.parse(localStorage.getItem(PK)||'null'); if(p){ did=p.$device_id||null; distinct=p.distinct_id||null; } }catch(e){}
+  if(!did||!distinct){ try{ var m=document.cookie.match(new RegExp('(?:^|; )'+PK+'=([^;]*)')); if(m){ var c=JSON.parse(decodeURIComponent(m[1])); did=did||c.$device_id||null; distinct=distinct||c.distinct_id||null; } }catch(e){} }
+  function uuid(){ try{ if(window.crypto&&crypto.randomUUID) return crypto.randomUUID(); }catch(e){}
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,function(ch){ var r=Math.random()*16|0; return (ch==='x'?r:(r&3|8)).toString(16); }); }
+  did=did||distinct||uuid(); distinct=distinct||did;
+  window.rwPhDeviceId=did; // /assets/rw-posthog.js hands this to the library, so both agree on the ID
+
+  var settled=false, prod=/(^|\.)revwhisper\.com$/.test(location.hostname);
+  de.classList.add('rw-ab-wait');
+  if(prod){ // the full library is needed right after (exposure, events): start it downloading now
+    var l=document.createElement('link'); l.rel='preload'; l.as='script'; l.href='/ingest/static/array.js'; l.crossOrigin='anonymous';
+    document.head.appendChild(l);
+  }
+  function show(){ if(settled) return; settled=true; de.classList.remove('rw-ab-wait'); }
+  var timer=setTimeout(show,WAIT); // no answer in time: the page as it is now, outside the test
+  function expose(v){
+    // window.posthog is re-read inside the callback: until the library loads it is a stand-in queue, which
+    // the library replaces with the real instance (a call on the stale stand-in is silently dropped)
+    function go(){ var ph=window.posthog; if(ph&&typeof ph.onFeatureFlags==='function') ph.onFeatureFlags(function(){
+      var lib=window.posthog, own=lib.getFeatureFlag(FLAG,{send_event:false});
+      if(own===v) lib.getFeatureFlag(FLAG); // records the exposure for the experiment
+      else lib.capture('vsl_ab_mismatch',{flag:FLAG,shown:v,library:own==null?'':String(own)}); // never counted
+    }); }
+    if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',go); else go();
+  }
+  function decide(v){
+    if(settled) return;
+    clearTimeout(timer);
+    if(v==='control') noVideo();
+    show();
+    if(v==='control'||v==='test') expose(v);
+  }
+  fetch((prod?'/ingest':'https://us.i.posthog.com')+'/flags/?v=2',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({token:TOKEN,distinct_id:distinct,$device_id:did,flag_keys:[FLAG]})})
+    .then(function(r){ return r.json(); })
+    .then(function(j){ var f=j&&j.flags&&j.flags[FLAG]; decide(f&&f.enabled?f.variant:null); },function(){ decide(null); });
+})();
+</script>

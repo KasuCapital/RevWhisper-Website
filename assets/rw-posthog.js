@@ -52,6 +52,10 @@
         maskTextFn:function(text){return text.replace(EMAIL,function(m){return '*'.repeat(m.length);}).replace(PHONE,function(m){return '*'.repeat(m.length);});}
       }
     };
+    // A page that already settled this browser's device ID before the library loaded (the /audit video A/B
+    // check asks the flag endpoint directly, for speed) hands it over, so a new browser gets that same ID.
+    // Only consulted when the library mints a new ID; an existing one is left alone.
+    if(window.rwPhDeviceId)cfg.get_device_id=function(){return window.rwPhDeviceId;};
     window.posthog.init(KEY,cfg);
 
     var a=attribution(), props={rw_region:(window.rwConsent&&rwConsent.region)||''};
