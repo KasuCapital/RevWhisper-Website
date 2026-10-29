@@ -106,7 +106,8 @@ fbq('track', 'PageView');
      their live listing report (RevWhisper Growth Hub, read through /api/listing-report) and the onboarding
      offer, which hands off to /checkout-form. Not linked yet: the live forms still send unqualified leads to
      /audit-report-coming. Reads the lead from sessionStorage.rw_audit_lead (set by the /audit forms), or
-     from ?name=&email=&listing= when opened directly. ?review=1 adds a screen picker; ?review=1&report=<id>
+     from ?name=&email=&listing= when opened directly; a listing link or email still missing is asked for on
+     the first screen, since the report needs both. ?review=1 adds a screen picker; ?review=1&report=<id>
      loads any finished Growth Hub report. Tracking: GA4 + PostHog events (listing_check_*), Meta
      ListingCheckStart / ListingCheckComplete, all behind rw-consent. -->
 <meta name="robots" content="noindex, nofollow">
@@ -375,7 +376,6 @@ body.scrolled .bar{background:rgba(255,255,255,.9);-webkit-backdrop-filter:satur
 .reach{height:8px;border-radius:4px;background:var(--g100);overflow:hidden;margin-bottom:12px}
 .reach i{display:block;height:100%;border-radius:4px;background:var(--accent)}
 .fn{font-size:12.5px;color:var(--g400);margin-top:-6px;margin-bottom:2px}
-.full{display:inline-block;margin:6px 0 4px;font-size:15px;font-weight:500;color:var(--accent);text-decoration:underline;text-underline-offset:3px}
 /* the single-listing field (the form's link was a host profile or not a listing) */
 .ask{margin-top:18px;text-align:left}
 .ask label{display:block;font-size:13px;font-weight:600;color:var(--g600);margin:0 0 6px 2px}
@@ -396,6 +396,10 @@ body.scrolled .bar{background:rgba(255,255,255,.9);-webkit-backdrop-filter:satur
 .op-list{list-style:none;display:grid;gap:10px}
 .op-list li{display:flex;gap:10px;align-items:flex-start;font-size:15.5px;line-height:1.4}
 .op-list li svg{flex:0 0 auto;width:20px;height:20px;padding:4px;margin-top:0;border-radius:50%;background:var(--accent-light);color:var(--accent)}
+/* the onboarding areas: name, then one line on what it covers */
+.op-on{font-size:14px;font-weight:600;color:var(--g600);margin:-4px 0 10px}
+.op-steps li b{display:block;font-size:15px;font-weight:600;line-height:1.3;color:var(--black)}
+.op-steps li small{display:block;font-size:13.5px;line-height:1.4;color:var(--g500);margin-top:1px}
 .op-month{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:14.5px;color:var(--g600)}
 .tbd{font-size:13px;color:var(--g500);border:1px dashed var(--g300);border-radius:8px;padding:4px 10px;white-space:nowrap}
 .paybar{margin-top:16px}
@@ -569,6 +573,23 @@ body.reviewing .stage{padding-bottom:96px}
   .op-head{text-align:left}
   .op .op-sec:first-of-type{margin-top:28px}
 }
+/* laptop heights: the sticky plan card lists all of onboarding, so it tightens up to keep the price button on screen */
+@media(min-width:1000px) and (max-height:900px){
+  .op{grid-template-columns:minmax(0,1fr) 400px;column-gap:48px}
+  .op-card{padding:18px 20px 16px}
+  .op-k,.op-on{margin-bottom:8px}
+  .op-steps{gap:7px}
+  .op-steps li b{font-size:14.5px}
+  .op-steps li small{font-size:13px;line-height:1.35}
+  .op-month{margin-top:10px;padding-top:9px}
+  .paybar{margin-top:12px}
+  .op-card .pricebtn{flex-direction:row;align-items:center;gap:10px;padding:14px 18px}
+  .op-card .pb-k{font-size:11px}
+  .op-card .pb-prices{gap:10px;margin-top:2px}
+  .op-card .pb-was{font-size:19px}
+  .op-card .pb-now{font-size:36px}
+  .op-card .pb-go{font-size:15.5px}
+}
 @container offer (min-width:440px){
   .pricebtn{flex-direction:row;align-items:center;gap:18px}
 }
@@ -740,6 +761,7 @@ function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return
 function firstName(n){return String(n||'').trim().split(/\s+/)[0]||'';}
 function shortUrl(u){return String(u||'').replace(/^https?:\/\//i,'').replace(/^www\./i,'').split(/[?#]/)[0].replace(/\/$/,'');}
 function fmt(n){return Number(n).toLocaleString('en-US');}
+function emailOk(v){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(v||''));}   // the same check Growth Hub runs
 
 /* ── state: kept in sessionStorage so a reload (or an in-app browser that drops the tab) resumes ── */
 var KEY='rw_listing_check';
@@ -781,20 +803,21 @@ function fbCustom(e,p){try{if(typeof window.fbq==='function')window.fbq('trackCu
 var PRICE={was:996,now:498,monthly:500,term:3};
 function checkoutUrl(){
   var q=new URLSearchParams({plan:'enterprise',monthly_cost:String(PRICE.monthly),term_months:String(PRICE.term),onboarding_fee:String(PRICE.now),listing_count:'1'});
-  if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(S.lead.email||''))q.set('email',S.lead.email);
+  if(emailOk(S.lead.email))q.set('email',S.lead.email);
   return '/checkout-form?'+q.toString();
 }
 
 /* ── the live listing report (RevWhisper Growth Hub) ──
    The visitor's browser starts the report as soon as they land: Growth Hub's public create-analysis
-   endpoint allows revwhisper.com and rate-limits per visitor, then emails the finished report.
+   endpoint allows revwhisper.com and rate-limits per visitor. delivery:'embedded' tells Growth Hub
+   this page shows the report itself: no report email and no CRM webhook.
    /api/listing-report reads it back here once Growth Hub's 15-page check is done: about 10 seconds
    for the first pass and usually under a minute in all (instant when the listing was reported in
    the last day). The check takes minutes, so it's ready by the report screen unless something
    went wrong. Only a single listing link is accepted. */
 var GH='https://app.revwhisper.com';
 var RKEY='rw_listing_check_report';
-var REPORT_WAIT_MS=45000;   // on the report screen, how long to wait before saying it'll be emailed
+var REPORT_WAIT_MS=45000;   // on the report screen, how long to wait before saying it's taking longer
 function listingIdFrom(u){
   var t=String(u||'').trim();if(!t)return null;
   if(!/^https?:\/\//i.test(t))t='https://'+t;
@@ -818,12 +841,12 @@ function reportData(){
 function keepReport(data){try{sessionStorage.setItem(RKEY,JSON.stringify({id:S.report.id,data:data}));}catch(e){}}
 function startReport(){
   var id=listingIdFrom(S.lead.url),r=S.report;
-  if(!id||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(S.lead.email||''))return;
+  if(!id||!emailOk(S.lead.email))return;
   // already started (or Growth Hub already rejected this exact link: wait for a new one;
   // a start that failed is retried at most once a minute, as they move through the check)
   if(r&&r.listing===id&&(r.id||r.error==='listing'||((r.pending||r.error==='failed')&&Date.now()-r.at<60000)))return;
   S.report={listing:id,pending:true,at:Date.now()};save();
-  var body={email:S.lead.email,airbnbUrl:'https://www.airbnb.com/rooms/'+id,revenue:revenueFrom(S.lead.revenue),reportType:'ranking',
+  var body={email:S.lead.email,airbnbUrl:'https://www.airbnb.com/rooms/'+id,revenue:revenueFrom(S.lead.revenue),reportType:'ranking',delivery:'embedded',
     attribution:Object.assign({},typeof window.rwAttribution==='function'?window.rwAttribution():{},{source:'listing-check'})};
   if(S.lead.name)body.fullName=S.lead.name;
   if(S.lead.phone)body.phone=S.lead.phone;
@@ -846,12 +869,13 @@ function fetchReport(cb){
     .then(function(j){if(j&&j.status==='ready')keepReport(j);cb(j);})
     .catch(function(){cb(null);});
 }
-// Report screen state: ready | loading | slow (still building, it'll be emailed) | listing (re-ask) | none
+// Report screen state: ready | loading | slow (still building, keeps checking) | listing (re-ask) | none
 var RS=null,pollT=0,waitFrom=0;
 function reportState(){
   if(reportData())return 'ready';
   var r=S.report;
-  if(r&&r.error==='listing')return 'listing';
+  // Growth Hub rejected the link, or there's no listing link or email to start one with: ask for what's missing
+  if(r&&r.error==='listing'||!r&&!(listingIdFrom(S.lead.url)&&emailOk(S.lead.email)))return 'listing';
   if(!r||r.error||!r.id&&!r.pending)return 'none';
   return RS==='slow'?'slow':'loading';
 }
@@ -1003,22 +1027,41 @@ function media(kind,n){
 function lead(inner){return '<div class="lead-m rv">'+inner+'</div>';}
 function backBtn(){return S.i>0?'<button class="bk" type="button" data-act="back">'+IC.back+'Back</button>':'';}
 function acts(label,disabled){return '<div class="acts rv">'+backBtn()+'<button class="cta" type="button" data-act="next"'+(disabled?' disabled':'')+'>'+label+IC.arrow+'</button></div>';}
+var LINK_HINT='Paste the link to one listing, not your host profile.',MAIL_HINT='We use it to build your listing report, which you\'ll see right here.';
 // Asked when the form's link isn't a single listing (a host profile, a search page, a typo)
 function listingAsk(label){
   return '<div class="ask rv"><label for="lurl">'+label+'</label>'+
     '<input class="lurl" id="lurl" type="url" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="airbnb.com/rooms/12345678" value="'+esc(S.lead.url)+'">'+
-    '<p class="ask-hint" id="lurl-msg">Paste the link to one listing, not your host profile.</p></div>';
+    '<p class="ask-hint" id="lurl-msg">'+LINK_HINT+'</p></div>';
 }
-// Reads the listing field; returns true when it holds a single listing (and saves it), else shows why not
-function takeListing(){
-  var el=document.getElementById('lurl');if(!el)return true;
-  var id=listingIdFrom(el.value);
-  if(!id){
-    var msg=document.getElementById('lurl-msg');
-    msg.textContent=/users\/show|\/user\//i.test(el.value)?'That\'s a host profile. Open the one listing you want checked and paste its link.':'Paste the link to one Airbnb listing. It looks like airbnb.com/rooms/12345678.';
-    msg.classList.add('bad');el.focus();track('listing_check_listing_rejected',{});return false;
+// Asked when there's no email from the form (someone opened the check from a direct link); the report needs one
+function emailAsk(){
+  return '<div class="ask rv"><label for="lmail">Your email</label>'+
+    '<input class="lurl" id="lmail" type="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" placeholder="you@example.com" value="'+esc(S.lead.email)+'">'+
+    '<p class="ask-hint" id="lmail-msg">'+MAIL_HINT+'</p></div>';
+}
+// Reads the asked-for fields (listing link, email); returns true when each one shown is valid (and saves them), else shows why not
+function takeLead(){
+  var u=document.getElementById('lurl'),m=document.getElementById('lmail');
+  if(!u&&!m)return true;
+  var id=u?listingIdFrom(u.value):null,mail=m?m.value.trim():'',bad=null;
+  // each field's hint turns into its error, and back once that field is fixed
+  var hint=function(el,text,isBad){var h=document.getElementById(el.id+'-msg');h.textContent=text;h.classList.toggle('bad',isBad);};
+  if(u){
+    if(id)hint(u,LINK_HINT,false);
+    else{
+      hint(u,/users\/show|\/user\//i.test(u.value)?'That\'s a host profile. Open the one listing you want checked and paste its link.':'Paste the link to one Airbnb listing. It looks like airbnb.com/rooms/12345678.',true);
+      bad=u;track('listing_check_listing_rejected',{});
+    }
   }
-  S.lead.url='https://www.airbnb.com/rooms/'+id;S.report=null;save();startReport();return true;
+  if(m){
+    if(emailOk(mail))hint(m,MAIL_HINT,false);
+    else{hint(m,'Enter your email, like name@example.com.',true);bad=bad||m;}
+  }
+  if(bad){bad.focus();return false;}
+  if(u)S.lead.url='https://www.airbnb.com/rooms/'+id;
+  if(m)S.lead.email=mail;
+  S.report=null;save();startReport();return true;
 }
 // The first screen: people land here straight from the audit form, so it says what this is and what's ahead
 function vHow(){
@@ -1038,6 +1081,7 @@ function vHow(){
     (listingIdFrom(L.url)
       ?'<div class="lchip rv"><span class="tile">'+IC.airbnb+'</span><span class="lt"><b>Your listing</b><small>'+esc(shortUrl(L.url))+'</small></span></div>'
       :listingAsk('Your Airbnb listing link'))+
+    (emailOk(L.email)?'':emailAsk())+
     acts('Start the audit')+
   '</div></div></div>';
 }
@@ -1093,29 +1137,30 @@ function vReport(){
       '</ol></div></div>';
   }
   if(state==='listing'){
+    var rejected=!!(S.report&&S.report.error==='listing'),needLink=rejected||!listingIdFrom(L.url),needMail=!emailOk(L.email);
     return '<div class="panel">'+
       '<p class="kick rv">One more thing</p>'+
-      '<h2 class="h rv" tabindex="-1" data-focus>Which listing should we <em>check?</em></h2>'+
-      '<p class="lede rv">We couldn\'t read that link as a single Airbnb listing.</p>'+
-      listingAsk('Your Airbnb listing link')+
+      '<h2 class="h rv" tabindex="-1" data-focus>'+(needLink?'Which listing should we <em>check?</em>':'Add your email to build your <em>report</em>')+'</h2>'+
+      '<p class="lede rv">'+(rejected?'We couldn\'t read that link as a single Airbnb listing.':needLink?'Paste the link to the one listing you want checked.':'It takes about a minute and shows up right here.')+'</p>'+
+      (needLink?listingAsk('Your Airbnb listing link'):'')+
+      (needMail?emailAsk():'')+
       acts('Build my report')+'</div>';
   }
   if(state==='none'){
-    // no report exists (the start failed, or no email): nothing will be emailed, so don't say so
+    // the start failed (Growth Hub didn't answer); it's retried as they move through the check
     return '<div class="panel">'+
       '<p class="kick rv">Your listing report</p>'+
       '<h2 class="h rv" tabindex="-1" data-focus>We couldn\'t start your <em>report</em></h2>'+
-      '<p class="lede rv">'+(S.report&&S.report.error==='failed'?'Our report service didn\'t answer. We\'ll try again while you finish up here.':'It needs the email and the Airbnb listing link from the form.')+'</p>'+
+      '<p class="lede rv">Our report service didn\'t answer. We\'ll try again while you finish up here.</p>'+
       acts('See how we fix this')+'</div>';
   }
   if(state!=='ready'){
-    var email=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(L.email||'')?esc(L.email):'';
-    var link=S.report&&S.report.id?'<a class="full rv" href="'+GH+'/report/'+encodeURIComponent(S.report.id)+'" target="_blank" rel="noopener">Open your report when it\'s ready</a>':'';
+    // still building after the wait: the screen keeps checking and shows it here when it lands
     return '<div class="panel">'+
       '<p class="kick rv">Your listing report</p>'+
-      '<h2 class="h rv" tabindex="-1" data-focus>'+(state==='slow'?'Still building your <em>report</em>':'Your report is <em>on its way</em>')+'</h2>'+
-      '<p class="lede rv">'+(state==='slow'?'This one is taking longer than usual. ':'')+(email?'We\'ll email it to '+email+' as soon as it\'s done.':'We\'ll send it as soon as it\'s done.')+'</p>'+
-      link+acts('See how we fix this')+'</div>';
+      '<h2 class="h rv" tabindex="-1" data-focus>Still building your <em>report</em></h2>'+
+      '<p class="lede rv">This one is taking longer than usual. It\'ll show up right here as soon as it\'s ready.</p>'+
+      acts('See how we fix this')+'</div>';
   }
   var D=reportData(),li=D.listing||{},vac=D.vacancy,vis=D.visibility||{},prim=(D.primary&&D.primary.windows)||[],small=D.small;
   var meta=[li.location,li.bedrooms?li.bedrooms+(li.bedrooms===1?' bedroom':' bedrooms'):'',li.guests?'sleeps '+li.guests:''].filter(Boolean).map(esc).join(' &middot; ');
@@ -1151,7 +1196,7 @@ function vReport(){
     seen='<section class="rsec rv"><h3>How far guests scroll to find you</h3>'+
       '<div class="vgrid"><div><b>#'+vis.avgPosition+'</b><span>your average spot'+(vis.page>1?', page '+vis.page:', page one')+'</span></div><div><b>'+vis.reachPct+'%</b><span>of searching guests scroll that far</span></div></div>'+
       '<div class="reach" aria-hidden="true"><i style="width:'+Math.max(4,vis.reachPct)+'%"></i></div>'+
-      '<p class="find">'+(vis.ahead>0?vis.ahead+' listings rank ahead of you on average':'You\'re at the top of the results')+(vis.foundPct<100?', and you showed up in '+vis.foundPct+'% of our searches.':'.')+'</p>'+
+      '<p class="find">'+(vis.ahead>0?vis.ahead+(vis.ahead===1?' listing ranks':' listings rank')+' ahead of you on average':'You\'re at the top of the results')+(vis.foundPct<100?', and you showed up in '+vis.foundPct+'% of our searches.':'.')+'</p>'+
       '<p class="fn">Reach is estimated from published search-scroll research. Airbnb doesn\'t share this data.</p>'+ties([5,7,8])+'</section>';
   }else if(vis.searches){
     seen='<section class="rsec rv"><h3>How far guests scroll to find you</h3><p class="find">Your listing didn\'t appear in the first '+vis.deepest+' results for any of the '+vis.searches+' searches we ran.</p>'+ties([5,7,8])+'</section>';
@@ -1177,43 +1222,47 @@ function vReport(){
       '<div><h2 class="h" tabindex="-1" data-focus>'+esc(li.title||'Your listing')+'</h2>'+(meta?'<p>'+meta+'</p>':'')+
       (li.rating?'<p class="star">&#9733; '+li.rating+(li.reviews?' ('+li.reviews+')':'')+'</p>':'')+'</div></div>'+
     hero+rank+seen+cal+
-    '<a class="full rv" href="'+esc(D.reportUrl)+'" target="_blank" rel="noopener">See your full report</a>'+
     acts('See how we fix this');
 }
 function vOffer(){
   var first=firstName(S.lead.name);
   var rows=STRATS.map(function(s,n){return {t:s.t,a:S.strat[n]||'no',n:n};});
   var notYet=rows.filter(function(r){return r.a==='no';}),partly=rows.filter(function(r){return r.a==='partly';}),yes=rows.length-notYet.length-partly.length;
-  var gaps=notYet.length+partly.length;
-  var h=gaps===0?'We\'ll keep all <em>ten</em> running':gaps===1?'We\'ll close your <em>last gap</em>':'We\'ll close your <em>'+gaps+' gaps</em>';
   var day=function(k){return new Date(Date.now()+k*864e5).toLocaleDateString('en-US',{month:'short',day:'numeric'});};
   var row=function(r){return '<li><b class="pl-n">'+(r.n+1)+'</b><span class="pl-t">'+esc(r.t)+'</span>'+(r.a==='no'?'<span class="tag no">Not yet</span>':'<span class="tag partly">Partly</span>')+'</li>';};
-  var tick=function(t){return '<li>'+IC.check+'<span>'+t+'</span></li>';};
+  var step=function(t,x){return '<li>'+IC.check+'<span><b>'+t+'</b><small>'+x+'</small></span></li>';};
   var faq=function(q,a){return '<details><summary>'+q+'</summary><p>'+a+'</p></details>';};
   // their own nightly rate from the report: what the monthly fee is worth in nights
   var D=reportData(),adr=D&&D.vacancy&&D.vacancy.adrSource==='own'?D.vacancy.adr:0,be=adr?Math.max(1,Math.round(PRICE.monthly/adr*10)/10):0;
   return '<div class="op">'+
     '<header class="op-head rv">'+
       '<p class="kick">'+IC.check+'Your plan'+(first?', '+esc(first):'')+'</p>'+
-      '<h2 class="h" tabindex="-1" data-focus>'+h+'</h2>'+
-      '<p class="op-sub">You scored '+yes+' of 10. '+(gaps?'Your analyst takes over the rest':'Your analyst keeps all ten running')+', and you keep the guests and the cleaning.</p>'+
+      '<h2 class="h" tabindex="-1" data-focus>Here\'s exactly what you\'re <em>signing up for</em></h2>'+
+      '<p class="op-sub">You scored '+yes+' of 10. Onboarding takes 7 days, then your analyst manages your listing\'s performance. Guests and cleaning stay with you.</p>'+
     '</header>'+
-    // the offer at a glance; on phones its price button is the pinned bar, on desktop the card is sticky
+    // the offer at a glance: exactly what onboarding delivers. On phones its price button is the pinned bar, on desktop the card is sticky
     '<aside class="op-card offer rv" aria-label="What you get">'+
-      '<p class="op-k">Done-for-you revenue management</p>'+
-      '<ul class="op-list">'+
-        tick('A dedicated analyst on your listing every other day')+
-        tick('Pricing, ranking, photos and listing copy, handled')+
-        tick('A monthly report against last year and your market')+
-        tick('Live in about 8 days. You just add us as a co-host')+
+      '<p class="op-k">Done-for-you performance management</p>'+
+      '<p class="op-on">Your 7-day onboarding covers five areas:</p>'+
+      '<ul class="op-list op-steps">'+
+        step('Search rank baseline','Your current position across 60 to 90 days of open dates, tracked by guest configuration.')+
+        step('Rules and settings optimization','Account-level adjustments that directly affect visibility.')+
+        step('Listing enhancements','Copy, title, meta tags, amenities, photos and completeness scoring.')+
+        step('Image improvements','Upgrades to photo quality, selection and sequencing. Airbnb first, then VRBO.')+
+        step('Pricing strategy and rules','A dynamic pricing structure built around a true competitive set.')+
+        step('Implementation','Our team executes every approved change to your account, listing and pricing setup, in about 2 days depending on the volume of changes.')+
       '</ul>'+
-      '<div class="op-month"><span>Then <b>$'+PRICE.monthly+'</b>/mo</span><span class="op-term">'+(be?'About '+be+' nights a month at your rate':PRICE.term+' months, then month to month')+'</span></div>'+
+      '<div class="op-month"><span>Then <b>$'+PRICE.monthly+'</b>/mo</span><span class="op-term">'+(be?'About '+be+(be===1?' night':' nights')+' a month at your rate':PRICE.term+' months, then month to month')+'</span></div>'+
       '<div class="paybar"><button class="pricebtn" type="button" data-act="checkout"><span class="pb-left"><span class="pb-k">Onboarding</span><span class="pb-prices"><span class="pb-was">$'+PRICE.was+'<i></i></span><span class="pb-now">$'+PRICE.now+'</span></span></span><span class="pb-go">Start onboarding'+IC.arrow+'</span></button>'+
         '<p class="op-trust">'+IC.lock+'Secure checkout with Stripe</p></div>'+
     '</aside>'+
     '<section class="op-sec rv"><h2>What your analyst does</h2>'+media('offer')+'</section>'+
-    '<section class="op-sec rv"><h2>Hosts your size</h2>'+
+    '<section class="op-sec rv"><h2>Client performance</h2>'+
       '<div class="proof">'+
+        '<article class="pf"><img src="/images/properties/cards/moonlit-peak.webp" alt="Moonlit Peak, a lakefront A-frame at dusk" width="400" height="300" loading="lazy"><div class="pf-b"><b>Moonlit Peak</b><small>4 BR lakefront, Pocono Mountains, PA</small>'+
+          '<div class="pf-up"><strong>+61%</strong><span>2026 bookings vs last year</span></div><div class="pf-was">$77.4K &rarr; $125.0K</div></div></article>'+
+        '<article class="pf"><img src="/images/properties/cards/waters-edge.webp" alt="Waters Edge Hideaway chalet on a winter evening" width="400" height="300" loading="lazy"><div class="pf-b"><b>Waters Edge Hideaway</b><small>5 BR, Pocono Mountains, PA</small>'+
+          '<div class="pf-up"><strong>+38%</strong><span>2026 bookings vs last year</span></div><div class="pf-was">$75.1K &rarr; $103.3K</div></div></article>'+
         '<article class="pf"><img src="/images/listing-check/proof-bears-tale.jpg" alt="A Bear\'s Tale cabin at sunset" width="400" height="225" loading="lazy"><div class="pf-b"><b>A Bear\'s Tale</b><small>2 BR cabin, Pigeon Forge, TN</small>'+
           '<div class="pf-up"><strong>+33%</strong><span>2026 bookings vs last year</span></div><div class="pf-was">$32.6K &rarr; $43.3K</div></div></article>'+
         '<article class="pf"><img src="/images/listing-check/proof-gulfstream.jpg" alt="Gulfstream Villa pool at golden hour" width="400" height="266" loading="lazy"><div class="pf-b"><b>Gulfstream Villa</b><small>3 BR, Gulf Coast, FL</small>'+
@@ -1342,8 +1391,8 @@ function afterMount(st,el){
 /* ── actions ── */
 function next(){
   var st=STEPS[S.i];
-  if(st.k==='how'){if(!takeListing())return;track('listing_check_start',{});fbCustom('ListingCheckStart');}
-  if(st.k==='report'&&reportState()==='listing'){if(takeListing()){RS=null;render(1);}return;}
+  if(st.k==='how'){if(!takeLead())return;track('listing_check_start',{});fbCustom('ListingCheckStart');}
+  if(st.k==='report'&&reportState()==='listing'){if(takeLead()){RS=null;render(1);}return;}
   if(st.k==='strat'&&!S.strat[st.n]&&!REVIEW)return;
   go(S.i+1);
 }
@@ -1389,6 +1438,10 @@ stage.addEventListener('change',function(e){
 stage.addEventListener('input',function(e){
   var t=e.target;
   if(t.id==='nt'){S.notes[STEPS[S.i].n]=t.value;saveSoon();}
+});
+// Enter in the listing or email field submits, like the button
+stage.addEventListener('keydown',function(e){
+  if(e.key==='Enter'&&(e.target.id==='lurl'||e.target.id==='lmail')){e.preventDefault();next();}
 });
 document.getElementById('back').addEventListener('click',back);
 window.addEventListener('scroll',function(){document.body.classList.toggle('scrolled',window.scrollY>4);},{passive:true});

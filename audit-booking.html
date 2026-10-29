@@ -652,7 +652,7 @@ function reportClientError(stage,err,serverBody){
     if(body&&body.alerted) return;
     const payload={page:'audit-booking',stage:stage,status:(err&&err.status)||undefined,
       message:String((err&&err.message)||err||'unknown error').slice(0,500),
-      detail:{url:location.pathname+location.search,tz:booking.timeZone,server:body?JSON.stringify(body).slice(0,400):null}};
+      detail:{url:location.pathname+location.search,tz:booking.timeZone,attempts:(err&&err.attempts)||undefined,server:body?JSON.stringify(body).slice(0,400):null}};
     fetch('/api/client-error',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),keepalive:true}).catch(function(){});
   }catch(e){}
 }
@@ -663,6 +663,35 @@ function recoverStaleSlot(message){
   const fromLoader=current;current=0;transitionStep(fromLoader,current,'backward');
   showCalError(message,{retry:false});
   loadSlots();
+}
+
+/* The availability request, built to survive the browser cutting it. iOS Safari drops in-flight
+   requests when the tab goes to the background (app switch, phone locked, link preview closed) and
+   reports "Load failed". In Oct 2026 five of those paged ops as outages while the API was healthy,
+   and the visitor came back to "We couldn't load open times". So a request cut while the page was
+   hidden asks again once they're back, and a network drop on a visible page gets two more tries
+   before anyone sees an error. HTTP errors pass straight through: the API alerts on those itself. */
+let pageHiddenAt=0;
+document.addEventListener('visibilitychange',function(){ if(document.visibilityState==='hidden') pageHiddenAt=Date.now(); });
+function whenVisible(fn){
+  if(document.visibilityState!=='hidden') return fn();
+  document.addEventListener('visibilitychange',function once(){
+    if(document.visibilityState==='hidden') return;
+    document.removeEventListener('visibilitychange',once);fn();
+  });
+}
+function fetchSlots(url){
+  return new Promise(function(resolve,reject){
+    let tries=0;
+    (function attempt(){
+      const startedAt=Date.now(),hiddenAtStart=document.visibilityState==='hidden';
+      fetch(url).then(resolve,function(err){
+        if(hiddenAtStart||pageHiddenAt>=startedAt||document.visibilityState==='hidden') return whenVisible(attempt);
+        if(++tries<3) return setTimeout(attempt,tries*1500);
+        err.attempts=tries;reject(err);
+      });
+    })();
+  });
 }
 
 async function loadSlots(){
@@ -679,7 +708,7 @@ async function loadSlots(){
   booking.visibleMonth=booking.visibleMonth||new Date(start.getFullYear(),start.getMonth(),1);
   const params=new URLSearchParams({start:start.toISOString(),end:end.toISOString(),timeZone:booking.timeZone});
   try{
-    const res=await fetch(`${CAL_SLOTS_ENDPOINT}?${params.toString()}`);
+    const res=await fetchSlots(`${CAL_SLOTS_ENDPOINT}?${params.toString()}`);
     if(!res.ok){const b=await res.json().catch(()=>({}));const e=new Error(b.error||`Cal.com returned ${res.status}`);e.serverBody=b;e.status=res.status;throw e;}
     const json=await res.json();
     const data=(json&&json.data)||{};
