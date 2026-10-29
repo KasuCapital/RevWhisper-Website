@@ -2,8 +2,8 @@
 export const BLOG_SCHEDULE = {
   "posts": {
     "best-airbnb-pricing-tools": 1793887200000,
-    "new-york-airbnb-law": 1793800800000,
-    "airbnb-revenue-management-new-york": 1793714400000
+    "airbnb-revenue-management-new-york": 1793800800000,
+    "new-york-airbnb-law": 1793714400000
   },
   "versions": [
     {
