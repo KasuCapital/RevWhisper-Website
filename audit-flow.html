@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-vsl-ab="audit-vsl-phone">
 <head>
 <meta charset="UTF-8">
 <!-- Warm the two heavy third-party origins before their loaders fire below -->
@@ -77,7 +77,74 @@
 </script>
 <!-- ATTRIBUTION:END -->
 <script src="/assets/rw-consent.js?v=3"></script>
-<script defer src="/assets/rw-posthog.js?v=4"></script>
+<!-- VSL-AB:START -->
+<!-- Video A/B test on /audit (10/29/26). PostHog experiments "audit-vsl-phone" (the phone page, audit-flow.html)
+     and "audit-vsl-desktop" (desktop and tablets, audit.html); each page names its flag in <html data-vsl-ab>.
+     Assigned once per device, 50/50: test keeps Bryan's video, control gets the page as it was before the video
+     (html.rw-vsl-off). The decision asks PostHog's flag endpoint directly the moment the page starts (~0.2s through
+     /ingest) instead of waiting for the full library; the page stays hidden until the answer (max 1.5s) with its
+     entrance animations held, so nothing changes or plays out of sight. The library then loads with the same device
+     ID and records the exposure once its own flags agree.
+     Outside the test, with the video: no analytics consent, team (rw_internal) browsers, no answer within 1.5s.
+     QA: ?rw_ab=test / ?rw_ab=control force a version without recording an exposure.
+     One copy for both pages. Edit _partials/vsl-ab.html, then run node scripts/sync-partials.mjs. -->
+<style>html.rw-ab-wait body{visibility:hidden}html.rw-ab-wait body *{animation-play-state:paused!important}</style>
+<script>
+(function(){
+  var de=document.documentElement, FLAG=de.getAttribute('data-vsl-ab'), WAIT=1500;
+  var TOKEN='phc_nfYFyU95DAZp2fvS3qZf6P5v8vJ2oH8SAGLomz9eqrLE';
+  if(!FLAG) return;
+  function noVideo(){ de.classList.add('rw-vsl-off'); }
+  var q=(location.search.match(/[?&]rw_ab=([a-z]+)/)||[])[1];
+  if(q==='control'){ noVideo(); return; }
+  if(q==='test'||q==='off') return;
+  if(!window.fetch) return;
+  if(!window.rwConsent||!rwConsent.analytics) return; // PostHog is told nothing without analytics consent
+  var internal=null; try{ internal=localStorage.getItem('rw_internal'); }catch(e){}
+  if(/[?&]rw_internal=1/.test(location.search)||(internal==='1'&&!/[?&]rw_internal=0/.test(location.search))) return;
+
+  // The device ID PostHog buckets on: this browser's existing one, or a new one the library will adopt
+  var PK='ph_'+TOKEN+'_posthog', did=null, distinct=null;
+  try{ var p=JSON.parse(localStorage.getItem(PK)||'null'); if(p){ did=p.$device_id||null; distinct=p.distinct_id||null; } }catch(e){}
+  if(!did||!distinct){ try{ var m=document.cookie.match(new RegExp('(?:^|; )'+PK+'=([^;]*)')); if(m){ var c=JSON.parse(decodeURIComponent(m[1])); did=did||c.$device_id||null; distinct=distinct||c.distinct_id||null; } }catch(e){} }
+  function uuid(){ try{ if(window.crypto&&crypto.randomUUID) return crypto.randomUUID(); }catch(e){}
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,function(ch){ var r=Math.random()*16|0; return (ch==='x'?r:(r&3|8)).toString(16); }); }
+  did=did||distinct||uuid(); distinct=distinct||did;
+  window.rwPhDeviceId=did; // /assets/rw-posthog.js hands this to the library, so both agree on the ID
+
+  var settled=false, prod=/(^|\.)revwhisper\.com$/.test(location.hostname);
+  de.classList.add('rw-ab-wait');
+  if(prod){ // the full library is needed right after (exposure, events): start it downloading now
+    var l=document.createElement('link'); l.rel='preload'; l.as='script'; l.href='/ingest/static/array.js'; l.crossOrigin='anonymous';
+    document.head.appendChild(l);
+  }
+  function show(){ if(settled) return; settled=true; de.classList.remove('rw-ab-wait'); }
+  var timer=setTimeout(show,WAIT); // no answer in time: the page as it is now, outside the test
+  function expose(v){
+    // window.posthog is re-read inside the callback: until the library loads it is a stand-in queue, which
+    // the library replaces with the real instance (a call on the stale stand-in is silently dropped)
+    function go(){ var ph=window.posthog; if(ph&&typeof ph.onFeatureFlags==='function') ph.onFeatureFlags(function(){
+      var lib=window.posthog, own=lib.getFeatureFlag(FLAG,{send_event:false});
+      if(own===v) lib.getFeatureFlag(FLAG); // records the exposure for the experiment
+      else lib.capture('vsl_ab_mismatch',{flag:FLAG,shown:v,library:own==null?'':String(own)}); // never counted
+    }); }
+    if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',go); else go();
+  }
+  function decide(v){
+    if(settled) return;
+    clearTimeout(timer);
+    if(v==='control') noVideo();
+    show();
+    if(v==='control'||v==='test') expose(v);
+  }
+  fetch((prod?'/ingest':'https://us.i.posthog.com')+'/flags/?v=2',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({token:TOKEN,distinct_id:distinct,$device_id:did,flag_keys:[FLAG]})})
+    .then(function(r){ return r.json(); })
+    .then(function(j){ var f=j&&j.flags&&j.flags[FLAG]; decide(f&&f.enabled?f.variant:null); },function(){ decide(null); });
+})();
+</script>
+<!-- VSL-AB:END -->
+<script defer src="/assets/rw-posthog.js?v=5"></script>
 <!-- GA4. Consent defaults come from /assets/rw-consent.js -->
 <script>
 window.dataLayer=window.dataLayer||[];
@@ -425,6 +492,23 @@ body.kb .scr .pill{display:none}
 .intro .intro-sub{animation:introIn .6s var(--silk) .27s both}
 .intro .intro-meta{animation:introIn .6s var(--silk) .32s both}
 .intro .cta{animation:introIn .6s var(--silk) .38s both}
+/* Video A/B control (VSL-AB in <head> adds html.rw-vsl-off): the welcome screen exactly as it was before the
+   video: three rows of cards under the original fade, the round logo where the video sits, the original spacing */
+.row.l2,.logo{display:none}
+html.rw-vsl-off .iv{display:none}
+html.rw-vsl-off .row.l2{display:flex;animation:rowL 58s linear infinite}
+html.rw-vsl-off .rows::after{top:auto;height:62%;background:linear-gradient(180deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.55) 38%,rgba(255,255,255,.9) 70%,#fff 100%)}
+html.rw-vsl-off .logo{width:78px;height:78px;border-radius:50%;background:#fff;display:grid;place-items:center;margin-top:-46px;position:relative;z-index:1;
+  box-shadow:0 1px 2px rgba(50,48,47,.06),0 12px 30px -8px rgba(50,48,47,.25)}
+.logo img{width:42px;height:42px}
+html.rw-vsl-off .intro-h{margin:18px auto 10px}
+html.rw-vsl-off .intro-sub{font-size:15px;display:block}
+html.rw-vsl-off .intro-meta{display:flex;margin-top:16px}
+html.rw-vsl-off .intro-gap{flex-basis:24px}
+html.rw-vsl-off .intro-body .cta{margin-top:auto}
+@media(max-height:620px){ html.rw-vsl-off .intro-sub{font-size:14px} html.rw-vsl-off .intro-meta{display:none} html.rw-vsl-off .intro-h{margin-top:12px} }
+@keyframes logoIn{from{opacity:0;transform:translate3d(0,8px,0) scale(.86)}to{opacity:1;transform:none}}
+.intro .logo{animation:logoIn .7s var(--silk) .15s both}
 
 /* the video: 16:9, rounded, over the bottom of the rows. Before it plays, a dark fade along the bottom
    carries a big sage play button and its length, bottom-left and clear of Bryan's face */
@@ -605,8 +689,9 @@ body.kb .scr .pill{display:none}
 <div class="app intro-on" id="app">
   <!-- Intro: welcome screen before question 1 (rows filled by JS); Bryan's video waits for a tap -->
   <section class="intro" id="intro" aria-labelledby="intro-h">
-    <div class="rows" aria-hidden="true"><div class="row l"></div><div class="row r"></div></div>
+    <div class="rows" aria-hidden="true"><div class="row l"></div><div class="row r"></div><div class="row l2"></div></div>
     <div class="intro-body">
+      <div class="logo"><img src="/icons/favicon-light.svg" alt="RevWhisper" width="42" height="42"></div>
       <div class="iv" id="iv" data-state="idle">
         <div class="iv-frame">
           <video id="intro-vsl" playsinline webkit-playsinline preload="metadata" disableremoteplayback poster="/images/video/audit-vsl-poster.aabb1ad8.webp" width="1280" height="720">
@@ -1014,7 +1099,7 @@ let introOpen=true;
     return '<div class="lc"><div class="lc-ph"><img src="/images/flow/'+c[0]+'.webp" alt="" loading="eager" decoding="async">'+(c[1]?'<span class="lc-fav">Guest favorite</span>':'')+heart+'</div>'+
       '</div>';
   }
-  const order=[[0,1,2,3,4,5,6,7],[8,9,10,11,0,3,6,1]];
+  const order=[[0,1,2,3,4,5,6,7],[8,9,10,11,0,3,6,1],[5,7,2,9,4,11,8,10]]; // the third row shows only without the video (A/B control)
   document.querySelectorAll('.row').forEach(function(r,i){
     const set=order[i].map(function(j){ return card(L[j]); }).join('');
     r.innerHTML=set+set; // two copies: translating by -50% loops seamlessly

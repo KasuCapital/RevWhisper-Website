@@ -18,6 +18,8 @@ const PARTIALS = [
   { name: 'LP-RESULTS', file: '_partials/lp-results.html' },
   // Bryan's intro video (10/27/26): hero of /audit (desktop), the Google LPs and the homepage.
   { name: 'VSL', file: '_partials/vsl.html' },
+  // A/B test of that video on /audit (10/29/26): the flag check in <head> of both /audit pages.
+  { name: 'VSL-AB', file: '_partials/vsl-ab.html' },
   // UTM + click-ID capture (10/16/26). allPages: synced into every page that has the markers,
   // not just TARGETS, so no landing page can drift from the copy the forms rely on.
   { name: 'ATTRIBUTION', file: '_partials/attribution.html', allPages: true },
@@ -37,6 +39,7 @@ const TARGETS = [
   'blog/_template.html',
   'vrma.html',
   'audit.html',
+  'audit-flow.html',
   'airbnb-revenue-management.html',
   'pricing-tool-audit.html',
   'ranking-audit.html',
