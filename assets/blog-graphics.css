@@ -308,8 +308,8 @@ figure.viz figcaption{font-size:14px;color:var(--muted);margin-top:14px;line-hei
 .v-cal .cc{background:var(--subtle);border:1px solid var(--stone);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:2px;font-size:13px}
 .v-cal .cc b{font-family:var(--mono);font-size:15px}
 .v-cal .cm{color:var(--muted)}
-.v-cal .cc.lw{background:var(--fern);border-color:var(--fern);color:#fff}
-.v-cal .cc.lw .cm{color:#E6EDE4}
+figure.viz .v-cal .cc.lw{background:#E3EADF;border-color:#4A6741}
+figure.viz .v-cal .cc.lw .cm,figure.viz .v-cal .cc.lw b{color:#4A6741}
 .v-strip{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
 .v-strip .dc{border-radius:8px;padding:8px 6px;display:flex;flex-direction:column;gap:2px;font-size:12px;border:1px solid var(--stone);background:var(--subtle);min-width:0}
 .v-strip .dc b{font-family:var(--mono);font-size:13px}
