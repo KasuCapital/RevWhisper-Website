@@ -534,3 +534,22 @@ figure.viz .v-cal .cc.lw .cm,figure.viz .v-cal .cc.lw b{color:#4A6741}
 .hx .hd-l{min-width:0}
 .hx .hd .calbox{box-sizing:border-box}
 .hx .phn>*{flex:none}
+
+/* Colorways: a hero sets one on its .in element (cw-white, cw-sage, cw-fern, cw-dune; cw-light is the
+   default canvas), and a post's figures follow it through <span class="cwv" data-cw="..."> at the top
+   of the body. The canvas changes, cards stay white, and Fern on sage keeps meaning "ours" or "good". */
+.hx:has(.cw-sage){background:#EEF2EC!important;border-color:#DCE5D8!important}
+.hx:has(.cw-white){background:#FFFFFF!important;border-color:#EBEBEB!important}
+.hx:has(.cw-fern){background:#4A6741!important;border-color:#4A6741!important}
+.hx .cw-dune .hcap,.hx .cw-fern .hcap{color:rgba(255,255,255,.78)}
+.hx .cw-dune .lp-t,.hx .cw-dune .lp-m,.hx .cw-dune .lp-r,.hx .cw-dune .sp-count,.hx .cw-dune .dotsep,
+.hx .cw-fern .lp-t,.hx .cw-fern .lp-m,.hx .cw-fern .lp-r,.hx .cw-fern .sp-count,.hx .cw-fern .dotsep{color:#fff}
+.hx .cw-dune .lp-r u,.hx .cw-fern .lp-r u{color:#fff}
+.hx .cw-dune .lbadge,.hx .cw-fern .lbadge{border-color:rgba(255,255,255,.5);color:#fff}
+.hx .cw-dune .iarr,.hx .cw-fern .iarr{color:rgba(255,255,255,.6)}
+.hx .cw-fern .ssi.g,.hx .cw-fern .sti.g,.hx .cw-fern .ins:last-of-type,.hx .cw-fern .pnl.us,.hx .cw-fern .srow.us,.hx .cw-fern .ck{border-color:#E3EADF}
+.hx .cw-fern .sc.us{box-shadow:0 0 0 .35cqw #E3EADF,0 .6cqw 2.4cqw rgba(0,0,0,.15)}
+.hx .cw-fern .pin.us{background:#32302F}
+.hx .cw-fern .rbtn,.hx .cw-fern .go{background:#32302F}
+article:has(.cwv[data-cw="sage"]) figure.viz,article:has(.cwv[data-cw="fern"]) figure.viz{background:#EEF2EC;border-color:#DCE5D8}
+article:has(.cwv[data-cw="white"]) figure.viz{background:#FFFFFF;border-color:#EBEBEB}

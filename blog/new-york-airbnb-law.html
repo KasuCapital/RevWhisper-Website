@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- ATTRIBUTION:START -->
+<!-- Attribution capture (cookie-free): a lead carries its UTMs and ad click IDs into the CRM.
+     One copy for every page. Edit _partials/attribution.html, then run node scripts/sync-partials.mjs. -->
+<script>
+(function(){
+  var key='rw_attribution';
+  var TTL=7776000000; // 90 days — keep the last paid touch across tabs/sessions
+  var params=new URLSearchParams(window.location.search);
+  var utmFields=['utm_source','utm_medium','utm_campaign','utm_term','utm_content','utm_id'];
+  // gbraid/wbraid: Google's iOS click IDs, sent in place of gclid. Keep in sync with CLICK_IDS in /assets/rw-consent.js.
+  var clickFields=['fbclid','gclid','gbraid','wbraid','ttclid','twclid','msclkid','li_fat_id'];
+  var trackedFields=utmFields.concat(clickFields);
+  // A page sets window.rwAttributionForce before this runs when every visit must be recorded (/vrma does).
+  var hasTracked=!!window.rwAttributionForce||trackedFields.some(function(f){return params.has(f);});
+  function rwGet(k){try{return localStorage.getItem(k)||sessionStorage.getItem(k);}catch(e){try{return sessionStorage.getItem(k);}catch(e2){return null;}}}
+  function rwSet(k,v){try{localStorage.setItem(k,v);}catch(e){try{sessionStorage.setItem(k,v);}catch(e2){}}}
+  var prev=null;try{prev=JSON.parse(rwGet(key));}catch(e){prev=null;}
+  var fresh=prev&&prev.arrived_at&&((Date.now()-new Date(prev.arrived_at).getTime())<TTL);
+  if(hasTracked||!fresh){
+    var data={};
+    trackedFields.forEach(function(f){if(params.get(f))data[f]=params.get(f);});
+    try{data.referrer=document.referrer?new URL(document.referrer).hostname:'direct';}catch(e){data.referrer=document.referrer||'direct';}
+    data.landing_page=window.location.pathname;
+    data.arrived_at=new Date().toISOString();
+    rwSet(key,JSON.stringify(data));
+    prev=data;
+  }
+  // This page's copy, kept in memory. Facebook's and Instagram's in-app browsers can lose storage
+  // while the page is still open (the visitor switches apps to copy their Airbnb link, comes back,
+  // submits), which sent those leads to the CRM with no UTMs at all.
+  var atLoad=prev||{};
+
+  // One label for where the lead came from, filled in even when the link carried no UTMs.
+  function channel(a){
+    var s=String(a.utm_source||'').toLowerCase(), m=String(a.utm_medium||'').toLowerCase();
+    var r=String(a.referrer||'').toLowerCase();
+    var paid=/cpc|ppc|paid|display|retarget|^ads?$/.test(m);
+    if(/^(meta|facebook|fb|instagram|ig|threads)$/.test(s))return paid?'meta-ads':'meta-organic';
+    if(a.gclid||a.gbraid||a.wbraid||(/google/.test(s)&&paid))return 'google-ads';
+    if(a.msclkid||(/bing|microsoft/.test(s)&&paid))return 'microsoft-ads';
+    // Meta adds fbclid to every Facebook/Instagram link. Without UTMs it's an ad click whose URL
+    // parameters didn't come through, or an organic post or message.
+    if(a.fbclid)return 'meta';
+    if(a.twclid||/^(x|twitter)$/.test(s))return 'x';
+    if(a.ttclid||s==='tiktok')return 'tiktok';
+    if(a.li_fat_id||s==='linkedin')return 'linkedin';
+    if(s)return s; // any other tagged link: email, partner, conference...
+    if(!r||r==='direct')return 'direct';
+    if(/(^|\.)revwhisper\.com$/.test(r))return 'unknown'; // record started mid-visit, the entry point wasn't seen
+    if(/(^|\.)(google|bing|duckduckgo|yahoo|ecosia|brave|baidu|yandex)\.[a-z.]+$/.test(r))return 'organic-search';
+    if(/(^|\.)(facebook|instagram|threads|linkedin|reddit|youtube|tiktok|pinterest|twitter|x)\.(com|net)$|^(t\.co|lnkd\.in)$/.test(r))return 'social';
+    return 'referral';
+  }
+
+  // What every form sends as `attribution`: the stored record, or this page's in-memory copy when
+  // storage was lost, plus `channel`.
+  window.rwAttribution=function(){
+    var a=null;
+    try{a=JSON.parse(localStorage.getItem(key));}catch(e){}
+    if(!a||!a.arrived_at){try{a=JSON.parse(sessionStorage.getItem(key));}catch(e){}}
+    if(!a||!a.arrived_at)a=atLoad;
+    var out={};
+    for(var k in a){if(Object.prototype.hasOwnProperty.call(a,k))out[k]=a[k];}
+    out.channel=channel(out);
+    // Opt-in regions without ad consent: no click IDs leave the browser (same rule as /assets/rw-consent.js).
+    if(window.rwConsent&&rwConsent.optIn&&!rwConsent.ads)clickFields.forEach(function(f){delete out[f];});
+    return out;
+  };
+})();
+</script>
+<!-- ATTRIBUTION:END -->
+<script src="/assets/rw-consent.js?v=3"></script>
+<script defer src="/assets/rw-posthog.js?v=3"></script>
+<!-- GA4. Consent defaults come from /assets/rw-consent.js -->
+<script>
+window.dataLayer=window.dataLayer||[];
+function gtag(){dataLayer.push(arguments);}
+gtag('js',new Date());
+gtag('config','G-Y1FYZ5849B');
+(window.rwConsent?rwConsent.whenAllowed:function(f){f();})(function(){var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-Y1FYZ5849B';document.head.appendChild(s);});
+function rwTrack(e,p){gtag('event',e,p||{});}
+</script>
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+(window.rwConsent?rwConsent.whenAdsAllowed:function(g){g()})(function(){s.parentNode.insertBefore(t,s)})}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+if(window.rwConsent&&!rwConsent.ads)fbq('consent','revoke');
+fbq('init', '959022406709300');
+fbq('track', 'PageView');
+</script>
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+  document.addEventListener('click',function(e){
+    var el=e.target.closest('a,button');
+    if(!el)return;
+    var txt=(el.textContent||'').replace(/\s+/g,' ').trim().toLowerCase();
+    if(txt.indexOf('book your free strategy call')!==-1||txt.indexOf('book a call')!==-1||txt.indexOf('book a free strategy call')!==-1){
+      fbq('track','Lead',{content_name:'Book Strategy Call'});
+    }else if(txt.indexOf('check my search ranking')!==-1){
+      fbq('track','Lead',{content_name:'Check Search Ranking'});
+    }
+  });
+});
+</script>
+<!-- End Meta Pixel -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>New York Airbnb Law Explained | RevWhisper Blog</title>
+<meta name="description" content="Is Airbnb banned in New York? In NYC, nearly. Elsewhere, no. What Local Law 18 requires and what the 2025 state law changed for upstate hosts.">
+<link rel="canonical" href="https://revwhisper.com/blog/new-york-airbnb-law">
+<meta property="og:type" content="article">
+<meta property="og:title" content="New York Airbnb Law Explained | RevWhisper Blog">
+<meta property="og:description" content="Is Airbnb banned in New York? In NYC, nearly. Elsewhere, no. What Local Law 18 requires and what the 2025 state law changed for upstate hosts.">
+<meta property="og:url" content="https://revwhisper.com/blog/new-york-airbnb-law">
+<meta property="og:site_name" content="RevWhisper">
+<meta property="og:image" content="https://revwhisper.com/images/blog/new-york-airbnb-law.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="675">
+<meta property="article:published_time" content="2026-11-04">
+<meta property="article:modified_time" content="2026-11-04">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="New York Airbnb Law Explained | RevWhisper Blog">
+<meta name="twitter:description" content="Is Airbnb banned in New York? In NYC, nearly. Elsewhere, no. What Local Law 18 requires and what the 2025 state law changed for upstate hosts.">
+<meta name="twitter:image" content="https://revwhisper.com/images/blog/new-york-airbnb-law.png">
+
+<link rel="icon" href="/icons/favicon-light.svg" type="image/svg+xml" media="(prefers-color-scheme: light)">
+<link rel="icon" href="/icons/favicon-dark.svg" type="image/svg+xml" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/icons/favicon-light.svg" type="image/svg+xml">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "New York Airbnb Law Explained: NYC's Rules and the 2025 State Law",
+  "description": "Is Airbnb banned in New York? In NYC, nearly. Elsewhere, no. What Local Law 18 requires and what the 2025 state law changed for upstate hosts.",
+  "image": "https://revwhisper.com/images/blog/new-york-airbnb-law.png",
+  "datePublished": "2026-11-04",
+  "dateModified": "2026-11-04",
+  "author": {
+    "@type": "Person",
+    "name": "Marisa @ RevWhisper",
+    "url": "https://revwhisper.com"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "RevWhisper",
+    "url": "https://revwhisper.com",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://revwhisper.com/icons/favicon-light.svg"
+    }
+  },
+  "mainEntityOfPage": "https://revwhisper.com/blog/new-york-airbnb-law"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is Airbnb illegal in New York?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Not statewide. In New York City, stays under 30 days are only legal with registration, the host present and two guests or fewer. Outside the city, town and county rules apply."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I rent my whole apartment on Airbnb in NYC?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Not for stays under 30 days. The host must live in the unit and be present during the stay."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many guests can an NYC Airbnb host have?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Two at a time, not counting children under 4."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does Airbnb collect taxes in New York State?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Since March 1, 2025, platforms collect the 4% state sales tax and local sales tax on stays under 30 days they handle."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do NYC's Airbnb rules apply upstate?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Local Law 18 applies only in New York City. Upstate rules come from your town and county."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does RevWhisper work with New York hosts?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, with hosts across New York State, for a flat monthly retainer per listing."
+      }
+    }
+  ]
+}
+</script>
+<link rel="stylesheet" href="/assets/fonts.css">
+<link rel="stylesheet" href="/assets/blog-post.css?v=20261030">
+<link rel="stylesheet" href="/assets/blog-graphics.css?v=20261030">
+<link rel="stylesheet" href="/assets/header.css">
+<script defer src="/assets/header.js"></script>
+<link rel="stylesheet" href="/assets/footer.css">
+<script defer src="/assets/blog-post.js"></script>
+<!-- X Pixel base code -->
+<script src="/assets/x-pixel-base.js?v=2"></script>
+<!-- End X Pixel base code -->
+</head>
+<body>
+
+
+<!-- HEADER:START -->
+<nav class="float-bar" id="float-bar" aria-label="Primary">
+  <a href="/" class="fb-logo">
+    <div class="lm"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24" fill="none" aria-hidden="true"><path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <span class="ln">RevWhisper</span>
+  </a>
+
+  <div class="fb-links" id="fb-links">
+
+    <!-- Services dropdown -->
+    <div class="fb-dropdown" data-dropdown>
+      <button class="fb-link fb-dropdown-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="fb-menu-services">
+        Services
+        <svg class="fb-chevron" viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="fb-menu" id="fb-menu-services">
+
+        <!-- Listing Optimization: document with text lines -->
+        <a href="/airbnb-listing-optimization" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/>
+              <path d="M14 2v4a2 2 0 0 0 2 2h4"/>
+              <path d="M10 9H8"/>
+              <path d="M16 13H8"/>
+              <path d="M16 17H8"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Listing Optimization</span>
+            </span>
+            <span class="fb-menu-desc">Title, description, and amenities tuned for conversion</span>
+          </span>
+        </a>
+
+        <!-- Revenue Management: stacked coins / database cylinder -->
+        <a href="/revenue-management" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <ellipse cx="12" cy="5" rx="9" ry="3"/>
+              <path d="M3 5v14a9 3 0 0 0 18 0V5"/>
+              <path d="M3 12a9 3 0 0 0 18 0"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Revenue Management</span>
+            </span>
+            <span class="fb-menu-desc">Dynamic pricing, minimum stays, seasonal strategy</span>
+          </span>
+        </a>
+
+        <!-- Photo Optimization: photo frame with sun + mountains -->
+        <a href="/photoediting" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              <circle cx="9" cy="9" r="2"/>
+              <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Photo Optimization</span>
+            </span>
+            <span class="fb-menu-desc">Cover photos, photo order, professional editing</span>
+          </span>
+        </a>
+
+      </div>
+    </div>
+
+    <!-- Resources dropdown -->
+    <div class="fb-dropdown" data-dropdown>
+      <button class="fb-link fb-dropdown-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="fb-menu-resources">
+        Resources
+        <svg class="fb-chevron" viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="fb-menu" id="fb-menu-resources">
+
+        <!-- Blog: notebook with binding + text lines -->
+        <a href="/blog" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="4" y="2" width="16" height="20" rx="2"/>
+              <path d="M2 6h4"/>
+              <path d="M2 10h4"/>
+              <path d="M2 14h4"/>
+              <path d="M2 18h4"/>
+              <path d="M9.5 8h5"/>
+              <path d="M9.5 12H16"/>
+              <path d="M9.5 16H14"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Blog</span>
+            </span>
+            <span class="fb-menu-desc">Strategies, data, and host insights</span>
+          </span>
+        </a>
+
+        <!-- Case Studies: open book -->
+        <a href="/case-study" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 7v14"/>
+              <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Case Studies</span>
+            </span>
+            <span class="fb-menu-desc">Real revenue lifts from real listings</span>
+          </span>
+        </a>
+
+        <!-- Free Listing Audit: clean magnifying glass -->
+        <a href="/#audit-form" class="fb-menu-item js-to-audit">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="10.5" cy="10.5" r="6.5"/>
+              <path d="m15.5 15.5 4 4"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Free Listing Audit</span>
+            </span>
+            <span class="fb-menu-desc">Ranking, pricing and conversion, walked through live</span>
+          </span>
+        </a>
+      </div>
+    </div>
+
+    <a href="/get-started" class="fb-link fb-link--mobile-cta">Book a Strategy Call</a>
+  </div>
+
+  <a href="/get-started" class="fb-cta">Book a Strategy Call</a>
+  <button class="fb-hamburger" id="fb-hamburger" aria-label="Toggle navigation" aria-expanded="false">
+    <span class="fb-ham-line"></span>
+    <span class="fb-ham-line"></span>
+    <span class="fb-ham-line"></span>
+  </button>
+</nav>
+<!-- HEADER:END -->
+
+<main class="post">
+  <a href="/blog" class="post-back">&larr; Back to Blog</a>
+
+  <div class="post-tags">
+    <span class="post-tag">Policy Guide</span>
+    <span class="post-tag">Market Guide</span>
+  </div>
+  <h1>New York Airbnb Law Explained: NYC's Rules and the 2025 State Law</h1>
+  <p class="post-dek">Is Airbnb banned in New York? Inside New York City, nearly. Everywhere else, no. What NYC's Local Law 18 requires and what the 2025 state law changed for hosts upstate.</p>
+
+  <p class="post-byline"><span class="by">By Marisa @ RevWhisper</span><span>Last updated <time datetime="2026-11-04">November 4, 2026</time></span></p>
+
+  <div class="post-answer">
+    <p>Airbnb isn't banned in New York State, but New York City's Local Law 18 makes most short-term rentals there illegal: stays under 30 days require city registration, the host living in the unit during the stay, and no more than two guests. Outside the city, the main change is a state law that took effect in 2025: booking platforms now collect New York's 4% state sales tax and local sales tax, and counties can create their own registries and occupancy taxes. Towns still set their own zoning and permit rules.</p>
+  </div>
+
+  <figure class="post-hero">
+    <div class="hx" role="img" aria-label="Two panels. New York City: registration with the city, host present every stay, two guests at most, rules apply under 30 nights. Rest of New York State: platforms collect 4% state sales tax, county registries and occupancy tax, town zoning and permits.">
+<!-- HERO:START -->
+<div class="in site cw-fern"><div class="bd"><div class="pn2"><div class="a slideL pnl" style="--d:0.2s"><div class="pnh">New York City</div><ul><li>Registration with the city</li><li>Host present every stay</li><li>Two guests at most</li><li>Rules apply under 30 nights</li></ul></div><div class="a slideR pnl us" style="--d:0.35s"><div class="pnh">Rest of New York State</div><ul><li>Platforms collect 4% state sales tax</li><li>County registries and occupancy tax</li><li>Town zoning and permits</li></ul></div></div><div class="strip"><div class="a pop sti" style="--d:0.90s"><b class="num">2</b><span>guests max in NYC</span></div><div class="a pop sti" style="--d:1.02s"><b class="num">30</b><span>nights: NYC rules stop applying</span></div><div class="a pop sti g" style="--d:1.14s"><b class="num">4%</b><span>state sales tax, platforms collect</span></div></div></div><span class="a fade hcap" style="--d:1.4s">Sources: NYC Office of Special Enforcement; NYSAC on the 2024 state law</span></div>
+<!-- HERO:END -->
+    </div>
+  </figure>
+
+  <article class="post-body">
+    <span class="cwv" data-cw="fern" hidden=""></span><h2>Is Airbnb banned in New York?</h2>
+    <p>Not statewide. New York City's rules amount to a near-ban on whole-home short-term rentals, which is where the "ban" headlines come from. Upstate and on Long Island, short-term rentals are legal subject to town zoning, county registries and taxes.</p>
+    <h2>What is NYC's Local Law 18?</h2>
+    <p>Local Law 18 created a registration system for short-term rentals in New York City, enforced from September 2023 by the Mayor's Office of Special Enforcement. According to the city, short-term rentals are only legal if the host lives in the same unit as the guests, guests have access to the whole unit, and there are no more than two guests, not counting children under 4. Hosts must register and show the registration number on listings, and platforms can't process bookings for unregistered units. Over 3,500 hosts had registered by 2026, against tens of thousands of listings before the law.</p>
+    <figure class="viz"><div class="vt">NYC short-term rental rules</div><ul class="v-check"><li><span class="ck">✓</span>Register with the Office of Special Enforcement</li><li><span class="ck">✓</span>Live in the unit and stay during every visit</li><li><span class="ck">✓</span>No more than two guests</li><li><span class="ck">✓</span>No locked internal doors</li><li><span class="ck">✓</span>Registration number on every listing</li><li><span class="ck">✓</span>Stays of 30 nights or more fall outside the rules</li></ul><figcaption>Source: NYC Office of Special Enforcement.</figcaption></figure>
+    <h2>What are the NYC Airbnb rules for hosts?</h2>
+    <div class="tablewrap"><table><thead><tr><th>Rule</th><th>What it means</th></tr></thead><tbody><tr><td>Registration</td><td>Register with the Office of Special Enforcement before listing</td></tr><tr><td>Host present</td><td>You live in the unit and stay during every guest's stay</td></tr><tr><td>Two guests</td><td>No more than two paying guests at a time</td></tr><tr><td>Full access</td><td>No locked internal doors between you and guests</td></tr><tr><td>Under 30 nights</td><td>These rules apply to stays under 30 days</td></tr><tr><td>Prohibited buildings</td><td>Units on the city's Prohibited Buildings List can't register</td></tr></tbody></table></div><p>Sources: NYC Office of Special Enforcement, and coverage from Brick Underground and City Limits.</p>
+    <h2>Do NYC's rules apply to one- and two-family homes?</h2>
+    <p>Yes. The same host-present and two-guest rules apply to houses, and one- and two-family homes make up about two-thirds of registered units. A City Council bill to let owners of those homes rent without being present failed. A newer bill, Intro 1107, introduced in December 2025, would drop the host-present rule and raise the guest limit; it was still before the Council as of October 2026. Stays of 30 nights or more fall outside Local Law 18.</p>
+    <h2>What are the penalties for illegal Airbnbs in NYC?</h2>
+    <p>Fines for unregistered hosts can reach $5,000, and booking platforms face penalties of $1,500 for processing illegal bookings, according to Brick Underground's coverage of the law. Advertising an illegal rental carries separate civil penalties.</p>
+    <h2>What changed for New York Airbnb hosts outside NYC in 2025?</h2>
+    <p>A state law signed in December 2024, finalized by a February 2025 amendment, treats short-term rentals like hotels for sales tax. From March 1, 2025, booking platforms collect the state's 4% sales tax and local sales tax on stays under 30 days they handle. Counties can also create a short-term rental registry and add their hotel and motel occupancy tax. Counties that wanted to opt out of the registry had until December 31, 2025. See <a href="/blog/airbnb-revenue-management-new-york">Airbnb Revenue Management in New York</a>.</p>
+    <figure class="viz"><div class="vt">How New York's rules got here</div><ol class="v-tl"><li><span class="td">Sep 2023</span><span class="tx">NYC starts enforcing Local Law 18</span></li><li><span class="td">Dec 2024</span><span class="tx">State law signed: platforms to collect sales tax, counties can add registries</span></li><li><span class="td">Feb 2025</span><span class="tx">Chapter amendment finalizes the state law</span></li><li><span class="td">Mar 1, 2025</span><span class="tx">Platforms start collecting state and local sales tax</span></li><li><span class="td">Dec 2025</span><span class="tx">Intro 1107 introduced to loosen NYC's rules</span></li><li><span class="td">Dec 31, 2025</span><span class="tx">Deadline for counties to opt out of the state registry</span></li></ol><figcaption>Sources: NYC Office of Special Enforcement, NYSAC, Avalara and local news coverage.</figcaption></figure>
+    <h2>Do upstate New York towns have their own Airbnb rules?</h2>
+    <p>Many do. Towns and villages set zoning, permits, occupancy limits and caps, and resort areas in the Catskills, Hudson Valley and Adirondacks have tightened rules in recent years. Check your town clerk or code office and your county's registry status before you list.</p><blockquote class="tip"><strong>Pro tip:</strong> Search your town's name plus "short-term rental law" and read the town's own code, not a summary.</blockquote>
+
+    <div class="choose">
+      <div class="ch rw"><h3>Choose RevWhisper if</h3><ul><li>You own a short-term rental outside New York City and want pricing, rank and listing work done for you</li></ul></div>
+      <div class="ch"><h3>Choose hosting in New York City if</h3><ul><li>You live in the unit and will stay during every guest's stay</li><li>You can host two guests or fewer</li><li>Your building isn't on the Prohibited Buildings List</li></ul></div>
+      <div class="ch"><h3>Choose renting 30 nights or more in NYC if</h3><ul><li>You want to rent a whole unit while you're away</li><li>Monthly stays fit your plans</li></ul></div>
+      <div class="ch"><h3>Choose hosting outside NYC if</h3><ul><li>Your town allows short-term rentals in your zone</li><li>You've checked your county's registry and occupancy tax</li></ul></div>
+    </div>
+
+    <section class="post-facts">
+      <h2>Who is RevWhisper for, and what does it include?</h2>
+      <p>RevWhisper is a done-for-you Airbnb revenue management and listing optimization service. It is for owners who want a team to run their pricing, search ranking and listing content, from 2-bedroom cabins to 20-guest estates.</p>
+      <p>The service includes:</p>
+      <ul>
+        <li>Daily pricing managed in PriceLabs, set against a comp set of the listings guests actually compare</li>
+        <li>Minimum stay, gap night and last-minute rules</li>
+        <li>Search rank tracking on every open date, every day</li>
+        <li>Title, description, amenity and photo order optimization, including photo editing</li>
+        <li>Monthly performance reporting</li>
+      </ul>
+      <p><strong>Pricing:</strong> a flat monthly retainer per listing. RevWhisper does not take a percentage of gross revenue. <strong>Scale:</strong> over 100 hosts. <strong>Where:</strong> hosts across North America, and anywhere else with enough comparable listings to price against. The work is done remotely, so location isn't a limit. <strong>Results:</strong> a 27% average revenue lift within 90 days. <strong>Free listing audit:</strong> a live 30-minute call with a RevWhisper strategist that shows where your listing ranks on every open date, why views aren't turning into bookings, and what to change first. <a href="/#audit-form">Book the free listing audit</a>. No account access is required.</p>
+    </section>
+
+    <section class="post-faq">
+      <h2>Frequently asked questions</h2>
+      <h3>Is Airbnb illegal in New York?</h3>
+      <p>Not statewide. In New York City, stays under 30 days are only legal with registration, the host present and two guests or fewer. Outside the city, town and county rules apply.</p>
+      <h3>Can I rent my whole apartment on Airbnb in NYC?</h3>
+      <p>Not for stays under 30 days. The host must live in the unit and be present during the stay.</p>
+      <h3>How many guests can an NYC Airbnb host have?</h3>
+      <p>Two at a time, not counting children under 4.</p>
+      <h3>Does Airbnb collect taxes in New York State?</h3>
+      <p>Yes. Since March 1, 2025, platforms collect the 4% state sales tax and local sales tax on stays under 30 days they handle.</p>
+      <h3>Do NYC's Airbnb rules apply upstate?</h3>
+      <p>No. Local Law 18 applies only in New York City. Upstate rules come from your town and county.</p>
+      <h3>Does RevWhisper work with New York hosts?</h3>
+      <p>Yes, with hosts across New York State, for a flat monthly retainer per listing.</p>
+    </section>
+
+    <nav class="post-related" aria-label="Related reading">
+      <h2>Related reading</h2>
+      <ul>
+        <li><a href="/blog/airbnb-revenue-management-new-york">Airbnb Revenue Management in New York: Rules, Taxes and Pricing by Season</a></li>
+        <li><a href="/blog/airbnb-checkout-instructions-2026-house-rules">Airbnb Checkout Instructions That Follow the New 2026 House Rules</a></li>
+        <li><a href="/blog/airbnb-cancellation-policies-for-hosts">Airbnb Cancellation Policies for Hosts: Flexible, Moderate, Limited and Firm</a></li>
+        <li><a href="/#audit-form">Get your free listing audit</a></li>
+      </ul>
+    </nav>
+  </article>
+
+  <aside class="post-cta">
+    <h2>Want to see where your listing ranks?</h2>
+    <p>We pull up your listing live on a free 30-minute call and show you where it ranks for every open date, why views aren't turning into bookings, and what to change first.</p>
+    <a class="post-cta-btn" href="/#audit-form">Get your free listing audit</a>
+  </aside>
+</main>
+
+<!-- FOOTER:START -->
+<footer class="site-footer">
+  <div class="w">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">
+          <div class="lm">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24" fill="none" aria-hidden="true">
+              <path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="#32302F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="#32302F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="footer-logo-name">RevWhisper</span>
+        </div>
+        <p class="footer-tag">A revenue intelligence team that layers into your Airbnb listing to accelerate performance and maximize earnings.</p>
+        <p class="footer-tag footer-address">501 East Kennedy Boulevard, Tampa, FL 33602 (Space 15&ndash;144)</p>
+        <div class="footer-socials">
+          <a href="https://x.com/RevWhisper" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+          <a href="https://www.instagram.com/rev.whisper/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          </a>
+          <a href="https://www.facebook.com/groups/airbnblistingoptimization" target="_blank" rel="noopener noreferrer" aria-label="Facebook Group">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <p class="footer-col-title">Explore</p>
+        <a href="/" class="footer-link">Home</a>
+        <a href="/airbnb-listing-optimization" class="footer-link">Listing Optimization</a>
+        <a href="/revenue-management" class="footer-link">Revenue Management</a>
+        <a href="/photoediting" class="footer-link">Photo Editing</a>
+        <a href="/case-study" class="footer-link">Case Study</a>
+        <a href="/blog" class="footer-link">Blog</a>
+        <a href="/get-started" class="footer-link">Book a Strategy Call</a>
+      </div>
+      <div class="footer-col">
+        <p class="footer-col-title">Resources</p>
+        <a href="/#audit-form" class="footer-link js-to-audit">Free Listing Audit</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 MCO CORP d/b/a RevWhisper. All rights reserved.</span>
+      <nav class="footer-legal" aria-label="Legal">
+        <a href="/privacy">Privacy Policy</a>
+        <a href="/terms">Terms of Service</a>
+      </nav>
+      <span>Stop Guessing. Start Whispering.</span>
+    </div>
+  </div>
+</footer>
+<!-- FOOTER:END -->
+
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>

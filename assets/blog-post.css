@@ -80,6 +80,8 @@ body{font-family:'DM Sans','system-ui','Helvetica Neue',sans-serif;background:#f
 .tablewrap td{padding:10px 14px;border-bottom:1px solid var(--g200);vertical-align:top}
 .tablewrap tr:last-child td{border-bottom:0}
 .tablewrap td.n{font-family:var(--mono);font-size:13px;color:var(--g500);text-align:right}
+/* Source line under a table */
+.post-body p.srcnote{font-size:14px;color:#6A6A6A;margin:-12px 0 24px}
 
 /* ── 6. From RevWhisper's data ── */
 .osdata{margin:28px 0;padding:18px 22px;border-left:4px solid var(--accent);background:#E3EADF;border-radius:0 12px 12px 0}

@@ -29,6 +29,42 @@
 
 var BLOG_POSTS = [
   {
+    slug: "best-airbnb-pricing-tools",
+    title: "Best Airbnb Pricing Tools, and When to Hire a Manager Instead",
+    excerpt: "PriceLabs, Wheelhouse and Beyond all set your rates for you. Here is how they compare, and when software alone is not enough.",
+    date: "2026-11-05",
+    updated: "2026-11-05",
+    publish: "2026-11-05T09:00:00-05:00",
+    image: "/images/blog/best-airbnb-pricing-tools.png",
+    hero: true,
+    tags: ["Comparison", "Revenue Management"],
+    author: "Marisa @ RevWhisper"
+  },
+  {
+    slug: "new-york-airbnb-law",
+    title: "New York Airbnb Law Explained: NYC's Rules and the 2025 State Law",
+    excerpt: "Is Airbnb banned in New York? Inside New York City, nearly. Everywhere else, no. What NYC's Local Law 18 requires and what the 2025 state law changed for hosts upstate.",
+    date: "2026-11-04",
+    updated: "2026-11-04",
+    publish: "2026-11-04T09:00:00-05:00",
+    image: "/images/blog/new-york-airbnb-law.png",
+    hero: true,
+    tags: ["Policy Guide", "Market Guide"],
+    author: "Marisa @ RevWhisper"
+  },
+  {
+    slug: "airbnb-revenue-management-new-york",
+    title: "Airbnb Revenue Management in New York: Rules, Taxes and Pricing by Season",
+    excerpt: "What New York hosts need to know about state and local rules, lodging taxes and seasonal pricing, and how RevWhisper works with New York listings.",
+    date: "2026-11-03",
+    updated: "2026-11-03",
+    publish: "2026-11-03T09:00:00-05:00",
+    image: "/images/blog/airbnb-revenue-management-new-york.png",
+    hero: true,
+    tags: ["Market Guide", "Revenue Management"],
+    author: "Marisa @ RevWhisper"
+  },
+  {
     slug: "2027-holiday-calendar-airbnb-hosts",
     title: "2027 Holiday Calendar for Airbnb Hosts: Dates to Price Now",
     excerpt: "Every major US holiday in 2027, the day it falls on, and which ones create long weekends. Set these rates before guests start booking.",
