@@ -54,16 +54,10 @@
 @media(max-width:380px){ .rv-cap{left:12px;right:12px;bottom:12px;gap:10px} .rv-disc{width:46px;height:46px} }
 @media(prefers-reduced-motion:reduce){ .rv-disc::after{animation:none!important} }
 
-/* ── /audit + Google LPs: centred headline, then video | form ───────────────────
-   The form keeps its place in the first screen; the video takes the left of the row.
-   Below 960px the two stack, form first, so the first question still leads. */
-.hero-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,520px);gap:40px;align-items:center;max-width:1064px;margin:0 auto}
-.hero-row .rv{grid-column:1;grid-row:1}
-.hero-row .form-glow{grid-column:2;grid-row:1;max-width:none;margin:0}
-@media(max-width:959px){
-  .hero-row{grid-template-columns:minmax(0,560px);justify-content:center;gap:28px}
-  .hero-row .rv,.hero-row .form-glow{grid-column:1}
-  .hero-row .form-glow{grid-row:1}
-  .hero-row .rv{grid-row:2}
-}
+/* ── /audit + Google LPs: centred headline, the form, then the video under it ────
+   One 560px column at every width (10/30/26: the desktop video | form row was dropped),
+   form first so the first question leads, Bryan's video right below it. */
+.hero-row{display:grid;grid-template-columns:minmax(0,560px);justify-content:center;gap:28px;margin:0 auto}
+.hero-row .form-glow{grid-row:1;max-width:none;margin:0}
+.hero-row .rv{grid-row:2}
 @media(max-width:640px){ .hero-row{gap:22px} }
