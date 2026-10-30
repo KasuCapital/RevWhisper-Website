@@ -624,7 +624,7 @@ body.kb .scr .pill{display:none}
   <div class="top">
     <button class="back" id="back" type="button" aria-label="Back" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
     <img class="mark" src="/icons/favicon-light.svg" alt="RevWhisper" width="28" height="28">
-    <div class="segs form" aria-hidden="true"><div class="seg"><i></i></div><div class="seg"><i></i></div><div class="seg"><i></i></div><div class="seg"><i></i></div><div class="seg"><i></i></div><div class="seg"><i></i></div></div>
+    <div class="segs form" aria-hidden="true"><div class="seg"><i></i></div><div class="seg"><i></i></div><div class="seg"><i></i></div><div class="seg"><i></i></div><div class="seg"><i></i></div><div class="seg"><i></i></div><div class="seg"><i></i></div></div>
     <div class="segs book" aria-hidden="true"><div class="seg"><i></i></div><div class="seg"><i></i></div><div class="seg"><i></i></div></div>
   </div>
 
@@ -761,7 +761,7 @@ body.kb .scr .pill{display:none}
       <div class="foot"><button class="cta" type="button" id="btn-url-next">Continue <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
     </section>
 
-    <!-- Q6: contact details -->
+    <!-- Q6: name + email (the phone number is its own screen next) -->
     <section class="scr" data-step="5">
       <div class="art"><div class="comp">
         <div class="halo"></div>
@@ -779,6 +779,28 @@ body.kb .scr .pill{display:none}
       <div class="fields">
         <div class="fld"><input type="text" class="inp" id="full-name" placeholder="Full name" autocomplete="name" aria-label="Full name" autocapitalize="words" enterkeyhint="next"><div class="err">Please enter your name</div></div>
         <div class="fld"><input type="email" class="inp" id="email" placeholder="Email" autocomplete="email" inputmode="email" aria-label="Email" autocapitalize="off" spellcheck="false" enterkeyhint="next"><div class="err">Please enter a valid email</div></div>
+      </div>
+      <div class="foot"><button class="cta" type="button" id="btn-contact-next">Continue <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
+    </section>
+
+    <!-- Q7: phone. The text it promises is the picture. -->
+    <section class="scr" data-step="6">
+      <div class="art"><div class="comp">
+        <div class="halo"></div>
+        <div class="card f1" style="left:34px;top:34px;width:252px;padding:12px 14px 14px;text-align:left">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:7px"><img src="/icons/favicon-light.svg" alt="" width="22" height="22" decoding="async" fetchpriority="low" style="border-radius:6px"><b style="font-size:12.5px;font-weight:600">RevWhisper</b><span class="mini" style="margin-left:auto">now</span></div>
+          <div style="font-size:12.5px;line-height:1.42;color:var(--g600)">Your live audit is tomorrow at 2:00 PM. Here's your Google Meet link.</div>
+        </div>
+        <div class="center" style="top:auto;bottom:22px;height:auto"><div class="badge sm f2"><span class="ck acc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></span>A text before your audit</div></div>
+        <svg class="spark tw" style="left:22px;top:20px" width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M12 0c1 6.5 5.5 11 12 12-6.5 1-11 5.5-12 12-1-6.5-5.5-11-12-12C6.5 11 11 6.5 12 0z"/></svg>
+        <svg class="spark g tw2" style="left:282px;top:18px" width="13" height="13" viewBox="0 0 24 24"><path fill="currentColor" d="M12 0c1 6.5 5.5 11 12 12-6.5 1-11 5.5-12 12-1-6.5-5.5-11-12-12C6.5 11 11 6.5 12 0z"/></svg>
+        <svg class="spark g tw" style="left:44px;top:146px" width="14" height="14" viewBox="0 0 24 24"><path fill="currentColor" d="M12 0c1 6.5 5.5 11 12 12-6.5 1-11 5.5-12 12-1-6.5-5.5-11-12-12C6.5 11 11 6.5 12 0z"/></svg>
+      </div></div>
+      <div class="copy">
+        <h2 class="h">Best number to <em>reach you?</em></h2>
+        <p class="sub">We'll text your Google Meet link and a reminder before your audit.</p>
+      </div>
+      <div class="fields">
         <div class="fld">
           <div class="phone">
             <select id="phone-code" aria-label="Country code"><option value="+1">🇺🇸 +1</option><option value="+44">🇬🇧 +44</option><option value="+61">🇦🇺 +61</option><option value="+33">🇫🇷 +33</option><option value="+49">🇩🇪 +49</option><option value="+52">🇲🇽 +52</option><option value="+34">🇪🇸 +34</option><option value="+39">🇮🇹 +39</option><option value="+55">🇧🇷 +55</option></select>
@@ -789,14 +811,14 @@ body.kb .scr .pill{display:none}
       </div>
       <div class="foot">
         <button class="cta" type="button" id="btn-submit">Get my free audit <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
-        <p class="legal">By submitting, you agree RevWhisper may call and text you at this number, including automated texts, about your audit and our services. Consent isn&rsquo;t a condition of purchase. Msg &amp; data rates may apply. Reply STOP to opt out. This page uses cookies and session recording. <a href="/privacy#cookies" target="_blank" rel="noopener">Privacy</a> · <a href="/terms" target="_blank" rel="noopener">Terms</a></p>
+        <p class="legal">By submitting, you agree RevWhisper may call and text you at this number, including automated texts. You don&rsquo;t need to agree to this to buy anything. Reply STOP to opt out. We use cookies and session replay to improve this page. <a href="/privacy#cookies" target="_blank" rel="noopener">Privacy</a> · <a href="/terms" target="_blank" rel="noopener">Terms</a></p>
       </div>
     </section>
 
     <!-- ── Booking ── A qualified submit carries straight on into these screens (no page load).
          /audit-flow#book opens the calendar directly and #booked the confirmation; without a lead in
          this tab that's a preview (dummy lead, real availability, nothing booked or tracked). -->
-    <section class="scr" data-step="6">
+    <section class="scr" data-step="7">
       <div class="copy">
         <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg><span id="bk-pill">Request received</span></span>
         <h2 class="h">When works <em>for you?</em></h2>
@@ -815,7 +837,7 @@ body.kb .scr .pill{display:none}
       </div>
     </section>
 
-    <section class="scr" data-step="7">
+    <section class="scr" data-step="8">
       <div class="copy">
         <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><span id="slot-date">&nbsp;</span></span>
         <h2 class="h">What time <em>works best?</em></h2>
@@ -824,7 +846,7 @@ body.kb .scr .pill{display:none}
       <p class="tz-note" id="slot-tz"></p>
     </section>
 
-    <section class="scr" data-step="8">
+    <section class="scr" data-step="9">
       <div class="art"><div class="comp">
         <div class="halo"></div>
         <div class="bub f2" style="left:95px;top:14px;width:52px;height:52px"><img src="/images/team/bryan.webp" alt="" width="322" height="400" decoding="async" fetchpriority="low"></div>
@@ -849,7 +871,7 @@ body.kb .scr .pill{display:none}
       </div>
     </section>
 
-    <section class="scr" data-step="9">
+    <section class="scr" data-step="10">
       <div class="art lift"><div class="comp">
         <div class="halo"></div>
         <div class="seal"><svg viewBox="0 0 48 48" aria-hidden="true"><path pathLength="1" stroke-width="2.4" d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z"/><path pathLength="1" stroke-width="2.2" d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22"/></svg></div>
@@ -884,7 +906,7 @@ body.kb .scr .pill{display:none}
 <script>
 const FORM_WEBHOOK_ENDPOINT='/api/form-webhook';
 const PAGE='audit-flow';
-const TOTAL=6;
+const TOTAL=7;
 let current=0, busy=false;
 // spacing every screen shares: min margin above the graphic, below the last control, and graphic → heading
 const SP={top:32,bot:28,gap:34,kmax:1.1};
@@ -1150,11 +1172,16 @@ function validateStep(step){
     mark(url,okUrl); if(!okUrl) valid=false;
   }
   if(step===5){
-    const name=document.getElementById('full-name'), email=document.getElementById('email'), phone=document.getElementById('phone');
-    const pcode=document.getElementById('phone-code').value||'+1';
-    const okName=!!name.value.trim(), okEmail=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim()), okPhone=rwPhoneValid(pcode,phone.value);
-    mark(name,okName); mark(email,okEmail); mark(phone,okPhone);
-    if(!(okName&&okEmail&&okPhone)) valid=false;
+    const name=document.getElementById('full-name'), email=document.getElementById('email');
+    const okName=!!name.value.trim(), okEmail=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim());
+    mark(name,okName); mark(email,okEmail);
+    if(!(okName&&okEmail)) valid=false;
+  }
+  if(step===6){
+    const phone=document.getElementById('phone');
+    const okPhone=rwPhoneValid(document.getElementById('phone-code').value||'+1',phone.value);
+    mark(phone,okPhone);
+    if(!okPhone) valid=false;
   }
   return valid;
 }
@@ -1219,17 +1246,18 @@ document.addEventListener('click',function(e){
 });
 
 document.getElementById('btn-url-next').addEventListener('click',next);
+document.getElementById('btn-contact-next').addEventListener('click',next);
 document.getElementById('btn-submit').addEventListener('click',submitForm);
 document.addEventListener('keydown',function(e){
   if(e.key!=='Enter') return;
   if(current===4){ e.preventDefault(); next(); }
   else if(current===5){
     e.preventDefault();
-    // Enter walks name → email → phone, then submits, the way a native form would
-    const order=['full-name','email','phone'], i=order.indexOf(document.activeElement&&document.activeElement.id);
-    if(i>-1&&i<order.length-1){ document.getElementById(order[i+1]).focus(); return; }
-    submitForm();
+    // Enter walks name → email, then continues, the way a native form would
+    if(document.activeElement&&document.activeElement.id==='full-name'){ document.getElementById('email').focus(); return; }
+    next();
   }
+  else if(current===6){ e.preventDefault(); submitForm(); }
 });
 document.querySelectorAll('.inp').forEach(function(i){ i.addEventListener('input',function(){ i.classList.remove('error'); const f=i.closest('.fld'); if(f) f.classList.remove('bad'); }); });
 
@@ -1270,7 +1298,8 @@ window.addEventListener('pageshow',function(e){
 });
 function submitForm(){
   if(!validateStep(4)){ show(4,-1); return; }
-  if(!validateStep(5)) return;
+  if(!validateStep(5)){ show(5,-1); return; }
+  if(!validateStep(6)) return;
   if(submitted) return;
   const btn=document.getElementById('btn-submit');
   btn.disabled=true;
@@ -1781,7 +1810,7 @@ if(['book','time','confirm','booked'].indexOf(ENTRY_HASH)>-1) openBookingFromHas
   else window.addEventListener('load',function(){ idle(step,{timeout:1500}); });
 })();
 
-/* ?preview=N opens straight on question N (1-6), skipping the intro, for design review; ?preview=0 or none shows the intro */
+/* ?preview=N opens straight on question N (1-7), skipping the intro, for design review; ?preview=0 or none shows the intro */
 (function(){
   var n=parseInt(new URLSearchParams(location.search).get('preview'),10);
   if(!(n>=1&&n<=TOTAL)||bk.phase) return;

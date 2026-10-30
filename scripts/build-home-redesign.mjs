@@ -5,7 +5,7 @@
  *
  * What the site keeps of its own:
  *   - the shared header and footer (_partials/*.html, between sync-partials markers)
- *   - the shared five-step audit form (.form-card, in scripts/home-redesign.form.html)
+ *   - the shared seven-step audit form (.form-card, in scripts/home-redesign.form.html)
  *   - buttons, eyebrows, section headings, inputs -> home.css / audit-widget.css classes
  *
  * What comes from the design:
@@ -314,7 +314,7 @@ function assetsAndLayout(html) {
 }
 
 /* ── 4. Assemble ──────────────────────────────────────────────────────────── */
-// The five-step audit form card. Held in its own build source rather than lifted from
+// The seven-step audit form card. Held in its own build source rather than lifted from
 // index.html: this build now WRITES index.html, so reading it back would be circular.
 // data-fullscreen opts the card into audit.html's takeover (see audit-widget.js). No
 // data-page — audit-widget.js then tags these leads "homepage", as the old / did.

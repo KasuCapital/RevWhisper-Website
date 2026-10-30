@@ -1,5 +1,5 @@
 /* ══════════════════════════════════════════════════════════════════════════
-   Audit widget — the 5-step lead form, ported from /audit (audit.html).
+   Audit widget — the 7-step lead form, ported from /audit (audit.html).
 
    Behaviour is deliberately identical to /audit: same steps, same revenue
    bands, same qualification gate, same Meta/X events, same CRM webhook, same
@@ -48,7 +48,7 @@ function attribution(){
 }
 
 var current = 0;
-var totalSteps = 5;
+var totalSteps = 7;
 var isTransitioning = false;
 var FORM_WEBHOOK_ENDPOINT = '/api/form-webhook';
 
@@ -122,46 +122,53 @@ function transitionStep(from,to,direction){
   var fromEl=card.querySelector('.step[data-step="'+from+'"]');
   var toEl=card.querySelector('.step[data-step="'+to+'"]');
   if(!fromEl||!toEl){isTransitioning=false;return;}
-  // measure current height, then the incoming step's height, and animate the gap
-  var startH=vp.offsetHeight;
-  // stable geometry: the card's top doesn't move as steps swap — only its height changes below it
-  var cardTopBefore=card.getBoundingClientRect().top;
-  var chromeH=card.offsetHeight-startH;
+  // Two beats, same as audit.html (see the Silk motion CSS): never two questions on screen.
+  // Phase 1 — the old question fades out exactly where it stands. It stays in normal flow
+  // (position:relative) so nothing re-lays out underneath it.
   fromEl.classList.remove('active','enter-from-below','enter-from-above');
+  fromEl.style.position='relative';
   fromEl.classList.add(direction==='forward'?'exit-up':'exit-down');
-  toEl.classList.remove('active','exit-up','exit-down');
-  // stage the incoming step off-screen with transitions OFF, then commit via reflow
-  toEl.style.transition='none';
-  toEl.style.position='relative';toEl.style.opacity='0';toEl.style.visibility='visible';
-  toEl.style.transform=direction==='forward'?'translateY(14px)':'translateY(-14px)';
-  toEl.style.pointerEvents='auto';
-  void toEl.offsetHeight;
-  var endH=toEl.offsetHeight;
-  // if the incoming step won't fully fit as-is, glide the card to dead centre of the viewport
-  var vpH=window.innerHeight||document.documentElement.clientHeight;
-  var recentre=!(cardTopBefore>=0 && (cardTopBefore+chromeH+endH)<=vpH);
-  if(recentre) centreCard(chromeH+endH);
-  // in the takeover the card is its own scroller — bring the incoming step's title into view
-  if(fsActive) card.scrollTo({top:0,behavior:'smooth'});
-  // animate the card height from old → new
-  vp.style.height=startH+'px';
-  void vp.offsetHeight;
-  vp.style.height=endH+'px';
-  // enable transitions and move the step to its resting state (no rAF — reflow already committed the start)
-  toEl.style.transition='';
-  toEl.classList.add(direction==='forward'?'enter-from-below':'enter-from-above');
-  toEl.style.position='';toEl.style.opacity='';toEl.style.visibility='';toEl.style.transform='';toEl.style.pointerEvents='';
-  setTimeout(function(){
-    fromEl.classList.remove('exit-up','exit-down');fromEl.style.position='';
-    vp.style.height='';            // release to auto so inline errors can expand the step
-    isTransitioning=false;
-    // settle pass: the browser's scroll anchoring can interrupt the smooth
-    // glide while the card height animates, and again on the height release
-    // above — so re-centre a beat later, on a fully stable layout (the <2px
-    // guard makes this a no-op when the first glide already landed)
-    if(recentre) setTimeout(function(){centreCard();},60);
-  },480);
   updateProgress();
+  setTimeout(function(){
+    // Phase 2 — the old question is invisible now. Freeze the box at its current height,
+    // take the old step out of flow, stage + measure the new one, then let it in.
+    var startH=vp.offsetHeight;
+    vp.style.height=startH+'px';
+    // stable geometry: the card's top doesn't move as steps swap — only its height changes below it
+    var cardTopBefore=card.getBoundingClientRect().top;
+    var chromeH=card.offsetHeight-startH;
+    fromEl.style.position='';fromEl.style.transition='';fromEl.style.opacity='';
+    toEl.classList.remove('active','exit-up','exit-down');
+    // stage the incoming step with transitions OFF, then commit via reflow
+    toEl.style.transition='none';
+    toEl.style.position='relative';toEl.style.opacity='0';toEl.style.visibility='visible';
+    toEl.style.transform=direction==='forward'?'translateY(14px)':'translateY(-14px)';
+    toEl.style.pointerEvents='auto';
+    void toEl.offsetHeight;
+    var endH=toEl.offsetHeight;
+    // if the incoming step won't fully fit as-is, glide the card to dead centre of the viewport
+    var vpH=window.innerHeight||document.documentElement.clientHeight;
+    var recentre=!(cardTopBefore>=0 && (cardTopBefore+chromeH+endH)<=vpH);
+    if(recentre) centreCard(chromeH+endH);
+    // in the takeover the card is its own scroller — bring the incoming step's title into view
+    if(fsActive) card.scrollTo({top:0,behavior:'smooth'});
+    // size the box for the new step (animated on desktop; instant inside the phone takeover)
+    void vp.offsetHeight;
+    vp.style.height=endH+'px';
+    toEl.style.transition='';
+    toEl.classList.add(direction==='forward'?'enter-from-below':'enter-from-above');
+    toEl.style.position='';toEl.style.opacity='';toEl.style.visibility='';toEl.style.transform='';toEl.style.pointerEvents='';
+    setTimeout(function(){
+      fromEl.classList.remove('exit-up','exit-down');
+      vp.style.height='';            // release to auto so inline errors can expand the step
+      isTransitioning=false;
+      // settle pass: the browser's scroll anchoring can interrupt the smooth
+      // glide while the card height animates, and again on the height release
+      // above — so re-centre a beat later, on a fully stable layout (the <2px
+      // guard makes this a no-op when the first glide already landed)
+      if(recentre) setTimeout(function(){centreCard();},60);
+    },440);
+  },200);
 }
 
 /* ── Phone: country-code-aware live mask + validation (US/Canada = 10 digits; intl = 7-15) ── */
@@ -203,10 +210,14 @@ function validateStep(step){
     // domain; abnb.me is what the Airbnb app's share sheet puts on the clipboard.
     var valLower=val.toLowerCase();
     if(!val || !(valLower.includes('airbnb.')||valLower.includes('abnb.me'))){url.classList.add('error');valid=false;}else{url.classList.remove('error');}
+  }
+  if(step===5){
     var name=document.getElementById('full-name');
     var email=document.getElementById('email');
     if(!name.value.trim()){name.classList.add('error');valid=false;}else{name.classList.remove('error');}
     if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())){email.classList.add('error');valid=false;}else{email.classList.remove('error');}
+  }
+  if(step===6){
     var phone=document.getElementById('phone');
     var pcode=(document.getElementById('phone-code')||{}).value||'+1';
     if(!phoneValid(pcode,phone.value)){phone.classList.add('error');valid=false;}else{phone.classList.remove('error');}
@@ -242,6 +253,11 @@ function nextStep(){
 function prevStep(){
   if(isTransitioning) return; // safe to drop: the Back button stays put for a re-tap
   if(current>0){var from=current;current--;transitionStep(from,current,'backward');}
+}
+/* Jump back to an earlier step whose answer went missing (see submitForm). */
+function backToStep(step){
+  if(isTransitioning||current<=step) return;
+  var from=current;current=step;transitionStep(from,current,'backward');
 }
 
 /* Revenue bands per listing count — annual gross portfolio revenue.
@@ -301,7 +317,7 @@ function renderRevenueOptions(listingVal){
     var bands=bandsFor(listingVal);
     var html='';
     bands.forEach(function(b){
-      html+='<label class="radio-card"><input type="radio" name="revenue" value="'+b+'"><div class="rc-label"><span>'+b+'</span></div></label>';
+      html+='<label class="option-card"><input type="radio" name="revenue" value="'+b+'"><div class="oc-label"><span class="oc-radio"></span><span>'+b+'</span></div></label>';
     });
     wrap.innerHTML=html;
   }
@@ -435,7 +451,10 @@ function initFs(){
 /* ── Submit — fire Lead, post webhook, stash context, go to booking page ── */
 var submitted=false;
 function submitForm(){
-  if(!validateStep(4)) return;
+  // an earlier step was skipped or emptied somehow: send them back to it
+  if(!validateStep(4)){ backToStep(4); return; }
+  if(!validateStep(5)){ backToStep(5); return; }
+  if(!validateStep(6)) return;
   if(submitted) return;
   var btn=document.getElementById('btn-submit');
   btn.disabled=true;
@@ -577,6 +596,9 @@ card.addEventListener('click',function(e){
 });
 
 card.querySelectorAll('.btn-back').forEach(function(b){ b.addEventListener('click',prevStep); });
+['btn-url-next','btn-contact-next'].forEach(function(id){
+  var b=document.getElementById(id); if(b) b.addEventListener('click',nextStep);
+});
 var submitBtn=document.getElementById('btn-submit');
 if(submitBtn) submitBtn.addEventListener('click',submitForm);
 
@@ -597,7 +619,14 @@ card.querySelectorAll('.field-input').forEach(function(input){
 card.addEventListener('keydown',function(e){
   if(e.key!=='Enter') return;
   if(e.target.tagName==='TEXTAREA') return;
-  if(current===4){e.preventDefault();submitForm();}
+  if(current===4){e.preventDefault();nextStep();}       // Enter in the URL field → continue
+  else if(current===5){
+    e.preventDefault();
+    // Enter in the name field moves on to email, the way a native form would; from email it continues
+    if(document.activeElement&&document.activeElement.id==='full-name'){ document.getElementById('email').focus(); return; }
+    nextStep();
+  }
+  else if(current===6){e.preventDefault();submitForm();}
 });
 
 /* CTAs elsewhere on the page (.js-to-audit / .js-to-form) scroll the card to

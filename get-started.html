@@ -978,7 +978,7 @@ body::before{
       </div>
     </div>
 
-    <!-- Step 3: Contact Info -->
+    <!-- Step 3: Name + email (the phone number is its own step next) -->
     <div class="step" data-step="2">
       <div class="step-eyebrow">Book a Call</div>
       <h2 class="step-title">Let's <em>connect.</em></h2>
@@ -998,6 +998,17 @@ body::before{
         </div>
         <div class="field-error">Please enter a valid email</div>
       </div>
+      <div class="form-actions">
+        <button class="btn-back" onclick="prevStep()"><span class="arrow">←</span> Back</button>
+        <button class="btn-next" onclick="nextStep()" id="btn-step2">Continue <span class="arrow">→</span></button>
+      </div>
+    </div>
+
+    <!-- Step 4: Phone -->
+    <div class="step" data-step="3">
+      <div class="step-eyebrow">Last step</div>
+      <h2 class="step-title">Best number to <em>reach you?</em></h2>
+      <p class="step-desc">We'll text you a reminder before your call.</p>
       <div class="field">
         <label class="field-label" for="phone">Phone Number</label>
         <div class="phone-wrap">
@@ -1019,13 +1030,13 @@ body::before{
       </div>
       <div class="form-actions">
         <button class="btn-back" onclick="prevStep()"><span class="arrow">←</span> Back</button>
-        <button class="btn-next" onclick="submitForm()" id="btn-step2">Pick a time <span class="arrow">→</span></button>
+        <button class="btn-next" onclick="submitForm()" id="btn-step3">Pick a time <span class="arrow">→</span></button>
       </div>
-      <p class="rw-sms-consent" style="margin:14px 0 0;font-size:11.5px;line-height:1.55;color:#706b68;text-align:center">By submitting, you agree RevWhisper may call and text you at the number you provide, including automated texts, about your audit and our services. Consent isn&rsquo;t a condition of purchase. Msg &amp; data rates may apply. Reply STOP to opt out. This page uses session recording to improve it. <a href="/privacy" style="color:inherit;text-decoration:underline">Privacy policy</a> &middot; <a href="/terms" style="color:inherit;text-decoration:underline">Terms</a></p>
+      <p class="rw-sms-consent" style="margin:14px 0 0;font-size:11.5px;line-height:1.55;color:#706b68;text-align:center">By submitting, you agree RevWhisper may call and text you at this number, including automated texts. You don&rsquo;t need to agree to this to buy anything. Reply STOP to opt out. We use session replay to improve this page. <a href="/privacy" style="color:inherit;text-decoration:underline">Privacy policy</a> &middot; <a href="/terms" style="color:inherit;text-decoration:underline">Terms</a></p>
     </div>
 
-    <!-- Step 4: Date Picker -->
-    <div class="step" data-step="3">
+    <!-- Step 5: Date Picker -->
+    <div class="step" data-step="4">
       <div class="host-strip">
         <div class="host-avatars">
           <img class="host-avatar" src="/images/team/bryan.webp?v=2" alt="Bryan" loading="lazy">
@@ -1083,8 +1094,8 @@ body::before{
       </div>
     </div>
 
-    <!-- Step 5: Time Picker -->
-    <div class="step" data-step="4">
+    <!-- Step 6: Time Picker -->
+    <div class="step" data-step="5">
       <div class="step-eyebrow">Pick a Time</div>
       <h2 class="step-title">Choose your <em>time slot.</em></h2>
       <p class="step-desc">Times are shown in your local timezone. Click a time to confirm your booking.</p>
@@ -1101,8 +1112,8 @@ body::before{
       </div>
     </div>
 
-    <!-- Step 6: Booking in flight -->
-    <div class="step" data-step="5">
+    <!-- Step 7: Booking in flight -->
+    <div class="step" data-step="6">
       <div class="booking-loader">
         <div class="booking-loader-icon"></div>
         <div class="step-eyebrow">One Moment</div>
@@ -1112,7 +1123,7 @@ body::before{
     </div>
 
     <!-- Success State -->
-    <div class="step" data-step="6">
+    <div class="step" data-step="7">
       <div class="success-state" id="success-state">
         <div class="success-icon">
           <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="#4A6741" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
@@ -1134,7 +1145,7 @@ body::before{
 
 <script>
 let current = 0;
-const totalSteps = 7;
+const totalSteps = 8;
 let isTransitioning = false;
 const FORM_WEBHOOK_ENDPOINT = '/api/form-webhook';
 const CAL_SLOTS_ENDPOINT = '/api/cal-slots';
@@ -1247,9 +1258,11 @@ function validateStep(step) {
   if (step === 2) {
     const name = document.getElementById('full-name');
     const email = document.getElementById('email');
-    const phone = document.getElementById('phone');
     if (!name.value.trim()) { name.classList.add('error'); valid = false; } else { name.classList.remove('error'); }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) { email.classList.add('error'); valid = false; } else { email.classList.remove('error'); }
+  }
+  if (step === 3) {
+    const phone = document.getElementById('phone');
     if (!phone.value.trim() || (window.rwPhoneCheck && !rwPhoneCheck(document.getElementById('phone-code').value, phone.value))) { phone.classList.add('error'); valid = false; } else { phone.classList.remove('error'); }
   }
   return valid;
@@ -1299,8 +1312,9 @@ function launchConfetti() {
 
 var webhookSent = false;
 function submitForm() {
-  if (!validateStep(2)) return;
-  const btn = document.getElementById('btn-step2');
+  if (!validateStep(2)) { const from = current; current = 2; transitionStep(from, current, 'backward'); return; }
+  if (!validateStep(3)) return;
+  const btn = document.getElementById('btn-step3');
   btn.disabled = true;
 
   const fullName = document.getElementById('full-name').value.trim();
@@ -1390,7 +1404,7 @@ function recoverStaleSlot(message) {
   booking.bookingInFlight = false;
   booking.loaded = false; booking.loading = false;
   rwTrack('booking_slot_taken',{page:'get-started'});
-  const fromLoader = current; current = 3; // back to the date picker (step 3)
+  const fromLoader = current; current = 4; // back to the date picker (step 4)
   transitionStep(fromLoader, current, 'backward');
   showCalError(message, { retry: false, fallback: true });
   loadSlots();
@@ -1803,14 +1817,21 @@ document.querySelectorAll('.field-input').forEach(input => {
 document.addEventListener('keydown', function(e) {
   if (e.key !== 'Enter') return;
   if (e.target.tagName === 'TEXTAREA') return;
-  // Step 2 is the contact form — Enter triggers submit (which calls Cal.com)
+  // Step 2 is name + email: Enter in the name field moves to email, from email it continues
   if (current === 2) {
+    e.preventDefault();
+    if (document.activeElement && document.activeElement.id === 'full-name') { document.getElementById('email').focus(); return; }
+    nextStep();
+    return;
+  }
+  // Step 3 is the phone — Enter triggers submit
+  if (current === 3) {
     e.preventDefault();
     submitForm();
     return;
   }
-  // Steps 3+ are click-only (date picker, time picker, loader, success)
-  if (current >= 3) return;
+  // Steps 4+ are click-only (date picker, time picker, loader, success)
+  if (current >= 4) return;
   if (current < 2) {
     e.preventDefault();
     nextStep();

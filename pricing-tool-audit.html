@@ -887,6 +887,7 @@ body.rw-fs .fc-title{display:none}
             <span class="fc-seg" data-seg="3"></span>
             <span class="fc-seg" data-seg="4"></span>
             <span class="fc-seg" data-seg="5"></span>
+            <span class="fc-seg" data-seg="6"></span>
           </div>
           <button class="fc-close" id="fc-close" type="button" aria-label="Exit full screen">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
@@ -958,8 +959,8 @@ body.rw-fs .fc-title{display:none}
           </div>
 
           <!-- Step 4: the listing. The URL sits on its own step: it's the one field hosts leave
-               the page to fetch, so isolating it keeps the contact step down to three
-               autofillable fields and keeps the momentum "about your listing" until the end. -->
+               the page to fetch, so isolating it keeps the contact steps to
+               autofillable fields only and keeps the momentum "about your listing" until the end. -->
           <div class="step" data-step="4">
             <div class="step-eyebrow">Your Airbnb</div>
             <h2 class="step-title">What's your Airbnb <em>listing URL?</em></h2>
@@ -984,7 +985,8 @@ body.rw-fs .fc-title{display:none}
             </div>
           </div>
 
-          <!-- Step 5: contact details (the ask) -->
+          <!-- Step 5: name + email. The phone number gets its own step after this one, so each
+               ask stays small: two fields here, one on the last step. -->
           <div class="step" data-step="5">
             <div class="step-eyebrow">Where to send it</div>
             <h2 class="step-title">Last step: <em>your details.</em></h2>
@@ -1002,6 +1004,17 @@ body.rw-fs .fc-title{display:none}
               </div>
               <div class="field-error">Please enter a valid email</div>
             </div>
+            <div class="form-actions">
+              <button class="btn-back" type="button" onclick="prevStep()"><span class="arrow">←</span></button>
+              <button class="btn-next" type="button" id="btn-contact-next" onclick="nextStep()">Continue <span class="arrow">→</span></button>
+            </div>
+          </div>
+
+          <!-- Step 6: phone (the ask) -->
+          <div class="step" data-step="6">
+            <div class="step-eyebrow">One more thing</div>
+            <h2 class="step-title">Best number to <em>reach you?</em></h2>
+            <p class="step-desc">We'll text your Google Meet link and a reminder before your audit.</p>
             <div class="field">
               <label class="field-label" for="phone">Phone number</label>
               <div class="phone-wrap">
@@ -1011,7 +1024,6 @@ body.rw-fs .fc-title{display:none}
                 <input type="tel" class="field-input phone-input" id="phone" placeholder="(555) 123-4567" autocomplete="tel" inputmode="tel" maxlength="20">
               </div>
               <div class="field-error">Please enter a valid phone number</div>
-              <div class="field-hint">We'll text your Google Meet link and a reminder before your audit.</div>
             </div>
             <div class="form-actions">
               <button class="btn-back" type="button" onclick="prevStep()"><span class="arrow">←</span></button>
@@ -1019,7 +1031,7 @@ body.rw-fs .fc-title{display:none}
             </div>
             <div class="fc-secure">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              <span style="color:var(--g500,#706b68)">Your info stays private and is never sold. By submitting, you agree RevWhisper may call and text you at the number you provide, including automated texts, about your audit and our services. Consent isn&rsquo;t a condition of purchase. Msg &amp; data rates may apply. Reply STOP to opt out. This page uses cookies and session recording to measure our ads and improve the page. <a href="/privacy#cookies" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">Privacy policy</a> &middot; <a href="/terms" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">Terms</a></span>
+              <span style="color:var(--g500,#706b68)">Your info stays private and is never sold. By submitting, you agree RevWhisper may call and text you at this number, including automated texts. You don&rsquo;t need to agree to this to buy anything. Reply STOP to opt out. We use cookies and session replay to improve this page. <a href="/privacy#cookies" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">Privacy policy</a> &middot; <a href="/terms" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">Terms</a></span>
             </div>
           </div>
         </div>
@@ -1537,7 +1549,7 @@ body.rw-fs .fc-title{display:none}
 <script>
 /* ───────────────────────── Multi-step lead form ───────────────────────── */
 let current = 0;
-const totalSteps = 6;
+const totalSteps = 7;
 let isTransitioning = false;
 const FORM_WEBHOOK_ENDPOINT = '/api/form-webhook';
 /* Fullscreen focus mode state — see the .rw-fs styles for the behavior contract. */
@@ -1674,6 +1686,8 @@ function validateStep(step){
     const email=document.getElementById('email');
     if(!name.value.trim()){name.classList.add('error');valid=false;}else{name.classList.remove('error');}
     if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())){email.classList.add('error');valid=false;}else{email.classList.remove('error');}
+  }
+  if(step===6){
     const phone=document.getElementById('phone');
     const pcode=(document.getElementById('phone-code')||{}).value||'+1';
     if(!rwPhoneValid(pcode,phone.value)){phone.classList.add('error');valid=false;}else{phone.classList.remove('error');}
@@ -1709,6 +1723,11 @@ function nextStep(){
 function prevStep(){
   if(isTransitioning) return; // safe to drop: the Back button stays put for a re-tap
   if(current>0){const from=current;current--;transitionStep(from,current,'backward');}
+}
+/* Jump back to an earlier step whose answer went missing (see submitForm). */
+function backToStep(step){
+  if(isTransitioning||current<=step) return;
+  const from=current;current=step;transitionStep(from,current,'backward');
 }
 
 /* Revenue bands per listing count — annual gross portfolio revenue.
@@ -2035,8 +2054,10 @@ document.querySelectorAll('.field-input').forEach(function(input){
 /* Submit — fire Lead, post webhook, stash context, go to booking page */
 var submitted=false;
 function submitForm(){
-  if(!validateStep(4)){ prevStep(); return; } // URL step was skipped/emptied somehow — send them back to it
-  if(!validateStep(5)) return;
+  // an earlier step was skipped or emptied somehow: send them back to it
+  if(!validateStep(4)){ backToStep(4); return; }
+  if(!validateStep(5)){ backToStep(5); return; }
+  if(!validateStep(6)) return;
   if(submitted) return;
   const btn=document.getElementById('btn-submit');
   btn.disabled=true;
@@ -2163,7 +2184,13 @@ document.addEventListener('keydown',function(e){
   if(e.key!=='Enter') return;
   if(e.target.tagName==='TEXTAREA') return;
   if(current===4){e.preventDefault();nextStep();}       // Enter in the URL field → continue
-  else if(current===5){e.preventDefault();submitForm();}
+  else if(current===5){
+    e.preventDefault();
+    // Enter in the name field moves on to email, the way a native form would; from email it continues
+    if(document.activeElement&&document.activeElement.id==='full-name'){ document.getElementById('email').focus(); return; }
+    nextStep();
+  }
+  else if(current===6){e.preventDefault();submitForm();}
 });
 
 /* Every other "Get my free audit" CTA on the page (report section, final band, sticky
