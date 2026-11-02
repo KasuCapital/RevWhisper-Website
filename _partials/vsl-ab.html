@@ -4,7 +4,8 @@
      (html.rw-vsl-off). The decision asks PostHog's flag endpoint directly the moment the page starts (~0.2s through
      /ingest) instead of waiting for the full library; the page stays hidden until the answer (max 1.5s) with its
      entrance animations held, so nothing changes or plays out of sight. The library then loads with the same device
-     ID and records the exposure once its own flags agree.
+     ID and records the exposure once its own flags agree and the page is on screen (Facebook's background
+     pre-loads of ad pages are never counted).
      Outside the test, with the video: no analytics consent, team (rw_internal) browsers, no answer within 1.5s.
      QA: ?rw_ab=test / ?rw_ab=control force a version without recording an exposure.
      One copy for both pages. Edit _partials/vsl-ab.html, then run node scripts/sync-partials.mjs. -->
@@ -48,7 +49,16 @@
       if(own===v) lib.getFeatureFlag(FLAG); // records the exposure for the experiment
       else lib.capture('vsl_ab_mismatch',{flag:FLAG,shown:v,library:own==null?'':String(own)}); // never counted
     }); }
-    if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',go); else go();
+    // Counted only once the page is on screen. Facebook and Instagram load ad pages hidden in the background
+    // before (and mostly without) a tap; those loads never show the page to anyone and must not enter the test.
+    function seen(){
+      if(document.visibilityState==='visible'){ go(); return; }
+      document.addEventListener('visibilitychange',function once(){
+        if(document.visibilityState!=='visible') return;
+        document.removeEventListener('visibilitychange',once); go();
+      });
+    }
+    if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',seen); else seen();
   }
   function decide(v){
     if(settled) return;
