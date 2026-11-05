@@ -1,5 +1,5 @@
 /* ══════════════════════════════════════════════════════════════════════════
-   Audit widget — the 5-step lead form, ported verbatim from /audit (audit.html).
+   Audit widget — the 7-step lead form, ported verbatim from /audit (audit.html).
    Keep this block in sync with the matching CSS in audit.html; the two pages
    run the same form and should look and behave identically.
 
@@ -61,9 +61,6 @@
 .radio-card input:checked + .rc-label{border-color:var(--accent);color:var(--accent);font-weight:600;box-shadow:0 0 0 1.5px var(--accent)}
 .radio-card input:checked + .rc-label::before{opacity:1;transform:scale(1)}
 .radio-card .rc-label span{position:relative;z-index:1}
-/* revenue band cards (rendered dynamically, wider money labels) */
-.revenue-group{grid-template-columns:repeat(3,1fr)}
-.revenue-group .rc-label{font-size:14px;padding:14px 6px;line-height:1.25}
 
 /* option cards */
 .option-cards{display:flex;flex-direction:column;gap:10px;margin-bottom:8px}
@@ -95,17 +92,22 @@
 .field-error{font-size:12px;color:var(--red);margin-top:5px;font-weight:400;display:none}
 .field-input.error ~ .field-error,.phone-wrap:has(.error) ~ .field-error{display:block;animation:fadeSlideUp .3s var(--ease-out-expo)}
 .field-input.error ~ .field-hint,.phone-wrap:has(.error) ~ .field-hint{display:none}
-/* ── Open Airbnb helper (mirrors get-started / checkout-form) ── */
-.open-airbnb-wrap{margin-top:16px;margin-bottom:18px}
-.open-airbnb-divider{display:block;font-size:12px;color:var(--g400);font-weight:400;text-align:center;margin-bottom:12px;position:relative}
-.open-airbnb-divider::before,.open-airbnb-divider::after{content:'';position:absolute;top:50%;width:calc(50% - 80px);height:1px;background:var(--g200)}
-.open-airbnb-divider::before{left:0}
-.open-airbnb-divider::after{right:0}
-.open-airbnb-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px 16px;border-radius:var(--radius);border:1.5px solid var(--g200);background:var(--g50);font-size:13px;font-weight:400;color:var(--g500);font-family:var(--body);text-decoration:none;cursor:pointer;transition:border-color .25s,color .25s,background .25s,transform .2s var(--ease-out-back),box-shadow .25s}
-.open-airbnb-btn:hover{border-color:var(--g300);color:var(--black);background:#fff;transform:translateY(-1px);box-shadow:var(--sh-sm)}
-.open-airbnb-btn:active{transform:scale(.98)}
-.open-airbnb-btn svg{flex-shrink:0;opacity:.6;transition:opacity .25s}
-.open-airbnb-btn:hover svg{opacity:1}
+/* ── Open Airbnb helper (same as /audit) ──
+   Helper row under the URL field: the same icon-tile + label + one-liner pattern as the
+   nav dropdown items, so it reads as one structured, pressable thing instead of a divider,
+   a floating chip and a caption. The action label can't wrap; only the one-liner may. */
+.open-airbnb-wrap{margin-top:12px;margin-bottom:4px}
+.open-airbnb-btn{display:grid;grid-template-columns:40px minmax(0,1fr) auto;align-items:center;gap:12px;width:100%;padding:10px 14px 10px 10px;border-radius:var(--radius);border:1.5px solid var(--g200);background:#fff;color:var(--black);font-family:var(--body);text-decoration:none;text-align:left;cursor:pointer;transition:border-color .25s,box-shadow .3s,transform .2s var(--ease-out-back)}
+.open-airbnb-btn:hover{border-color:var(--g300);box-shadow:var(--sh);transform:translateY(-1px)}
+.open-airbnb-btn:active{transform:translateY(0) scale(.99)}
+.oab-tile{width:40px;height:40px;border-radius:10px;background:rgba(255,56,92,.09);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .25s}
+.open-airbnb-btn:hover .oab-tile{background:rgba(255,56,92,.14)}
+.oab-logo{width:20px;height:20px;fill:#FF385C;display:block}
+.oab-text{display:flex;flex-direction:column;gap:2px;min-width:0}
+.oab-title{font-size:14px;font-weight:500;color:var(--black);line-height:1.3;white-space:nowrap}
+.oab-sub{font-size:12.5px;color:var(--g500);font-weight:300;line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.oab-ext{color:var(--g400);flex-shrink:0;transition:color .25s}
+.open-airbnb-btn:hover .oab-ext{color:var(--black)}
 .step.active .open-airbnb-wrap,.step.enter-from-below .open-airbnb-wrap,.step.enter-from-above .open-airbnb-wrap{animation:fadeSlideUp .42s var(--ease-out-expo) .25s both}
 .input-icon-wrap{position:relative}
 .input-icon-wrap .field-input{padding-left:42px}
@@ -153,7 +155,6 @@
 @media(max-width:640px){
   .form-card{padding:20px 18px 18px;border-radius:14px}
   .radio-group{grid-template-columns:repeat(3,1fr)}
-  .revenue-group{grid-template-columns:repeat(2,1fr)}
   /* 16px inputs prevent iOS zoom-on-focus */
   .field-input{font-size:16px}.phone-input{font-size:16px}
 }
@@ -194,6 +195,74 @@ body.rw-fs #audit-form{position:fixed;left:50%;top:50%;transform:translate(-50%,
 .form-card[data-fullscreen] .fc-count{display:none}
 body.rw-fs #audit-form .step[data-step="1"] .form-actions{display:none}
 
+/* ── Silk motion (2026-10-08, sequenced) ───────────────────
+   One beat per answer, compositor-only (transform + opacity) so it runs at full refresh rate:
+   1. the tapped answer presses in and fills, so the choice registers before anything moves
+   2. the old question fades and lifts away and is FULLY gone (180ms) before
+   3. the new question settles in as a cascade: eyebrow, title, description, then each
+      answer one after another, decelerating into place on a long expo ease-out.
+   Strictly sequential: there is never a frame with both questions on screen.
+   Ported from audit.html along with its two-phase transitionStep (audit-widget.js), so the
+   homepage card moves exactly like /audit. Phones get no container-height animation. */
+:root{--silk:cubic-bezier(.16,1,.3,1);--silk-out:cubic-bezier(.4,0,1,1)}
+@keyframes rwRise{from{opacity:0;transform:translate3d(0,16px,0)}to{opacity:1;transform:translate3d(0,0,0)}}
+@keyframes rwPick{0%{transform:scale(1)}35%{transform:scale(.965)}100%{transform:scale(1)}}
+.steps-viewport{transition:height .5s var(--silk) 0.09s}
+.step.exit-up{transform:translate3d(0,-10px,0)}
+.step.exit-down{transform:translate3d(0,10px,0)}
+.step.exit-up,.step.exit-down{transition:opacity 0.18s var(--silk-out),transform 0.18s var(--silk-out),visibility 0s 0.18s}
+.step.enter-from-below,.step.enter-from-above{transition:opacity .01s linear 0s,transform .01s linear 0s;will-change:transform,opacity}
+.step.active .step-eyebrow,.step.enter-from-below .step-eyebrow,.step.enter-from-above .step-eyebrow{animation:rwRise 0.5s var(--silk) 0s both}
+.step.enter-from-below .step-eyebrow,.step.enter-from-above .step-eyebrow{animation-delay:0s}
+.step.active .step-title,.step.enter-from-below .step-title,.step.enter-from-above .step-title{animation:rwRise 0.55s var(--silk) 0.025s both}
+.step.enter-from-below .step-title,.step.enter-from-above .step-title{animation-delay:0.025s}
+.step.active .step-desc,.step.enter-from-below .step-desc,.step.enter-from-above .step-desc{animation:rwRise 0.55s var(--silk) 0.05s both}
+.step.enter-from-below .step-desc,.step.enter-from-above .step-desc{animation-delay:0.05s}
+.step.active .radio-group,.step.enter-from-below .radio-group,.step.enter-from-above .radio-group,.step.active .option-cards,.step.enter-from-below .option-cards,.step.enter-from-above .option-cards{animation:none}
+.step.active .radio-group > .radio-card,.step.enter-from-below .radio-group > .radio-card,.step.enter-from-above .radio-group > .radio-card,.step.active .option-cards > .option-card,.step.enter-from-below .option-cards > .option-card,.step.enter-from-above .option-cards > .option-card{animation:rwRise .55s var(--silk) both}
+.step.active .radio-group > .radio-card:nth-child(1){animation-delay:0.08s}
+.step.enter-from-below .radio-group > .radio-card:nth-child(1),.step.enter-from-above .radio-group > .radio-card:nth-child(1){animation-delay:0.08s}
+.step.active .radio-group > .radio-card:nth-child(2){animation-delay:0.11s}
+.step.enter-from-below .radio-group > .radio-card:nth-child(2),.step.enter-from-above .radio-group > .radio-card:nth-child(2){animation-delay:0.11s}
+.step.active .radio-group > .radio-card:nth-child(3){animation-delay:0.14s}
+.step.enter-from-below .radio-group > .radio-card:nth-child(3),.step.enter-from-above .radio-group > .radio-card:nth-child(3){animation-delay:0.14s}
+.step.active .radio-group > .radio-card:nth-child(4){animation-delay:0.17s}
+.step.enter-from-below .radio-group > .radio-card:nth-child(4),.step.enter-from-above .radio-group > .radio-card:nth-child(4){animation-delay:0.17s}
+.step.active .radio-group > .radio-card:nth-child(5){animation-delay:0.2s}
+.step.enter-from-below .radio-group > .radio-card:nth-child(5),.step.enter-from-above .radio-group > .radio-card:nth-child(5){animation-delay:0.2s}
+.step.active .radio-group > .radio-card:nth-child(6){animation-delay:0.23s}
+.step.enter-from-below .radio-group > .radio-card:nth-child(6),.step.enter-from-above .radio-group > .radio-card:nth-child(6){animation-delay:0.23s}
+.step.active .option-cards > .option-card:nth-child(1){animation-delay:0.08s}
+.step.enter-from-below .option-cards > .option-card:nth-child(1),.step.enter-from-above .option-cards > .option-card:nth-child(1){animation-delay:0.08s}
+.step.active .option-cards > .option-card:nth-child(2){animation-delay:0.115s}
+.step.enter-from-below .option-cards > .option-card:nth-child(2),.step.enter-from-above .option-cards > .option-card:nth-child(2){animation-delay:0.115s}
+.step.active .option-cards > .option-card:nth-child(3){animation-delay:0.15s}
+.step.enter-from-below .option-cards > .option-card:nth-child(3),.step.enter-from-above .option-cards > .option-card:nth-child(3){animation-delay:0.15s}
+.step.active .option-cards > .option-card:nth-child(4){animation-delay:0.185s}
+.step.enter-from-below .option-cards > .option-card:nth-child(4),.step.enter-from-above .option-cards > .option-card:nth-child(4){animation-delay:0.185s}
+.step.active .option-cards > .option-card:nth-child(5){animation-delay:0.22s}
+.step.enter-from-below .option-cards > .option-card:nth-child(5),.step.enter-from-above .option-cards > .option-card:nth-child(5){animation-delay:0.22s}
+.step.active .option-cards > .option-card:nth-child(6){animation-delay:0.255s}
+.step.enter-from-below .option-cards > .option-card:nth-child(6),.step.enter-from-above .option-cards > .option-card:nth-child(6){animation-delay:0.255s}
+.step.active .field,.step.enter-from-below .field,.step.enter-from-above .field{animation:rwRise 0.55s var(--silk) 0.12s both}
+.step.enter-from-below .field,.step.enter-from-above .field{animation-delay:0.12s}
+.step.active .field ~ .field,.step.enter-from-below .field ~ .field,.step.enter-from-above .field ~ .field{animation-delay:.16s}
+.step.enter-from-below .field ~ .field,.step.enter-from-above .field ~ .field{animation-delay:0.16s}
+.step.active .field ~ .field ~ .field,.step.enter-from-below .field ~ .field ~ .field,.step.enter-from-above .field ~ .field ~ .field{animation-delay:.2s}
+.step.enter-from-below .field ~ .field ~ .field,.step.enter-from-above .field ~ .field ~ .field{animation-delay:0.2s}
+.step.active .open-airbnb-wrap,.step.enter-from-below .open-airbnb-wrap,.step.enter-from-above .open-airbnb-wrap{animation:rwRise 0.55s var(--silk) 0.17s both}
+.step.enter-from-below .open-airbnb-wrap,.step.enter-from-above .open-airbnb-wrap{animation-delay:0.17s}
+.step.active .form-actions,.step.enter-from-below .form-actions,.step.enter-from-above .form-actions{animation:rwRise 0.55s var(--silk) 0.22s both}
+.step.enter-from-below .form-actions,.step.enter-from-above .form-actions{animation-delay:0.22s}
+.step.active .fc-secure,.step.enter-from-below .fc-secure,.step.enter-from-above .fc-secure{animation:rwRise 0.55s var(--silk) 0.27s both}
+.step.enter-from-below .fc-secure,.step.enter-from-above .fc-secure{animation-delay:0.27s}
+.radio-card input:checked + .rc-label,.option-card input:checked + .oc-label{animation:rwPick .34s var(--silk)}
+.radio-card .rc-label::before,.option-card .oc-label::before{transition-duration:.38s;transition-timing-function:var(--silk)}
+.fc-seg::after{transition:transform .6s var(--silk)}
+.fs-scrim{transition:opacity .3s ease-out}
+@media(max-width:719px){
+  body.rw-fs .steps-viewport{transition:none}
+}
 /* ── Steady tap (2026-10-08) ───────────────────────────────
    Tapping an answer made its text jump: the checked label switched to a heavier weight
    (wider glyphs reflow the line), the press animation scaled the whole label, and on

@@ -232,7 +232,7 @@
     }
     if(!links.length&&!document.querySelector('[data-rw-privacy-choices],#rw-privacy-line')&&!document.body.hasAttribute('data-rw-no-privacy-line')){
       var line=document.createElement('div');line.id='rw-privacy-line';
-      line.innerHTML='This site uses cookies and session recording to improve it. <a href="/privacy">Privacy policy</a> &middot; <a href="/terms">Terms</a> &middot; ';
+      line.innerHTML='We use cookies and session replay to improve this site. <a href="/privacy">Privacy policy</a> &middot; <a href="/terms">Terms</a> &middot; ';
       line.appendChild(choicesButton());
       var host=document.querySelector('[data-rw-privacy-line-host]')||lineHost();
       host.appendChild(line);
