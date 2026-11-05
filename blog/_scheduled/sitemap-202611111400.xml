@@ -33,8 +33,18 @@
   <!-- BLOG-SITEMAP:START -->
   <url>
     <loc>https://revwhisper.com/blog</loc>
-    <lastmod>2026-11-05</lastmod>
+    <lastmod>2026-11-11</lastmod>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://revwhisper.com/blog/pricelabs-review</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://revwhisper.com/blog/scottsdale-phoenix-airbnb-guide</loc>
+    <lastmod>2026-11-10</lastmod>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://revwhisper.com/blog/best-airbnb-pricing-tools</loc>

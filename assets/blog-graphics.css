@@ -553,3 +553,292 @@ figure.viz .v-cal .cc.lw .cm,figure.viz .v-cal .cc.lw b{color:#4A6741}
 .hx .cw-fern .rbtn,.hx .cw-fern .go{background:#32302F}
 article:has(.cwv[data-cw="sage"]) figure.viz,article:has(.cwv[data-cw="fern"]) figure.viz{background:#EEF2EC;border-color:#DCE5D8}
 article:has(.cwv[data-cw="white"]) figure.viz{background:#FFFFFF;border-color:#EBEBEB}
+
+/* More colourways: dune, terracotta and stone canvases, and cw-photo, a full-bleed photo set as the
+   .in element's background-image (darkened so white labels read). */
+.hx:has(.cw-dune){background:#32302F!important;border-color:#32302F!important}
+.hx:has(.cw-terra){background:#8B4A3E!important;border-color:#8B4A3E!important}
+.hx:has(.cw-stone){background:#E0DCDA!important;border-color:#D3CECB!important}
+.hx:has(.cw-photo){background:#32302F!important;border-color:#32302F!important}
+.hx .cw-photo{background-size:cover;background-position:center}
+.hx .cw-photo::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.05) 40%,rgba(0,0,0,.45))}
+.hx .cw-photo>*{position:relative}
+.hx .cw-photo>.hcap{position:absolute}
+.hx .cw-terra .hcap,.hx .cw-photo .hcap{color:rgba(255,255,255,.82)}
+.hx .cw-terra .iarr{color:rgba(255,255,255,.6)}
+.hx .cw-terra .ssi.g,.hx .cw-dune .ssi.g,.hx .cw-terra .pnl.us,.hx .cw-dune .pnl.us{border-color:#E3EADF}
+
+/* Big headline beside a graphic, on a coloured canvas */
+.hx .bigt{display:flex;flex-direction:column;gap:.8cqw;min-width:0;color:#222}
+.hx .bigt b{font-size:9cqw;font-weight:600;line-height:.95;letter-spacing:-.03em}
+.hx .bigt span{font-size:2.1cqw;line-height:1.3}
+.hx .bigt i{font-style:normal;font-size:1.5cqw;opacity:.75}
+.hx .cw-terra .bigt,.hx .cw-dune .bigt,.hx .cw-fern .bigt{color:#fff}
+
+/* Year grid: 12 month tiles with day chips */
+.hx .yr{background:#fff;border-radius:1.6cqw;padding:2cqw;display:grid;grid-template-columns:repeat(4,1fr);gap:.9cqw;width:52cqw;box-shadow:0 .6cqw 2.4cqw rgba(0,0,0,.12)}
+.hx .ym{border:1px solid #EBEBEB;border-radius:1cqw;padding:.9cqw 1cqw;min-height:7.6cqw;display:flex;flex-direction:column;gap:.5cqw}
+.hx .ym>span{font-size:1.35cqw;color:#6A6A6A}
+.hx .ym>div{display:flex;gap:.5cqw;flex-wrap:wrap}
+.hx .yd{font-size:1.5cqw;font-weight:600;min-width:3cqw;text-align:center;padding:.2cqw .5cqw;border-radius:.6cqw;background:#F7F7F7;color:#222}
+.hx .yd.lw{background:#E3EADF;color:#4A6741}
+
+/* Horizontal bars: label, track with fill, value */
+.hx .bars{background:#fff;border-radius:1.6cqw;padding:2.2cqw 2.4cqw;width:50cqw;display:flex;flex-direction:column;gap:1.3cqw;color:#222;box-shadow:0 .6cqw 2.4cqw rgba(0,0,0,.12)}
+.hx .bars .bh{font-size:2cqw;font-weight:600}
+.hx .bars .bh small{display:block;font-size:1.3cqw;font-weight:400;color:#6A6A6A;margin-top:.3cqw}
+.hx .br{display:grid;grid-template-columns:11cqw 1fr 8cqw;align-items:center;gap:1.2cqw;font-size:1.6cqw}
+.hx .bt{height:2.2cqw;border-radius:99cqw;background:#F1F0EE;overflow:hidden}
+.hx .bf{height:100%;border-radius:99cqw;background:#4A6741}
+.hx .br .bv{font-weight:600;text-align:right}
+.hx .br.mu .bf{background:#B9C7B3}
+.hx .br.tr .bf{background:#8B4A3E}
+
+/* Checkout message: a host message bubble with allowed and not-allowed lines */
+.hx .msg{background:#fff;border-radius:2cqw;padding:2.2cqw;width:42cqw;color:#222;box-shadow:0 .6cqw 2.4cqw rgba(0,0,0,.1)}
+.hx .msg .msh{display:flex;align-items:center;gap:1.2cqw;font-size:1.45cqw;color:#6A6A6A;margin-bottom:1.4cqw}
+.hx .msg .msh i{width:3.6cqw;height:3.6cqw;border-radius:50%;background:#4A6741;flex:none}
+.hx .msg .msh b{display:block;color:#222;font-size:1.7cqw;font-weight:600}
+.hx .msg .msb{background:#F1F4F0;border-radius:1.6cqw 1.6cqw 1.6cqw .4cqw;padding:1.6cqw 1.8cqw;display:flex;flex-direction:column;gap:.9cqw;font-size:1.7cqw}
+.hx .msg .msl{display:flex;gap:1cqw;align-items:center}
+.hx .msg .msl u{text-decoration:none;font-weight:700;color:#4A6741;width:2cqw}
+.hx .msg .msl.no{color:#8B4A3E}
+.hx .msg .msl.no s{color:#8B4A3E}
+.hx .msg .msl.no u{color:#8B4A3E}
+
+/* Labels pinned on a photo */
+.hx .tagp{position:absolute;display:flex;align-items:center;gap:.8cqw;background:#fff;color:#222;border-radius:99cqw;padding:.8cqw 1.6cqw;font-size:1.7cqw;font-weight:500;box-shadow:0 .5cqw 1.6cqw rgba(0,0,0,.25);white-space:nowrap}
+.hx .tagp u{text-decoration:none;font-weight:700;color:#4A6741}
+.hx .tagp.no u{color:#8B4A3E}
+.hx .tagp.lead{background:#4A6741;color:#fff;font-weight:600}
+
+/* Funnel: stacked bars narrowing left to right */
+.hx .fun{display:flex;flex-direction:column;gap:1cqw;width:56cqw}
+.hx .fs{background:#fff;border-radius:1.2cqw;padding:1.3cqw 1.8cqw;display:flex;justify-content:space-between;align-items:baseline;color:#222;font-size:1.6cqw}
+.hx .fs b{font-size:3.4cqw;font-weight:600;letter-spacing:-.02em}
+.hx .fs.g{background:#E3EADF;color:#4A6741}
+
+/* Amenity tiles */
+.hx .amtg{display:grid;grid-template-columns:repeat(4,1fr);gap:1.1cqw;width:60cqw}
+.hx .amt{background:#fff;border:1px solid #fff;border-radius:1.4cqw;padding:1.6cqw;display:flex;flex-direction:column;gap:.8cqw;color:#222;font-size:1.7cqw;font-weight:500}
+.hx .amt u{text-decoration:none;width:3cqw;height:3cqw;border-radius:50%;background:#4A6741;color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.6cqw}
+.hx .amt.off{background:transparent;border:1px dashed #8F8A87;color:#6A6A6A}
+.hx .amt.off u{background:transparent;border:1px dashed #8F8A87;color:transparent}
+
+/* Before and after: two photos side by side, full bleed */
+.hx .ba{position:absolute;inset:0;display:grid;grid-template-columns:1fr 1fr}
+.hx .ba>div{background-size:cover;background-position:center;position:relative}
+.hx .ba>div+div{border-left:.4cqw solid #fff}
+.hx .ba .tagp{top:2.4cqw}
+.hx .ba>div:first-child .tagp{left:2.4cqw}
+.hx .ba>div+div .tagp{right:2.4cqw}
+.hx .bigt.wd b{font-size:5.4cqw;line-height:1.05;letter-spacing:-.02em}
+.hx .ttl{font-size:2.3cqw;font-weight:600;color:#222;text-align:center}
+.hx .ttl small{display:block;font-size:1.45cqw;font-weight:400;color:#6A6A6A;margin-top:.4cqw}
+
+/* Small listing cards: photo, then name and price */
+.hx .lcd{background:#fff;border:1px solid #EBEBEB;border-radius:1.4cqw;padding:1cqw;width:19cqw;color:#222;box-shadow:0 .4cqw 1.6cqw rgba(0,0,0,.06)}
+.hx .lcd .photo{aspect-ratio:4/3;box-shadow:none;border-radius:1cqw}
+.hx .lcd .lcp{margin:.9cqw .2cqw .2cqw;font-size:1.5cqw;display:flex;justify-content:space-between;gap:1cqw}
+.hx .lcd .lcp b{font-weight:600}
+.hx .lcd.us{border:.35cqw solid #4A6741;background:#E3EADF}
+.hx .lcd.us .lcp{color:#4A6741}
+
+/* v3 layout: an even 20px frame on every side, content filling it. A text column (headline, source
+   line at the bottom) beside a graphic that fills the rest, or one inset photo. No orphan words. */
+.hx .in.site.v3{padding:20px!important;gap:0;align-items:stretch;justify-content:stretch}
+.hx .v3 *{text-wrap:pretty}
+.hx .v3 .bigt b,.hx .v3 .ttl{text-wrap:balance}
+.hx .v3 .g2{display:grid;grid-template-columns:40fr 60fr;gap:20px;width:100%;height:100%;min-height:0}
+.hx .v3 .lcol{display:flex;flex-direction:column;min-width:0;padding-left:.4cqw}
+.hx .v3 .lcol .bigt{margin:auto 0}
+.hx .v3 .bigt.wd b{font-size:5cqw}
+.hx .v3 .src{font-size:1.25cqw;line-height:1.35;color:#6A6A6A}
+.hx .cw-terra .src,.hx .cw-dune .src,.hx .cw-fern .src{color:rgba(255,255,255,.8)}
+.hx .v3 .rcol{min-width:0;min-height:0;display:flex}
+.hx .v3 .rcol>*{width:100%!important;height:100%;box-sizing:border-box}
+.hx .v3 .bars,.hx .v3 .rcard{display:flex;flex-direction:column;justify-content:center}
+.hx .v3 .rcard{font-size:1.7cqw;padding:2.4cqw}
+.hx .v3 .yr{grid-template-rows:repeat(3,1fr)}
+.hx .v3 .msg{display:flex;flex-direction:column}
+.hx .v3 .msg .msb{flex:1;justify-content:center}
+.hx .v3 .fun{justify-content:space-between}
+.hx .v3 .fs{flex:1;align-items:center}
+.hx .v3 .amtg{grid-template-rows:1fr 1fr}
+.hx .v3 .amt{justify-content:center}
+.hx .v3 .rcol.ctr{justify-content:center}
+.hx .v3 .rcol.ctr>.phn{width:30cqw!important}
+.hx .v3 .stack{display:grid;grid-template-rows:auto 1fr auto;gap:20px;width:100%;height:100%;min-height:0}
+.hx .v3 .stack .ttl{text-align:left}
+.hx .v3 .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;min-height:0}
+.hx .v3 .lcd{width:auto;display:flex;flex-direction:column;min-height:0;box-sizing:border-box}
+.hx .v3 .lcd .photo{aspect-ratio:auto;flex:1;min-height:0}
+.hx .v3 .pf{position:relative;width:100%;height:100%;border-radius:1.6cqw;overflow:hidden;background-size:cover;background-position:center}
+.hx .v3 .pf::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 55%,rgba(0,0,0,.5));pointer-events:none}
+.hx .v3 .pf .src{position:absolute;left:20px;bottom:20px;right:20px;z-index:2;color:rgba(255,255,255,.9)}
+.hx .v3 .pf .tagp{z-index:2}
+.hx .v3 .pf .ba{position:absolute;inset:0}
+.hx .v3 .ba .tagp{top:20px}
+.hx .v3 .ba>div:first-child .tagp{left:20px}
+.hx .v3 .ba>div+div .tagp{right:20px}
+/* v3 sizing: 20px on the 1200x675 artboard (1.667cqw), so the frame stays even at every display size */
+.hx .in.site.v3{padding:1.667cqw!important}
+.hx .v3 .g2,.hx .v3 .stack,.hx .v3 .cards{gap:1.667cqw}
+.hx .v3 .pf .src{left:1.667cqw;bottom:1.667cqw;right:1.667cqw}
+.hx .v3 .ba .tagp{top:1.667cqw}
+.hx .v3 .ba>div:first-child .tagp{left:1.667cqw}
+.hx .v3 .ba>div+div .tagp{right:1.667cqw}
+.hx .v3 .lcol{padding:1.2cqw 0 .4cqw 1.2cqw}
+.hx .v3 .bigt{gap:1.2cqw}
+.hx .v3 .bigt b{font-size:11cqw}
+.hx .v3 .bigt.wd b{font-size:5.6cqw}
+.hx .v3 .bigt span{font-size:2.5cqw}
+.hx .v3 .bigt i{font-size:1.8cqw}
+.hx .v3 .src{font-size:1.45cqw}
+.hx .v3 .bars{padding:3cqw;gap:2.4cqw}
+.hx .v3 .bars .bh{font-size:2.7cqw}
+.hx .v3 .bars .bh small{font-size:1.8cqw}
+.hx .v3 .br{grid-template-columns:14cqw 1fr 9cqw;font-size:2.2cqw}
+.hx .v3 .bt{height:3cqw}
+.hx .v3 .yr{padding:1.6cqw;gap:1.1cqw}
+.hx .v3 .ym{padding:1.2cqw}
+.hx .v3 .ym>span{font-size:1.8cqw}
+.hx .v3 .yd{font-size:2cqw;min-width:3.8cqw}
+.hx .v3 .msg{justify-content:center;gap:2.2cqw;padding:3cqw}
+.hx .v3 .msg .msh{font-size:1.9cqw;margin:0}
+.hx .v3 .msg .msh i{width:5cqw;height:5cqw}
+.hx .v3 .msg .msh b{font-size:2.3cqw}
+.hx .v3 .msg .msb{flex:none;font-size:2.3cqw;gap:1.5cqw;padding:2.4cqw}
+.hx .v3 .msg .msl u{width:2.6cqw}
+.hx .v3 .fs{font-size:2.2cqw;padding:1.6cqw 2.4cqw}
+.hx .v3 .fs b{font-size:5.4cqw}
+.hx .v3 .amt{font-size:2.2cqw;gap:1.2cqw}
+.hx .v3 .amt u{width:4.2cqw;height:4.2cqw;font-size:2.2cqw}
+.hx .v3 .rcard{font-size:2.3cqw;padding:3.2cqw}
+.hx .v3 .rcard .rp{font-size:2.2cqw;margin-bottom:1.6cqw}
+.hx .v3 .rcard .rp b{font-size:3.6cqw}
+.hx .v3 .rcard .rl{padding:1.1cqw 0}
+.hx .v3 .ttl{font-size:3cqw}
+.hx .v3 .ttl small{font-size:1.8cqw}
+.hx .v3 .lcd .lcp{font-size:2cqw;margin:1.2cqw .4cqw .4cqw}
+.hx .v3 .tagp{font-size:2.1cqw}
+.hx .v3 .rcol.ctr>.phn{width:31cqw!important;padding:2.4cqw 2cqw}
+.hx .v3 .phn .pbar{font-size:1.5cqw}
+.hx .v3 .phn .pttl{font-size:1.75cqw}
+.hx .v3 .phn .pm{font-size:1.55cqw;margin-top:-.2cqw}
+.hx .v3 .fs{box-sizing:border-box}
+.hx .v3 .amt{font-size:1.9cqw;padding:1.4cqw}
+.hx .lcd .lcp,.hx .amt,.hx .yd,.hx .br>span,.hx .rl>span.num{white-space:nowrap}
+.hx .v3 .msg{gap:1.6cqw;padding:2.6cqw}
+.hx .v3 .msg .msb{font-size:2.1cqw;gap:1.2cqw;padding:2.2cqw}
+.hx .v3 .bigt.wd b{font-size:5.2cqw}
+/* v3 frame: 50px on the 1200x675 artboard (4.167cqw) on every side; inner gaps stay 20px (1.667cqw) */
+.hx .in.site.v3{padding:4.167cqw!important}
+.hx .v3 .amt{font-size:1.8cqw;padding:1.2cqw;gap:.9cqw}
+.hx .v3 .amt u{width:3.6cqw;height:3.6cqw;font-size:1.9cqw}
+/* v3: every box is white; highlights are a Fern outline and Fern text */
+.hx .v3 .amt.off{background:#fff;border:1px dashed #A8A29E;color:#8F8A87}
+.hx .v3 .amt.off u{border-color:#A8A29E}
+.hx .v3 .fs.g{background:#fff;color:#4A6741;box-shadow:inset 0 0 0 .3cqw #4A6741}
+.hx .v3 .pnl.us{background:#fff;border:.3cqw solid #4A6741}
+.hx .v3 .msg .msb{background:#fff;border:1px solid #E6E3E1}
+.hx .v3 .ssi.g{background:#fff}
+.hx .v3 .pn2{width:100%!important;height:100%;grid-template-rows:1fr;gap:1.667cqw}
+.hx .v3 .pnl{display:flex;flex-direction:column;justify-content:center;padding:2.6cqw}
+.hx .v3 .pnh{font-size:2.5cqw;margin-bottom:1.2cqw}
+.hx .v3 .pnl li{font-size:1.9cqw;padding:1.1cqw 0}
+
+/* Airbnb-style search cards: rounded photo with heart and dots, no box */
+.hx .v3 .abcard{width:auto;display:flex;flex-direction:column;min-height:0}
+.hx .v3 .abimg{aspect-ratio:auto;flex:1;min-height:0;border-radius:1.4cqw}
+.hx .v3 .abheart{width:2.8cqw;height:2.8cqw;top:1.2cqw;right:1.2cqw}
+.hx .abfav{position:absolute;top:1.2cqw;left:1.2cqw;background:#fff;color:#222;border-radius:99cqw;padding:.55cqw 1.2cqw;font-size:1.35cqw;font-weight:600;box-shadow:0 .2cqw .8cqw rgba(0,0,0,.18);white-space:nowrap}
+.hx .abfav.you{background:#4A6741;color:#fff}
+.hx .v3 .abrow{font-size:1.75cqw;margin-top:1.2cqw}
+.hx .v3 .abl{font-size:1.65cqw}
+.hx .v3 .abp{font-size:1.75cqw;margin-top:.5cqw}
+
+/* Airbnb app search screen in a phone: bezel, status bar, search pill, category tabs, listing cards, tab bar */
+.hx .app{position:relative;height:100%;aspect-ratio:9/17.5;background:#fff;border:.55cqw solid #1F1E1D;border-radius:4.2cqw;box-shadow:0 1.2cqw 3.4cqw rgba(0,0,0,.28);display:flex;flex-direction:column;overflow:hidden;color:#222;box-sizing:border-box}
+.hx .app .adi{position:absolute;top:.8cqw;left:50%;width:7cqw;height:1.9cqw;margin-left:-3.5cqw;border-radius:99cqw;background:#1F1E1D;z-index:3}
+.hx .app .ast{display:flex;justify-content:space-between;align-items:center;padding:1.1cqw 2.2cqw .4cqw;font-size:1.25cqw;font-weight:600;flex:none}
+.hx .app .ast svg{height:1.1cqw;width:auto}
+.hx .app .asr{margin:.8cqw 1.4cqw .4cqw;display:flex;align-items:center;gap:1cqw;padding:.9cqw 1.4cqw;border-radius:99cqw;box-shadow:0 .3cqw 1.2cqw rgba(0,0,0,.14);border:1px solid #EBEBEB;flex:none}
+.hx .app .asr svg{width:1.6cqw;height:1.6cqw;flex:none}
+.hx .app .asr b{display:block;font-size:1.3cqw;font-weight:600;line-height:1.2}
+.hx .app .asr span{display:block;font-size:1.05cqw;color:#6A6A6A;line-height:1.25}
+.hx .app .acat{display:flex;justify-content:space-around;gap:.6cqw;padding:.9cqw 1.2cqw 0;border-bottom:1px solid #EBEBEB;flex:none}
+.hx .app .acat span{font-size:1.05cqw;color:#6A6A6A;padding-bottom:.7cqw;white-space:nowrap}
+.hx .app .acat span.on{color:#222;font-weight:600;border-bottom:.25cqw solid #222}
+.hx .app .ascr{flex:1;min-height:0;overflow:hidden;padding:1.3cqw 1.4cqw 0;display:flex;flex-direction:column;gap:1.5cqw}
+.hx .app .acard{flex:none}
+.hx .app .aimg{position:relative;aspect-ratio:1/0.92;border-radius:1.3cqw;background-size:cover;background-position:center}
+.hx .app .aimg .abfav{font-size:1.05cqw;padding:.45cqw .9cqw;top:1cqw;left:1cqw}
+.hx .app .aimg .abheart{width:2.2cqw;height:2.2cqw;top:1cqw;right:1cqw}
+.hx .app .aimg .abdots i{width:.5cqw;height:.5cqw}
+.hx .app .arow{display:flex;justify-content:space-between;gap:.8cqw;margin-top:.9cqw;font-size:1.3cqw;white-space:nowrap}
+.hx .app .arow b{font-weight:600;overflow:hidden;text-overflow:ellipsis}
+.hx .app .al{font-size:1.2cqw;color:#6A6A6A;line-height:1.35;white-space:nowrap}
+.hx .app .ap{font-size:1.3cqw;margin-top:.3cqw;white-space:nowrap}
+.hx .app .ap b{font-weight:600}
+.hx .app .atab{flex:none;display:flex;justify-content:space-around;border-top:1px solid #EBEBEB;padding:.9cqw .6cqw 1.4cqw;background:#fff}
+.hx .app .atab span{display:flex;flex-direction:column;align-items:center;gap:.35cqw;font-size:.95cqw;color:#6A6A6A}
+.hx .app .atab span svg{width:1.8cqw;height:1.8cqw}
+.hx .app .atab span.on{color:#222;font-weight:600}
+.hx .v3 .rcol.ctr>.app{width:auto!important}
+/* v3: boxes hug their content and sit centred inside the 50px frame instead of stretching to fill it */
+.hx .v3 .g2{align-items:center}
+.hx .v3 .lcol{align-self:stretch}
+.hx .v3 .rcol{align-self:center;flex-direction:column;justify-content:center}
+.hx .v3 .rcol>*{height:auto!important}
+.hx .v3 .rcol.ctr{align-self:stretch;flex-direction:row}
+.hx .v3 .rcol.ctr>.app{height:100%!important}
+.hx .v3 .fun{gap:1.2cqw}
+.hx .v3 .fs{flex:none;padding:1.8cqw 2.4cqw}
+.hx .v3 .amtg{grid-template-rows:auto auto}
+.hx .v3 .amt{padding:1.6cqw;justify-content:flex-start}
+.hx .v3 .yr{grid-template-rows:auto}
+.hx .v3 .ym{min-height:0}
+.hx .v3 .pn2{height:auto!important;align-items:stretch}
+.hx .v3 .stack{grid-template-rows:auto auto auto;align-content:center}
+.hx .v3 .abcard{flex:none}
+.hx .v3 .abimg{flex:none;aspect-ratio:1/.95}
+.hx .v3 .amtg{gap:1.4cqw}
+.hx .v3 .amt{padding:2cqw 1.8cqw;font-size:2.1cqw;gap:1.2cqw}
+.hx .v3 .amt u{width:3.8cqw;height:3.8cqw;font-size:2cqw}
+.hx .cw-terra .amt.off{border-color:#fff;color:#8F8A87}
+.hx .v3 .amtg{grid-template-columns:repeat(4,minmax(0,1fr))}
+.hx .v3 .amt{padding:1.8cqw 1.4cqw;font-size:1.8cqw}
+
+/* Checklist card (✓ / ✕ or numbered steps), text card, and a single large listing card */
+.hx .ckl{background:#fff;border:1px solid #EBEBEB;border-radius:1.6cqw;padding:2.8cqw 3cqw;display:flex;flex-direction:column;gap:1.5cqw;box-shadow:0 .6cqw 2.4cqw rgba(0,0,0,.1);color:#222;box-sizing:border-box}
+.hx .ckl .ckh{font-size:2.5cqw;font-weight:600}
+.hx .ckl .ckh small{display:block;font-size:1.7cqw;font-weight:400;color:#6A6A6A;margin-top:.3cqw}
+.hx .ckl .cis{display:flex;flex-direction:column;gap:1.3cqw}
+.hx .ckl.two .cis{display:grid;grid-template-columns:1fr 1fr;gap:1.3cqw 2.4cqw}
+.hx .ckl .ci{display:flex;gap:1.2cqw;align-items:baseline;font-size:2.05cqw;line-height:1.3}
+.hx .ckl .ci u{text-decoration:none;font-weight:700;color:#4A6741;min-width:2.4cqw;flex:none}
+.hx .ckl .ci.no,.hx .ckl .ci.no u{color:#8B4A3E}
+.hx .ckl .ci b{font-weight:600}
+.hx .ckl .abtp{font-size:2.05cqw;line-height:1.45;margin:0}
+.hx .ckl .rvw{font-size:2.05cqw;line-height:1.45;padding:1.6cqw 1.8cqw;border:1px solid #EBEBEB;border-radius:1.2cqw}
+.hx .ckl .rvw b{display:block;font-weight:600;margin-bottom:.4cqw}
+.hx .v3 .lst{display:flex;flex-direction:column}
+.hx .v3 .lst .abcard{width:100%}
+.hx .v3 .lst .abimg{aspect-ratio:16/10}
+.hx .v3 .lst .abrow{font-size:2.1cqw}
+.hx .v3 .lst .abl{font-size:1.9cqw}
+.hx .v3 .bigt b.sm{font-size:8cqw}
+/* Softer grey canvas in place of stone; white boxes on light canvases get a faint edge */
+.hx:has(.cw-stone){background:#F3F2F0!important;border-color:#E8E6E3!important}
+.hx .cw-stone .fs,.hx .cw-white .fs{border:1px solid #E6E3E1;box-shadow:0 .4cqw 1.6cqw rgba(0,0,0,.05)}
+.hx .cw-stone .amt:not(.off),.hx .cw-white .amt:not(.off){border-color:#E6E3E1}
+.hx .v3 .ckl{gap:1.2cqw;padding:2.4cqw 2.8cqw}
+.hx .v3 .ckl .abtp{font-size:1.9cqw}
+.hx .v3 .bigt b:has(+ span):is(:not(.sm)){overflow-wrap:normal}
+.hx .v3 .pn2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.hx .v3 .pnh{font-size:2.2cqw}
+/* Text sitting straight on a dark canvas (fern, terracotta) is white */
+.hx .cw-fern .abcard,.hx .cw-terra .abcard,.hx .cw-fern .abrow,.hx .cw-terra .abrow,.hx .cw-fern .abp,.hx .cw-terra .abp{color:#fff}
+.hx .cw-fern .abl,.hx .cw-terra .abl{color:rgba(255,255,255,.82)}
+.hx .cw-fern .ttl,.hx .cw-terra .ttl,.hx .cw-fern .ttl small,.hx .cw-terra .ttl small{color:#fff}

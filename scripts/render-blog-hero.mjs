@@ -24,6 +24,8 @@ function hero(slug) {
 
 function page(markup) {
   const font = f => pathToFileURL(join(ROOT, 'fonts', f)).href;
+  // Photos in a hero use site paths (/images/...); point them at the local files
+  markup = markup.replace(/url\(\/images\//g, `url(${pathToFileURL(join(ROOT, 'images')).href}/`);
   return `<!doctype html><html><head><meta charset="utf-8"><style>
 @font-face{font-family:'DM Sans';font-weight:100 1000;src:url(${font('dm-sans-normal-300-700.woff2')}) format('woff2')}
 html,body{margin:0;width:${W}px;height:${H}px;overflow:hidden;background:#fff}
@@ -43,7 +45,7 @@ try {
     const out = join(ROOT, 'images/blog', `${slug}.png`);
     writeFileSync(html, page(hero(slug)));
     execFileSync(CHROME, [
-      '--headless=new', '--disable-gpu', '--hide-scrollbars', '--force-device-scale-factor=1',
+      '--headless=new', '--disable-gpu', '--hide-scrollbars', '--force-device-scale-factor=1', '--allow-file-access-from-files',
       `--window-size=${W},${H}`, `--screenshot=${out}`, '--virtual-time-budget=2000',
       pathToFileURL(html).href,
     ], { stdio: 'ignore' });

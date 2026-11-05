@@ -33,8 +33,23 @@
   <!-- BLOG-SITEMAP:START -->
   <url>
     <loc>https://revwhisper.com/blog</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-05</lastmod>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://revwhisper.com/blog/best-airbnb-pricing-tools</loc>
+    <lastmod>2026-11-05</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://revwhisper.com/blog/airbnb-revenue-management-new-york</loc>
+    <lastmod>2026-11-04</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://revwhisper.com/blog/new-york-airbnb-law</loc>
+    <lastmod>2026-11-03</lastmod>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://revwhisper.com/blog/2027-holiday-calendar-airbnb-hosts</loc>

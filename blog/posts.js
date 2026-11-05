@@ -29,6 +29,42 @@
 
 var BLOG_POSTS = [
   {
+    slug: "airbnb-changes-2026",
+    title: "Airbnb in 2026: Every Change Hosts Need to Know",
+    excerpt: "A new fee model, new cancellation policies, built-in dynamic pricing and new house rules. Here is what changed on Airbnb in 2026, and what to do about each.",
+    date: "2026-11-12",
+    updated: "2026-11-12",
+    publish: "2026-11-12T09:00:00-05:00",
+    image: "/images/blog/airbnb-changes-2026.png",
+    hero: true,
+    tags: ["Platform Changes", "Year in Review"],
+    author: "Marisa @ RevWhisper"
+  },
+  {
+    slug: "pricelabs-review",
+    title: "PriceLabs Review: Cost, Pros and Cons, and Alternatives",
+    excerpt: "What PriceLabs costs in 2026, what it does well, where hosts get stuck, and the alternatives worth comparing.",
+    date: "2026-11-11",
+    updated: "2026-11-11",
+    publish: "2026-11-11T09:00:00-05:00",
+    image: "/images/blog/pricelabs-review.png",
+    hero: true,
+    tags: ["Review", "Revenue Management"],
+    author: "Marisa @ RevWhisper"
+  },
+  {
+    slug: "scottsdale-phoenix-airbnb-guide",
+    title: "Scottsdale and Phoenix Airbnb Guide for Hosts",
+    excerpt: "Permits, taxes and event pricing for Scottsdale, Phoenix, Tempe and Mesa Airbnb hosts, from the WM Phoenix Open to the summer slowdown.",
+    date: "2026-11-10",
+    updated: "2026-11-10",
+    publish: "2026-11-10T09:00:00-05:00",
+    image: "/images/blog/scottsdale-phoenix-airbnb-guide.png",
+    hero: true,
+    tags: ["Market Guide", "Revenue Management"],
+    author: "Marisa @ RevWhisper"
+  },
+  {
     slug: "best-airbnb-pricing-tools",
     title: "Best Airbnb Pricing Tools, and When to Hire a Manager Instead",
     excerpt: "PriceLabs, Wheelhouse and Beyond all set your rates for you. Here is how they compare, and when software alone is not enough.",
