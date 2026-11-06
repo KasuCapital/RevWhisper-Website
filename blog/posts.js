@@ -65,6 +65,18 @@ var BLOG_POSTS = [
     author: "Marisa @ RevWhisper"
   },
   {
+    slug: "airbnb-house-rules-update-november-2026",
+    title: "Airbnb's New House Rules: What Changed on November 3 and What Hosts Need to Do Before November 20",
+    excerpt: "Airbnb updated its house rules announcement on November 3, but the policy still starts November 20. Here's what changed, what didn't, the review timeline and how to appeal a rule.",
+    date: "2026-11-07",
+    updated: "2026-11-07",
+    publish: "2026-11-07T09:00:00-05:00",
+    image: "/images/blog/airbnb-house-rules-update-november-2026.png",
+    hero: true,
+    tags: ["Policy Guide", "Platform Changes"],
+    author: "Marisa @ RevWhisper"
+  },
+  {
     slug: "airbnb-q3-2026-earnings",
     title: "Airbnb Q3 2026 Earnings: What Hosts Need to Know About Demand and Pricing",
     excerpt: "Bookings grew faster than listings, and Airbnb is putting more pricing tools in front of hosts. Here is what the Q3 2026 results mean for your pricing, and what to check this quarter.",

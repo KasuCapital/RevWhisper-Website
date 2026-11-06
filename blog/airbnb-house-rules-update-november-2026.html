@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- ATTRIBUTION:START -->
+<!-- Attribution capture (cookie-free): a lead carries its UTMs and ad click IDs into the CRM.
+     One copy for every page. Edit _partials/attribution.html, then run node scripts/sync-partials.mjs. -->
+<script>
+(function(){
+  var key='rw_attribution';
+  var TTL=7776000000; // 90 days — keep the last paid touch across tabs/sessions
+  var params=new URLSearchParams(window.location.search);
+  var utmFields=['utm_source','utm_medium','utm_campaign','utm_term','utm_content','utm_id'];
+  // gbraid/wbraid: Google's iOS click IDs, sent in place of gclid. Keep in sync with CLICK_IDS in /assets/rw-consent.js.
+  var clickFields=['fbclid','gclid','gbraid','wbraid','ttclid','twclid','msclkid','li_fat_id'];
+  var trackedFields=utmFields.concat(clickFields);
+  // A page sets window.rwAttributionForce before this runs when every visit must be recorded (/vrma does).
+  var hasTracked=!!window.rwAttributionForce||trackedFields.some(function(f){return params.has(f);});
+  function rwGet(k){try{return localStorage.getItem(k)||sessionStorage.getItem(k);}catch(e){try{return sessionStorage.getItem(k);}catch(e2){return null;}}}
+  function rwSet(k,v){try{localStorage.setItem(k,v);}catch(e){try{sessionStorage.setItem(k,v);}catch(e2){}}}
+  var prev=null;try{prev=JSON.parse(rwGet(key));}catch(e){prev=null;}
+  var fresh=prev&&prev.arrived_at&&((Date.now()-new Date(prev.arrived_at).getTime())<TTL);
+  if(hasTracked||!fresh){
+    var data={};
+    trackedFields.forEach(function(f){if(params.get(f))data[f]=params.get(f);});
+    try{data.referrer=document.referrer?new URL(document.referrer).hostname:'direct';}catch(e){data.referrer=document.referrer||'direct';}
+    data.landing_page=window.location.pathname;
+    data.arrived_at=new Date().toISOString();
+    rwSet(key,JSON.stringify(data));
+    prev=data;
+  }
+  // This page's copy, kept in memory. Facebook's and Instagram's in-app browsers can lose storage
+  // while the page is still open (the visitor switches apps to copy their Airbnb link, comes back,
+  // submits), which sent those leads to the CRM with no UTMs at all.
+  var atLoad=prev||{};
+
+  // One label for where the lead came from, filled in even when the link carried no UTMs.
+  function channel(a){
+    var s=String(a.utm_source||'').toLowerCase(), m=String(a.utm_medium||'').toLowerCase();
+    var r=String(a.referrer||'').toLowerCase();
+    var paid=/cpc|ppc|paid|display|retarget|^ads?$/.test(m);
+    if(/^(meta|facebook|fb|instagram|ig|threads)$/.test(s))return paid?'meta-ads':'meta-organic';
+    if(a.gclid||a.gbraid||a.wbraid||(/google/.test(s)&&paid))return 'google-ads';
+    if(a.msclkid||(/bing|microsoft/.test(s)&&paid))return 'microsoft-ads';
+    // Meta adds fbclid to every Facebook/Instagram link. Without UTMs it's an ad click whose URL
+    // parameters didn't come through, or an organic post or message.
+    if(a.fbclid)return 'meta';
+    if(a.twclid||/^(x|twitter)$/.test(s))return 'x';
+    if(a.ttclid||s==='tiktok')return 'tiktok';
+    if(a.li_fat_id||s==='linkedin')return 'linkedin';
+    if(s)return s; // any other tagged link: email, partner, conference...
+    if(!r||r==='direct')return 'direct';
+    if(/(^|\.)revwhisper\.com$/.test(r))return 'unknown'; // record started mid-visit, the entry point wasn't seen
+    if(/(^|\.)(google|bing|duckduckgo|yahoo|ecosia|brave|baidu|yandex)\.[a-z.]+$/.test(r))return 'organic-search';
+    if(/(^|\.)(facebook|instagram|threads|linkedin|reddit|youtube|tiktok|pinterest|twitter|x)\.(com|net)$|^(t\.co|lnkd\.in)$/.test(r))return 'social';
+    return 'referral';
+  }
+
+  // What every form sends as `attribution`: the stored record, or this page's in-memory copy when
+  // storage was lost, plus `channel`.
+  window.rwAttribution=function(){
+    var a=null;
+    try{a=JSON.parse(localStorage.getItem(key));}catch(e){}
+    if(!a||!a.arrived_at){try{a=JSON.parse(sessionStorage.getItem(key));}catch(e){}}
+    if(!a||!a.arrived_at)a=atLoad;
+    var out={};
+    for(var k in a){if(Object.prototype.hasOwnProperty.call(a,k))out[k]=a[k];}
+    out.channel=channel(out);
+    // Opt-in regions without ad consent: no click IDs leave the browser (same rule as /assets/rw-consent.js).
+    if(window.rwConsent&&rwConsent.optIn&&!rwConsent.ads)clickFields.forEach(function(f){delete out[f];});
+    return out;
+  };
+})();
+</script>
+<!-- ATTRIBUTION:END -->
+<script src="/assets/rw-consent.js?v=3"></script>
+<script defer src="/assets/rw-posthog.js?v=3"></script>
+<!-- GA4. Consent defaults come from /assets/rw-consent.js -->
+<script>
+window.dataLayer=window.dataLayer||[];
+function gtag(){dataLayer.push(arguments);}
+gtag('js',new Date());
+gtag('config','G-Y1FYZ5849B');
+(window.rwConsent?rwConsent.whenAllowed:function(f){f();})(function(){var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-Y1FYZ5849B';document.head.appendChild(s);});
+function rwTrack(e,p){gtag('event',e,p||{});}
+</script>
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+(window.rwConsent?rwConsent.whenAdsAllowed:function(g){g()})(function(){s.parentNode.insertBefore(t,s)})}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+if(window.rwConsent&&!rwConsent.ads)fbq('consent','revoke');
+fbq('init', '959022406709300');
+fbq('track', 'PageView');
+</script>
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+  document.addEventListener('click',function(e){
+    var el=e.target.closest('a,button');
+    if(!el)return;
+    var txt=(el.textContent||'').replace(/\s+/g,' ').trim().toLowerCase();
+    if(txt.indexOf('book your free strategy call')!==-1||txt.indexOf('book a call')!==-1||txt.indexOf('book a free strategy call')!==-1){
+      fbq('track','Lead',{content_name:'Book Strategy Call'});
+    }else if(txt.indexOf('check my search ranking')!==-1){
+      fbq('track','Lead',{content_name:'Check Search Ranking'});
+    }
+  });
+});
+</script>
+<!-- End Meta Pixel -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Airbnb&#x27;s New House Rules: What Changed on Nov 3 | RevWhisper Blog</title>
+<meta name="description" content="Airbnb updated its house rules policy after hearing from hosts. Here&#x27;s what changed, what didn&#x27;t, the review timeline, and how to appeal a rule.">
+<link rel="canonical" href="https://revwhisper.com/blog/airbnb-house-rules-update-november-2026">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Airbnb&#x27;s New House Rules: What Changed on Nov 3 | RevWhisper Blog">
+<meta property="og:description" content="Airbnb updated its house rules policy after hearing from hosts. Here&#x27;s what changed, what didn&#x27;t, the review timeline, and how to appeal a rule.">
+<meta property="og:url" content="https://revwhisper.com/blog/airbnb-house-rules-update-november-2026">
+<meta property="og:site_name" content="RevWhisper">
+<meta property="og:image" content="https://revwhisper.com/images/blog/airbnb-house-rules-update-november-2026.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="675">
+<meta property="article:published_time" content="2026-11-07">
+<meta property="article:modified_time" content="2026-11-07">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Airbnb&#x27;s New House Rules: What Changed on Nov 3 | RevWhisper Blog">
+<meta name="twitter:description" content="Airbnb updated its house rules policy after hearing from hosts. Here&#x27;s what changed, what didn&#x27;t, the review timeline, and how to appeal a rule.">
+<meta name="twitter:image" content="https://revwhisper.com/images/blog/airbnb-house-rules-update-november-2026.png">
+
+<link rel="icon" href="/icons/favicon-light.svg" type="image/svg+xml" media="(prefers-color-scheme: light)">
+<link rel="icon" href="/icons/favicon-dark.svg" type="image/svg+xml" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/icons/favicon-light.svg" type="image/svg+xml">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Airbnb's New House Rules: What Changed on November 3 and What Hosts Need to Do Before November 20",
+  "description": "Airbnb updated its house rules policy after hearing from hosts. Here's what changed, what didn't, the review timeline, and how to appeal a rule.",
+  "image": "https://revwhisper.com/images/blog/airbnb-house-rules-update-november-2026.png",
+  "datePublished": "2026-11-07",
+  "dateModified": "2026-11-07",
+  "author": {
+    "@type": "Person",
+    "name": "Marisa @ RevWhisper",
+    "url": "https://revwhisper.com"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "RevWhisper",
+    "url": "https://revwhisper.com",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://revwhisper.com/icons/favicon-light.svg"
+    }
+  },
+  "mainEntityOfPage": "https://revwhisper.com/blog/airbnb-house-rules-update-november-2026"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Did Airbnb reverse its new house rules policy?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Airbnb updated its announcement on November 3, 2026, but the policy still applies to all reservations booked on or after November 20, 2026."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How long do hosts have to fix a flagged house rule?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "At least 20 days to update the rule or appeal, after Airbnb lets you know by email and in the app."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many times can I appeal a house rule decision?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Once. Explain your situation in detail and upload any supporting files, such as a local ordinance or homeowners association rule."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do the new rules apply to bookings made before November 20?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Reservations booked before November 20, 2026 are covered by the previous policy and keep the house rules that were on your listing when the guest booked."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I charge guests a fine for breaking house rules?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Generally no. You can let guests know about fines your local government or homeowners association could charge, at the bottom of your house rules."
+      }
+    }
+  ]
+}
+</script>
+<link rel="stylesheet" href="/assets/fonts.css">
+<link rel="stylesheet" href="/assets/blog-post.css?v=20261030">
+<link rel="stylesheet" href="/assets/blog-graphics.css?v=20261105">
+<link rel="stylesheet" href="/assets/header.css">
+<script defer src="/assets/header.js"></script>
+<link rel="stylesheet" href="/assets/footer.css">
+<script defer src="/assets/blog-post.js"></script>
+<!-- X Pixel base code -->
+<script src="/assets/x-pixel-base.js?v=2"></script>
+<!-- End X Pixel base code -->
+</head>
+<body>
+
+
+<!-- HEADER:START -->
+<nav class="float-bar" id="float-bar" aria-label="Primary">
+  <a href="/" class="fb-logo">
+    <div class="lm"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24" fill="none" aria-hidden="true"><path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <span class="ln">RevWhisper</span>
+  </a>
+
+  <div class="fb-links" id="fb-links">
+
+    <!-- Services dropdown -->
+    <div class="fb-dropdown" data-dropdown>
+      <button class="fb-link fb-dropdown-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="fb-menu-services">
+        Services
+        <svg class="fb-chevron" viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="fb-menu" id="fb-menu-services">
+
+        <!-- Listing Optimization: document with text lines -->
+        <a href="/airbnb-listing-optimization" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/>
+              <path d="M14 2v4a2 2 0 0 0 2 2h4"/>
+              <path d="M10 9H8"/>
+              <path d="M16 13H8"/>
+              <path d="M16 17H8"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Listing Optimization</span>
+            </span>
+            <span class="fb-menu-desc">Title, description, and amenities tuned for conversion</span>
+          </span>
+        </a>
+
+        <!-- Revenue Management: stacked coins / database cylinder -->
+        <a href="/revenue-management" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <ellipse cx="12" cy="5" rx="9" ry="3"/>
+              <path d="M3 5v14a9 3 0 0 0 18 0V5"/>
+              <path d="M3 12a9 3 0 0 0 18 0"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Revenue Management</span>
+            </span>
+            <span class="fb-menu-desc">Dynamic pricing, minimum stays, seasonal strategy</span>
+          </span>
+        </a>
+
+        <!-- Photo Optimization: photo frame with sun + mountains -->
+        <a href="/photoediting" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              <circle cx="9" cy="9" r="2"/>
+              <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Photo Optimization</span>
+            </span>
+            <span class="fb-menu-desc">Cover photos, photo order, professional editing</span>
+          </span>
+        </a>
+
+      </div>
+    </div>
+
+    <!-- Resources dropdown -->
+    <div class="fb-dropdown" data-dropdown>
+      <button class="fb-link fb-dropdown-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="fb-menu-resources">
+        Resources
+        <svg class="fb-chevron" viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="fb-menu" id="fb-menu-resources">
+
+        <!-- Blog: notebook with binding + text lines -->
+        <a href="/blog" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="4" y="2" width="16" height="20" rx="2"/>
+              <path d="M2 6h4"/>
+              <path d="M2 10h4"/>
+              <path d="M2 14h4"/>
+              <path d="M2 18h4"/>
+              <path d="M9.5 8h5"/>
+              <path d="M9.5 12H16"/>
+              <path d="M9.5 16H14"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Blog</span>
+            </span>
+            <span class="fb-menu-desc">Strategies, data, and host insights</span>
+          </span>
+        </a>
+
+        <!-- Case Studies: open book -->
+        <a href="/case-study" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 7v14"/>
+              <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Case Studies</span>
+            </span>
+            <span class="fb-menu-desc">Real revenue lifts from real listings</span>
+          </span>
+        </a>
+
+        <!-- Free Listing Audit: clean magnifying glass -->
+        <a href="/#audit-form" class="fb-menu-item js-to-audit">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="10.5" cy="10.5" r="6.5"/>
+              <path d="m15.5 15.5 4 4"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Free Listing Audit</span>
+            </span>
+            <span class="fb-menu-desc">Ranking, pricing and conversion, walked through live</span>
+          </span>
+        </a>
+      </div>
+    </div>
+
+    <a href="/get-started" class="fb-link fb-link--mobile-cta">Book a Strategy Call</a>
+  </div>
+
+  <a href="/get-started" class="fb-cta">Book a Strategy Call</a>
+  <button class="fb-hamburger" id="fb-hamburger" aria-label="Toggle navigation" aria-expanded="false">
+    <span class="fb-ham-line"></span>
+    <span class="fb-ham-line"></span>
+    <span class="fb-ham-line"></span>
+  </button>
+</nav>
+<!-- HEADER:END -->
+<main class="post">
+  <a href="/blog" class="post-back">&larr; Back to Blog</a>
+
+  <div class="post-tags">
+    <span class="post-tag">Policy Guide</span>
+    <span class="post-tag">Platform Changes</span>
+  </div>
+  <h1>Airbnb&#x27;s New House Rules: What Changed on November 3 and What Hosts Need to Do Before November 20</h1>
+  <p class="post-dek">Airbnb updated its house rules announcement on November 3, but the policy still starts November 20. Here&#x27;s what changed, what didn&#x27;t, the review timeline and how to appeal a rule.</p>
+
+  <p class="post-byline"><span class="by">By Marisa @ RevWhisper</span><span>Last updated <time datetime="2026-11-07">November 7, 2026</time></span></p>
+
+  <div class="post-answer">
+    <p>Airbnb&#x27;s new house rules policy still applies to all reservations booked on or after November 20, 2026. On November 3, Airbnb updated its announcement: &quot;Requests&quot; are being relabeled &quot;Additional rules&quot;, listing reviews run from November 20 through March 2027, and hosts get at least 20 days to update a flagged rule or appeal it once. The limits on checkout chores didn&#x27;t change.</p>
+  </div>
+
+  <figure class="post-hero">
+    <div class="hx" role="img" aria-label="House rules: what changed on November 3, and what to do before November 20. The policy still starts November 20. The timeline: policy announced October 20, 2026; announcement updated November 3, 2026; policy starts and reviews begin November 20, 2026; initial reviews end March 2027; at least 20 days to fix or appeal a flagged rule. Dates from Airbnb&#x27;s Resource Center.">
+<!-- HERO:START -->
+<div class="in site v3 cw-white"><div class="g2"><div class="lcol"><div class="a rise bigt wd" style="--d:0.2s"><b>House&nbsp;rules</b><span>What changed on November&nbsp;3, and what to do before November&nbsp;20</span><i>The policy still starts November&nbsp;20</i></div><span class="a fade src" style="--d:1.2s">Dates from Airbnb's Resource&nbsp;Center</span></div><div class="rcol"><div class="a pop rcard" style="--d:0.35s"><div class="rp"><b>The&nbsp;timeline</b></div><div class="rl"><span>Policy&nbsp;announced</span><span class="num">Oct 20,&nbsp;2026</span></div><div class="rl"><span>Announcement&nbsp;updated</span><span class="num">Nov 3,&nbsp;2026</span></div><div class="rl"><span>Policy starts, reviews&nbsp;begin</span><span class="num">Nov 20,&nbsp;2026</span></div><div class="rl"><span>Initial reviews&nbsp;end</span><span class="num">Mar&nbsp;2027</span></div><div class="rl tot"><span>Time to fix or&nbsp;appeal</span><span class="num">At least 20&nbsp;days</span></div></div></div></div></div>
+<!-- HERO:END -->
+    </div>
+  </figure>
+
+  <article class="post-body">
+    <span class="cwv" data-cw="white" hidden></span><p>On October 20, Airbnb announced changes to house rules, including clearer standards for what guests can be required to do. Airbnb says guests "have told us for years that checkout chores and unexpected rules make them hesitant to book." Hosts pushed back. Airbnb says it has heard from many hosts, and that some are concerned about losing control over the rules they set for their homes.</p>
+    <p>On November 3, Airbnb updated its announcement. It said, "We also could have done a better job explaining why and how we're making these changes."</p>
+    <p>If you read about that update and assumed Airbnb backed down, it didn't. The policy still applies to all reservations booked on or after November 20, 2026. What changed is how Airbnb labels your rules, how it will review listings and how you can push back on a decision.</p>
+    <h2>What did Airbnb change on November 3?</h2>
+    <ul><li><strong>"Requests" are now "Additional rules."</strong> Hosts told Airbnb that calling additional rules "Requests" was confusing, so they'll be labeled "Additional rules" in the app over the coming weeks.</li>
+    <li><strong>Reviews are phased in.</strong> Airbnb starts its initial reviews on November 20, and they continue through March 2027. After that, it will review listings on an ongoing basis.</li>
+    <li><strong>You get time to respond.</strong> If a rule on your listing doesn't follow the policy, Airbnb will let you know by email and in the app. You'll have at least 20 days to update it, or to appeal and explain why your home needs it. The Listing editor will also give tips for adjusting rules that don't follow the policy.</li>
+    <li><strong>Lock up at checkout is now a standard house rule.</strong> The checkout instructions section was removed from the Listing editor. You can re-add other checkout instructions, like turning things off, as Additional rules under "Before checkout."</li>
+    <li><strong>House rules are now a quick reply.</strong> If you want to send guests a friendly reminder during their stay, your house rules are available as a pre-written quick reply that matches your listing.</li></ul>
+    <h2>What didn't change?</h2>
+    <p>The limits on checkout chores are the same. Airbnb's own examples draw the line:</p>
+    <div class="tablewrap"><table><thead><tr><th></th><th>You can ask guests to</th><th>You can't ask guests to</th></tr></thead><tbody>
+    <tr><td>Dishes</td><td>Put used dishes in the sink</td><td>Wash and put away dishes</td></tr>
+    <tr><td>Laundry</td><td>Gather used towels</td><td>Remove sheets from the bed or start a load of laundry</td></tr>
+    <tr><td>Trash</td><td>Separate trash and recycling into designated indoor bins</td><td>Take garbage off site</td></tr>
+    <tr><td>Utilities</td><td>Turn off the air conditioning when they leave</td><td>Avoid using a listed amenity</td></tr>
+    </tbody></table></div>
+    <p>Hosts also generally shouldn't impose fines or other penalties. You can let guests know about fines your local government or homeowners association could charge, at the bottom of your house rules. Airbnb doesn't collect or enforce those fines for you, and you can't charge guests a fee for skipping cleaning or checkout tasks. You can still leave ratings and reviews based on cleanliness.</p>
+    <p>There are 7 standard house rules to choose from: maximum overnight guests, quiet hours, events, pets, smoking (including vaping and e-cigarettes), commercial photography, and lock up at checkout, where you can add where to return keys.</p>
+    <p>House rules also have to be on your listing when the guest books. Airbnb says hosts can't add new house rules after booking, including by message, signs in the home or in person. For more on wording a checkout message that stays inside the rules, see <a href="/blog/airbnb-checkout-instructions-2026-house-rules">Airbnb Checkout Instructions</a>.</p>
+    <h2>When does the new house rules policy start?</h2>
+    <figure class="viz"><div class="vt">The timeline</div><ol class="v-tl"><li><span class="td">Oct 20, 2026</span><span class="tx">Airbnb announces changes to house rules</span></li><li><span class="td">Nov 3, 2026</span><span class="tx">Airbnb updates the announcement after hearing from hosts</span></li><li><span class="td">Nov 20, 2026</span><span class="tx">Policy applies to new bookings; initial reviews begin</span></li><li><span class="td">Through Mar 2027</span><span class="tx">Initial reviews continue</span></li><li><span class="td">After Mar 2027</span><span class="tx">Listings reviewed on an ongoing basis</span></li></ol><figcaption>Dates from Airbnb's Resource Center and Help Center.</figcaption></figure>
+    <p>Bookings made before November 20 are covered by the previous policy. The house rules that were on your listing when you received a reservation still apply to that reservation.</p>
+    <h2>How do you appeal an Airbnb house rule decision?</h2>
+    <p>Airbnb says it considers the type of listing and other relevant factors, including local laws, and may grant exceptions based on your situation. Its own examples: asking guests to dispose of trash in an animal-proof container in bear country, or limiting shower time because of drought-related water restrictions.</p>
+    <p>If Airbnb flags a rule you believe your home needs, select the "Submit an appeal" link in the email Airbnb sent you, or tap the "Required action" card in the Listing editor. You can only submit an appeal once, so make it count.</p>
+    <ol><li><strong>Explain your situation in detail.</strong> Not "guests should clean up after themselves," but what makes the rule necessary at your home. Airbnb's own sample statements include a co-op with a communal kitchen where everyone washes their own dishes, and bins that need to go out on collection day for stays of a month or more.</li>
+    <li><strong>Upload supporting photos or files,</strong> such as a local ordinance or homeowners association rule.</li>
+    <li><strong>Review it before you submit,</strong> since you only get one appeal.</li></ol>
+    <p>If Airbnb doesn't approve the rule, it will email you a deadline to update or remove it.</p>
+    <h2>What happens if you keep a rule Airbnb hasn't approved?</h2>
+    <p>Guests may see a notice on your listing page. If a violation continues, Airbnb's policy says it can lead to a notice flagging the issue to guests, reduced listing visibility in search, or other action under its Terms of Service.</p>
+    <p>That matters more than it sounds. House rules are now displayed more prominently on your listing, and guests can also read them in their Trips tab and in reservation reminders from Airbnb. A guest comparing your listing to the one next to it will see that notice before they book. Anything that gives a guest a reason to pick another listing costs you clicks and bookings, and reduced visibility in search costs you more.</p>
+    <blockquote class="tip"><strong>If a rule isn't worth an appeal,</strong> it's usually not worth keeping.</blockquote>
+    <h2>Can Airbnb hosts still use contracts and waivers?</h2>
+    <p>Only in specific cases. Airbnb's examples include legal and insurance requirements, homeowners association rules, rental agreements for monthly stays of 28 nights or more, Airbnb Luxe listings, and coverage for optional amenities like golf carts.</p>
+    <p>Airbnb doesn't mention pool or hot tub waivers specifically. A contract can be allowed when your insurance provider or the law requires it, so check with them before you rely on a waiver. Airbnb does require hosts to disclose safety hazards such as a pool or a body of water, and to explain how to use features like hot tubs safely.</p>
+    <p>An allowed contract goes under Contracts in your listing settings, as one PDF per listing, and it's visible to guests, so remove personal information first. Airbnb doesn't help enforce your contracts or require guests to sign them; collecting the signature is up to you. You can't ask a guest to sign a contract that wasn't on your listing when they booked.</p>
+    <h2>What should Airbnb hosts do before November 20?</h2>
+    <ol><li>Open your house rules in the Listing editor and compare each Additional rule with Airbnb's examples above.</li>
+    <li>Remove or rewrite anything a cleaner would normally do.</li>
+    <li>For rules your home genuinely needs, gather your supporting documents now, before you get the email.</li>
+    <li>If you use a contract or waiver, confirm it fits one of the allowed reasons and upload it under Contracts.</li>
+    <li>Move any checkout instructions you still need into Additional rules under "Before checkout."</li></ol>
+    <p>The policy applies to bookings made from November 20, so anything you fix before then is in place for every new guest.</p>
+    <p>Sources: Airbnb's <a href="https://www.airbnb.com/resources/hosting-homes/a/important-changes-to-house-rules-21">Important changes to house rules</a> (October 20, 2026, updated November 3, 2026), and the Help Center articles <a href="https://www.airbnb.com/help/article/4168">Reasonable house rules</a>, <a href="https://www.airbnb.com/help/article/472">Add house rules to your listing</a>, <a href="https://www.airbnb.com/help/article/4169">Limiting host-imposed contracts and other requirements</a> and <a href="https://www.airbnb.com/help/article/2824">Add a contract to your home listing</a>.</p>
+
+    <section class="post-facts">
+      <h2>Who is RevWhisper for, and what does it include?</h2>
+      <p>RevWhisper is a done-for-you Airbnb revenue management and listing optimization service. It is for owners who want a team to run their pricing, search ranking and listing content, from 2-bedroom cabins to 20-guest estates.</p>
+      <p>The service includes:</p>
+      <ul><li>Daily pricing managed in PriceLabs, set against a comp set of the listings guests actually compare</li>
+      <li>Minimum stay, gap night and last-minute rules</li>
+      <li>Search rank tracking on every open date, every day</li>
+      <li>Title, description, amenity and photo order optimization, including photo editing</li>
+      <li>Monthly performance reporting</li></ul>
+      <p><strong>Pricing:</strong> a flat monthly retainer per listing. RevWhisper does not take a percentage of gross revenue. <strong>Scale:</strong> over 100 hosts. <strong>Where:</strong> hosts across North America, and anywhere else with enough comparable listings to price against. The work is done remotely, so location isn't a limit. <strong>Results:</strong> a 27% average revenue lift within 90 days. <strong>Free listing audit:</strong> a live 30-minute call with a RevWhisper strategist that shows where your listing ranks on every open date, why views aren't turning into bookings, and what to change first. <a href="/#audit-form">Book the free listing audit</a>. No account access is required.</p>
+    </section>
+
+    <section class="post-faq">
+      <h2>Frequently asked questions</h2>
+      <h3>Did Airbnb reverse its new house rules policy?</h3>
+      <p>No. Airbnb updated its announcement on November 3, 2026, but the policy still applies to all reservations booked on or after November 20, 2026.</p>
+      <h3>How long do hosts have to fix a flagged house rule?</h3>
+      <p>At least 20 days to update the rule or appeal, after Airbnb lets you know by email and in the app.</p>
+      <h3>How many times can I appeal a house rule decision?</h3>
+      <p>Once. Explain your situation in detail and upload any supporting files, such as a local ordinance or homeowners association rule.</p>
+      <h3>Do the new rules apply to bookings made before November 20?</h3>
+      <p>No. Reservations booked before November 20, 2026 are covered by the previous policy and keep the house rules that were on your listing when the guest booked.</p>
+      <h3>Can I charge guests a fine for breaking house rules?</h3>
+      <p>Generally no. You can let guests know about fines your local government or homeowners association could charge, at the bottom of your house rules.</p>
+    </section>
+
+    <nav class="post-related" aria-label="Related reading">
+      <h2>Related reading</h2>
+      <ul>
+        <li><a href="/blog/airbnb-checkout-instructions-2026-house-rules">Airbnb Checkout Instructions That Follow the New 2026 House Rules</a></li>
+        <li><a href="/blog/airbnb-cancellation-policies-for-hosts">Airbnb Cancellation Policies for Hosts: Flexible, Moderate, Limited and Firm</a></li>
+        <li><a href="/blog/views-not-bookings-content-gap">You&#x27;re Getting Views but Not Bookings. Here&#x27;s What the Algorithm Sees.</a></li>
+        <li><a href="/#audit-form">Get your free listing audit</a></li>
+      </ul>
+    </nav>
+  </article>
+
+  <aside class="post-cta">
+    <h2>Want to see where your listing ranks?</h2>
+    <p>We pull up your listing live on a free 30-minute call and show you where it ranks for every open date, why views aren't turning into bookings, and what to change first.</p>
+    <a class="post-cta-btn" href="/#audit-form">Get your free listing audit</a>
+  </aside>
+</main>
+<!-- FOOTER:START -->
+<footer class="site-footer">
+  <div class="w">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">
+          <div class="lm">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24" fill="none" aria-hidden="true">
+              <path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="#32302F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="#32302F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="footer-logo-name">RevWhisper</span>
+        </div>
+        <p class="footer-tag">A revenue intelligence team that layers into your Airbnb listing to accelerate performance and maximize earnings.</p>
+        <p class="footer-tag footer-address">501 East Kennedy Boulevard, Tampa, FL 33602 (Space 15&ndash;144)</p>
+        <div class="footer-socials">
+          <a href="https://x.com/RevWhisper" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+          <a href="https://www.instagram.com/rev.whisper/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          </a>
+          <a href="https://www.facebook.com/groups/airbnblistingoptimization" target="_blank" rel="noopener noreferrer" aria-label="Facebook Group">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <p class="footer-col-title">Explore</p>
+        <a href="/" class="footer-link">Home</a>
+        <a href="/airbnb-listing-optimization" class="footer-link">Listing Optimization</a>
+        <a href="/revenue-management" class="footer-link">Revenue Management</a>
+        <a href="/photoediting" class="footer-link">Photo Editing</a>
+        <a href="/case-study" class="footer-link">Case Study</a>
+        <a href="/blog" class="footer-link">Blog</a>
+        <a href="/get-started" class="footer-link">Book a Strategy Call</a>
+      </div>
+      <div class="footer-col">
+        <p class="footer-col-title">Resources</p>
+        <a href="/#audit-form" class="footer-link js-to-audit">Free Listing Audit</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 MCO CORP d/b/a RevWhisper. All rights reserved.</span>
+      <nav class="footer-legal" aria-label="Legal">
+        <a href="/privacy">Privacy Policy</a>
+        <a href="/terms">Terms of Service</a>
+      </nav>
+      <span>Stop Guessing. Start Whispering.</span>
+    </div>
+  </div>
+</footer>
+<!-- FOOTER:END -->
+
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>

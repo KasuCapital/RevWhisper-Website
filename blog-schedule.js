@@ -3,9 +3,15 @@ export const BLOG_SCHEDULE = {
   "posts": {
     "airbnb-changes-2026": 1794492000000,
     "pricelabs-review": 1794405600000,
-    "scottsdale-phoenix-airbnb-guide": 1794319200000
+    "scottsdale-phoenix-airbnb-guide": 1794319200000,
+    "airbnb-house-rules-update-november-2026": 1794060000000
   },
   "versions": [
+    {
+      "at": 1794060000000,
+      "index": "/blog/_scheduled/index-202611071400",
+      "sitemap": "/blog/_scheduled/sitemap-202611071400.xml"
+    },
     {
       "at": 1794319200000,
       "index": "/blog/_scheduled/index-202611101400",
