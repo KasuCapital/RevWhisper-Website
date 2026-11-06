@@ -65,6 +65,18 @@ var BLOG_POSTS = [
     author: "Marisa @ RevWhisper"
   },
   {
+    slug: "airbnb-q3-2026-earnings",
+    title: "Airbnb Q3 2026 Earnings: What Hosts Need to Know About Demand and Pricing",
+    excerpt: "Bookings grew faster than listings, and Airbnb is putting more pricing tools in front of hosts. Here is what the Q3 2026 results mean for your pricing, and what to check this quarter.",
+    date: "2026-11-06",
+    updated: "2026-11-06",
+    publish: "2026-11-06T14:00:00-05:00",
+    image: "/images/blog/airbnb-q3-2026-earnings.png",
+    hero: true,
+    tags: ["Platform Changes", "Pricing"],
+    author: "Marisa @ RevWhisper"
+  },
+  {
     slug: "best-airbnb-pricing-tools",
     title: "Best Airbnb Pricing Tools, and When to Hire a Manager Instead",
     excerpt: "PriceLabs, Wheelhouse and Beyond all set your rates for you. Here is how they compare, and when software alone is not enough.",

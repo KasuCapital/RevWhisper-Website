@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- ATTRIBUTION:START -->
+<!-- Attribution capture (cookie-free): a lead carries its UTMs and ad click IDs into the CRM.
+     One copy for every page. Edit _partials/attribution.html, then run node scripts/sync-partials.mjs. -->
+<script>
+(function(){
+  var key='rw_attribution';
+  var TTL=7776000000; // 90 days — keep the last paid touch across tabs/sessions
+  var params=new URLSearchParams(window.location.search);
+  var utmFields=['utm_source','utm_medium','utm_campaign','utm_term','utm_content','utm_id'];
+  // gbraid/wbraid: Google's iOS click IDs, sent in place of gclid. Keep in sync with CLICK_IDS in /assets/rw-consent.js.
+  var clickFields=['fbclid','gclid','gbraid','wbraid','ttclid','twclid','msclkid','li_fat_id'];
+  var trackedFields=utmFields.concat(clickFields);
+  // A page sets window.rwAttributionForce before this runs when every visit must be recorded (/vrma does).
+  var hasTracked=!!window.rwAttributionForce||trackedFields.some(function(f){return params.has(f);});
+  function rwGet(k){try{return localStorage.getItem(k)||sessionStorage.getItem(k);}catch(e){try{return sessionStorage.getItem(k);}catch(e2){return null;}}}
+  function rwSet(k,v){try{localStorage.setItem(k,v);}catch(e){try{sessionStorage.setItem(k,v);}catch(e2){}}}
+  var prev=null;try{prev=JSON.parse(rwGet(key));}catch(e){prev=null;}
+  var fresh=prev&&prev.arrived_at&&((Date.now()-new Date(prev.arrived_at).getTime())<TTL);
+  if(hasTracked||!fresh){
+    var data={};
+    trackedFields.forEach(function(f){if(params.get(f))data[f]=params.get(f);});
+    try{data.referrer=document.referrer?new URL(document.referrer).hostname:'direct';}catch(e){data.referrer=document.referrer||'direct';}
+    data.landing_page=window.location.pathname;
+    data.arrived_at=new Date().toISOString();
+    rwSet(key,JSON.stringify(data));
+    prev=data;
+  }
+  // This page's copy, kept in memory. Facebook's and Instagram's in-app browsers can lose storage
+  // while the page is still open (the visitor switches apps to copy their Airbnb link, comes back,
+  // submits), which sent those leads to the CRM with no UTMs at all.
+  var atLoad=prev||{};
+
+  // One label for where the lead came from, filled in even when the link carried no UTMs.
+  function channel(a){
+    var s=String(a.utm_source||'').toLowerCase(), m=String(a.utm_medium||'').toLowerCase();
+    var r=String(a.referrer||'').toLowerCase();
+    var paid=/cpc|ppc|paid|display|retarget|^ads?$/.test(m);
+    if(/^(meta|facebook|fb|instagram|ig|threads)$/.test(s))return paid?'meta-ads':'meta-organic';
+    if(a.gclid||a.gbraid||a.wbraid||(/google/.test(s)&&paid))return 'google-ads';
+    if(a.msclkid||(/bing|microsoft/.test(s)&&paid))return 'microsoft-ads';
+    // Meta adds fbclid to every Facebook/Instagram link. Without UTMs it's an ad click whose URL
+    // parameters didn't come through, or an organic post or message.
+    if(a.fbclid)return 'meta';
+    if(a.twclid||/^(x|twitter)$/.test(s))return 'x';
+    if(a.ttclid||s==='tiktok')return 'tiktok';
+    if(a.li_fat_id||s==='linkedin')return 'linkedin';
+    if(s)return s; // any other tagged link: email, partner, conference...
+    if(!r||r==='direct')return 'direct';
+    if(/(^|\.)revwhisper\.com$/.test(r))return 'unknown'; // record started mid-visit, the entry point wasn't seen
+    if(/(^|\.)(google|bing|duckduckgo|yahoo|ecosia|brave|baidu|yandex)\.[a-z.]+$/.test(r))return 'organic-search';
+    if(/(^|\.)(facebook|instagram|threads|linkedin|reddit|youtube|tiktok|pinterest|twitter|x)\.(com|net)$|^(t\.co|lnkd\.in)$/.test(r))return 'social';
+    return 'referral';
+  }
+
+  // What every form sends as `attribution`: the stored record, or this page's in-memory copy when
+  // storage was lost, plus `channel`.
+  window.rwAttribution=function(){
+    var a=null;
+    try{a=JSON.parse(localStorage.getItem(key));}catch(e){}
+    if(!a||!a.arrived_at){try{a=JSON.parse(sessionStorage.getItem(key));}catch(e){}}
+    if(!a||!a.arrived_at)a=atLoad;
+    var out={};
+    for(var k in a){if(Object.prototype.hasOwnProperty.call(a,k))out[k]=a[k];}
+    out.channel=channel(out);
+    // Opt-in regions without ad consent: no click IDs leave the browser (same rule as /assets/rw-consent.js).
+    if(window.rwConsent&&rwConsent.optIn&&!rwConsent.ads)clickFields.forEach(function(f){delete out[f];});
+    return out;
+  };
+})();
+</script>
+<!-- ATTRIBUTION:END -->
+<script src="/assets/rw-consent.js?v=3"></script>
+<script defer src="/assets/rw-posthog.js?v=3"></script>
+<!-- GA4. Consent defaults come from /assets/rw-consent.js -->
+<script>
+window.dataLayer=window.dataLayer||[];
+function gtag(){dataLayer.push(arguments);}
+gtag('js',new Date());
+gtag('config','G-Y1FYZ5849B');
+(window.rwConsent?rwConsent.whenAllowed:function(f){f();})(function(){var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-Y1FYZ5849B';document.head.appendChild(s);});
+function rwTrack(e,p){gtag('event',e,p||{});}
+</script>
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+(window.rwConsent?rwConsent.whenAdsAllowed:function(g){g()})(function(){s.parentNode.insertBefore(t,s)})}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+if(window.rwConsent&&!rwConsent.ads)fbq('consent','revoke');
+fbq('init', '959022406709300');
+fbq('track', 'PageView');
+</script>
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+  document.addEventListener('click',function(e){
+    var el=e.target.closest('a,button');
+    if(!el)return;
+    var txt=(el.textContent||'').replace(/\s+/g,' ').trim().toLowerCase();
+    if(txt.indexOf('book your free strategy call')!==-1||txt.indexOf('book a call')!==-1||txt.indexOf('book a free strategy call')!==-1){
+      fbq('track','Lead',{content_name:'Book Strategy Call'});
+    }else if(txt.indexOf('check my search ranking')!==-1){
+      fbq('track','Lead',{content_name:'Check Search Ranking'});
+    }
+  });
+});
+</script>
+<!-- End Meta Pixel -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Airbnb Q3 2026 Earnings: What Hosts Need to Know | RevWhisper Blog</title>
+<meta name="description" content="Airbnb&#x27;s Q3 2026 results: bookings up 16%, demand outpacing listings, and new pricing tools for hosts. What it means and what to check this quarter.">
+<link rel="canonical" href="https://revwhisper.com/blog/airbnb-q3-2026-earnings">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Airbnb Q3 2026 Earnings: What Hosts Need to Know | RevWhisper Blog">
+<meta property="og:description" content="Airbnb&#x27;s Q3 2026 results: bookings up 16%, demand outpacing listings, and new pricing tools for hosts. What it means and what to check this quarter.">
+<meta property="og:url" content="https://revwhisper.com/blog/airbnb-q3-2026-earnings">
+<meta property="og:site_name" content="RevWhisper">
+<meta property="og:image" content="https://revwhisper.com/images/blog/airbnb-q3-2026-earnings.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="675">
+<meta property="article:published_time" content="2026-11-06">
+<meta property="article:modified_time" content="2026-11-06">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Airbnb Q3 2026 Earnings: What Hosts Need to Know | RevWhisper Blog">
+<meta name="twitter:description" content="Airbnb&#x27;s Q3 2026 results: bookings up 16%, demand outpacing listings, and new pricing tools for hosts. What it means and what to check this quarter.">
+<meta name="twitter:image" content="https://revwhisper.com/images/blog/airbnb-q3-2026-earnings.png">
+
+<link rel="icon" href="/icons/favicon-light.svg" type="image/svg+xml" media="(prefers-color-scheme: light)">
+<link rel="icon" href="/icons/favicon-dark.svg" type="image/svg+xml" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/icons/favicon-light.svg" type="image/svg+xml">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Airbnb Q3 2026 Earnings: What Hosts Need to Know About Demand and Pricing",
+  "description": "Airbnb's Q3 2026 results: bookings up 16%, demand outpacing listings, and new pricing tools for hosts. What it means and what to check this quarter.",
+  "image": "https://revwhisper.com/images/blog/airbnb-q3-2026-earnings.png",
+  "datePublished": "2026-11-06",
+  "dateModified": "2026-11-06",
+  "author": {
+    "@type": "Person",
+    "name": "Marisa @ RevWhisper",
+    "url": "https://revwhisper.com"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "RevWhisper",
+    "url": "https://revwhisper.com",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://revwhisper.com/icons/favicon-light.svg"
+    }
+  },
+  "mainEntityOfPage": "https://revwhisper.com/blog/airbnb-q3-2026-earnings"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "When did Airbnb report Q3 2026 earnings?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Thursday, November 5, 2026."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much did Airbnb grow in Q3 2026?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Nights and seats booked grew 16%, and revenue grew 19% to $4.9 billion, Airbnb's fastest revenue growth in more than three years."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much does a host get paid on a $100 night after Airbnb's fee?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "$84.50, after the single 15.5% host service fee. Listings in Brazil and Mexico pay 16%."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does Airbnb have its own dynamic pricing?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Airbnb recommends a price range and adjusts your pricing daily. You can change the range at any time. It started rolling out in October 2026."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "When is Airbnb's AI agent coming?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Airbnb plans to roll it out to guests in the first half of 2027."
+      }
+    }
+  ]
+}
+</script>
+<link rel="stylesheet" href="/assets/fonts.css">
+<link rel="stylesheet" href="/assets/blog-post.css?v=20261030">
+<link rel="stylesheet" href="/assets/blog-graphics.css?v=20261105">
+<link rel="stylesheet" href="/assets/header.css">
+<script defer src="/assets/header.js"></script>
+<link rel="stylesheet" href="/assets/footer.css">
+<script defer src="/assets/blog-post.js"></script>
+<!-- X Pixel base code -->
+<script src="/assets/x-pixel-base.js?v=2"></script>
+<!-- End X Pixel base code -->
+</head>
+<body>
+
+
+<!-- HEADER:START -->
+<nav class="float-bar" id="float-bar" aria-label="Primary">
+  <a href="/" class="fb-logo">
+    <div class="lm"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24" fill="none" aria-hidden="true"><path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <span class="ln">RevWhisper</span>
+  </a>
+
+  <div class="fb-links" id="fb-links">
+
+    <!-- Services dropdown -->
+    <div class="fb-dropdown" data-dropdown>
+      <button class="fb-link fb-dropdown-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="fb-menu-services">
+        Services
+        <svg class="fb-chevron" viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="fb-menu" id="fb-menu-services">
+
+        <!-- Listing Optimization: document with text lines -->
+        <a href="/airbnb-listing-optimization" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/>
+              <path d="M14 2v4a2 2 0 0 0 2 2h4"/>
+              <path d="M10 9H8"/>
+              <path d="M16 13H8"/>
+              <path d="M16 17H8"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Listing Optimization</span>
+            </span>
+            <span class="fb-menu-desc">Title, description, and amenities tuned for conversion</span>
+          </span>
+        </a>
+
+        <!-- Revenue Management: stacked coins / database cylinder -->
+        <a href="/revenue-management" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <ellipse cx="12" cy="5" rx="9" ry="3"/>
+              <path d="M3 5v14a9 3 0 0 0 18 0V5"/>
+              <path d="M3 12a9 3 0 0 0 18 0"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Revenue Management</span>
+            </span>
+            <span class="fb-menu-desc">Dynamic pricing, minimum stays, seasonal strategy</span>
+          </span>
+        </a>
+
+        <!-- Photo Optimization: photo frame with sun + mountains -->
+        <a href="/photoediting" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              <circle cx="9" cy="9" r="2"/>
+              <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Photo Optimization</span>
+            </span>
+            <span class="fb-menu-desc">Cover photos, photo order, professional editing</span>
+          </span>
+        </a>
+
+      </div>
+    </div>
+
+    <!-- Resources dropdown -->
+    <div class="fb-dropdown" data-dropdown>
+      <button class="fb-link fb-dropdown-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="fb-menu-resources">
+        Resources
+        <svg class="fb-chevron" viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="fb-menu" id="fb-menu-resources">
+
+        <!-- Blog: notebook with binding + text lines -->
+        <a href="/blog" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="4" y="2" width="16" height="20" rx="2"/>
+              <path d="M2 6h4"/>
+              <path d="M2 10h4"/>
+              <path d="M2 14h4"/>
+              <path d="M2 18h4"/>
+              <path d="M9.5 8h5"/>
+              <path d="M9.5 12H16"/>
+              <path d="M9.5 16H14"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Blog</span>
+            </span>
+            <span class="fb-menu-desc">Strategies, data, and host insights</span>
+          </span>
+        </a>
+
+        <!-- Case Studies: open book -->
+        <a href="/case-study" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 7v14"/>
+              <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Case Studies</span>
+            </span>
+            <span class="fb-menu-desc">Real revenue lifts from real listings</span>
+          </span>
+        </a>
+
+        <!-- Free Listing Audit: clean magnifying glass -->
+        <a href="/#audit-form" class="fb-menu-item js-to-audit">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="10.5" cy="10.5" r="6.5"/>
+              <path d="m15.5 15.5 4 4"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Free Listing Audit</span>
+            </span>
+            <span class="fb-menu-desc">Ranking, pricing and conversion, walked through live</span>
+          </span>
+        </a>
+      </div>
+    </div>
+
+    <a href="/get-started" class="fb-link fb-link--mobile-cta">Book a Strategy Call</a>
+  </div>
+
+  <a href="/get-started" class="fb-cta">Book a Strategy Call</a>
+  <button class="fb-hamburger" id="fb-hamburger" aria-label="Toggle navigation" aria-expanded="false">
+    <span class="fb-ham-line"></span>
+    <span class="fb-ham-line"></span>
+    <span class="fb-ham-line"></span>
+  </button>
+</nav>
+<!-- HEADER:END -->
+
+<main class="post">
+  <a href="/blog" class="post-back">&larr; Back to Blog</a>
+
+  <div class="post-tags">
+    <span class="post-tag">Platform Changes</span>
+    <span class="post-tag">Pricing</span>
+  </div>
+  <h1>Airbnb Q3 2026 Earnings: What Hosts Need to Know About Demand and Pricing</h1>
+  <p class="post-dek">Bookings grew faster than listings, and Airbnb is putting more pricing tools in front of hosts. Here is what the Q3 2026 results mean for your pricing, and what to check this quarter.</p>
+
+  <p class="post-byline"><span class="by">By Marisa @ RevWhisper</span><span>Last updated <time datetime="2026-11-06">November 6, 2026</time></span></p>
+
+  <div class="post-answer">
+    <p>Airbnb reported Q3 2026 results on November 5, 2026. Nights and seats booked grew 16% while active listings grew at a high-single-digit rate, so guest demand is outpacing supply. Airbnb is also pushing hosts toward its own pricing tools: dynamic pricing, calendar tips that suggest discounts and shorter minimum stays, and a 15% top-rated guest discount.</p>
+  </div>
+
+  <figure class="post-hero">
+    <div class="hx" role="img" aria-label="16%: more nights and seats booked on Airbnb in Q3 2026; demand is growing faster than listings. Airbnb&#x27;s Q3 2026: revenue $4.9 billion, up 19%; booking value $27.7 billion, up 21%; active listings up high single digits; Q4 revenue outlook up 16% to 18%; Airbnb&#x27;s AI agent for guests in the first half of 2027. From Airbnb&#x27;s Q3 2026 results.">
+<!-- HERO:START -->
+<div class="in site v3 cw-fern"><div class="g2"><div class="lcol"><div class="a rise bigt" style="--d:0.2s"><b>16%</b><span>More nights and seats booked on Airbnb in Q3&nbsp;2026</span><i>Demand is growing faster than&nbsp;listings</i></div><span class="a fade src" style="--d:1.2s">From Airbnb's Q3 2026&nbsp;results</span></div><div class="rcol"><div class="a pop rcard" style="--d:0.35s"><div class="rp"><b>Airbnb's Q3&nbsp;2026</b></div><div class="rl"><span>Revenue</span><span class="num">$4.9B, up&nbsp;19%</span></div><div class="rl"><span>Booking&nbsp;value</span><span class="num">$27.7B, up&nbsp;21%</span></div><div class="rl"><span>Active&nbsp;listings</span><span class="num">Up high single&nbsp;digits</span></div><div class="rl"><span>Q4 revenue&nbsp;outlook</span><span class="num">Up 16% to&nbsp;18%</span></div><div class="rl tot"><span>Airbnb's AI agent for&nbsp;guests</span><span class="num">First half of&nbsp;2027</span></div></div></div></div></div>
+<!-- HERO:END -->
+    </div>
+  </figure>
+
+  <article class="post-body">
+    <span class="cwv" data-cw="fern" hidden></span><h2>What happened in Airbnb's Q3 2026 earnings?</h2>
+    <p>Airbnb reported its third-quarter results on Thursday, November 5, 2026. Growth sped up. Nights and seats booked rose 16% from a year earlier, a clear speed-up from Q2. Revenue was $4.9 billion, up 19%, Airbnb's fastest revenue growth in more than three years. Gross booking value was $27.7 billion, up 21%, and the average daily rate was moderately higher. In North America, nights and seats booked grew at a low-double-digit rate, the highest growth Airbnb has seen there in four years.</p>
+    <div class="tablewrap"><table><thead><tr><th>Airbnb, Q3 2026</th><th>Result</th></tr></thead><tbody>
+    <tr><td>Nights and seats booked</td><td>Up 16% from Q3 2025</td></tr>
+    <tr><td>Revenue</td><td>$4.9 billion, up 19%</td></tr>
+    <tr><td>Gross booking value</td><td>$27.7 billion, up 21%</td></tr>
+    <tr><td>Average daily rate</td><td>Moderately higher</td></tr>
+    <tr><td>Active listings</td><td>Up at a high-single-digit rate</td></tr>
+    </tbody></table></div>
+    <p>For October to December, Airbnb expects at least low-double-digit growth in nights and seats booked, and revenue of $3.22 billion to $3.28 billion, up 16% to 18%.</p>
+    <p>Sources: Airbnb's <a href="https://news.airbnb.com/airbnb-q3-2026-financial-results">Q3 2026 financial results</a> and its <a href="https://www.sec.gov/Archives/edgar/data/0001559720/000119312526449727/d437988dex991.htm">Q3 2026 shareholder letter</a>, also on <a href="https://investors.airbnb.com">Airbnb Investor Relations</a>.</p>
+    <h2>Is guest demand growing faster than Airbnb listings?</h2>
+    <p>Yes. Active listings grew at a high-single-digit rate in Q3, slower than the 16% growth in nights and seats booked. Guests are also booking further ahead, which Airbnb puts partly down to Reserve Now, Pay Later.</p>
+    <p>More guests chasing a slower-growing pool of homes is good for occupancy, but it doesn't reach every listing equally. Guests still book what they see first, so the listings near the top of search get most of the extra demand.</p>
+    <h2>What is Airbnb changing about pricing?</h2>
+    <p>Airbnb is putting more pricing tools in front of hosts, most of them built into the calendar.</p>
+    <ul><li><strong>Dynamic pricing.</strong> Airbnb recommends a price range, and your pricing then adjusts automatically every day. You can change the range at any time to stay competitive with similar listings. It started rolling out in October 2026.</li>
+    <li><strong>Calendar insights and tips.</strong> Pricing and availability insights appear right in your calendar. Airbnb looks at your area, including the amenities guests search for and the types of stays they book, and suggests actions you can take there: allowing bookings further in advance, requiring less advance notice, adding discounts, adjusting your base price or reducing minimum nights. New tips, such as adjusting last-minute settings to fill unbooked nights, started rolling out in October.</li>
+    <li><strong>A calendar for hosts with several listings.</strong> It recommends changes to minimum stays and last-minute discounts to fill unbooked nights. It can automatically shorten a minimum stay to open up the nights between bookings, or offer last-minute discounts as unbooked nights get close. Nearly 1 in 4 eligible hosts opted in during its first month of early access, and in the coming months it becomes the default desktop calendar for hosts with 6 or more listings.</li>
+    <li><strong>An earnings dashboard.</strong> It compares your expected earnings with similar listings nearby and suggests actions, such as turning on Instant Book. AI summaries of your performance are rolling out to hosts with 5 or fewer listings first.</li>
+    <li><strong>A top-rated guest discount.</strong> Hosts can offer 15% off to guests rated 4.8 stars or above with at least 3 reviews.</li></ul>
+    <p>Sources: Airbnb's <a href="https://news.airbnb.com/airbnb-2026-fall-update">2026 Fall Update</a>, and the Resource Center articles <a href="https://www.airbnb.com/resources/hosting-homes/a/new-tools-to-host-smarter-not-harder-776">New tools to host smarter, not harder</a> and <a href="https://www.airbnb.com/resources/hosting-homes/a/all-new-insights-to-help-your-listing-stand-out-768">All-new insights to help your listing stand out</a>.</p>
+    <h2>What does the 15.5% host fee mean for your payout?</h2>
+    <p>Airbnb's single service fee is 15.5%, paid by hosts. Its shareholder letter says the simpler fee structure is "helping our hosts price more competitively." On October 13, 2026, Airbnb switched hosts who manage prices with property management or channel management software to the single fee. If you didn't take action by October 13, your prices and payouts per night are now lower. On a $100 nightly price, you're paid $84.50. Listings in Brazil and Mexico stay at 16%.</p>
+    <p>Source: <a href="https://www.airbnb.com/resources/hosting-homes/a/simplifying-airbnb-service-fees-746">Simplifying Airbnb service fees</a>. For the pricing math, see <a href="/blog/airbnb-host-fee-squeeze-pricing-math">The 15.5% Fee Squeeze</a>.</p>
+    <h2>Should Airbnb hosts lower their prices to fill more nights?</h2>
+    <p>Not across the board. Many of Airbnb's suggestions point the same way: add discounts, lower your base price, shorten minimum stays, offer last-minute deals. A lower price only wins bookings if guests see your listing for that date. If your listing sits on page three for a weekend, a discount doesn't move it to page one. You give away money on the bookings you would have had anyway, and the reason guests aren't finding you is still there.</p>
+    <p>The math also looks different from each side. Airbnb earns its fee on every booking, so more bookings at slightly lower prices helps Airbnb across the whole marketplace. For one host, a price cut or discount pays off only if it fills nights that would otherwise sit empty.</p>
+    <blockquote class="tip"><strong>Test it before you roll it out.</strong> Pick a few open dates, lower them or add the discount, and leave similar dates where they are. After two or three weeks, compare bookings and revenue on both sets. Check where those dates rank in search before you start, so you know whether price was the problem.</blockquote>
+    <p>For how the main pricing tools compare, including Airbnb's own, see <a href="/blog/best-airbnb-pricing-tools">Best Airbnb Pricing Tools</a>.</p>
+    <h2>What is Airbnb's AI agent, and when is it coming?</h2>
+    <p>Airbnb is building its own AI agent to help guests plan and book trips, and plans to roll it out to guests in the first half of 2027. Airbnb says it isn't a traditional chatbot or chat window. It draws on a library of hundreds of travel-specific interface elements, such as maps, photos, comparisons, calendars and itineraries, and puts them together in real time to match what the guest is looking for.</p>
+    <ul><li><strong>Before the trip,</strong> it will help guests explore options, decide with the people they're traveling with, and take action directly in Airbnb.</li>
+    <li><strong>During the trip,</strong> it will help with changing a reservation, resolving a payment issue, refunds, rebooking and 24-hour safety support.</li>
+    <li><strong>Over time,</strong> Airbnb wants it to help guests plan a whole trip in one place, across homes, hotels, services and experiences.</li></ul>
+    <p>Airbnb describes the agent as guest-facing. It hasn't said anything about how the agent will treat hosts, listings or search ranking.</p>
+    <h2>What else is changing for Airbnb listings?</h2>
+    <ul><li><strong>AI descriptions in search.</strong> Search results now include AI-powered descriptions that highlight the key features of each home, starting in the US. Make sure your title, photos and amenities show off your home's best features. See <a href="/blog/amenity-completeness-listing-visibility">Amenity Completeness</a>.</li>
+    <li><strong>3D floor plans.</strong> Hosts can scan rooms with a compatible iPhone Pro or iPad to add an interactive 3D floor plan, so guests understand a home's layout before they book. Basic amenities are detected automatically. It works with iPhone 12 Pro or later and iPads with a LiDAR camera, and reaches all hosts in the coming weeks.</li>
+    <li><strong>Smart Setup.</strong> New hosts can enter a home's address to create a listing, with the option to use property details about the home and edit them before publishing. It's rolling out now for eligible US homes, and outside the US early next year.</li></ul>
+    <h2>What did Airbnb say about Reserve Now, Pay Later?</h2>
+    <p>Airbnb says guests are booking further in advance, in part because of Reserve Now, Pay Later. It's available for listings with a Flexible or Moderate cancellation policy. The guest's payment method is charged on the scheduled date shown at checkout, and guests get an email 3 days before the charge. Your cancellation policy terms don't change, and neither does what you receive if a guest cancels.</p>
+    <p>For hosts, that means more bookings arrive far ahead and aren't paid until later. Watch those reservations as their payment dates near, and have a plan for refilling any nights that open up. Sources: <a href="https://news.airbnb.com/reserve-now-pay-later-is-now-available-worldwide">Reserve Now, Pay Later is now available worldwide</a> and the <a href="https://www.airbnb.com/help/article/2143">Help Center</a>. See also <a href="/blog/reserve-now-pay-later-revenue-strategy">Reserve Now, Pay Later</a> and <a href="/blog/airbnb-cancellation-policies-for-hosts">Airbnb Cancellation Policies for Hosts</a>.</p>
+    <h2>What else did Airbnb announce?</h2>
+    <ul><li><strong>Customer support:</strong> about 40% of all support issues were resolved without a human agent in Q3, up from about a third in Q2. Airbnb is expanding its AI assistant to voice support in the US, so guests and hosts can get help over the phone.</li>
+    <li><strong>Airbnb.org:</strong> announced October 28, Airbnb now donates $0.10 of its revenue per stay to Airbnb.org. There's no donation for stays canceled before check-in, or for experiences or services bookings. Airbnb says hosts won't earn less and guests won't pay more.</li>
+    <li><strong>Hotels:</strong> thousands of boutique and independent hotels in more than 60 destinations. Hotels are still a single-digit share of nights booked.</li>
+    <li><strong>American Express:</strong> a partnership launched October 22 brings more than one million Airbnb listings to Amex Travel for eligible US card members.</li></ul>
+    <h2>What should Airbnb hosts check this quarter?</h2>
+    <ul><li><strong>Search visibility on open dates.</strong> Before you change a price, see where you rank for that date.</li>
+    <li><strong>Your prices after the 15.5% fee.</strong> If you were switched on October 13 and didn't adjust, you're earning less per night.</li>
+    <li><strong>Your dynamic pricing range.</strong> If you turn it on, check the range against what similar listings charge before you let it run.</li>
+    <li><strong>Any discount or price drop, on a few dates first.</strong> Test Airbnb's suggestions before you apply them to your whole calendar.</li>
+    <li><strong>Far-out Reserve Now, Pay Later bookings.</strong> Know which stays aren't paid yet.</li>
+    <li><strong>Your listing details and amenities.</strong> Airbnb's AI descriptions highlight a home's key features.</li></ul>
+
+    <section class="post-facts">
+      <h2>Who is RevWhisper for, and what does it include?</h2>
+      <p>RevWhisper is a done-for-you Airbnb revenue management and listing optimization service. It is for owners who want a team to run their pricing, search ranking and listing content, from 2-bedroom cabins to 20-guest estates.</p>
+      <p>The service includes:</p>
+      <ul><li>Daily pricing managed in PriceLabs, set against a comp set of the listings guests actually compare</li>
+      <li>Minimum stay, gap night and last-minute rules</li>
+      <li>Search rank tracking on every open date, every day</li>
+      <li>Title, description, amenity and photo order optimization, including photo editing</li>
+      <li>Monthly performance reporting</li></ul>
+      <p><strong>Pricing:</strong> a flat monthly retainer per listing. RevWhisper does not take a percentage of gross revenue. <strong>Scale:</strong> over 100 hosts. <strong>Where:</strong> hosts across North America, and anywhere else with enough comparable listings to price against. The work is done remotely, so location isn't a limit. <strong>Results:</strong> a 27% average revenue lift within 90 days. <strong>Free listing audit:</strong> a live 30-minute call with a RevWhisper strategist that shows where your listing ranks on every open date, why views aren't turning into bookings, and what to change first. <a href="/#audit-form">Book the free listing audit</a>. No account access is required.</p>
+    </section>
+
+    <section class="post-faq">
+      <h2>Frequently asked questions</h2>
+      <h3>When did Airbnb report Q3 2026 earnings?</h3>
+      <p>Thursday, November 5, 2026.</p>
+      <h3>How much did Airbnb grow in Q3 2026?</h3>
+      <p>Nights and seats booked grew 16%, and revenue grew 19% to $4.9 billion, Airbnb's fastest revenue growth in more than three years.</p>
+      <h3>How much does a host get paid on a $100 night after Airbnb's fee?</h3>
+      <p>$84.50, after the single 15.5% host service fee. Listings in Brazil and Mexico pay 16%.</p>
+      <h3>Does Airbnb have its own dynamic pricing?</h3>
+      <p>Yes. Airbnb recommends a price range and adjusts your pricing daily. You can change the range at any time. It started rolling out in October 2026.</p>
+      <h3>When is Airbnb's AI agent coming?</h3>
+      <p>Airbnb plans to roll it out to guests in the first half of 2027.</p>
+    </section>
+
+    <nav class="post-related" aria-label="Related reading">
+      <h2>Related reading</h2>
+      <ul>
+        <li><a href="/blog/best-airbnb-pricing-tools">Best Airbnb Pricing Tools, and When to Hire a Manager Instead</a></li>
+        <li><a href="/blog/reserve-now-pay-later-revenue-strategy">Reserve Now, Pay Later Hit Over 70% Adoption. Here&#x27;s How It Changes Your Revenue Strategy.</a></li>
+        <li><a href="/blog/airbnb-host-fee-squeeze-pricing-math">The 15.5% Fee Squeeze: How Airbnb&#x27;s New Host Fee Changes Your Pricing Math</a></li>
+        <li><a href="/#audit-form">Get your free listing audit</a></li>
+      </ul>
+    </nav>
+  </article>
+
+  <aside class="post-cta">
+    <h2>Want to see where your listing ranks?</h2>
+    <p>We pull up your listing live on a free 30-minute call and show you where it ranks for every open date, why views aren't turning into bookings, and what to change first.</p>
+    <a class="post-cta-btn" href="/#audit-form">Get your free listing audit</a>
+  </aside>
+</main>
+
+<!-- FOOTER:START -->
+<footer class="site-footer">
+  <div class="w">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">
+          <div class="lm">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24" fill="none" aria-hidden="true">
+              <path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="#32302F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="#32302F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="footer-logo-name">RevWhisper</span>
+        </div>
+        <p class="footer-tag">A revenue intelligence team that layers into your Airbnb listing to accelerate performance and maximize earnings.</p>
+        <p class="footer-tag footer-address">501 East Kennedy Boulevard, Tampa, FL 33602 (Space 15&ndash;144)</p>
+        <div class="footer-socials">
+          <a href="https://x.com/RevWhisper" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+          <a href="https://www.instagram.com/rev.whisper/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          </a>
+          <a href="https://www.facebook.com/groups/airbnblistingoptimization" target="_blank" rel="noopener noreferrer" aria-label="Facebook Group">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <p class="footer-col-title">Explore</p>
+        <a href="/" class="footer-link">Home</a>
+        <a href="/airbnb-listing-optimization" class="footer-link">Listing Optimization</a>
+        <a href="/revenue-management" class="footer-link">Revenue Management</a>
+        <a href="/photoediting" class="footer-link">Photo Editing</a>
+        <a href="/case-study" class="footer-link">Case Study</a>
+        <a href="/blog" class="footer-link">Blog</a>
+        <a href="/get-started" class="footer-link">Book a Strategy Call</a>
+      </div>
+      <div class="footer-col">
+        <p class="footer-col-title">Resources</p>
+        <a href="/#audit-form" class="footer-link js-to-audit">Free Listing Audit</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 MCO CORP d/b/a RevWhisper. All rights reserved.</span>
+      <nav class="footer-legal" aria-label="Legal">
+        <a href="/privacy">Privacy Policy</a>
+        <a href="/terms">Terms of Service</a>
+      </nav>
+      <span>Stop Guessing. Start Whispering.</span>
+    </div>
+  </div>
+</footer>
+<!-- FOOTER:END -->
+
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
