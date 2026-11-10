@@ -1045,17 +1045,18 @@ function renderSuccess(data){
   if(addcal&&start){
     const calEnd=new Date(start.getTime()+30*60000);
     const z=function(d){return d.toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'');};
-    const meet=(data&&typeof data.meetingUrl==='string'&&/^https:\/\/meet\.google\.com\/[A-Za-z0-9-]+$/.test(data.meetingUrl))?data.meetingUrl:'';
+    // No Meet link in these events, on purpose: calls get swapped between reps and the link changes
+    // with the host, so a link saved at booking time sends people to the wrong meeting.
     const calTitle=encodeURIComponent('Your RevWhisper live audit');
-    const calDetails=encodeURIComponent('Your live Airbnb performance audit with RevWhisper, 30 minutes over Google Meet.'+(meet?'\n\nJoin: '+meet:''));
+    const calDetails=encodeURIComponent('Your live Airbnb performance audit with RevWhisper, 30 minutes over Google Meet.\n\nYour Google Meet link will be emailed to you 1 hour before your call.');
     const g=document.getElementById('addcal-g');
     if(g){
-      g.href='https://calendar.google.com/calendar/render?action=TEMPLATE&text='+calTitle+'&dates='+z(start)+'/'+z(calEnd)+'&details='+calDetails+(meet?'&location='+encodeURIComponent(meet):'');
+      g.href='https://calendar.google.com/calendar/render?action=TEMPLATE&text='+calTitle+'&dates='+z(start)+'/'+z(calEnd)+'&details='+calDetails;
       g.onclick=function(){rwTrack('add_to_calendar',{kind:'google',page:'audit-booking'});};
     }
     const ics=document.getElementById('addcal-ics');
     if(ics){
-      ics.href='/api/booking-ics?start='+encodeURIComponent(start.toISOString())+(meet?'&meet='+encodeURIComponent(meet):'');
+      ics.href='/api/booking-ics?start='+encodeURIComponent(start.toISOString());
       ics.onclick=function(){rwTrack('add_to_calendar',{kind:'ics',page:'audit-booking'});};
     }
     addcal.hidden=false;

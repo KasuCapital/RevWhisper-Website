@@ -1,8 +1,8 @@
 // Post-booking "what to expect" email for the live audit. Fired from /api/cal-booking on a
 // successful booking and sent immediately (no scheduling — one fewer point of failure). Deliberately
 // SHORT — the host has already read the /audit-booking confirmation screen, so this leads with the
-// Google Meet link (the one actionable thing) and the genuinely new content (a plain-English "what
-// RevWhisper is"), not a page recap.
+// time, says the Google Meet link comes 1 hour before the call, and gives the genuinely new content
+// (a plain-English "what RevWhisper is"), not a page recap.
 //
 // Hard rules:
 //  - NEVER throws. A confirmation-email failure must not affect the booking.
@@ -60,20 +60,18 @@ function buildAuditConfirmationHtml({ name, startIso, timeZone, listings, meetin
   const prop = single ? 'property' : 'portfolio';
   const when = esc(formatWhen(startIso, timeZone));
   const day = esc(weekday(startIso, timeZone));
-  const meet = (typeof meetingUrl === 'string' && /^https?:\/\//.test(meetingUrl)) ? meetingUrl : '';
   const whenLine = when
     ? `You're set for <strong style="color:#32302F;">${when}</strong>, about 30 minutes over Google Meet.`
     : `Your audit is confirmed, about 30 minutes over Google Meet.`;
 
-  // The Meet link is the one actionable thing — lead with it. If Cal.com hasn't surfaced it yet,
-  // fall back to the "we'll send it" reassurance rather than showing a broken button.
-  const meetBlock = meet
-    ? `<a href="${esc(meet)}" style="display:inline-block;background:#4A6741;color:#ffffff;text-decoration:none;font-size:15px;font-weight:600;padding:13px 26px;border-radius:8px;">Join on Google Meet</a>
-        <p style="font-size:13px;color:#a39e9b;margin:11px 0 0;">It's also in your calendar invite, and we'll send a reminder before your call.</p>`
-    : `<p style="font-size:15px;line-height:1.6;color:#706b68;margin:0;">Your Google Meet link is in the calendar invite we just sent, and we'll have it ready for you here before your call.</p>`;
+  // No Meet link or button here, on purpose. Calls get swapped between reps and the link changes
+  // with the host, so a link sent at booking time sends people to the wrong meeting. The link goes
+  // out from Cal.com 1 hour before the call instead. (meetingUrl is still accepted, just unused.)
+  const meetBlock = `<p style="font-size:16px;line-height:1.6;color:#32302F;margin:0;"><strong>Your Google Meet link will be emailed to you 1 hour before your call.</strong></p>
+        <p style="font-size:16px;line-height:1.6;color:#706b68;margin:14px 0 0;"><strong style="color:#32302F;">One heads-up:</strong> we sometimes change which of our team members takes your call. If that happens, you may get an automated notice saying your meeting was canceled or updated. Your call is still on for the same day and time, and there's nothing you need to do.</p>`;
 
   return `
-    <div style="display:none;max-height:0;overflow:hidden;opacity:0;">Your audit is confirmed — here's your Google Meet link and what we'll cover.</div>
+    <div style="display:none;max-height:0;overflow:hidden;opacity:0;">Your audit is confirmed. Your Google Meet link arrives 1 hour before the call.</div>
     <div style="font-family:'DM Sans',Helvetica,Arial,sans-serif;max-width:600px;margin:0 auto;color:#32302F;background:#ffffff;">
       <div style="padding:32px 24px;">
         <img src="https://revwhisper.com/images/email/rw-mark.png" width="34" height="34" alt="RevWhisper" style="display:block;border:0;margin:0 0 24px;">

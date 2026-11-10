@@ -1,4 +1,4 @@
-// GET /api/booking-ics?start=<ISO>[&meet=<https://meet.google.com/...>]
+// GET /api/booking-ics?start=<ISO>
 // Serves the booked audit as a downloadable calendar event (text/calendar) for the
 // success screen's "Apple / Outlook" link. A data: URI .ics is unreliable on iOS Safari,
 // so a real endpoint with the right content type is the dependable route — the OS opens
@@ -6,11 +6,9 @@
 //
 // Query-driven by design (no Cal.com round-trip, works even when the booking response is
 // long gone). Everything in the event is a fixed string except `start` (must parse as a
-// real date) and `meet` (pinned to Google Meet URLs), so the endpoint can't be repurposed
-// to generate arbitrary spam invites.
+// real date), so the endpoint can't be repurposed to generate arbitrary spam invites.
 
 const DURATION_MIN = 30;
-const MEET_RE = /^https:\/\/meet\.google\.com\/[A-Za-z0-9-]+$/;
 
 function icsStamp(d) {
   return d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
@@ -31,13 +29,14 @@ module.exports = async function handler(req, res) {
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
     return res.end(JSON.stringify({ error: 'A valid start time is required (ISO 8601).' }));
   }
-  const meetRaw = url.searchParams.get('meet') || '';
-  const meet = MEET_RE.test(meetRaw) ? meetRaw : '';
+  // A ?meet= param is ignored on purpose (pages cached before this change may still send one):
+  // calls get swapped between reps and the Meet link changes with the host, so a link saved at
+  // booking time sends people to the wrong meeting. The link goes out 1 hour before the call.
   const end = new Date(start.getTime() + DURATION_MIN * 60 * 1000);
 
   // Commas are reserved in ICS text values (RFC 5545) — escape the one in the copy.
   const description = 'Your live Airbnb performance audit with RevWhisper\\, 30 minutes over Google Meet.' +
-    (meet ? '\\n\\nJoin: ' + meet : '');
+    '\\n\\nYour Google Meet link will be emailed to you 1 hour before your call.';
 
   // CRLF line endings per RFC 5545.
   const lines = [
@@ -52,7 +51,6 @@ module.exports = async function handler(req, res) {
     `DTEND:${icsStamp(end)}`,
     'SUMMARY:Your RevWhisper live audit',
     `DESCRIPTION:${description}`,
-    ...(meet ? [`LOCATION:${meet}`, `URL:${meet}`] : []),
     'BEGIN:VALARM',
     'ACTION:DISPLAY',
     'DESCRIPTION:Your RevWhisper live audit starts in 30 minutes',
