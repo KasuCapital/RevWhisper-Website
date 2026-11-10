@@ -16,7 +16,10 @@ function isEmailEnabled() {
 // can decide whether the failure matters (fire-and-forget vs. surface to the user).
 // scheduledAt (optional): an ISO-8601 string or Resend natural-language offset (e.g. "in 5 min").
 // When set, Resend holds the email and delivers it at that time instead of immediately.
-async function sendEmail({ to, subject, html, from = DEFAULT_FROM, replyTo = DEFAULT_REPLY_TO, scheduledAt }) {
+// idempotencyKey (optional): sent as Resend's Idempotency-Key header. Resend remembers a key for
+// 24 hours and will not send a second email for the same key, so a job that runs repeatedly over
+// the same item can call this every time without the recipient getting duplicates.
+async function sendEmail({ to, subject, html, from = DEFAULT_FROM, replyTo = DEFAULT_REPLY_TO, scheduledAt, idempotencyKey }) {
   if (!RESEND_API_KEY) {
     console.warn('RESEND_API_KEY not set — skipping email.');
     return { ok: false, skipped: true, error: 'RESEND_API_KEY not configured.' };
@@ -27,7 +30,8 @@ async function sendEmail({ to, subject, html, from = DEFAULT_FROM, replyTo = DEF
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${RESEND_API_KEY}`,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        ...(idempotencyKey ? { 'Idempotency-Key': String(idempotencyKey).slice(0, 256) } : {})
       },
       body: JSON.stringify({
         from,
@@ -45,7 +49,9 @@ async function sendEmail({ to, subject, html, from = DEFAULT_FROM, replyTo = DEF
       return { ok: false, status: res.status, error: text || `Resend returned ${res.status}` };
     }
 
-    return { ok: true, status: res.status };
+    let id;
+    try { id = (await res.json()).id; } catch { id = undefined; }
+    return { ok: true, status: res.status, id };
   } catch (err) {
     console.error('Resend email error:', err);
     return { ok: false, error: err && err.message ? err.message : 'Unknown Resend error.' };

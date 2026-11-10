@@ -1,7 +1,7 @@
 // Post-booking "what to expect" email for the live audit. Fired from /api/cal-booking on a
 // successful booking and sent immediately (no scheduling — one fewer point of failure). Deliberately
 // SHORT — the host has already read the /audit-booking confirmation screen, so this leads with the
-// time, says the Google Meet link comes 1 hour before the call, and gives the genuinely new content
+// time, says the Google Meet link comes 10 minutes before the call, and gives the genuinely new content
 // (a plain-English "what RevWhisper is"), not a page recap.
 //
 // Hard rules:
@@ -66,12 +66,12 @@ function buildAuditConfirmationHtml({ name, startIso, timeZone, listings, meetin
 
   // No Meet link or button here, on purpose. Calls get swapped between reps and the link changes
   // with the host, so a link sent at booking time sends people to the wrong meeting. The link goes
-  // out from Cal.com 1 hour before the call instead. (meetingUrl is still accepted, just unused.)
-  const meetBlock = `<p style="font-size:16px;line-height:1.6;color:#32302F;margin:0;"><strong>Your Google Meet link will be emailed to you 1 hour before your call.</strong></p>
+  // out 10 minutes before the call instead (/api/meeting-reminders). (meetingUrl is still accepted, just unused.)
+  const meetBlock = `<p style="font-size:16px;line-height:1.6;color:#32302F;margin:0;"><strong>Your Google Meet link will be emailed to you 10 minutes before your call.</strong></p>
         <p style="font-size:16px;line-height:1.6;color:#706b68;margin:14px 0 0;"><strong style="color:#32302F;">One heads-up:</strong> we sometimes change which of our team members takes your call. If that happens, you may get an automated notice saying your meeting was canceled or updated. Your call is still on for the same day and time, and there's nothing you need to do.</p>`;
 
   return `
-    <div style="display:none;max-height:0;overflow:hidden;opacity:0;">Your audit is confirmed. Your Google Meet link arrives 1 hour before the call.</div>
+    <div style="display:none;max-height:0;overflow:hidden;opacity:0;">Your audit is confirmed. Your Google Meet link arrives 10 minutes before the call.</div>
     <div style="font-family:'DM Sans',Helvetica,Arial,sans-serif;max-width:600px;margin:0 auto;color:#32302F;background:#ffffff;">
       <div style="padding:32px 24px;">
         <img src="https://revwhisper.com/images/email/rw-mark.png" width="34" height="34" alt="RevWhisper" style="display:block;border:0;margin:0 0 24px;">

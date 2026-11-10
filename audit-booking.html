@@ -1048,7 +1048,7 @@ function renderSuccess(data){
     // No Meet link in these events, on purpose: calls get swapped between reps and the link changes
     // with the host, so a link saved at booking time sends people to the wrong meeting.
     const calTitle=encodeURIComponent('Your RevWhisper live audit');
-    const calDetails=encodeURIComponent('Your live Airbnb performance audit with RevWhisper, 30 minutes over Google Meet.\n\nYour Google Meet link will be emailed to you 1 hour before your call.');
+    const calDetails=encodeURIComponent('Your live Airbnb performance audit with RevWhisper, 30 minutes over Google Meet.\n\nYour Google Meet link will be emailed to you 10 minutes before your call.');
     const g=document.getElementById('addcal-g');
     if(g){
       g.href='https://calendar.google.com/calendar/render?action=TEMPLATE&text='+calTitle+'&dates='+z(start)+'/'+z(calEnd)+'&details='+calDetails;

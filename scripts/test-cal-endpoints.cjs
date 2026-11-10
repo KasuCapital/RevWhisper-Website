@@ -9,7 +9,18 @@ require.cache[require.resolve(path.join(__dirname, '..', 'api', '_alert.js'))] =
   id: 'mock-alert', filename: 'mock-alert', loaded: true, children: [],
   exports: { sendBookingAlert: async (a) => { alerts.push(a); return { ok: true }; } }
 };
+// Capture customer emails instead of sending them. Default result mirrors "RESEND_API_KEY not set"
+// (skipped), which is what the booking tests have always run against.
+const emails = [];
+let emailResult = { ok: false, skipped: true };
+require.cache[require.resolve(path.join(__dirname, '..', 'api', '_resend.js'))] = {
+  id: 'mock-resend', filename: 'mock-resend', loaded: true, children: [],
+  exports: { sendEmail: async (a) => { emails.push(a); return emailResult; }, isEmailEnabled: () => false, DEFAULT_FROM: 'test' }
+};
 const booking = require(path.join(__dirname, '..', 'api', 'cal-booking.js'));
+const reminders = require(path.join(__dirname, '..', 'api', 'meeting-reminders.js'));
+const ics = require(path.join(__dirname, '..', 'api', 'booking-ics.js'));
+const { buildAuditConfirmationHtml } = require(path.join(__dirname, '..', 'api', '_audit-confirmation-email.js'));
 const slots = require(path.join(__dirname, '..', 'api', 'cal-slots.js'));
 const clientError = require(path.join(__dirname, '..', 'api', 'client-error.js'));
 const DAY = 24 * 60 * 60 * 1000;
@@ -348,6 +359,134 @@ async function run() {
   r = mockRes();
   await clientError({ method: 'GET', url: '/api/client-error', headers: {} }, r);
   check('client-error/get: 405', r.statusCode === 405);
+
+  // ───────────────────── meeting-link reminders ─────────────────────
+  // The Meet link must never be handed out at booking time (calls get swapped between reps and the
+  // link changes with the host); it goes out ~10 minutes before the call from /api/meeting-reminders.
+  const confHtml = buildAuditConfirmationHtml({ name: 'Jane Doe', startIso: '2026-07-01T15:00:00.000Z', timeZone: 'America/New_York', listings: '1', meetingUrl: 'https://meet.google.com/abc-defg-hij' });
+  check('confirmation: no Meet link or button', !/meet\.google\.com|Join on Google Meet/.test(confHtml));
+  check('confirmation: says link comes 10 minutes before', /10 minutes before your call/.test(confHtml));
+  r = mockRes();
+  await ics({ method: 'GET', url: '/api/booking-ics?start=2026-07-01T15:00:00.000Z&meet=' + encodeURIComponent('https://meet.google.com/abc-defg-hij'), headers: {} }, r);
+  check('ics: ignores a passed Meet link', r.statusCode === 200 && !/meet\.google\.com/.test(String(r._body)) && /10 minutes before your call/.test(String(r._body)), String(r._body).slice(0, 200));
+
+  const savedEnv = { CRON_SECRET: process.env.CRON_SECRET, CAL_API_KEY: process.env.CAL_API_KEY };
+  const cronReq = (q) => ({ method: 'GET', url: '/api/meeting-reminders' + (q || ''), headers: { authorization: 'Bearer cron-test' } });
+  const mk = (uid, minsFromNow, over) => Object.assign({
+    uid, status: 'accepted', eventTypeId: 5076967,
+    start: new Date(Date.now() + minsFromNow * 60000).toISOString(),
+    hosts: [{ name: 'Nicolas Luna', email: 'nluna@revwhisper.com' }],
+    meetingUrl: 'https://meet.google.com/new-link-xyz', location: 'https://meet.google.com/new-link-xyz',
+    attendees: [{ name: 'Jane Doe', email: 'jane@example.com', timeZone: 'America/New_York' }]
+  }, over || {});
+
+  // R1. No CRON_SECRET → fails closed, no upstream call
+  delete process.env.CRON_SECRET; process.env.CAL_API_KEY = 'cal-test';
+  installFetch([]); r = mockRes();
+  await reminders(cronReq(), r);
+  check('reminders/no-secret: 503', r.statusCode === 503 && fetchCalls.length === 0, r._body);
+
+  // R2. Wrong / missing bearer → 401, no upstream call
+  process.env.CRON_SECRET = 'cron-test';
+  installFetch([]); r = mockRes();
+  await reminders({ method: 'GET', url: '/api/meeting-reminders', headers: { authorization: 'Bearer nope' } }, r);
+  check('reminders/bad-auth: 401', r.statusCode === 401 && fetchCalls.length === 0);
+  r = mockRes();
+  await reminders({ method: 'GET', url: '/api/meeting-reminders', headers: {} }, r);
+  check('reminders/no-auth: 401', r.statusCode === 401);
+  r = mockRes();
+  await reminders({ method: 'POST', url: '/api/meeting-reminders', headers: { authorization: 'Bearer cron-test' } }, r);
+  check('reminders/post: 405', r.statusCode === 405);
+
+  // R3. Only accepted Discovery calls inside the 10-minute window are emailed
+  emails.length = 0; alerts.length = 0; emailResult = { ok: true, status: 200, id: 'e1' };
+  const dueStart = new Date(Date.now() + 8 * 60000).toISOString(); // a real booking's start never moves between runs
+  installFetch([fakeResponse(200, { data: [
+    mk('due-1', 8, { start: dueStart }),
+    mk('too-early', 25),
+    mk('long-gone', -30),
+    mk('cancelled', 5, { status: 'cancelled' }),
+    mk('other-type', 5, { eventTypeId: 7614063 })
+  ] })]);
+  r = mockRes();
+  await reminders(cronReq(), r);
+  check('reminders/window: 200', r.statusCode === 200 && r.json().ok === true, r._body);
+  check('reminders/window: exactly one email', emails.length === 1, JSON.stringify(emails.map(e => e.to)));
+  const em = emails[0] || {};
+  check('reminders/window: to the booker', em.to === 'jane@example.com');
+  check('reminders/window: subject', em.subject === 'Your meeting link');
+  check('reminders/window: carries the CURRENT link', /https:\/\/meet\.google\.com\/new-link-xyz/.test(em.html || ''));
+  check('reminders/window: names the current host', /with Nicolas\./.test(em.html || ''));
+  check('reminders/window: replies go to the host', em.replyTo === 'nluna@revwhisper.com');
+  check('reminders/window: has an idempotency key', /^meeting-link\/due-1\/[0-9a-f]{24}$/.test(em.idempotencyKey || ''), em.idempotencyKey);
+  check('reminders/window: Cal request is authed + filtered', /eventTypeId=5076967/.test(fetchCalls[0].url) && authHeaderOf(0) === 'Bearer cal-test');
+  check('reminders/window: response masks emails', !/jane@example\.com/.test(r._body));
+  check('reminders/window: no alert', alerts.length === 0);
+
+  // R4. The next run over the same booking sends nothing more
+  const firstKey = em.idempotencyKey;
+  emails.length = 0;
+  installFetch([fakeResponse(200, { data: [mk('due-1', 8, { start: dueStart })] })]);
+  r = mockRes();
+  await reminders(cronReq(), r);
+  check('reminders/repeat: 200', r.statusCode === 200);
+  check('reminders/repeat: nothing sent again', emails.length === 0 && r.json().items[0].result === 'already-sent', r._body);
+
+  // R5. Host swap inside the window → new link → one corrected email under a NEW key
+  emails.length = 0;
+  installFetch([fakeResponse(200, { data: [mk('due-1', 8, {
+    start: dueStart,
+    hosts: [{ name: 'Bryan Gamble', email: 'bgamble@revwhisper.com' }],
+    meetingUrl: 'https://meet.google.com/swapped-link', location: 'https://meet.google.com/swapped-link'
+  })] })]);
+  r = mockRes();
+  await reminders(cronReq(), r);
+  check('reminders/swap: one corrected email', emails.length === 1 && /swapped-link/.test(emails[0].html) && /with Bryan\./.test(emails[0].html));
+  check('reminders/swap: new idempotency key', emails[0] && emails[0].idempotencyKey !== firstKey);
+  check('reminders/swap: replies go to the new host', emails[0] && emails[0].replyTo === 'bgamble@revwhisper.com');
+
+  // R6. Dry run reports but sends nothing
+  emails.length = 0;
+  installFetch([fakeResponse(200, { data: [mk('dry-1', 4)] })]);
+  r = mockRes();
+  await reminders(cronReq('?dry=1'), r);
+  check('reminders/dry: nothing sent', emails.length === 0 && r.json().dry === true && r.json().items[0].result === 'would-send', r._body);
+
+  // R7. A due call with no Meet link → no email, alert, non-200 so the cron run shows red
+  emails.length = 0; alerts.length = 0;
+  installFetch([fakeResponse(200, { data: [mk('nolink-1', 5, { meetingUrl: null, location: 'integrations:google:meet' })] })]);
+  r = mockRes();
+  await reminders(cronReq(), r);
+  check('reminders/no-link: no email', emails.length === 0);
+  check('reminders/no-link: alerted + 500', alerts.length === 1 && alerts[0].source === 'meeting reminder' && r.statusCode === 500, JSON.stringify(alerts));
+
+  // R8. Cal.com down → alert, 502, no email
+  emails.length = 0; alerts.length = 0;
+  installFetch([fakeResponse(500, { error: 'boom' })]);
+  r = mockRes();
+  await reminders(cronReq(), r);
+  check('reminders/cal-500: 502 + alert', r.statusCode === 502 && alerts.length === 1 && emails.length === 0);
+  alerts.length = 0;
+  installFetch(['NETWORK']);
+  r = mockRes();
+  await reminders(cronReq(), r);
+  check('reminders/cal-network: 502 + alert', r.statusCode === 502 && alerts.length === 1);
+
+  // R9. Resend rejects the send → alert, 500
+  emails.length = 0; alerts.length = 0; emailResult = { ok: false, status: 422, error: 'nope' };
+  installFetch([fakeResponse(200, { data: [mk('fail-1', 5)] })]);
+  r = mockRes();
+  await reminders(cronReq(), r);
+  check('reminders/resend-fail: 500 + alert', r.statusCode === 500 && alerts.length === 1 && /Resend/.test(alerts[0].reason), r._body);
+
+  // R10. No CAL_API_KEY → 503 + alert
+  alerts.length = 0; delete process.env.CAL_API_KEY;
+  installFetch([]); r = mockRes();
+  await reminders(cronReq(), r);
+  check('reminders/no-cal-key: 503 + alert', r.statusCode === 503 && alerts.length === 1 && fetchCalls.length === 0);
+
+  emailResult = { ok: false, skipped: true };
+  for (const k of Object.keys(savedEnv)) { if (savedEnv[k] === undefined) delete process.env[k]; else process.env[k] = savedEnv[k]; }
 
   // ── Summary ──
   console.log(`\n${'='.repeat(56)}`);

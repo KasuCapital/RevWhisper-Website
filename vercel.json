@@ -1,5 +1,8 @@
 {
   "cleanUrls": true,
+  "crons": [
+    { "path": "/api/meeting-reminders", "schedule": "* * * * *" }
+  ],
   "rewrites": [
     { "source": "/ingest/static/:path(.*)", "destination": "https://us-assets.i.posthog.com/static/:path" },
     { "source": "/ingest/array/:path(.*)", "destination": "https://us-assets.i.posthog.com/array/:path" },

@@ -31,12 +31,12 @@ module.exports = async function handler(req, res) {
   }
   // A ?meet= param is ignored on purpose (pages cached before this change may still send one):
   // calls get swapped between reps and the Meet link changes with the host, so a link saved at
-  // booking time sends people to the wrong meeting. The link goes out 1 hour before the call.
+  // booking time sends people to the wrong meeting. The link goes out 10 minutes before the call (/api/meeting-reminders).
   const end = new Date(start.getTime() + DURATION_MIN * 60 * 1000);
 
   // Commas are reserved in ICS text values (RFC 5545) — escape the one in the copy.
   const description = 'Your live Airbnb performance audit with RevWhisper\\, 30 minutes over Google Meet.' +
-    '\\n\\nYour Google Meet link will be emailed to you 1 hour before your call.';
+    '\\n\\nYour Google Meet link will be emailed to you 10 minutes before your call.';
 
   // CRLF line endings per RFC 5545.
   const lines = [
