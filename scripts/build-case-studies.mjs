@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // build-case-studies.mjs — turns the case study drafts (the "RevWhisper Case Studies" folder: pages/*.html
 // plus images/) into site pages under /case-studies, and fills the
-// scrolling "more case studies" strips (CS-STRIP-MORE markers) on /case-study and on
+// scrolling "more case studies" strips (CS-STRIP-NEW / CS-STRIP-MORE markers) on /case-study and on
 // every case study page. Then it runs sync-partials so the pages get the site header, footer and
 // attribution script.
 //
@@ -124,7 +124,7 @@ function headMeta({ title, description, path, image }) {
 const headBottom = `<link rel="stylesheet" href="/assets/header.css">
 <script defer src="/assets/header.js"></script>
 <link rel="stylesheet" href="/assets/footer.css">
-<link rel="stylesheet" href="/assets/cs-strip.css">
+<link rel="stylesheet" href="/assets/cs-strip.css?v=2">
 <script defer src="/assets/cs-strip.js"></script>
 <script src="/assets/x-pixel-base.js?v=2"></script>`;
 
@@ -137,9 +137,10 @@ const shellCss = `<style>
 
 // ── The scrolling strip ──────────────────────────────────────────────────────────────────────────
 // `all`: the "See all case studies" link back to /case-study (left off on /case-study itself).
-function strip({ id, eyebrow, title, sub, exclude, all = true }) {
+// `compact`: smaller cards, no host line or chip (the carousel above the cards on /case-study).
+function strip({ id, eyebrow, title, sub, exclude, all = true, compact = false }) {
   const list = PAGES.filter(p => p.slug !== exclude);
-  return `<aside class="cs-strip" aria-labelledby="${id}-h" data-cs-strip>
+  return `<aside class="cs-strip${compact ? ' cs-strip--compact' : ''}" aria-labelledby="${id}-h" data-cs-strip>
   <div class="cs-strip-in">
     <div class="cs-strip-head">
       <div class="cs-strip-intro">
@@ -159,8 +160,8 @@ ${list.map(p => `      <li><a class="cs-strip-card" href="${url(p)}">
         <span class="cs-strip-body">
           <span class="cs-strip-kick">${p.eyebrow}</span>
           <span class="cs-strip-h">${p.h}</span>
-          <span class="cs-strip-meta">${esc(p.name)} · ${esc(p.host)}</span>
-          <span class="cs-strip-for"><b>For:</b> ${p.tag}</span>
+${compact ? `          <span class="cs-strip-meta">${esc(p.name)}</span>` : `          <span class="cs-strip-meta">${esc(p.name)} · ${esc(p.host)}</span>
+          <span class="cs-strip-for"><b>For:</b> ${p.tag}</span>`}
         </span>
       </a></li>`).join('\n')}
     </ul>
@@ -169,6 +170,7 @@ ${list.map(p => `      <li><a class="cs-strip-card" href="${url(p)}">
 }
 
 const STRIPS = {
+  'CS-STRIP-NEW': () => strip({ id: 'cs-strip-new', eyebrow: 'New case studies', title: 'The full stories, <em>home by home.</em>', all: false, compact: true }),
   'CS-STRIP-MORE': () => strip({ id: 'cs-strip-more', eyebrow: 'Keep reading', title: 'More homes, <em>more results.</em>', all: false }),
 };
 

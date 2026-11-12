@@ -33,7 +33,20 @@
 .cs-strip-meta{color:var(--cs-muted);font-size:14px;line-height:1.45}
 .cs-strip-for{margin-top:auto;align-self:flex-start;font-family:'DM Mono',Consolas,monospace;font-size:11px;padding:3px 9px;border-radius:999px;border:1px solid var(--cs-ink)}
 .cs-strip-for b{font-weight:500}
+/* Compact carousel: a quick peek at the case studies, above the calendar cards on /case-study */
+.cs-strip--compact{padding:44px 0 36px}
+.cs-strip--compact .cs-strip-head{margin-bottom:18px;align-items:center}
+.cs-strip--compact .cs-strip-title{font-size:clamp(22px,2.6vw,28px)}
+.cs-strip--compact .cs-strip-row{grid-auto-columns:240px;gap:14px;padding-bottom:12px}
+.cs-strip--compact .cs-strip-img{aspect-ratio:16/9}
+.cs-strip--compact .cs-strip-body{gap:6px;padding:12px 14px 14px}
+.cs-strip--compact .cs-strip-kick{font-size:10px}
+.cs-strip--compact .cs-strip-h{font-size:16px}
+.cs-strip--compact .cs-strip-meta{font-size:13px}
+.cs-strip--compact .cs-strip-btn{width:34px;height:34px;font-size:19px}
 @media(max-width:720px){
+  .cs-strip--compact{padding:36px 0 28px}
+  .cs-strip--compact .cs-strip-row{grid-auto-columns:min(66vw,240px)}
   .cs-strip{padding:48px 0 40px}
   .cs-strip-in{padding:0 16px}
   .cs-strip-row{grid-auto-columns:min(82vw,300px)}
