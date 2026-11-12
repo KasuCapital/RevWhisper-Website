@@ -23,25 +23,26 @@ const IMG_OUT = join(ROOT, 'images', 'case-studies');
 const SITE = 'https://revwhisper.com';
 
 // In display order. `src` is the draft file in pages/. `img` is the card image; `crop`/`pos` trim
-// screenshots of Airbnb listings down to the photo.
+// screenshots of Airbnb listings down to the photo. `stat` is the number that pops up on the carousel card;
+// take it from the page's own figures and update it when the draft changes.
 const PAGES = [
-  { group: 'full', slug: 'sombrero-beach-home', src: 'sombrero-beach-home', tag: 'Single-home owner', name: 'Sombrero Beach Home', eyebrow: 'Marathon, FL · 4 BR Waterfront',
+  { group: 'full', slug: 'sombrero-beach-home', stat: ['80% vs 36%', 'booked in September, vs similar homes'], src: 'sombrero-beach-home', tag: 'Single-home owner', name: 'Sombrero Beach Home', eyebrow: 'Marathon, FL · 4 BR Waterfront',
     h: 'More homes in Marathon. <em>More nights booked anyway.</em>', host: 'Matt, owner', img: '2ffee431a42c79b46932c5245e9d3cde.jpg', crop: '8.3% 49.1% 34.4% 5.1%', pos: '20% 30%' },
-  { group: 'full', slug: 'peek-n-peak', src: 'peek-n-peak', tag: 'Owner with a slow off-season', name: 'Peek n’ Peak', eyebrow: 'Clymer, NY · 4 BR Ski Chalet',
+  { group: 'full', slug: 'peek-n-peak', stat: ['0 → 14', 'October nights booked, vs last October'], src: 'peek-n-peak', tag: 'Owner with a slow off-season', name: 'Peek n’ Peak', eyebrow: 'Clymer, NY · 4 BR Ski Chalet',
     h: 'A ski house that sat <em>empty all fall.</em>', host: 'Mike and Julie, owners', img: 'lead-peek-house-a.jpg' },
-  { group: 'full', slug: 'eastside-pool-home', src: 'eastside-pool-home', tag: 'Manager with a new listing', name: 'Eastside Pool Home', eyebrow: 'Austin, TX · 5 BR Group Home',
+  { group: 'full', slug: 'eastside-pool-home', stat: ['$437 → $721', 'November nightly price'], src: 'eastside-pool-home', tag: 'Manager with a new listing', name: 'Eastside Pool Home', eyebrow: 'Austin, TX · 5 BR Group Home',
     h: 'A second-season listing, <em>priced to be seen.</em>', host: 'Cribs (Blake and Jeremy)', img: 'lead-holly-pool-a.jpg' },
-  { group: 'full', slug: 'retreats-miami', src: 'retreats-miami', tag: 'Manager with a mixed portfolio', name: 'Retreats Miami', eyebrow: 'Miami and Miami Beach, FL · 6-Home Portfolio',
+  { group: 'full', slug: 'retreats-miami', stat: ['6 of 6', 'homes beat their market in October'], src: 'retreats-miami', tag: 'Manager with a mixed portfolio', name: 'Retreats Miami', eyebrow: 'Miami and Miami Beach, FL · 6-Home Portfolio',
     h: 'Miami got more crowded. <em>All six homes still beat the market.</em>', host: 'Marc, Retreats Miami', img: '4c91be0776b0031299e63f17372253a6.jpg', crop: '9.8% 1.6% 16.8% 1.7%', pos: '50% 40%' },
-  { group: 'full', slug: 'pinecone-stays', src: 'pinecone-stays', tag: 'Large portfolio operator', name: 'Pinecone Stays', eyebrow: 'Catskills, NY · 17-Cabin Portfolio',
+  { group: 'full', slug: 'pinecone-stays', stat: ['$121.1K', 'October revenue across 17 cabins'], src: 'pinecone-stays', tag: 'Large portfolio operator', name: 'Pinecone Stays', eyebrow: 'Catskills, NY · 17-Cabin Portfolio',
     h: 'Seventeen Catskills cabins, <em>ahead of their markets.</em>', host: 'Max, Pinecone Stays', img: 'lead-woods-living-a.jpg' },
-  { group: 'timeline', slug: 'woods-edge', src: 'timeline-woods-edge', tag: 'Hosts asking if gains last', name: 'Woods Edge', eyebrow: 'Results Timeline · 30/60/90 days',
+  { group: 'timeline', slug: 'woods-edge', stat: ['$16.0K', 'first 30 days, vs $4.6K last year'], src: 'timeline-woods-edge', tag: 'Hosts asking if gains last', name: 'Woods Edge', eyebrow: 'Results Timeline · 30/60/90 days',
     h: 'Ahead in 30 days. <em>Still ahead at 90.</em>', host: 'Max, Pinecone Stays · Catskills, NY', img: 'lead-woods-game-a.jpg' },
-  { group: 'timeline', slug: 'casa-spur', src: 'timeline-casa-spur', tag: 'Large home, crowded market', name: 'Casa Spur', eyebrow: 'Results Timeline · First 30 days',
+  { group: 'timeline', slug: 'casa-spur', stat: ['26×', 'its bookings in the same 30 days last year'], src: 'timeline-casa-spur', tag: 'Large home, crowded market', name: 'Casa Spur', eyebrow: 'Results Timeline · First 30 days',
     h: '$34.3K booked in 30 days. <em>Against $1.3K a year earlier.</em>', host: 'Daniel, Palm Homes · Miami, FL', img: 'casa-cover-a.jpg' },
-  { group: 'timeline', slug: 'killington-ski-home', src: 'timeline-killington-ski-home', tag: 'Ski-town owner', name: 'Killington Ski Home', eyebrow: 'Results Timeline · First 30 days',
+  { group: 'timeline', slug: 'killington-ski-home', stat: ['52% vs 31%', 'December booked, vs similar homes'], src: 'timeline-killington-ski-home', tag: 'Ski-town owner', name: 'Killington Ski Home', eyebrow: 'Results Timeline · First 30 days',
     h: '$66.5K booked in the first 30 days. <em>Ski season, filled early.</em>', host: 'Joel Santos · Killington, VT', img: 'joel-cover-a.jpg' },
-  { group: 'guide', slug: 'what-to-expect', src: 'what-to-expect', tag: 'Hosts with a slow start', name: 'What to expect', eyebrow: 'Three homes that started slowly',
+  { group: 'guide', slug: 'what-to-expect', stat: ['+77%', '1820 House, after a one-booking first month'], src: 'what-to-expect', tag: 'Hosts with a slow start', name: 'What to expect', eyebrow: 'Three homes that started slowly',
     h: 'Some homes jump in week one. <em>Most build over two or three months.</em>', host: 'Matt; Mike and Julie', img: 'dc0082903768aa8168dd0a0c05c28a56.jpg', crop: '7.1% 50.4% 38.4% 2.3%', pos: '15% 25%' },
 ];
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -124,8 +125,8 @@ function headMeta({ title, description, path, image }) {
 const headBottom = `<link rel="stylesheet" href="/assets/header.css">
 <script defer src="/assets/header.js"></script>
 <link rel="stylesheet" href="/assets/footer.css">
-<link rel="stylesheet" href="/assets/cs-strip.css?v=2">
-<script defer src="/assets/cs-strip.js"></script>
+<link rel="stylesheet" href="/assets/cs-strip.css?v=5">
+<script defer src="/assets/cs-strip.js?v=3"></script>
 <script src="/assets/x-pixel-base.js?v=2"></script>`;
 
 // Fixed menu bar on desktop: push the page down so it doesn't sit on the hero. On phones the bar is in
@@ -137,7 +138,7 @@ const shellCss = `<style>
 
 // ── The scrolling strip ──────────────────────────────────────────────────────────────────────────
 // `all`: the "See all case studies" link back to /case-study (left off on /case-study itself).
-// `compact`: smaller cards, no host line or chip (the carousel above the cards on /case-study).
+// `compact`: smaller cards with the "For" tag and a pop-up stat on the photo, no host line (the carousel above The System on /case-study).
 function strip({ id, eyebrow, title, sub, exclude, all = true, compact = false }) {
   const list = PAGES.filter(p => p.slug !== exclude);
   return `<aside class="cs-strip${compact ? ' cs-strip--compact' : ''}" aria-labelledby="${id}-h" data-cs-strip>
@@ -155,13 +156,13 @@ function strip({ id, eyebrow, title, sub, exclude, all = true, compact = false }
       </div>
     </div>
     <ul class="cs-strip-row" role="list">
-${list.map(p => `      <li><a class="cs-strip-card" href="${url(p)}">
-        <span class="cs-strip-img"><img src="/images/case-studies/${p.img}" alt="" loading="lazy" style="${imgStyle(p)}"></span>
+${list.map((p, i) => `      <li><a class="cs-strip-card" href="${url(p)}">
+        <span class="cs-strip-img"><img src="/images/case-studies/${p.img}" alt="" loading="lazy" style="${imgStyle(p)}">${compact ? `<span class="cs-strip-tag">For: ${p.tag}</span>` : ''}${compact && p.stat ? `<span class="cs-strip-stat" style="--i:${i}"><b>${esc(p.stat[0])}</b><span>${esc(p.stat[1])}</span></span>` : ''}</span>
         <span class="cs-strip-body">
           <span class="cs-strip-kick">${p.eyebrow}</span>
           <span class="cs-strip-h">${p.h}</span>
-${compact ? `          <span class="cs-strip-meta">${esc(p.name)}</span>` : `          <span class="cs-strip-meta">${esc(p.name)} · ${esc(p.host)}</span>
-          <span class="cs-strip-for"><b>For:</b> ${p.tag}</span>`}
+          <span class="cs-strip-meta">${esc(p.name)}${compact ? '' : ` · ${esc(p.host)}`}</span>
+${compact ? '' : `          <span class="cs-strip-for"><b>For:</b> ${p.tag}</span>`}
         </span>
       </a></li>`).join('\n')}
     </ul>

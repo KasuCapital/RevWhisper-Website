@@ -21,7 +21,16 @@
     window.addEventListener('resize', update);
     update();
   }
-  function start() { document.querySelectorAll('[data-cs-strip]').forEach(init); }
+  // Pop the stats in once the carousel is on screen (stats stay visible without JS or observer support).
+  function reveal(strip) {
+    if (!strip.querySelector('.cs-strip-stat') || !('IntersectionObserver' in window)) return;
+    strip.classList.add('has-js');
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (e.isIntersecting) { strip.classList.add('is-in'); io.disconnect(); } });
+    }, { threshold: 0.35 });
+    io.observe(strip);
+  }
+  function start() { document.querySelectorAll('[data-cs-strip]').forEach(function (s) { init(s); reveal(s); }); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
   else start();
 })();

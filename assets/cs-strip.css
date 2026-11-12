@@ -44,13 +44,30 @@
 .cs-strip--compact .cs-strip-h{font-size:16px}
 .cs-strip--compact .cs-strip-meta{font-size:13px}
 .cs-strip--compact .cs-strip-btn{width:34px;height:34px;font-size:19px}
+/* Compact cards: green "For" tag at the top of the photo and a frosted stat chip at the bottom that pops in
+   when the carousel scrolls into view (cs-strip.js adds .is-in) */
+.cs-strip-img{position:relative}
+.cs-strip-img img{transition:transform .4s ease}
+.cs-strip--compact .cs-strip-card:hover .cs-strip-img img{transform:scale(1.04)}
+.cs-strip-tag{position:absolute;top:10px;left:10px;max-width:calc(100% - 20px);font-size:11px;font-weight:500;line-height:1.3;padding:4px 10px;border-radius:999px;background:var(--cs-accent);color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.cs-strip-stat{position:absolute;left:10px;bottom:10px;display:flex;flex-direction:column;max-width:calc(100% - 20px);padding:8px 12px 9px;border-radius:12px;
+  background:rgba(255,255,255,.86);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 6px 20px rgba(0,0,0,.16);
+  transform-origin:left bottom;transition:transform .2s ease}
+.cs-strip-stat b{font-family:'Lora',Georgia,serif;font-weight:500;font-size:20px;line-height:1.1;color:var(--cs-accent);white-space:nowrap}
+.cs-strip-stat span{font-size:11px;line-height:1.3;color:var(--cs-muted)}
+.cs-strip.has-js .cs-strip-stat{opacity:0;transform:translateY(10px) scale(.86)}
+.cs-strip.is-in .cs-strip-stat{animation:cs-stat-pop .5s cubic-bezier(.34,1.56,.64,1) forwards;animation-delay:calc(var(--i,0) * 90ms + 150ms)}
+.cs-strip-card:hover .cs-strip-stat{transform:translateY(-3px) scale(1.03)}
+@keyframes cs-stat-pop{to{opacity:1;transform:none}}
+.cs-strip--compact .cs-strip-row{grid-auto-columns:260px}
+.cs-strip--compact .cs-strip-img{aspect-ratio:4/3}
 @media(max-width:720px){
   .cs-strip--compact{padding:36px 0 28px}
-  .cs-strip--compact .cs-strip-row{grid-auto-columns:min(66vw,240px)}
+  .cs-strip--compact .cs-strip-row{grid-auto-columns:min(72vw,260px)}
   .cs-strip{padding:48px 0 40px}
   .cs-strip-in{padding:0 16px}
   .cs-strip-row{grid-auto-columns:min(82vw,300px)}
   .cs-strip-btn{display:none}
   .cs-strip-all{margin-right:0}
 }
-@media(prefers-reduced-motion:reduce){.cs-strip-card{transition:none}.cs-strip-card:hover{transform:none}}
+@media(prefers-reduced-motion:reduce){.cs-strip-card,.cs-strip-stat,.cs-strip-img img{transition:none}.cs-strip-card:hover,.cs-strip-card:hover .cs-strip-stat,.cs-strip--compact .cs-strip-card:hover .cs-strip-img img{transform:none}.cs-strip.has-js .cs-strip-stat{opacity:1;transform:none;animation:none}}
