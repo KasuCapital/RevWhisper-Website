@@ -29,6 +29,66 @@
 
 var BLOG_POSTS = [
   {
+    slug: "catskills-airbnb-guide",
+    title: "Catskills Airbnb Guide for Hosts: Kingston, Hunter and the Hudson Valley",
+    excerpt: "County taxes, town rules and seasonal pricing for Airbnb hosts in the Catskills and Hudson Valley, from a revenue manager with client homes across the region.",
+    date: "2026-11-20",
+    updated: "2026-11-20",
+    publish: "2026-11-20T09:00:00-05:00",
+    image: "/images/blog/catskills-airbnb-guide.png",
+    hero: true,
+    tags: ["Market Guide", "Revenue Management"],
+    author: "Marisa @ RevWhisper"
+  },
+  {
+    slug: "remote-revenue-management-vs-local-airbnb-manager",
+    title: "Remote Revenue Management vs a Local Airbnb Manager Near You",
+    excerpt: "A local manager runs the property on the ground. A remote revenue manager runs pricing and performance from anywhere. Which you need depends on what's missing.",
+    date: "2026-11-19",
+    updated: "2026-11-19",
+    publish: "2026-11-19T09:00:00-05:00",
+    image: "/images/blog/remote-revenue-management-vs-local-airbnb-manager.png",
+    hero: true,
+    tags: ["Comparison", "Revenue Management"],
+    author: "Marisa @ RevWhisper"
+  },
+  {
+    slug: "how-to-set-up-pricelabs-airbnb",
+    title: "How to Set Up PriceLabs for Airbnb",
+    excerpt: "A setup guide from a team that runs PriceLabs every day: what to set first and what to check weekly.",
+    date: "2026-11-18",
+    updated: "2026-11-18",
+    publish: "2026-11-18T09:00:00-05:00",
+    image: "/images/blog/how-to-set-up-pricelabs-airbnb.png",
+    hero: true,
+    tags: ["How-To Guide", "Revenue Management"],
+    author: "Marisa @ RevWhisper"
+  },
+  {
+    slug: "sedona-northern-arizona-airbnb-guide",
+    title: "Sedona, Prescott and Northern Arizona Airbnb Guide for Hosts",
+    excerpt: "Permits, lodging taxes and seasonal pricing for Airbnb hosts in Sedona, Prescott, Flagstaff and the rest of Northern Arizona.",
+    date: "2026-11-17",
+    updated: "2026-11-17",
+    publish: "2026-11-17T09:00:00-05:00",
+    image: "/images/blog/sedona-northern-arizona-airbnb-guide.png",
+    hero: true,
+    tags: ["Market Guide", "Revenue Management"],
+    author: "Marisa @ RevWhisper"
+  },
+  {
+    slug: "how-to-price-your-airbnb",
+    title: "How to Price Your Airbnb: A Pricing Guide for Hosts",
+    excerpt: "Most hosts set a nightly rate once and adjust it when bookings slow down. Here is how pricing on Airbnb actually works, and the six settings that decide what you earn.",
+    date: "2026-11-16",
+    updated: "2026-11-16",
+    publish: "2026-11-16T09:00:00-05:00",
+    image: "/images/blog/how-to-price-your-airbnb.png",
+    hero: true,
+    tags: ["Deep Dive", "Revenue Management"],
+    author: "Marisa @ RevWhisper"
+  },
+  {
     slug: "airbnb-changes-2026",
     title: "Airbnb in 2026: Every Change Hosts Need to Know",
     excerpt: "A new fee model, new cancellation policies, built-in dynamic pricing and new house rules. Here is what changed on Airbnb in 2026, and what to do about each.",
