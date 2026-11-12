@@ -56,6 +56,12 @@ function discoverBlogPosts() {
     .map(f => `blog/${f}`);
 }
 
+// Case study pages and the /case-studies hub, built by scripts/build-case-studies.mjs.
+function discoverCaseStudies() {
+  try { return readdirSync(join(ROOT, 'case-studies')).filter(f => f.endsWith('.html')).map(f => `case-studies/${f}`); }
+  catch { return []; }
+}
+
 // Every page an allPages partial can live in: top-level pages, blog posts, and build shells.
 function discoverAllPages() {
   const list = (dir, keep) => {
@@ -65,6 +71,7 @@ function discoverAllPages() {
   return [
     ...list('.', f => f.endsWith('.html')),
     ...list('blog', f => f.endsWith('.html')),
+    ...list('case-studies', f => f.endsWith('.html')),
     ...list('scripts', f => f.endsWith('.shell.html')),
   ];
 }
@@ -114,7 +121,7 @@ function syncFile(rel, partials) {
 
 function main() {
   const partials = PARTIALS.map(p => ({ name: p.name, body: readPartial(p.file), allPages: !!p.allPages }));
-  const targets = [...TARGETS, ...discoverBlogPosts()];
+  const targets = [...TARGETS, ...discoverBlogPosts(), ...discoverCaseStudies()];
   const everywhere = partials.filter(p => p.allPages);
   const others = discoverAllPages().filter(rel => !targets.includes(rel));
   let changed = 0;

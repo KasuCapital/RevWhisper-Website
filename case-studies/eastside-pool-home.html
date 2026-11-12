@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- ATTRIBUTION:START -->
+<!-- Attribution capture (cookie-free): a lead carries its UTMs and ad click IDs into the CRM.
+     One copy for every page. Edit _partials/attribution.html, then run node scripts/sync-partials.mjs. -->
+<script>
+(function(){
+  var key='rw_attribution';
+  var TTL=7776000000; // 90 days — keep the last paid touch across tabs/sessions
+  var params=new URLSearchParams(window.location.search);
+  var utmFields=['utm_source','utm_medium','utm_campaign','utm_term','utm_content','utm_id'];
+  // gbraid/wbraid: Google's iOS click IDs, sent in place of gclid. Keep in sync with CLICK_IDS in /assets/rw-consent.js.
+  var clickFields=['fbclid','gclid','gbraid','wbraid','ttclid','twclid','msclkid','li_fat_id'];
+  var trackedFields=utmFields.concat(clickFields);
+  // A page sets window.rwAttributionForce before this runs when every visit must be recorded (/vrma does).
+  var hasTracked=!!window.rwAttributionForce||trackedFields.some(function(f){return params.has(f);});
+  function rwGet(k){try{return localStorage.getItem(k)||sessionStorage.getItem(k);}catch(e){try{return sessionStorage.getItem(k);}catch(e2){return null;}}}
+  function rwSet(k,v){try{localStorage.setItem(k,v);}catch(e){try{sessionStorage.setItem(k,v);}catch(e2){}}}
+  var prev=null;try{prev=JSON.parse(rwGet(key));}catch(e){prev=null;}
+  var fresh=prev&&prev.arrived_at&&((Date.now()-new Date(prev.arrived_at).getTime())<TTL);
+  if(hasTracked||!fresh){
+    var data={};
+    trackedFields.forEach(function(f){if(params.get(f))data[f]=params.get(f);});
+    try{data.referrer=document.referrer?new URL(document.referrer).hostname:'direct';}catch(e){data.referrer=document.referrer||'direct';}
+    data.landing_page=window.location.pathname;
+    data.arrived_at=new Date().toISOString();
+    rwSet(key,JSON.stringify(data));
+    prev=data;
+  }
+  // This page's copy, kept in memory. Facebook's and Instagram's in-app browsers can lose storage
+  // while the page is still open (the visitor switches apps to copy their Airbnb link, comes back,
+  // submits), which sent those leads to the CRM with no UTMs at all.
+  var atLoad=prev||{};
+
+  // One label for where the lead came from, filled in even when the link carried no UTMs.
+  function channel(a){
+    var s=String(a.utm_source||'').toLowerCase(), m=String(a.utm_medium||'').toLowerCase();
+    var r=String(a.referrer||'').toLowerCase();
+    var paid=/cpc|ppc|paid|display|retarget|^ads?$/.test(m);
+    if(/^(meta|facebook|fb|instagram|ig|threads)$/.test(s))return paid?'meta-ads':'meta-organic';
+    if(a.gclid||a.gbraid||a.wbraid||(/google/.test(s)&&paid))return 'google-ads';
+    if(a.msclkid||(/bing|microsoft/.test(s)&&paid))return 'microsoft-ads';
+    // Meta adds fbclid to every Facebook/Instagram link. Without UTMs it's an ad click whose URL
+    // parameters didn't come through, or an organic post or message.
+    if(a.fbclid)return 'meta';
+    if(a.twclid||/^(x|twitter)$/.test(s))return 'x';
+    if(a.ttclid||s==='tiktok')return 'tiktok';
+    if(a.li_fat_id||s==='linkedin')return 'linkedin';
+    if(s)return s; // any other tagged link: email, partner, conference...
+    if(!r||r==='direct')return 'direct';
+    if(/(^|\.)revwhisper\.com$/.test(r))return 'unknown'; // record started mid-visit, the entry point wasn't seen
+    if(/(^|\.)(google|bing|duckduckgo|yahoo|ecosia|brave|baidu|yandex)\.[a-z.]+$/.test(r))return 'organic-search';
+    if(/(^|\.)(facebook|instagram|threads|linkedin|reddit|youtube|tiktok|pinterest|twitter|x)\.(com|net)$|^(t\.co|lnkd\.in)$/.test(r))return 'social';
+    return 'referral';
+  }
+
+  // What every form sends as `attribution`: the stored record, or this page's in-memory copy when
+  // storage was lost, plus `channel`.
+  window.rwAttribution=function(){
+    var a=null;
+    try{a=JSON.parse(localStorage.getItem(key));}catch(e){}
+    if(!a||!a.arrived_at){try{a=JSON.parse(sessionStorage.getItem(key));}catch(e){}}
+    if(!a||!a.arrived_at)a=atLoad;
+    var out={};
+    for(var k in a){if(Object.prototype.hasOwnProperty.call(a,k))out[k]=a[k];}
+    out.channel=channel(out);
+    // Opt-in regions without ad consent: no click IDs leave the browser (same rule as /assets/rw-consent.js).
+    if(window.rwConsent&&rwConsent.optIn&&!rwConsent.ads)clickFields.forEach(function(f){delete out[f];});
+    return out;
+  };
+})();
+</script>
+<!-- ATTRIBUTION:END -->
+<script src="/assets/rw-consent.js?v=3"></script>
+<script defer src="/assets/rw-posthog.js?v=3"></script>
+<!-- GA4. Consent defaults come from /assets/rw-consent.js -->
+<script>
+window.dataLayer=window.dataLayer||[];
+function gtag(){dataLayer.push(arguments);}
+gtag('js',new Date());
+gtag('config','G-Y1FYZ5849B');
+(window.rwConsent?rwConsent.whenAllowed:function(f){f();})(function(){var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-Y1FYZ5849B';document.head.appendChild(s);});
+function rwTrack(e,p){gtag('event',e,p||{});}
+</script>
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+(window.rwConsent?rwConsent.whenAdsAllowed:function(g){g()})(function(){s.parentNode.insertBefore(t,s)})}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+if(window.rwConsent&&!rwConsent.ads)fbq('consent','revoke');
+fbq('init', '959022406709300');
+fbq('track', 'PageView');
+</script>
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+  document.addEventListener('click',function(e){
+    var el=e.target.closest('a,button');
+    if(!el)return;
+    var txt=(el.textContent||'').replace(/\s+/g,' ').trim().toLowerCase();
+    if(txt.indexOf('book your free strategy call')!==-1||txt.indexOf('book a call')!==-1||txt.indexOf('book a free strategy call')!==-1){
+      fbq('track','Lead',{content_name:'Book Strategy Call'});
+    }
+  });
+});
+</script>
+<!-- End Meta Pixel -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eastside Pool Home case study | RevWhisper</title>
+<meta name="description" content="Eastside Pool Home went live in late 2025. Cribs, the Austin property manager that runs it, moved it to RevWhisper on April 29, before its first full…">
+<link rel="canonical" href="https://revwhisper.com/case-studies/eastside-pool-home">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Eastside Pool Home case study | RevWhisper">
+<meta property="og:description" content="Eastside Pool Home went live in late 2025. Cribs, the Austin property manager that runs it, moved it to RevWhisper on April 29, before its first full…">
+<meta property="og:url" content="https://revwhisper.com/case-studies/eastside-pool-home">
+<meta property="og:site_name" content="RevWhisper">
+<meta property="og:image" content="https://revwhisper.com/images/case-studies/lead-holly-pool-a.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Eastside Pool Home case study | RevWhisper">
+<meta name="twitter:description" content="Eastside Pool Home went live in late 2025. Cribs, the Austin property manager that runs it, moved it to RevWhisper on April 29, before its first full…">
+<meta name="twitter:image" content="https://revwhisper.com/images/case-studies/lead-holly-pool-a.jpg">
+<link rel="icon" href="/icons/favicon-light.svg" type="image/svg+xml" media="(prefers-color-scheme: light)">
+<link rel="icon" href="/icons/favicon-dark.svg" type="image/svg+xml" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/icons/favicon-light.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/fonts.css">
+<style>
+*,::before,::after{box-sizing:border-box;margin:0;padding:0}
+:root{--black:#32302F;--white:#ffffff;--accent:#4A6741;--accent-light:#dce6d8;--accent-border:#b3c5ab;--terra:#8B4A3E;--gold:#9B7B3A;--g50:#faf9f8;--g100:#f3f1ef;--g200:#E0DCDA;--g300:#ccc8c5;--g400:#a39e9b;--g500:#706b68;--g600:#58534f;--g700:#48433f;--radius:8px;--radius-sm:6px;--radius-lg:12px;--radius-xl:16px;--sh-sm:0 1px 3px rgba(50,48,47,.06),0 1px 2px rgba(50,48,47,.04);--sh:0 4px 16px rgba(50,48,47,.07),0 2px 6px rgba(50,48,47,.04);--sh-lg:0 16px 48px rgba(50,48,47,.1),0 4px 12px rgba(50,48,47,.05);--heading:'Lora','Georgia',serif;--body:'DM Sans','system-ui','Helvetica Neue',sans-serif;--mono:'DM Mono','Consolas',monospace;--maxw:1080px}
+body{margin:0;background:var(--white);color:var(--black);font-family:var(--body);font-size:18px;line-height:1.6;font-weight:400;-webkit-font-smoothing:antialiased}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 40px}
+h1,h2,h3,h4{font-family:var(--heading);font-weight:400;color:var(--black);margin:0;line-height:1.14;letter-spacing:-0.02em}
+.serif{font-family:var(--heading);font-weight:400}
+.eyebrow{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--g500)}
+.green{color:var(--accent)}.terra{color:var(--terra)}
+.up::before{content:"\25B2";font-size:.62em;vertical-align:middle;margin-right:.32em;position:relative;top:-1px}
+.dn::before{content:"\25BC";font-size:.62em;vertical-align:middle;margin-right:.32em;position:relative;top:-1px}
+.hero{padding-top:72px;padding-bottom:18px}
+.hero .kick{display:flex;gap:14px;align-items:center;margin-bottom:26px}
+.hero .kick .line{height:1px;background:var(--g200);flex:1 1 0%}
+.hero h1{font-size:clamp(40px,6.4vw,68px);line-height:1.04;letter-spacing:-.025em;max-width:15ch}
+.hero h1 .accent{font-style:italic;color:var(--accent)}
+.hero .sub{margin-top:24px;max-width:62ch;color:var(--g600);font-size:18px;font-weight:300;line-height:1.7}
+.propline{margin-top:30px;display:flex;flex-wrap:wrap;gap:10px 22px;align-items:baseline}
+.propline .pl-name{font-family:var(--heading);font-weight:400;font-size:20px}
+.propline .pl-meta{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;color:var(--g500);text-transform:uppercase}
+.ablink{display:block;margin-top:40px;position:relative;border-radius:var(--radius-xl);overflow:hidden;border:1px solid var(--g200);background:var(--white);box-shadow:var(--sh-sm);text-decoration:none}
+.ablink .pill{position:absolute;top:16px;right:16px;background:var(--black);color:#fff;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:8px 14px;border-radius:30px;box-shadow:rgba(50,48,47,.22) 0 2px 10px;display:inline-flex;align-items:center;gap:7px}
+.ablink .ph{aspect-ratio:2.4/1;background:var(--g100);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--g500);text-align:center;padding:24px}
+.hook{margin-top:40px;border-left:3px solid var(--terra);padding:6px 0 6px 26px}
+.hook .hlab{font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--terra)}
+.hook blockquote{margin:14px 0 0;font-family:var(--heading);font-style:italic;font-weight:400;font-size:clamp(20px,2.5vw,26px);line-height:1.45;color:var(--black);max-width:50ch}
+.statrow{margin-top:46px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.stat{background:var(--g50);border:1px solid var(--g200);border-radius:var(--radius);padding:24px}
+.stat .lab{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--g500)}
+.stat .big{font-family:var(--mono);font-weight:500;font-size:clamp(26px,3.4vw,36px);line-height:1.04;margin-top:14px;letter-spacing:-.01em;color:var(--accent)}
+.stat .big small{font-family:var(--body);font-size:.42em;font-weight:400;color:var(--g400);letter-spacing:0}
+.stat .delta{margin-top:9px;font-family:var(--mono);font-size:12px;color:var(--g500)}
+.stat .delta.green{color:var(--accent)}
+section{padding-top:74px}
+.sec-head{display:flex;gap:14px;align-items:center;margin-bottom:30px}
+.sec-head .num{font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--g500);text-transform:uppercase;white-space:nowrap}
+.sec-head .line{height:1px;background:var(--g200);flex:1 1 0%}
+.sec-title{font-size:clamp(30px,4.4vw,46px);line-height:1.06;letter-spacing:-.02em;max-width:18ch}
+.sec-title .accent{font-style:italic;color:var(--accent)}
+.lede{margin-top:18px;max-width:66ch;color:var(--g600);font-size:17px;font-weight:300;line-height:1.7}
+.baseline{margin-top:34px;display:grid;grid-template-columns:1.05fr .95fr;gap:26px;align-items:start}
+.panel{background:var(--g50);border:1px solid var(--g200);border-radius:var(--radius);padding:28px}
+.panel.dark{background:var(--accent);color:#fff;border-color:transparent;position:relative;overflow:hidden}
+.panel.dark::before{content:"";position:absolute;inset:0;background:radial-gradient(at 25% -20%,rgba(255,255,255,.07),transparent 55%);pointer-events:none}
+.panel.dark>*{position:relative;z-index:1}
+.panel.dark .eyebrow{color:var(--accent-light)}
+.panel h3{font-size:22px;margin-bottom:4px}
+.panel.dark h3{color:#fff}
+.kv{margin-top:18px;border-top:1px solid var(--g200)}
+.kv .row{display:flex;justify-content:space-between;align-items:baseline;gap:18px;padding:13px 0;border-bottom:1px solid var(--g200)}
+.kv .k{font-size:14.5px;color:var(--g500)}
+.kv .v{font-family:var(--mono);font-weight:500;font-size:17px;text-align:right;white-space:nowrap;color:var(--black)}
+.kv .v small{font-family:var(--body);font-weight:400;font-size:12px;color:var(--g400);display:block}
+.mkt{margin-top:18px;border-top:1px solid rgba(255,255,255,.18)}
+.mkt .mrow{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.18)}
+.mkt .mrow:last-child{border-bottom:0}
+.mkt .mk{font-family:var(--mono);font-size:12px;letter-spacing:.05em;color:var(--accent-light);text-transform:uppercase}
+.mkt .mv{font-family:var(--mono);font-weight:500;font-size:17px;color:#fff}
+.mkt .mv .dlt{font-family:var(--mono);font-size:11px;margin-left:8px;color:rgb(230,195,182)}
+.mkt-foot{margin-top:16px;font-size:14.5px;color:rgba(255,255,255,.85);line-height:1.55}
+.mkt-foot b{color:#fff;font-weight:500;font-family:var(--heading)}
+.paradox{margin-top:26px;background:var(--g50);border-left:3px solid var(--terra);border-radius:var(--radius-sm);padding:20px 22px;font-size:15.5px;color:var(--g600)}
+.paradox b{font-family:var(--heading);font-weight:400;color:var(--black)}
+.levers{margin-top:34px;display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.lever{background:var(--g50);border:1px solid var(--g200);border-radius:var(--radius);padding:22px 20px}
+.lever .n{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--terra)}
+.lever h4{font-size:18px;margin-top:12px;margin-bottom:9px;line-height:1.18}
+.lever p{font-size:14px;color:var(--g500);line-height:1.55;margin:0}
+.lever ul{margin:12px 0 0;padding-left:16px}
+.lever li{font-size:13.5px;color:var(--g600);line-height:1.55;margin-bottom:5px}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px}
+.frame{position:relative;border:1px solid var(--g200);border-radius:var(--radius);overflow:hidden;background:#ffffff}
+.frame .ph{aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;padding:24px;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--g500);text-align:center}
+.cmp.hero .frame .ph{aspect-ratio:3/2}
+.frame .tag{position:absolute;top:0;left:0;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:6px 11px;color:#fff;z-index:2}
+.tag.before{background:rgba(139,74,62,.92)}.tag.after{background:rgba(74,103,65,.94)}
+.cmp-label{margin-top:30px;display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--terra)}
+.cmp-label .ln{height:1px;background:var(--g200);flex:1 1 0%}
+.cmp-cap{margin-top:10px;font-size:14px;color:var(--g500);line-height:1.55;max-width:74ch}
+.cmp-cap b{color:var(--black);font-family:var(--heading);font-weight:400}
+.titleflip{margin-top:30px;display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.tf{border:1px solid var(--g200);border-radius:var(--radius);padding:20px 22px;background:var(--g50)}
+.tf .tflab{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--g500)}
+.tf .tfval{font-family:var(--heading);font-weight:400;font-size:20px;margin-top:10px;line-height:1.3}
+.tf .tfdesc{font-family:var(--body);font-weight:300;font-size:15px;margin-top:10px;line-height:1.65;color:var(--g600)}
+.tf.before .tfval{color:var(--g500)}
+.tfwhy{margin-top:16px;padding:4px 0 4px 18px;border-left:2px solid var(--accent)}.tfwhy .tfwlab{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}.tfwhy p{margin-top:8px;font-size:15px;line-height:1.65;color:var(--g700);max-width:74ch;text-wrap:pretty}
+.tf.after{border-color:var(--accent-border);background:var(--accent-light)}
+.tf.after .tfdesc{color:var(--black)}
+.rank-wrap{margin-top:30px;display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.rankcard{border:1px solid var(--g200);border-radius:var(--radius);overflow:hidden}
+.rankcard .rc-head{padding:16px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--g200)}
+.rankcard.before .rc-head{background:rgb(245,236,233)}
+.rankcard.after .rc-head{background:var(--accent-light)}
+.rc-head .h{font-family:var(--heading);font-weight:400;font-size:17px}
+.rc-head .s{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--g500)}
+.rankcard table{width:100%;border-collapse:collapse}
+.rankcard td{padding:11px 20px;font-size:13.5px;border-bottom:1px solid var(--g200)}
+.rankcard tr:last-child td{border-bottom:0}
+.rankcard td:first-child{font-family:var(--mono);font-size:11.5px;color:var(--g500)}
+.rankcard td:last-child{text-align:right;font-family:var(--mono);font-weight:500;font-size:15px}
+.rankcard.before td:last-child{color:var(--terra)}
+.rankcard.after td:last-child{color:var(--accent)}
+.badge1{display:inline-block;background:var(--accent);color:#fff;font-family:var(--mono);font-size:11px;font-weight:500;padding:2px 9px;border-radius:4px}
+.rank-foot{margin-top:18px;font-size:14.5px;color:var(--g600);max-width:66ch}
+.rank-foot b{font-family:var(--heading);font-weight:400;color:var(--black)}
+.ptbl{margin-top:14px;border:1px solid var(--g200);border-radius:var(--radius);overflow:hidden;background:var(--white)}
+.ptbl-scroll{overflow-x:auto}
+.ptbl .pt-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 18px;background:var(--g50);border-bottom:1px solid var(--g200)}
+.ptbl .pt-top .ttl{font-weight:500;font-size:14px;color:var(--g700)}
+.ptbl .pt-top .src{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--g400)}
+table.perf{width:100%;border-collapse:collapse;font-size:13.5px;min-width:600px}
+table.perf th{font-family:var(--mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--g500);text-align:right;padding:12px 16px;border-bottom:1px solid var(--g200);font-weight:500}
+table.perf th:first-child{text-align:left}
+table.perf td{padding:11px 16px;border-bottom:1px solid var(--g100);text-align:right;color:var(--black);font-family:var(--mono);font-weight:400}
+table.perf td:first-child{text-align:left;color:var(--g600);font-family:var(--body)}
+table.perf tr:last-child td{border-bottom:0}
+table.perf tr.cur td{background:var(--g50)}
+table.perf .mo{font-weight:500}
+table.perf .cur-tag{font-family:var(--mono);font-size:8.5px;letter-spacing:.08em;background:var(--accent-light);color:var(--accent);padding:2px 6px;border-radius:3px;margin-left:7px;text-transform:uppercase}
+table.perf .d{font-family:var(--mono);font-size:11px;color:var(--g500)}
+table.perf .d.green{color:var(--accent)}
+table.perf .d.terra{color:var(--terra)}
+.perf-cap{margin-top:16px;font-size:14.5px;color:var(--g600);max-width:68ch}
+.perf-cap b{font-family:var(--heading);font-weight:400;color:var(--black)}
+.vs{margin-top:30px;border:1px solid var(--g200);border-radius:var(--radius);overflow:hidden}
+.vs .vs-head{display:grid;grid-template-columns:1fr 1fr 1fr;background:var(--g50);border-bottom:1px solid var(--g200)}
+.vs .vs-head div{padding:13px 18px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--g500)}
+.vs .vs-head .c2{color:var(--accent)}.vs .vs-head .c3{text-align:right}
+.vs .vrow{display:grid;grid-template-columns:1fr 1fr 1fr;border-bottom:1px solid var(--g100);align-items:center}
+.vs .vrow:last-child{border-bottom:0}
+.vs .vrow .vm{padding:13px 18px;font-family:var(--mono);font-size:12px;color:var(--g600)}
+.vs .vrow .vl{padding:13px 18px;font-family:var(--mono);font-weight:500;font-size:18px;color:var(--accent)}
+.vs .vrow .vl.under{color:var(--terra)}
+.vs .vrow .vmk{padding:13px 18px;text-align:right;font-family:var(--mono);font-weight:500;font-size:18px;color:var(--g400)}
+.vs-foot{margin-top:16px;font-size:14.5px;color:var(--g600);max-width:68ch}
+.vs-foot b{font-family:var(--heading);font-weight:400;color:var(--black)}
+.fc-lead{margin-top:14px;background:var(--g50);border:1px solid var(--g200);border-radius:var(--radius);padding:22px 24px;display:flex;gap:22px;align-items:baseline;flex-wrap:wrap}
+.fc-lead .fcbig{font-family:var(--mono);font-weight:500;font-size:44px;color:var(--accent);line-height:1;letter-spacing:-.01em}
+.fc-lead p{margin:0;font-size:15.5px;color:var(--g600);max-width:52ch}
+.fc-lead p b{font-family:var(--heading);font-weight:400;color:var(--black)}
+.bars{margin-top:34px;display:flex;flex-direction:column;gap:30px}
+.bar{display:grid;grid-template-columns:180px 1fr;gap:18px;align-items:center}
+.bar .blab{font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--g500)}
+.bar .blab b{display:block;font-family:var(--heading);font-weight:400;font-size:13px;color:var(--black);text-transform:none;margin-top:3px}
+.bar .track{position:relative;height:44px;background:var(--g100);border:1px solid var(--g200);border-radius:var(--radius-sm);overflow:visible}
+.fill{position:absolute;top:0;left:0;height:100%;display:flex;align-items:center;padding-left:14px;font-family:var(--mono);font-weight:500;font-size:15px;color:#fff;white-space:nowrap;border-radius:5px 0 0 5px}
+.fill.before{background:var(--g400)}.fill.booked{background:var(--accent)}
+.lyline{position:absolute;top:-7px;bottom:-7px;border-left:2px dotted var(--g500)}
+.lyline .llab{position:absolute;bottom:-20px;left:6px;font-family:var(--mono);font-size:9.5px;letter-spacing:.03em;color:var(--g500);white-space:nowrap}
+.fee-note{margin-top:34px;font-size:14.5px;color:var(--g600);max-width:68ch}
+.fee-note b{font-family:var(--heading);font-weight:400;color:var(--black)}
+.ba2{margin-top:30px;display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.state{border-radius:var(--radius);padding:30px 28px;border:1px solid var(--g200)}
+.state.b{background:var(--g50)}
+.state.a{background:var(--accent);border-color:transparent;position:relative;overflow:hidden}
+.state.a::before{content:"";position:absolute;inset:0;background:radial-gradient(at 25% -20%,rgba(255,255,255,.07),transparent 55%);pointer-events:none}
+.state.a>*{position:relative;z-index:1}
+.state .st-lab{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase}
+.state.b .st-lab{color:var(--g500)}.state.a .st-lab{color:var(--accent-light)}
+.state h3{font-size:24px;margin-top:10px}.state.a h3{color:#fff}
+.state ul{list-style:none;margin:20px 0 0;padding:0}
+.state li{padding:11px 0;border-bottom:1px solid var(--g200);font-size:14.5px;display:flex;gap:11px;align-items:flex-start}
+.state.a li{border-bottom-color:rgba(255,255,255,.18);color:rgba(255,255,255,.9)}
+.state li:last-child{border-bottom:0}
+.state .mk{font-family:var(--mono);font-size:13px;line-height:1.4}
+.state.b .mk{color:var(--terra)}.state.a .mk{color:var(--accent-light)}
+.state.a li b{color:#fff;font-weight:500}
+.loop{display:flex;flex-wrap:wrap;align-items:stretch;gap:10px;margin-top:30px}
+.lnode{flex:1 1 0px;min-width:150px;background:var(--g50);border:1px solid var(--g200);border-radius:var(--radius-lg);padding:14px;display:flex;flex-direction:column;gap:7px}
+.lnode .ln-k{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--g500)}
+.lnode .ln-t{font-family:var(--body);font-size:14px;line-height:1.35;color:var(--black);font-weight:500}
+.lnode.rw{box-shadow:inset 3px 0 0 var(--accent);border-color:var(--accent-border)}
+.lnode.host{box-shadow:inset 3px 0 0 var(--terra);border-color:rgb(216,182,172)}
+.lnode .ln-k.rw{color:var(--accent)}.lnode .ln-k.host{color:var(--terra)}
+.larr{display:flex;align-items:center;justify-content:center;color:var(--g400);font-size:17px;flex:0 0 auto}
+.loop-legend{display:flex;gap:22px;margin-top:16px;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--g500)}
+.loop-legend .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px;vertical-align:middle}
+.loop-back{margin-top:14px;font-family:var(--body);font-size:13.5px;color:var(--accent);display:flex;align-items:center;gap:8px}
+.tlead{margin-top:36px;font-family:var(--body);font-size:15px;color:var(--black)}
+.tgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+.tcard{background:var(--white);border:1px solid var(--g200);border-radius:var(--radius-lg);padding:20px 22px;box-shadow:var(--sh-sm)}
+.tcard .tstars{color:var(--accent);font-size:13px;letter-spacing:2px;margin-bottom:10px}
+.tcard .tquote{font-family:var(--heading);font-weight:400;font-style:italic;font-size:16px;line-height:1.5;color:var(--black);margin:0}
+.tcard .tmeta{margin-top:14px;font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--g500)}
+.compound-foot{margin-top:30px;font-family:var(--body);font-size:15px;line-height:1.6;color:var(--black);border-left:3px solid var(--accent);padding-left:18px}
+.closing{margin-top:74px;background:var(--accent);color:#fff;border-radius:var(--radius-lg);padding:52px 50px;margin-bottom:30px;position:relative;overflow:hidden}
+.closing::before{content:"";position:absolute;inset:0;background:radial-gradient(at 28% -20%,rgba(255,255,255,.08),transparent 52%),radial-gradient(at 78% 120%,rgba(50,48,47,.16),transparent 52%);pointer-events:none}
+.closing>*{position:relative;z-index:1}
+.closing .eyebrow{color:var(--accent-light)}
+.closing h2{color:#fff;font-size:clamp(30px,4.2vw,44px);margin-top:14px;max-width:17ch}
+.closing h2 .accent{font-style:italic;color:var(--accent-light)}
+.closing p{margin-top:20px;max-width:64ch;color:rgba(255,255,255,.86);font-size:16px;line-height:1.7}
+.cta{margin-top:32px;display:inline-flex;align-items:center;gap:10px;background:#fff;color:var(--accent);font-family:var(--body);font-weight:600;font-size:16px;padding:16px 32px;border-radius:var(--radius);text-decoration:none;box-shadow:rgba(50,48,47,.2) 0 4px 16px}
+.cta:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.rw-signoff{margin-top:42px;padding-top:26px;border-top:1px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px}
+.rw-signoff .sg{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-light)}
+.rw-signoff .wm{font-family:var(--body);font-weight:600;font-size:18px;color:#fff}
+.sourcing{margin-top:34px;padding-top:18px;border-top:1px solid var(--g200);font-family:var(--mono);font-size:10px;letter-spacing:.02em;color:var(--g500);line-height:1.8}
+footer .wrap{display:flex;justify-content:space-between;align-items:center;padding:22px 40px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--g500);gap:16px;flex-wrap:wrap}
+footer .ft-brand b{font-family:var(--body);font-weight:600;font-size:13px;letter-spacing:0;text-transform:none;color:var(--accent)}
+@media (max-width:860px){.levers{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:780px){.wrap{padding:0 24px}.baseline{grid-template-columns:1fr}.statrow{grid-template-columns:1fr}.rank-wrap,.ba2,.titleflip{grid-template-columns:1fr}}
+@media (max-width:680px){.tgrid{grid-template-columns:1fr}.larr{transform:rotate(90deg)}.lnode{flex:1 1 100%}}
+@media (max-width:600px){.bar{grid-template-columns:1fr;gap:6px}}
+@media (max-width:560px){.cmp{grid-template-columns:1fr}.hero{padding-top:48px}.closing{padding:40px 24px}.cta{width:100%;justify-content:center}}
+@media (max-width:480px){.levers{grid-template-columns:1fr}}
+h1,h2,h3,h4,.sec-title,.sub,.hook,.lede,.tf,.closing h2,.closing p{text-wrap:balance}p,li,blockquote,figcaption,.cmp-cap,.lab,.paradox,.tcard p{text-wrap:pretty}
+.todo{color:#C62828;font-weight:600}
+.whofor{margin-top:16px;font-size:15px;color:var(--black);max-width:62ch}.whofor b{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--terra);font-weight:500;margin-right:6px}@media (min-width:900px){.statrow.four{grid-template-columns:repeat(4,1fr)}}.plainlist{list-style:none;margin-top:26px;display:grid;gap:12px}.plainlist li{position:relative;padding:14px 18px 14px 44px;border:1px solid var(--g200);border-radius:var(--radius);background:var(--g50);font-size:16px;line-height:1.5}.plainlist li::before{content:"";position:absolute;left:18px;top:22px;width:10px;height:10px;border-radius:50%;background:var(--accent)}.mkt-c{color:var(--g500)}
+.hook .hlab.hk{font-family:var(--heading);font-size:clamp(22px,2.8vw,30px);line-height:1.25;letter-spacing:0;text-transform:none;color:var(--black);font-style:normal;max-width:30ch}
+.cmp.hero{padding:0}.cmp-label{margin-top:56px}.lede+.cmp-label{margin-top:32px}.cmp{margin-top:14px}.cmp-cap{margin-top:14px}.titleflip{margin-top:20px}.titleflip+.titleflip{margin-top:14px}.cmp+.titleflip{margin-top:20px}
+.cmp-cap{max-width:none}
+p,li,blockquote,.tf,.tfval,.tfdesc,.cmp-cap,.hlab,.delta,.lab,.ln-t,.lede,.sub,.whofor,.fee-note,.perf-cap,.st-lab,.tquote,.tmeta,.blab,.loop-back{text-wrap:pretty}
+.hl{font-weight:600;color:var(--black)}
+.closing .hl,.dark .hl{color:#fff}
+</style>
+<link rel="stylesheet" href="/assets/header.css">
+<script defer src="/assets/header.js"></script>
+<link rel="stylesheet" href="/assets/footer.css">
+<link rel="stylesheet" href="/assets/cs-strip.css">
+<script defer src="/assets/cs-strip.js"></script>
+<script src="/assets/x-pixel-base.js?v=2"></script>
+<style>
+@media(min-width:901px){body{padding-top:76px}}
+.float-bar{border-radius:14px}
+</style>
+</head>
+<body>
+<!-- Generated by scripts/build-case-studies.mjs from the case study drafts. Edit the draft, then re-run. -->
+<!-- HEADER:START -->
+<nav class="float-bar" id="float-bar" aria-label="Primary">
+  <a href="/" class="fb-logo">
+    <div class="lm"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24" fill="none" aria-hidden="true"><path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <span class="ln">RevWhisper</span>
+  </a>
+
+  <div class="fb-links" id="fb-links">
+
+    <!-- Services dropdown -->
+    <div class="fb-dropdown" data-dropdown>
+      <button class="fb-link fb-dropdown-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="fb-menu-services">
+        Services
+        <svg class="fb-chevron" viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="fb-menu" id="fb-menu-services">
+
+        <!-- Listing Optimization: document with text lines -->
+        <a href="/airbnb-listing-optimization" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/>
+              <path d="M14 2v4a2 2 0 0 0 2 2h4"/>
+              <path d="M10 9H8"/>
+              <path d="M16 13H8"/>
+              <path d="M16 17H8"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Listing Optimization</span>
+            </span>
+            <span class="fb-menu-desc">Title, description, and amenities tuned for conversion</span>
+          </span>
+        </a>
+
+        <!-- Revenue Management: stacked coins / database cylinder -->
+        <a href="/revenue-management" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <ellipse cx="12" cy="5" rx="9" ry="3"/>
+              <path d="M3 5v14a9 3 0 0 0 18 0V5"/>
+              <path d="M3 12a9 3 0 0 0 18 0"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Revenue Management</span>
+            </span>
+            <span class="fb-menu-desc">Dynamic pricing, minimum stays, seasonal strategy</span>
+          </span>
+        </a>
+
+        <!-- Photo Optimization: photo frame with sun + mountains -->
+        <a href="/photoediting" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              <circle cx="9" cy="9" r="2"/>
+              <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Photo Optimization</span>
+            </span>
+            <span class="fb-menu-desc">Cover photos, photo order, professional editing</span>
+          </span>
+        </a>
+
+      </div>
+    </div>
+
+    <!-- Resources dropdown -->
+    <div class="fb-dropdown" data-dropdown>
+      <button class="fb-link fb-dropdown-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="fb-menu-resources">
+        Resources
+        <svg class="fb-chevron" viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="fb-menu" id="fb-menu-resources">
+
+        <!-- Blog: notebook with binding + text lines -->
+        <a href="/blog" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="4" y="2" width="16" height="20" rx="2"/>
+              <path d="M2 6h4"/>
+              <path d="M2 10h4"/>
+              <path d="M2 14h4"/>
+              <path d="M2 18h4"/>
+              <path d="M9.5 8h5"/>
+              <path d="M9.5 12H16"/>
+              <path d="M9.5 16H14"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Blog</span>
+            </span>
+            <span class="fb-menu-desc">Strategies, data, and host insights</span>
+          </span>
+        </a>
+
+        <!-- Case Studies: open book -->
+        <a href="/case-study" class="fb-menu-item">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 7v14"/>
+              <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Case Studies</span>
+            </span>
+            <span class="fb-menu-desc">Real revenue lifts from real listings</span>
+          </span>
+        </a>
+
+        <!-- Free Listing Audit: clean magnifying glass -->
+        <a href="/#audit-form" class="fb-menu-item js-to-audit">
+          <span class="fb-menu-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="10.5" cy="10.5" r="6.5"/>
+              <path d="m15.5 15.5 4 4"/>
+            </svg>
+          </span>
+          <span class="fb-menu-content">
+            <span class="fb-menu-row">
+              <span class="fb-menu-label">Free Listing Audit</span>
+            </span>
+            <span class="fb-menu-desc">Ranking, pricing and conversion, walked through live</span>
+          </span>
+        </a>
+      </div>
+    </div>
+
+    <a href="/get-started" class="fb-link fb-link--mobile-cta">Book a Strategy Call</a>
+  </div>
+
+  <a href="/get-started" class="fb-cta">Book a Strategy Call</a>
+  <button class="fb-hamburger" id="fb-hamburger" aria-label="Toggle navigation" aria-expanded="false">
+    <span class="fb-ham-line"></span>
+    <span class="fb-ham-line"></span>
+    <span class="fb-ham-line"></span>
+  </button>
+</nav>
+<!-- HEADER:END -->
+
+<main style="width: 100%; background: #ffffff">
+<div class="wrap">
+<header class="hero"><div class="kick"><span class="eyebrow">01 / Austin, TX  ·  5 BR Group&#160;Home</span><span class="line"></span></div><h1>A second-season listing,<br><span class="accent">priced to be&#160;seen.</span></h1><p class="sub">Eastside Pool Home went live in late 2025. Cribs, the Austin property manager that runs it, moved it to RevWhisper on April 29, before its first full summer. From May to October <strong class="hl">it earned&#160;$92.6K</strong>, <strong class="hl">booked more than similar homes nearby all&#160;summer</strong>, and its November price, already booked, is <strong class="hl">65% higher than last&#160;November’s</strong>.</p><p class="whofor"><b>Who this is&#160;for:</b> A property manager launching a new listing with no booking&#160;history.</p><div class="propline"><span class="pl-name">Eastside Pool&#160;Home</span><span class="pl-meta">5 BR / Pool / Near&#160;downtown</span><span class="pl-meta">Austin, TX · Cribs</span><span class="pl-meta terra">Started with RevWhisper · Apr 29,&#160;2026</span></div><a class="ablink" href="https://www.airbnb.com/rooms/1539227698927561562" target="_blank" rel="noopener"><img src="/images/case-studies/75d5a568cc6fefd4974d39a23abe8b18.jpg" alt="Eastside Pool Home on Airbnb: Eastside Pool Home, Guest favorite, 5.0 from 27 reviews, hosted by Blake" style="width: 100%; display: block; aspect-ratio: 1157 / 847; object-fit: cover"></a><div class="hook"><div class="hlab hk">A new listing, already booking well above last November’s&#160;rate.</div><blockquote>Last November it sold 16 nights at $437. This November already has $13.0K booked at $721 a night, against $7.0K for the whole of last&#160;November.</blockquote></div></header><div class="statrow four"><div class="stat"><div class="lab">Revenue, May to&#160;Oct</div><div class="big">$92.6K</div><div class="delta green">Its first summer and&#160;fall</div></div><div class="stat"><div class="lab">November nightly&#160;price</div><div class="big">$437 <small>to</small> $721</div><div class="delta green">Already booked, against last&#160;November</div></div><div class="stat"><div class="lab">Airbnb&#160;rating</div><div class="big">5.0</div><div class="delta green">Every category, 44&#160;reviews</div></div><div class="stat"><div class="lab">Time to first&#160;result</div><div class="big">Month&#160;2</div><div class="delta green">June 70% booked, against 57% for every nearby Airbnb home of the same&#160;size</div></div></div><section><div class="sec-head"><span class="num">02 / The&#160;Revamp</span><span class="line"></span></div><h2 class="sec-title">What used to be. <span class="accent">What it is&#160;now.</span></h2><p class="lede">The listing before and after its photo update, and its title and description before and after the&#160;rewrite.</p><div class="cmp hero"><figure class="frame"><span class="tag before">Before</span><span style="display:block;aspect-ratio:2.15;overflow:hidden;position:relative;background:#ffffff"><img src="/images/case-studies/d03f71beacf369645bfc9f70e46aad14.jpg" alt="Airbnb opening grid" style="position:absolute;width:177.913%;max-width:none;left:-40.418%;top:-18.852%;display:block"></span></figure><figure class="frame"><span class="tag after">After</span><span style="display:block;aspect-ratio:2.15;overflow:hidden;position:relative;background:#ffffff"><img src="/images/case-studies/75d5a568cc6fefd4974d39a23abe8b18.jpg" alt="Airbnb opening grid" style="position:absolute;width:111.416%;max-width:none;left:-6.815%;top:-15.735%;display:block"></span></figure></div><p class="cmp-cap"><b>The first five&#160;photos.</b> The cover is now a brighter daylight view of the curved white front. The pool moves into the second slot, and the living room joins the first&#160;five.</p><div class="titleflip"><div class="tf before"><div class="tflab">Title · before</div><div class="tfval">Eastside Lux Group Retreat W/ Pool near&#160;Downtown</div></div><div class="tf after"><div class="tflab">Title · after</div><div class="tfval">Eastside Pool Home • Outdoor Fireplace • Game&#160;Room</div></div></div><div class="titleflip"><div class="tf before"><div class="tflab">Description · before</div><div class="tfdesc">Welcome to your private urban oasis in the heart of East Austin where modern comfort meets laid-back Texas&#160;charm.</div></div><div class="tf after"><div class="tflab">Description · after</div><div class="tfdesc">“We had 12 guests and the house never felt cramped.” That’s how a guest described Holly St, our three-story Eastside home in the Holly&#160;neighborhood.</div></div></div><div class="tfwhy"><div class="tfwlab">Why we changed it</div><p>The old title called it a “Lux Group Retreat,” which tells a guest very little. The new one names three things guests can picture: the pool, the outdoor fireplace and the game room. <strong class="hl">Groups of 16 and 12 are among its five most common bookings</strong>, so the description opens with a guest whose group of 12 said the house never felt&#160;cramped.</p></div><p class="cmp-cap">The new title and description are both live on&#160;Airbnb.</p><div class="cmp-label">Pool<span class="ln"></span></div><div class="cmp"><figure class="frame"><span class="tag before">Before</span><span style="display:block;aspect-ratio:1.5;overflow:hidden;position:relative;background:#ffffff"><img src="/images/case-studies/lead-holly-pool-b.jpg" alt="Pool, before" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block"></span></figure><figure class="frame"><span class="tag after">After</span><span style="display:block;aspect-ratio:1.5;overflow:hidden;position:relative;background:#ffffff"><img src="/images/case-studies/lead-holly-pool-a.jpg" alt="Pool, after" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block"></span></figure></div><p class="cmp-cap"><b>Pool.</b> The same shot of the pool, brightened and warmed&#160;up.</p></section><section><div class="sec-head"><span class="num">03 / What We&#160;Changed</span><span class="line"></span></div><h2 class="sec-title">What we changed, <span class="accent">in plain&#160;terms.</span></h2><div class="paradox"><b>The&#160;problem.</b> A new house with spotless reviews, sitting on page 4 of Airbnb search for some of its late-summer dates, where few guests ever&#160;look.</div><ul class="plainlist"><li>Never priced a night below the owners’ $250&#160;minimum.</li><li>Retitled the listing around the pool, outdoor fireplace and game room, and rewrote the description to open with a guest’s review of a 12-guest&#160;stay.</li><li>Swapped in a daylight cover and moved the pool into the second&#160;photo.</li><li>Caught a weekend priced nearly $300 a night above similar homes, lowered open weekday nights just enough to reach page one of Airbnb search, and kept weekends&#160;higher.</li></ul></section><section><div class="sec-head"><span class="num">04 / Results &amp; Market</span><span class="line"></span></div><h2 class="sec-title">Busier than nearby homes <span class="accent">all&#160;summer.</span></h2><p class="lede">These are the home’s real results. Eastside Pool Home had no summer last year to compare with, so the comparison here is similar homes&#160;nearby.</p><div class="ptbl"><div class="pt-top"><span class="ttl">Each month since we&#160;started</span><span class="src">Source: PriceLabs Booking&#160;Insights</span></div><div class="ptbl-scroll"><table class="perf"><thead><tr><th>Month</th><th>Revenue</th><th>vs last year</th><th>Booked</th><th>Similar homes</th><th>Avg. nightly price</th><th>Last year’s price</th></tr></thead><tbody><tr><td class="mo">May&#160;2026</td><td>$16.6K</td><td class="d">none</td><td>54%</td><td class="mkt-c">62%</td><td>$1,109</td><td>none</td></tr><tr><td class="mo">June&#160;2026</td><td>$13.7K</td><td class="d">none</td><td>70%</td><td class="mkt-c">57%</td><td>$651</td><td>none</td></tr><tr><td class="mo">July&#160;2026</td><td>$15.8K</td><td class="d">none</td><td>77%</td><td class="mkt-c">61%</td><td>$658</td><td>none</td></tr><tr><td class="mo">August&#160;2026</td><td>$12.8K</td><td class="d">none</td><td>63%</td><td class="mkt-c">54%</td><td>$675</td><td>none</td></tr><tr><td class="mo">September&#160;2026</td><td>$14.0K</td><td class="d">none</td><td>52%</td><td class="mkt-c">55%</td><td>$934</td><td>none</td></tr><tr class="cur"><td class="mo">October 2026<span class="cur-tag">Latest full&#160;month</span></td><td>$19.6K</td><td class="d green up">$19.1K</td><td>65%</td><td class="mkt-c">64%</td><td>$982</td><td>$490</td></tr></tbody></table></div></div><p class="perf-cap"><b>$92.6K in its first summer and&#160;fall.</b> <strong class="hl">October was its biggest month&#160;yet</strong>, during Austin City Limits. Booked is the share of open nights guests booked. Similar homes is the same figure for every nearby Airbnb home of the same size, tracked by PriceLabs, not just homes we&#160;manage.</p><p class="vs-foot">Booked more than similar homes nearby in June, July and August. May and September booked a little less, both at high&#160;prices.</p></section><section><div class="sec-head"><span class="num">05 / The Months&#160;Ahead</span><span class="line"></span></div><h2 class="sec-title">Higher rates this winter, <span class="accent">and still&#160;booking.</span></h2><p class="lede">This section uses only bookings already on the calendar. Nothing here is&#160;projected.</p><div class="fc-lead"><div class="fcbig">$721</div><p><b>average nightly price already booked for&#160;November,</b> against $437 last&#160;November.</p></div><div class="bars"><div class="bar"><div class="blab">November<b>Booked so&#160;far</b></div><div class="track"><div class="fill booked" style="width:96.2%">$13.0K</div><div class="lyline" style="left:51.9%"><span class="llab">Last November, final: $7.00K</span></div></div></div><div class="bar"><div class="blab">December<b>Booked so&#160;far</b></div><div class="track"><div class="fill booked" style="width:71.1%">$9.59K</div><div class="lyline" style="left:44.2%"><span class="llab">Last December, final: $5.97K</span></div></div></div><div class="bar"><div class="blab">January<b>Booked so&#160;far</b></div><div class="track"><div class="fill booked" style="width:32.0%">$4.32K</div><div class="lyline" style="left:71.7%"><span class="llab">Last January, final: $9.67K</span></div></div></div></div><p class="fee-note"><b>January is behind so&#160;far.</b> It’s at $4.32K against $9.67K for last January, finished. Guests usually book this home about two weeks ahead, so most of January is still to&#160;come.</p></section><section><div class="sec-head"><span class="num">06 / Ranking&#160;Movement</span><span class="line"></span></div><h2 class="sec-title">Specific weeks moved <span class="accent">from page 4 to page&#160;1.</span></h2><p class="lede">These are our records of which page of Airbnb search the listing showed up on for each set of dates, before and after we changed the&#160;price.</p><div class="rank-wrap"><div class="rankcard before"><div class="rc-head"><span class="h">Before the&#160;change</span><span class="s">Which page of Airbnb&#160;search</span></div><table><tbody><tr><td>Aug 17 → 20</td><td>Page&#160;4</td></tr><tr><td>Sep 03 → 06</td><td>Page&#160;4</td></tr><tr><td>Sep 18 → 20</td><td>Below page&#160;1</td></tr></tbody></table></div><div class="rankcard after"><div class="rc-head"><span class="h">After the&#160;change</span><span class="s">Same dates, after the price&#160;change</span></div><table><tbody><tr><td>Aug 17 → 20</td><td><span class="badge1">Page&#160;1</span></td></tr><tr><td>Sep 03 → 06</td><td><span class="badge1">#6</span></td></tr><tr><td>Sep 18 → 20</td><td><span class="badge1">Page&#160;1</span></td></tr></tbody></table></div></div><p class="rank-foot"><b>Still one of the higher prices on the&#160;page.</b> For Sep 3 to 6 the rate came down <strong class="hl">from nearly $2,000 to $1,200 a&#160;night</strong>.</p></section><section><div class="sec-head"><span class="num">07 / The Compounding&#160;Effect</span><span class="line"></span></div><h2 class="sec-title">We bring the guests. <span class="accent">Cribs makes the&#160;stay.</span></h2><p class="lede">In April the home’s communication rating was 3.75. <strong class="hl">Today every rating category is&#160;5.0</strong>, across 44&#160;reviews.</p><div class="loop"><div class="lnode rw"><span class="ln-k rw">RevWhisper</span><span class="ln-t">We get it seen in search and price it to&#160;book</span></div><span class="larr">→</span><div class="lnode"><span class="ln-k">Result</span><span class="ln-t">More guests see it and&#160;book</span></div><span class="larr">→</span><div class="lnode host"><span class="ln-k host">Cribs</span><span class="ln-t">Delivers a five-star&#160;stay</span></div><span class="larr">→</span><div class="lnode"><span class="ln-k">Reviews</span><span class="ln-t">Fresh reviews, faster bookings, few&#160;cancellations</span></div><span class="larr">→</span><div class="lnode rw"><span class="ln-k rw">Airbnb</span><span class="ln-t">Shows it higher in&#160;search</span></div></div><div class="loop-legend"><span><span class="dot" style="background:var(--accent)"></span>Our&#160;work</span><span><span class="dot" style="background:var(--terra)"></span>The host’s&#160;work</span></div><div class="loop-back">↻ Every good stay helps the next booking come&#160;in.</div><p class="tlead">Every review below came in during its first summer and fall with&#160;us.</p><div class="tgrid"><div class="tcard"><div class="tstars">★★★★★</div><p class="tquote">“The place was perfect, very cool, and super&#160;walkable.”</p><div class="tmeta">Family guest · Stayed Oct 16 to 19,&#160;2026</div></div><div class="tcard"><div class="tstars">★★★★★</div><p class="tquote">“Spotless, new, great interior decor, close to&#160;everything.”</p><div class="tmeta">Guest · Stayed Sep 10 to 13,&#160;2026</div></div></div><p class="compound-foot">Cleanliness and host communication are the two themes guests mention&#160;most.</p></section><section><div class="sec-head"><span class="num">08 / Before &amp; After&#160;RevWhisper</span><span class="line"></span></div><h2 class="sec-title">A new listing <span class="accent">that never had to start&#160;cheap.</span></h2><div class="ba2"><div class="state b"><div class="st-lab">Before&#160;RevWhisper</div><h3 class="serif">New and&#160;unproven</h3><ul><li><span class="mk">▼</span><span>No summer&#160;history</span></li><li><span class="mk">▼</span><span>Last November at $437 a&#160;night</span></li><li><span class="mk">▼</span><span>Communication rating at&#160;3.75</span></li><li><span class="mk">▼</span><span>A market adding 30 five-bedroom&#160;homes</span></li></ul></div><div class="state a"><div class="st-lab">After&#160;RevWhisper</div><h3 class="serif">Found and&#160;booking</h3><ul><li><span class="mk">▲</span><span>$92.6K from May to&#160;October</span></li><li><span class="mk">▲</span><span>This November at $721 a&#160;night</span></li><li><span class="mk">▲</span><span>5.0 in every&#160;category</span></li><li><span class="mk">▲</span><span>Ahead of the market in June, July and&#160;August</span></li></ul></div></div></section><section class="closing"><span class="eyebrow">Your&#160;home</span><h2>We set you up for success. <span class="accent">You determine the&#160;outcome.</span></h2><p>Cribs started with three homes on RevWhisper and <strong class="hl">has since added two&#160;more</strong>. Blake and Jeremy still run the guest&#160;side.</p><p style="margin-top:14px">We did our part: where each home shows up in search, and how each night is priced against the homes showing above&#160;it.</p><p style="margin-top:14px">Here is the part no software can do for you. We set you up for success. You determine the&#160;outcome.</p><p style="margin-top:14px">Every listing is different, but the first step is always the same: see where your listing stands today, before anything&#160;changes.</p><a class="cta" href="https://cal.com/team/revwhisper/discovery">Book Your Free Strategy Call <span class="arr">→</span></a><div class="rw-signoff"><span class="wm">RevWhisper</span><span class="sg">Your revenue,&#160;optimized.</span></div></section><div class="sourcing">SOURCES &#160;//&#160; Actual revenue, occupancy and ADR: PriceLabs Booking Insights. Market occupancy and comparable-home counts: PriceLabs market data. Search moves: RevWhisper Queue records. Ratings and reviews: live Airbnb listing. Figures as of November 10, 2026.</div></div>
+</main>
+<!-- CS-STRIP-MORE:START -->
+<aside class="cs-strip" aria-labelledby="cs-strip-more-h" data-cs-strip>
+  <div class="cs-strip-in">
+    <div class="cs-strip-head">
+      <div class="cs-strip-intro">
+        <div class="cs-strip-eyebrow">Keep reading</div>
+        <h2 class="cs-strip-title" id="cs-strip-more-h">More homes, <em>more results.</em></h2>
+        
+      </div>
+      <div class="cs-strip-nav">
+        <a class="cs-strip-all" href="/case-studies">See all 9 <span aria-hidden="true">→</span></a>
+        <button class="cs-strip-btn" type="button" data-dir="-1" aria-label="Scroll back" disabled>‹</button>
+        <button class="cs-strip-btn" type="button" data-dir="1" aria-label="Scroll forward">›</button>
+      </div>
+    </div>
+    <ul class="cs-strip-row" role="list">
+      <li><a class="cs-strip-card" href="/case-studies/sombrero-beach-home">
+        <span class="cs-strip-img"><img src="/images/case-studies/2ffee431a42c79b46932c5245e9d3cde.jpg" alt="" loading="lazy" style="object-position:20% 30%;object-view-box:inset(8.3% 49.1% 34.4% 5.1%)"></span>
+        <span class="cs-strip-body">
+          <span class="cs-strip-kick">Marathon, FL · 4 BR Waterfront</span>
+          <span class="cs-strip-h">More homes in Marathon. <em>More nights booked anyway.</em></span>
+          <span class="cs-strip-meta">Sombrero Beach Home · Matt, owner</span>
+          <span class="cs-strip-for"><b>For:</b> Single-home owner</span>
+        </span>
+      </a></li>
+      <li><a class="cs-strip-card" href="/case-studies/peek-n-peak">
+        <span class="cs-strip-img"><img src="/images/case-studies/lead-peek-house-a.jpg" alt="" loading="lazy" style="object-position:center"></span>
+        <span class="cs-strip-body">
+          <span class="cs-strip-kick">Clymer, NY · 4 BR Ski Chalet</span>
+          <span class="cs-strip-h">A ski house that sat <em>empty all fall.</em></span>
+          <span class="cs-strip-meta">Peek n’ Peak · Mike and Julie, owners</span>
+          <span class="cs-strip-for"><b>For:</b> Owner with a slow off-season</span>
+        </span>
+      </a></li>
+      <li><a class="cs-strip-card" href="/case-studies/retreats-miami">
+        <span class="cs-strip-img"><img src="/images/case-studies/4c91be0776b0031299e63f17372253a6.jpg" alt="" loading="lazy" style="object-position:50% 40%;object-view-box:inset(9.8% 1.6% 16.8% 1.7%)"></span>
+        <span class="cs-strip-body">
+          <span class="cs-strip-kick">Miami and Miami Beach, FL · 6-Home Portfolio</span>
+          <span class="cs-strip-h">Miami got more crowded. <em>All six homes still beat the market.</em></span>
+          <span class="cs-strip-meta">Retreats Miami · Marc, Retreats Miami</span>
+          <span class="cs-strip-for"><b>For:</b> Manager with a mixed portfolio</span>
+        </span>
+      </a></li>
+      <li><a class="cs-strip-card" href="/case-studies/pinecone-stays">
+        <span class="cs-strip-img"><img src="/images/case-studies/lead-woods-living-a.jpg" alt="" loading="lazy" style="object-position:center"></span>
+        <span class="cs-strip-body">
+          <span class="cs-strip-kick">Catskills, NY · 17-Cabin Portfolio</span>
+          <span class="cs-strip-h">Seventeen Catskills cabins, <em>ahead of their markets.</em></span>
+          <span class="cs-strip-meta">Pinecone Stays · Max, Pinecone Stays</span>
+          <span class="cs-strip-for"><b>For:</b> Large portfolio operator</span>
+        </span>
+      </a></li>
+      <li><a class="cs-strip-card" href="/case-studies/woods-edge">
+        <span class="cs-strip-img"><img src="/images/case-studies/lead-woods-game-a.jpg" alt="" loading="lazy" style="object-position:center"></span>
+        <span class="cs-strip-body">
+          <span class="cs-strip-kick">Results Timeline · 30/60/90 days</span>
+          <span class="cs-strip-h">Ahead in 30 days. <em>Still ahead at 90.</em></span>
+          <span class="cs-strip-meta">Woods Edge · Max, Pinecone Stays · Catskills, NY</span>
+          <span class="cs-strip-for"><b>For:</b> Hosts asking if gains last</span>
+        </span>
+      </a></li>
+      <li><a class="cs-strip-card" href="/case-studies/casa-spur">
+        <span class="cs-strip-img"><img src="/images/case-studies/casa-cover-a.jpg" alt="" loading="lazy" style="object-position:center"></span>
+        <span class="cs-strip-body">
+          <span class="cs-strip-kick">Results Timeline · First 30 days</span>
+          <span class="cs-strip-h">$34.3K booked in 30 days. <em>Against $1.3K a year earlier.</em></span>
+          <span class="cs-strip-meta">Casa Spur · Daniel, Palm Homes · Miami, FL</span>
+          <span class="cs-strip-for"><b>For:</b> Large home, crowded market</span>
+        </span>
+      </a></li>
+      <li><a class="cs-strip-card" href="/case-studies/killington-ski-home">
+        <span class="cs-strip-img"><img src="/images/case-studies/joel-cover-a.jpg" alt="" loading="lazy" style="object-position:center"></span>
+        <span class="cs-strip-body">
+          <span class="cs-strip-kick">Results Timeline · First 30 days</span>
+          <span class="cs-strip-h">$66.5K booked in the first 30 days. <em>Ski season, filled early.</em></span>
+          <span class="cs-strip-meta">Killington Ski Home · Joel Santos · Killington, VT</span>
+          <span class="cs-strip-for"><b>For:</b> Ski-town owner</span>
+        </span>
+      </a></li>
+      <li><a class="cs-strip-card" href="/case-studies/what-to-expect">
+        <span class="cs-strip-img"><img src="/images/case-studies/dc0082903768aa8168dd0a0c05c28a56.jpg" alt="" loading="lazy" style="object-position:15% 25%;object-view-box:inset(7.1% 50.4% 38.4% 2.3%)"></span>
+        <span class="cs-strip-body">
+          <span class="cs-strip-kick">Three homes that started slowly</span>
+          <span class="cs-strip-h">Some homes jump in week one. <em>Most build over two or three months.</em></span>
+          <span class="cs-strip-meta">What to expect · Matt; Mike and Julie</span>
+          <span class="cs-strip-for"><b>For:</b> Hosts with a slow start</span>
+        </span>
+      </a></li>
+    </ul>
+  </div>
+</aside>
+<!-- CS-STRIP-MORE:END -->
+<!-- FOOTER:START -->
+<footer class="site-footer">
+  <div class="w">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">
+          <div class="lm">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24" fill="none" aria-hidden="true">
+              <path d="M6 20C6 12 12 6 22 6H26C36 6 42 12 42 20C42 28 36 34 26 34H20L12 40V34C8.5 32 6 27 6 20Z" stroke="#32302F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M15 21C15 21 17 14 19.5 14C22 14 22 28 24.5 28C27 28 27 16 29 16C31 16 32 22 33 22" stroke="#32302F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="footer-logo-name">RevWhisper</span>
+        </div>
+        <p class="footer-tag">A revenue intelligence team that layers into your Airbnb listing to accelerate performance and maximize earnings.</p>
+        <p class="footer-tag footer-address">501 East Kennedy Boulevard, Tampa, FL 33602 (Space 15&ndash;144)</p>
+        <div class="footer-socials">
+          <a href="https://x.com/RevWhisper" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+          <a href="https://www.instagram.com/rev.whisper/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          </a>
+          <a href="https://www.facebook.com/groups/airbnblistingoptimization" target="_blank" rel="noopener noreferrer" aria-label="Facebook Group">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <p class="footer-col-title">Explore</p>
+        <a href="/" class="footer-link">Home</a>
+        <a href="/airbnb-listing-optimization" class="footer-link">Listing Optimization</a>
+        <a href="/revenue-management" class="footer-link">Revenue Management</a>
+        <a href="/photoediting" class="footer-link">Photo Editing</a>
+        <a href="/case-study" class="footer-link">Case Study</a>
+        <a href="/blog" class="footer-link">Blog</a>
+        <a href="/get-started" class="footer-link">Book a Strategy Call</a>
+      </div>
+      <div class="footer-col">
+        <p class="footer-col-title">Resources</p>
+        <a href="/#audit-form" class="footer-link js-to-audit">Free Listing Audit</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 MCO CORP d/b/a RevWhisper. All rights reserved.</span>
+      <nav class="footer-legal" aria-label="Legal">
+        <a href="/privacy">Privacy Policy</a>
+        <a href="/terms">Terms of Service</a>
+      </nav>
+      <span>Stop Guessing. Start Whispering.</span>
+    </div>
+  </div>
+</footer>
+<!-- FOOTER:END -->
+</body>
+</html>

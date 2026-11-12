@@ -26,6 +26,56 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://revwhisper.com/case-studies</loc>
+    <lastmod>2026-11-12</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://revwhisper.com/case-studies/sombrero-beach-home</loc>
+    <lastmod>2026-11-12</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://revwhisper.com/case-studies/peek-n-peak</loc>
+    <lastmod>2026-11-12</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://revwhisper.com/case-studies/eastside-pool-home</loc>
+    <lastmod>2026-11-12</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://revwhisper.com/case-studies/retreats-miami</loc>
+    <lastmod>2026-11-12</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://revwhisper.com/case-studies/pinecone-stays</loc>
+    <lastmod>2026-11-12</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://revwhisper.com/case-studies/woods-edge</loc>
+    <lastmod>2026-11-12</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://revwhisper.com/case-studies/casa-spur</loc>
+    <lastmod>2026-11-12</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://revwhisper.com/case-studies/killington-ski-home</loc>
+    <lastmod>2026-11-12</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://revwhisper.com/case-studies/what-to-expect</loc>
+    <lastmod>2026-11-12</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://revwhisper.com/get-started</loc>
     <lastmod>2026-07-29</lastmod>
     <priority>0.8</priority>
@@ -33,8 +83,28 @@
   <!-- BLOG-SITEMAP:START -->
   <url>
     <loc>https://revwhisper.com/blog</loc>
-    <lastmod>2026-11-06</lastmod>
+    <lastmod>2026-11-12</lastmod>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://revwhisper.com/blog/airbnb-changes-2026</loc>
+    <lastmod>2026-11-12</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://revwhisper.com/blog/pricelabs-review</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://revwhisper.com/blog/scottsdale-phoenix-airbnb-guide</loc>
+    <lastmod>2026-11-10</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://revwhisper.com/blog/airbnb-house-rules-update-november-2026</loc>
+    <lastmod>2026-11-07</lastmod>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://revwhisper.com/blog/airbnb-q3-2026-earnings</loc>
