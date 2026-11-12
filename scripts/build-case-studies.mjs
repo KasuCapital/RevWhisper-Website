@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // build-case-studies.mjs — turns the case study drafts (the "RevWhisper Case Studies" folder: pages/*.html
-// plus images/) into site pages under /case-studies, builds the /case-studies hub, and fills the
+// plus images/) into site pages under /case-studies, and fills the
 // scrolling "more case studies" strips (CS-STRIP-MORE markers) on /case-study and on
 // every case study page. Then it runs sync-partials so the pages get the site header, footer and
 // attribution script.
@@ -44,12 +44,6 @@ const PAGES = [
   { group: 'guide', slug: 'what-to-expect', src: 'what-to-expect', tag: 'Hosts with a slow start', name: 'What to expect', eyebrow: 'Three homes that started slowly',
     h: 'Some homes jump in week one. <em>Most build over two or three months.</em>', host: 'Matt; Mike and Julie', img: 'dc0082903768aa8168dd0a0c05c28a56.jpg', crop: '7.1% 50.4% 38.4% 2.3%', pos: '15% 25%' },
 ];
-const GROUPS = [
-  { key: 'full', title: 'Full case studies', note: 'What we changed, month by month, and what’s booked next.' },
-  { key: 'timeline', title: 'Results timelines', note: 'What happened in the first 30, 60 and 90 days.' },
-  { key: 'guide', title: 'Guide', note: 'For homes that don’t jump in week one.' },
-];
-
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const plain = s => s.replace(/<[^>]+>/g, '').replace(/&#160;|&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&#39;/g, '’').replace(/\s+/g, ' ').trim();
 const url = p => `/case-studies/${p.slug}`;
@@ -142,7 +136,8 @@ const shellCss = `<style>
 </style>`;
 
 // ── The scrolling strip ──────────────────────────────────────────────────────────────────────────
-function strip({ id, eyebrow, title, sub, exclude }) {
+// `all`: the "See all case studies" link back to /case-study (left off on /case-study itself).
+function strip({ id, eyebrow, title, sub, exclude, all = true }) {
   const list = PAGES.filter(p => p.slug !== exclude);
   return `<aside class="cs-strip" aria-labelledby="${id}-h" data-cs-strip>
   <div class="cs-strip-in">
@@ -153,7 +148,7 @@ function strip({ id, eyebrow, title, sub, exclude }) {
         ${sub ? `<p class="cs-strip-sub">${sub}</p>` : ''}
       </div>
       <div class="cs-strip-nav">
-        <a class="cs-strip-all" href="/case-studies">See all ${PAGES.length} <span aria-hidden="true">→</span></a>
+        ${all ? '<a class="cs-strip-all" href="/case-study">See all case studies <span aria-hidden="true">→</span></a>' : ''}
         <button class="cs-strip-btn" type="button" data-dir="-1" aria-label="Scroll back" disabled>‹</button>
         <button class="cs-strip-btn" type="button" data-dir="1" aria-label="Scroll forward">›</button>
       </div>
@@ -174,7 +169,7 @@ ${list.map(p => `      <li><a class="cs-strip-card" href="${url(p)}">
 }
 
 const STRIPS = {
-  'CS-STRIP-MORE': () => strip({ id: 'cs-strip-more', eyebrow: 'Keep reading', title: 'More homes, <em>more results.</em>' }),
+  'CS-STRIP-MORE': () => strip({ id: 'cs-strip-more', eyebrow: 'Keep reading', title: 'More homes, <em>more results.</em>', all: false }),
 };
 
 function fillMarker(src, name, body) {
@@ -233,114 +228,6 @@ ${body}
   return fillMarker(html, 'CS-STRIP-MORE', strip({ id: 'cs-strip-more', eyebrow: 'Keep reading', title: 'More homes, <em>more results.</em>', exclude: p.slug }));
 }
 
-// ── The /case-studies hub ────────────────────────────────────────────────────────────────────────
-function buildHub() {
-  const card = p => `      <a class="hub-card" href="${url(p)}">
-        <span class="hub-img"><img src="/images/case-studies/${p.img}" alt="" loading="lazy" style="${imgStyle(p)}"></span>
-        <span class="hub-body">
-          <span class="hub-kick">${p.eyebrow}</span>
-          <span class="hub-h">${p.h}</span>
-          <span class="hub-host">${esc(p.name)} · ${esc(p.host)}</span>
-          <span class="hub-for"><b>For:</b> ${p.tag}</span>
-        </span>
-      </a>`;
-  const groups = GROUPS.map(g => `  <section class="hub-group" aria-labelledby="hub-${g.key}">
-    <div class="hub-group-head"><h2 id="hub-${g.key}">${g.title}</h2><p>${g.note}</p></div>
-    <div class="hub-grid">
-${PAGES.filter(p => p.group === g.key).map(card).join('\n')}
-    </div>
-  </section>`).join('\n');
-  const counts = k => PAGES.filter(p => p.group === k).length;
-  const title = 'Case studies: real homes, real results | RevWhisper';
-  const description = 'Full case studies and results timelines from RevWhisper hosts: what we changed on each listing, month-by-month results against last year, and what’s already booked next.';
-
-  return `<!DOCTYPE html>
-<html lang="en">
-<head>
-${headTop()}
-${headMeta({ title, description, path: '/case-studies', image: PAGES[0].img })}
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--black:#32302F;--white:#fff;--accent:#4A6741;--accent-light:#dce6d8;--terra:#8B4A3E;--g50:#faf9f8;--g200:#E0DCDA;--g500:#706b68;--g600:#58534f;
-  --heading:'Lora',Georgia,serif;--body:'DM Sans',system-ui,'Helvetica Neue',sans-serif;--mono:'DM Mono',Consolas,monospace;
-  --sh:0 4px 16px rgba(50,48,47,.07),0 2px 6px rgba(50,48,47,.04)}
-body{background:var(--white);color:var(--black);font-family:var(--body);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
-h1,h2{font-family:var(--heading);font-weight:400;letter-spacing:-.02em;line-height:1.12;text-wrap:balance}
-.hub{max-width:1120px;margin:0 auto;padding:72px 40px 24px}
-.hub-hero{display:grid;gap:22px;padding-bottom:40px;border-bottom:1px solid var(--g200)}
-.hub-eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--g500)}
-.hub-hero h1{font-size:clamp(38px,5.6vw,62px);max-width:16ch}
-.hub-hero h1 em,.hub-group-head h2 em{color:var(--accent);font-style:italic}
-.hub-hero p{max-width:62ch;color:var(--g600);font-size:18px;font-weight:300;text-wrap:pretty}
-.hub-facts{display:flex;flex-wrap:wrap;gap:10px 30px;list-style:none}
-.hub-facts li{display:flex;gap:8px;align-items:baseline}
-.hub-facts b{font-family:var(--heading);font-weight:500;font-size:24px}
-.hub-facts span{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--g500)}
-.hub-group{display:grid;gap:22px;padding-top:52px}
-.hub-group-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px 18px}
-.hub-group-head h2{font-size:28px}
-.hub-group-head p{color:var(--g500);font-size:15px}
-.hub-grid{display:grid;gap:22px;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr))}
-.hub-card{display:grid;grid-template-rows:auto 1fr;background:var(--g50);border:1px solid var(--g200);border-radius:12px;overflow:hidden;color:inherit;text-decoration:none;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
-.hub-card:hover{transform:translateY(-2px);box-shadow:var(--sh);border-color:#a9b9a3}
-.hub-card:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
-.hub-img{display:block;aspect-ratio:16/10;background:var(--g200);overflow:hidden}
-.hub-img img{width:100%;height:100%;object-fit:cover;display:block}
-.hub-body{display:flex;flex-direction:column;gap:10px;padding:18px 20px 20px}
-.hub-kick{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--g500)}
-.hub-h{font-family:var(--heading);font-size:21px;line-height:1.2;letter-spacing:-.015em;text-wrap:balance}
-.hub-h em{font-style:normal;color:var(--accent)}
-.hub-host{color:var(--g500);font-size:14.5px}
-.hub-for{margin-top:auto;align-self:flex-start;font-family:var(--mono);font-size:11.5px;padding:3px 10px;border-radius:999px;border:1px solid var(--black)}
-.hub-for b{font-weight:500}
-.hub-band{margin-top:64px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px 28px;padding:26px 30px;border-radius:14px;background:var(--accent-light)}
-.hub-band p{font-family:var(--heading);font-size:21px;max-width:40ch}
-.hub-band a{font-weight:500;color:var(--accent);text-decoration:none;white-space:nowrap}
-.hub-band a:hover{text-decoration:underline}
-.hub-cta{text-align:center;padding:84px 0 56px;display:grid;justify-items:center;gap:18px}
-.hub-cta h2{font-size:clamp(30px,4vw,42px);max-width:22ch}
-.hub-cta p{color:var(--g600);max-width:54ch}
-.hub-cta a{display:inline-flex;gap:10px;align-items:center;background:var(--black);color:var(--white);text-decoration:none;font-weight:500;padding:15px 26px;border-radius:999px;margin-top:6px}
-.hub-cta a:hover{background:var(--accent)}
-@media(max-width:720px){.hub{padding:44px 16px 16px}.hub-band{padding:22px}}
-@media(prefers-reduced-motion:reduce){.hub-card{transition:none}.hub-card:hover{transform:none}}
-</style>
-${headBottom}
-${shellCss}
-</head>
-<body>
-<!-- Generated by scripts/build-case-studies.mjs. Edit PAGES there, then re-run. -->
-<!-- HEADER:START -->
-<!-- HEADER:END -->
-<main class="hub">
-  <header class="hub-hero">
-    <div class="hub-eyebrow">RevWhisper · Case studies</div>
-    <h1>Real homes. <em>Real calendars.</em></h1>
-    <p>Each story shows what we changed on the listing, how every month compared with the same month last year, and what’s already booked next. Slow months are shown too. Pick the home that looks most like yours.</p>
-    <ul class="hub-facts">
-      <li><b>${counts('full')}</b><span>Full case studies</span></li>
-      <li><b>${counts('timeline')}</b><span>Results timelines</span></li>
-      <li><b>${counts('guide')}</b><span>Guide</span></li>
-    </ul>
-  </header>
-${groups}
-  <div class="hub-band">
-    <p>Want the quick version? See what client calendars look like right now.</p>
-    <a href="/case-study">See client calendars <span aria-hidden="true">→</span></a>
-  </div>
-  <section class="hub-cta">
-    <h2>One of these homes probably looks like yours.</h2>
-    <p>Every listing is different, but the first step is always the same: see where your listing stands today, before anything changes.</p>
-    <a href="https://cal.com/team/revwhisper/discovery">Book Your Free Strategy Call <span aria-hidden="true">→</span></a>
-  </section>
-</main>
-<!-- FOOTER:START -->
-<!-- FOOTER:END -->
-</body>
-</html>
-`;
-}
-
 // ── Run ──────────────────────────────────────────────────────────────────────────────────────────
 if (!existsSync(join(SRC, 'pages'))) { console.error(`No pages/ folder in ${SRC}`); process.exit(1); }
 mkdirSync(OUT, { recursive: true });
@@ -350,8 +237,6 @@ for (const p of PAGES) {
   writeFileSync(join(OUT, `${p.slug}.html`), buildPage(p));
   console.log(`WROTE case-studies/${p.slug}.html`);
 }
-writeFileSync(join(OUT, 'index.html'), buildHub());
-console.log('WROTE case-studies/index.html');
 
 for (const f of images) copyFileSync(join(SRC, 'images', f), join(IMG_OUT, f));
 console.log(`COPIED ${images.size} images to images/case-studies/`);
