@@ -125,7 +125,7 @@ function headMeta({ title, description, path, image }) {
 const headBottom = `<link rel="stylesheet" href="/assets/header.css">
 <script defer src="/assets/header.js"></script>
 <link rel="stylesheet" href="/assets/footer.css">
-<link rel="stylesheet" href="/assets/cs-strip.css?v=6">
+<link rel="stylesheet" href="/assets/cs-strip.css?v=7">
 <script defer src="/assets/cs-strip.js?v=3"></script>
 <script src="/assets/x-pixel-base.js?v=2"></script>`;
 
