@@ -946,6 +946,9 @@ const selectedPlan = isEnterprise ? 'enterprise' : (requestedPlan === 'annual' ?
 const enterpriseMonthly = isEnterprise ? Number(params.get('monthly_cost')) || 0 : 0;
 const enterpriseOnboarding = isEnterprise && params.get('onboarding_fee') ? Number(params.get('onboarding_fee')) : 996;
 const enterpriseTermMonths = isEnterprise ? Number(params.get('term_months')) || 0 : 0;
+// convert_months: the MSA v2 3-month plan. The Initial Term converts to one more term of this many months
+// unless notice is given 30 days before it ends (Growth Hub's three_then_annual). Without it, rep links stay month to month.
+const enterpriseConvertMonths = isEnterprise && enterpriseTermMonths ? Number(params.get('convert_months')) || 0 : 0;
 const onboardingFee = isEnterprise ? enterpriseOnboarding : 996;
 // Optional cap on the TOTAL one-time onboarding charge — set via rep-built links
 // (?onboarding_cap=1000). Total billed is min(per-listing fee × count, cap).
@@ -1013,7 +1016,8 @@ function showCheckoutTransition(email, destinationUrl, descriptionText, ctaText)
 if (requestedPlan) {
   const badge = document.getElementById('plan-badge');
   if (isEnterprise) {
-    badge.textContent = 'Enterprise Plan' + (enterpriseMonthly ? ' · $' + enterpriseMonthly.toLocaleString() + '/mo' : ' · Custom Pricing');
+    // the standard 3-month plan (convert_months, e.g. from the Listing Check) isn't an enterprise deal, so it isn't labelled one
+    badge.textContent = (enterpriseConvertMonths ? 'Performance Management' : 'Enterprise Plan') + (enterpriseMonthly ? ' · $' + enterpriseMonthly.toLocaleString() + '/mo' : ' · Custom Pricing');
     badge.style.display = 'inline-flex';
   } else if (selectedPlan === 'annual') {
     badge.textContent = '12-Month Annual Plan · $500/mo';
@@ -1201,7 +1205,27 @@ updateProgress(current);
     document.getElementById('terms-3-1').innerHTML = 'Client shall pay a one-time listing optimization fee of ' + feeAmt + ' per Listing (the &ldquo;Listing Optimization Fee&rdquo;). The Listing Optimization Fee is due upfront upon execution of this Agreement and is non-refundable. Client&rsquo;s monthly subscription shall commence upon completion of the listing optimization period and the start of ongoing revenue management services.';
   }
 
-  if (isEnterprise && enterpriseMonthly && enterpriseTermMonths) {
+  if (isEnterprise && enterpriseMonthly && enterpriseTermMonths && enterpriseConvertMonths) {
+    // MSA v2 Section 2 for the 3-month plan, word for word where the sections line up
+    var mo = '$' + enterpriseMonthly.toLocaleString() + '.00';
+    var WORDS = ['zero','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen','twenty','twenty-one','twenty-two','twenty-three','twenty-four'];
+    var inWords = function(n) { return (WORDS[n] || String(n)) + ' (' + n + ')'; };
+    var tm = enterpriseTermMonths, cm = enterpriseConvertMonths, all = tm + cm;
+    var commitTotal = '$' + (enterpriseMonthly * all).toLocaleString() + '.00';
+
+    document.getElementById('terms-2-1').innerHTML = '<p>This Agreement shall commence on the Effective Date for an initial term of ' + inWords(tm) + ' months (the &ldquo;Initial Term&rdquo;). At the end of the Initial Term, this Agreement shall automatically convert to a single additional term of ' + inWords(cm) + ' months (the &ldquo;Converted Term&rdquo;), for a total commitment of ' + inWords(all) + ' months from the Effective Date, unless either Party provides written notice of non-renewal at least thirty (30) days prior to the end of the Initial Term.</p>';
+
+    document.getElementById('terms-2-2').innerHTML = '<p>Upon expiration of the Initial Term, this Agreement automatically converts to the Converted Term. At the end of the Converted Term, this Agreement shall automatically renew for additional twelve (12) month terms unless either Party provides written notice of non-renewal at least thirty (30) days prior to the end of the then-current term.</p>' +
+      '<p>Within fifteen (15) days after the first day of the Converted Term, Client may cancel this Agreement by written notice to Provider at Admin@RevWhisper.com without payment of any early termination fee or other penalty. Upon such notice: (a) fees already paid or invoiced for the then-current monthly billing period are non-refundable; (b) Provider shall continue to perform the services through the end of that billing period; and (c) this Agreement shall terminate at the end of that billing period. This cancellation right applies only to the Converted Term and does not apply to any subsequent renewal term.</p>';
+
+    document.getElementById('terms-2-3').innerHTML = '<ul><li><strong>Initial Term:</strong> If Client terminates prior to the expiration of the Initial Term, Client shall pay an early termination fee equal to two (2) months of the applicable Monthly Fee, due within fifteen (15) days of the date of termination notice.</li><li><strong>Converted Term:</strong> Except as provided in Section 2.2, no early termination is permitted during the Converted Term. Client is committed to the full ' + inWords(cm) + ' month Converted Term.</li><li><strong>Renewal Terms:</strong> No early termination is permitted during any renewal term. Client is committed to the full twelve (12) month renewal term.</li></ul>';
+
+    // MSA v2 Section 3.2: the first Monthly Fee is due when onboarding ends, which is also what this checkout bills (onboarding only)
+    document.getElementById('terms-3-2').innerHTML = '<p>Client shall pay ' + mo + ' per month, per Listing (the &ldquo;Monthly Fee&rdquo;). The first Monthly Fee is due upon completion of the listing optimization period described in Section 1.3, and the Monthly Fee is billed monthly thereafter. The same Monthly Fee applies throughout the Initial Term, the Converted Term, and any renewal term, for a total of ' + commitTotal + ' per Listing over the ' + inWords(all) + ' month commitment.</p>';
+
+    // the conversion is acknowledged at the checkbox, as in the MSA's Client Acknowledgement of Automatic Conversion
+    document.querySelector('.terms-agree-text').innerHTML = 'I have read and agree to the <strong>RevWhisper Service Agreement</strong>, and I understand that after the ' + tm + '-month initial term it converts to ' + cm + ' more months at ' + mo + ' per month per listing (' + all + ' months in all) unless I give written notice at least 30 days before the initial term ends, and that I may cancel without penalty within 15 days after it converts.';
+  } else if (isEnterprise && enterpriseMonthly && enterpriseTermMonths) {
     var mo = '$' + enterpriseMonthly.toLocaleString() + '.00';
     var tm = enterpriseTermMonths;
     var totalAnnual = '$' + (enterpriseMonthly * enterpriseTermMonths).toLocaleString() + '.00';
@@ -1431,6 +1455,7 @@ async function submitForm() {
     data.onboarding_fee = onboardingFee;
     if (enterpriseMonthly) data.monthly_cost = enterpriseMonthly;
     if (enterpriseTermMonths) data.term_months = enterpriseTermMonths;
+    if (enterpriseConvertMonths) data.convert_months = enterpriseConvertMonths;
   }
 
   if (onboardingCap > 0) data.onboarding_cap = onboardingCap;

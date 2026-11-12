@@ -199,7 +199,12 @@ body.scrolled .bar{background:rgba(255,255,255,.9);-webkit-backdrop-filter:satur
 .media[data-state=paused] .frame::before,.media[data-state=ended] .frame::before,.media[data-state=idle] .frame::before{opacity:1}
 .vprog{position:absolute;left:0;right:0;bottom:0;height:3px;z-index:3;background:rgba(50,48,47,.06)}
 .vprog i{display:block;height:100%;background:var(--accent);transform:scaleX(0);transform-origin:left}
-.vbig,.vsound,.verr{position:absolute;z-index:2;opacity:0;pointer-events:none;transition:opacity .25s var(--silk),transform .25s var(--silk)}
+.vbig,.vsound{position:absolute;z-index:2;opacity:0;pointer-events:none;transition:opacity .25s var(--silk),transform .25s var(--silk)}
+/* the video's still, in place of a video that won't load (the tap on its play button tries again) */
+.vpost{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:0;pointer-events:none;transition:opacity .3s var(--silk)}
+.media[data-state=failed] .vpost{opacity:1}
+.media[data-state=failed] .frame::before{opacity:1}
+.media[data-state=failed] .vbig{opacity:1;pointer-events:auto;transform:none}
 .vbig{left:50%;top:50%;width:64px;height:64px;margin:-32px 0 0 -32px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;box-shadow:0 8px 22px rgba(74,103,65,.3);transform:scale(.9)}
 .vbig svg{width:24px;height:24px}
 .vbig .ic-play{margin-left:3px}
@@ -211,9 +216,6 @@ body.scrolled .bar{background:rgba(255,255,255,.9);-webkit-backdrop-filter:satur
 .vsound svg{width:15px;height:15px}
 @media(min-width:720px){.vsound{top:12px;right:12px;height:34px;padding:0 14px 0 11px;font-size:13px}.vsound svg{width:16px;height:16px}}
 .media[data-state=muted] .vsound{opacity:1;pointer-events:auto;transform:none}
-.verr{top:0;right:0;bottom:0;left:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:var(--g50);font-size:15px;color:var(--terra);text-align:center;padding:16px}
-.verr button{font-size:14px;font-weight:600;color:var(--accent);text-decoration:underline;text-underline-offset:3px}
-.media[data-state=error] .verr{opacity:1;pointer-events:auto}
 /* timed captions under the strategy videos (the other three have them burned in) */
 .vcap{display:flex;justify-content:center;align-items:flex-start;min-height:58px;margin-top:12px;padding:0 4px}
 .vcap span{background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:var(--sh-chip);padding:8px 14px;font-size:14.5px;font-weight:500;line-height:1.4;text-align:center;opacity:0;transform:translateY(3px);transition:opacity .15s ease,transform .2s var(--silk)}
@@ -343,6 +345,19 @@ body.scrolled .bar{background:rgba(255,255,255,.9);-webkit-backdrop-filter:satur
 .rtable td.p1{background:var(--accent-wash);color:var(--accent)}
 .rtable td.pn{background:var(--terra-wash);color:var(--terra)}
 .rtable tr:last-child th,.rtable tr:last-child td{border-bottom:0}
+/* by stay: rows are stays grouped by type, columns are group sizes, so it fits a phone without scrolling sideways */
+.rtable.stay table{min-width:0}
+.rtable.stay thead th{text-align:center}
+.rtable.stay thead th:first-child{text-align:left;padding-left:12px}
+.rtable.stay tbody th{white-space:nowrap;font-family:var(--mono);font-weight:400;font-size:13.5px}
+.rtable.stay th small{display:block;font-family:var(--body);font-size:12px;color:var(--g500);margin-top:1px}
+.rtable.stay td{line-height:1.2;width:30%}
+.rtable.stay td b{display:block;font-weight:500}
+.rtable.stay td small{display:block;font-size:12px;opacity:.8}
+.rtable td.p2{background:var(--gold-wash);color:var(--gold)}
+.rtable.stay tr.grp th{background:var(--g50);font-family:var(--body);font-size:11.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--g600);padding:8px 12px}
+.rtable.stay tr.grp th small{display:inline;text-transform:none;letter-spacing:0;font-weight:400;font-size:12px;margin:0 0 0 8px}
+.legend .nb::before{display:none}
 .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--g500);margin-top:8px}
 .legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px;background:var(--c);box-shadow:inset 0 0 0 1px var(--line)}
 .cals{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
@@ -361,6 +376,11 @@ body.scrolled .bar{background:rgba(255,255,255,.9);-webkit-backdrop-filter:satur
 .steps strong{display:block;font-size:15.5px;font-weight:600;line-height:1.35}
 .steps span{display:block;font-size:14px;line-height:1.45;color:var(--g500);margin-top:1px}
 .qcard .lg-only + .steps{margin-top:18px}
+.hsub{font-size:16px;line-height:1.5;color:var(--g500);margin-top:8px;text-wrap:pretty}
+/* phones: the subline says what the steps' small print said, so the steps go to titles only and the screen still fits */
+@media(max-width:719px){.hsub{font-size:15px;line-height:1.45;margin-top:6px}.steps span{display:none}.steps{gap:8px}}
+/* the shortest phones (an iPhone SE inside Instagram's browser): no room for both, so the steps keep their small print instead */
+@media(max-width:719px) and (max-height:580px){.hsub{display:none}.steps span{display:block}.steps{gap:10px}}
 /* the listing itself, from Growth Hub's scrape */
 .lcard{display:flex;gap:14px;align-items:center;margin:4px 0 16px}
 .lcard img{flex:0 0 auto;width:96px;height:72px;border-radius:12px;object-fit:cover;background:var(--g100);box-shadow:var(--sh-chip)}
@@ -424,6 +444,7 @@ body.scrolled .bar{background:rgba(255,255,255,.9);-webkit-backdrop-filter:satur
 .offer.s3 .pb-now{color:#fff}
 .offer.s3 .pb-go{opacity:1;transform:none}
 .pricebtn:disabled{cursor:default}
+.op-commit{font-size:12.5px;line-height:1.45;color:var(--g500);margin-top:6px;text-wrap:pretty}
 .op-trust{display:flex;align-items:center;justify-content:center;gap:6px;font-size:12px;color:var(--g500);margin-top:9px}
 .op-trust svg{width:12px;height:12px;color:var(--accent)}
 .op-sec{margin-top:36px}
@@ -462,6 +483,65 @@ body.scrolled .bar{background:rgba(255,255,255,.9);-webkit-backdrop-filter:satur
 .pf-was{font-family:var(--mono);font-size:13.5px;color:var(--g600);margin-top:2px}
 .pf-src{font-size:13px;line-height:1.5;color:var(--g500);margin-top:10px}
 .pf-src a{color:var(--accent);font-weight:500}
+/* the sample report link in the plan card */
+.op-sample{display:flex;align-items:center;gap:10px;width:100%;margin-top:14px;padding:11px 14px;border:1px solid var(--line);border-radius:12px;background:var(--g50);font-size:14.5px;font-weight:600;color:var(--black);text-align:left;cursor:pointer;transition:border-color .2s var(--silk),background-color .2s var(--silk)}
+.op-sample > svg:first-child{flex:0 0 auto;width:18px;height:18px;color:var(--accent)}
+.op-sample span{flex:1}
+.op-sample > svg:last-child{flex:0 0 auto;width:16px;height:16px;color:var(--g500)}
+.op-sample:active{background:var(--g100)}
+@media(hover:hover){.op-sample:hover{border-color:var(--g300)}}
+/* the sample report sheet */
+html.sheet-open{overflow:hidden}
+.sheet{position:fixed;top:0;right:0;bottom:0;left:0;z-index:80;background:rgba(50,48,47,.5);opacity:0;transition:opacity .26s var(--silk);overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.sheet.on{opacity:1}
+.sh-in{position:relative;max-width:920px;margin:0 auto;min-height:100%;background:var(--g50);padding:0 16px calc(env(safe-area-inset-bottom,0px) + 24px);transform:translateY(16px);transition:transform .32s var(--silk)}
+.sheet.on .sh-in{transform:none}
+.sh-h{position:sticky;top:0;z-index:2;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin:0 -16px 6px;padding:16px 16px 14px;background:rgba(250,249,248,.96);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.sh-t{font-family:var(--heading);font-weight:400;font-size:24px;letter-spacing:-.01em;line-height:1.2;outline:none}
+.sh-l{font-size:14.5px;line-height:1.45;color:var(--g500);margin-top:3px}
+.sh-x{flex:0 0 auto;position:relative;width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:#fff;cursor:pointer}
+.sh-x span::before,.sh-x span::after{content:"";position:absolute;left:12px;top:19px;width:15px;height:2px;border-radius:1px;background:var(--black);transform:rotate(45deg)}
+.sh-x span::after{transform:rotate(-45deg)}
+.sh-p{margin-top:18px}
+.sh-p figcaption{display:flex;align-items:center;gap:10px;font-size:14.5px;font-weight:600;margin-bottom:8px}
+.sh-p figcaption b{flex:0 0 auto;width:24px;height:24px;border-radius:50%;background:var(--accent-light);color:var(--accent);display:grid;place-items:center;font-family:var(--mono);font-size:12px;font-weight:500}
+.sh-p img{display:block;width:100%;height:auto;border-radius:10px;background:#fff;box-shadow:var(--sh-card)}
+.sh-done{display:block;margin:26px auto 0;height:48px;padding:0 22px;border-radius:12px;background:var(--black);color:#fff;font-size:15.5px;font-weight:600;cursor:pointer}
+@media(min-width:720px){.sh-in{margin:32px auto;min-height:0;border-radius:18px;padding:0 28px 28px}.sh-h{margin:0 -28px 6px;padding:20px 28px 16px;border-radius:18px 18px 0 0}}
+/* before and after: one client's Airbnb covers, the same photos edited and re-sequenced */
+.ba{container-type:inline-size;margin-top:14px}
+.ba-in{display:grid;gap:18px}
+@container (min-width:600px){.ba-in{grid-template-columns:1fr 1fr;gap:14px}}
+.ba-k{display:flex;align-items:baseline;gap:8px;font-size:11.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--g500);margin-bottom:7px}
+.ba-k small{font-size:12.5px;font-weight:400;letter-spacing:0;text-transform:none}
+.ba-after .ba-k{color:var(--accent)}
+.ba-g{display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:1fr 1fr;gap:3px;aspect-ratio:2 / 1;border-radius:12px;overflow:hidden;background:var(--line)}
+.ba-g img{display:block;width:100%;height:100%;object-fit:cover;min-height:0}
+.ba-g img:first-child{grid-row:1 / span 2}
+.ba-t{margin-top:8px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 11px;font-size:14px;line-height:1.4;color:var(--g600)}
+.ba-t small{display:block;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--g500);margin-bottom:2px}
+.ba-after .ba-t{color:var(--black);font-weight:600}
+/* more than Airbnb: Vrbo ads as real numbers */
+.ch{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:14px}
+.ch-c{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 16px;box-shadow:var(--sh-chip)}
+.ch-wide{grid-column:1 / -1}
+.ch-k{font-size:11.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--g500);margin-bottom:6px}
+.ch-big{font-family:var(--mono);font-size:26px;line-height:1.15}
+.ch-big small{font-family:var(--body);font-size:14px;color:var(--g500)}
+.ch-c > p:not(.ch-k):not(.ch-big){font-size:14px;line-height:1.45;color:var(--g500);margin-top:6px}
+.ab{display:grid;grid-template-columns:110px 1fr auto;align-items:center;gap:10px;font-size:13.5px;margin-top:6px}
+.ab i{display:block;height:10px;border-radius:5px;background:var(--accent);width:var(--w)}
+.ab b{font-family:var(--mono);font-weight:500;color:var(--accent)}
+.ab.lo i{background:var(--g300)}
+.ab.lo b{color:var(--g500)}
+.ch-bk{list-style:none}
+.ch-bk li{display:grid;grid-template-columns:1fr auto;gap:2px 12px;padding:10px 0;border-top:1px solid var(--line)}
+.ch-bk li:first-child{border-top:0;padding-top:2px}
+.bk-v,.bk-c{font-family:var(--mono);font-size:20px;line-height:1.2}
+.bk-c{text-align:right;color:var(--accent)}
+.bk-c.lo{color:var(--black)}
+.bk-v small,.bk-c small{display:block;font-family:var(--body);font-size:12.5px;color:var(--g500)}
+.ch-bk p{grid-column:1 / -1;font-size:14px;line-height:1.45;color:var(--g500)}
 /* faq */
 .faq{margin-top:12px;border-top:1px solid var(--line)}
 .faq details{border-bottom:1px solid var(--line)}
@@ -569,7 +649,7 @@ body.reviewing .stage{padding-bottom:96px}
   .scr[data-k=offer]{max-width:1120px}
   .op{display:grid;grid-template-columns:minmax(0,1fr) 380px;column-gap:56px;align-items:start}
   .op > *{grid-column:1}
-  .op > .op-card{grid-column:2;grid-row:1 / span 12;position:sticky;top:calc(var(--bar-h) + 20px);margin-top:4px}
+  .op > .op-card{grid-column:2;grid-row:1 / span 20;position:sticky;top:calc(var(--bar-h) + 20px);margin-top:4px}
   .op-head{text-align:left}
   .op .op-sec:first-of-type{margin-top:28px}
 }
@@ -578,11 +658,12 @@ body.reviewing .stage{padding-bottom:96px}
   .op{grid-template-columns:minmax(0,1fr) 400px;column-gap:48px}
   .op-card{padding:18px 20px 16px}
   .op-k,.op-on{margin-bottom:8px}
-  .op-steps{gap:7px}
+  .op-steps{gap:5px}
   .op-steps li b{font-size:14.5px}
   .op-steps li small{font-size:13px;line-height:1.35}
   .op-month{margin-top:10px;padding-top:9px}
-  .paybar{margin-top:12px}
+  .op-commit{font-size:12px;line-height:1.4;margin-top:4px}
+  .paybar{margin-top:10px}
   .op-card .pricebtn{flex-direction:row;align-items:center;gap:10px;padding:14px 18px}
   .op-card .pb-k{font-size:11px}
   .op-card .pb-prices{gap:10px;margin-top:2px}
@@ -742,6 +823,7 @@ var NOTE={
 var STEPS=[{k:'how'}].concat(STRATS.map(function(_,n){return {k:'strat',n:n};}),[{k:'score'},{k:'report'},{k:'offer'}]);
 
 var IC={
+ doc:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg>',
  arrow:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
  back:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>',
  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>',
@@ -795,14 +877,30 @@ function payload(){
   return {lead:S.lead,score:counts(),answers:answers,furthestScreen:name(STEPS[Math.max(reached,S.i)]),screenLog:S.log};
 }
 window.rwListingCheck={payload:payload};
+/* ── results to the team: /api/listing-check-result turns the payload into a note on the lead's Attio record.
+   Three moments, each sent at most once per check: they finish the ten questions, they click Start onboarding,
+   or they leave partway (a beacon, only once they've answered one). Nothing is sent from ?review=1. ── */
+function sendResult(kind){
+  if(REVIEW||!emailOk(S.lead.email))return;
+  S.sent=S.sent||{};
+  if(S.sent[kind]||(kind==='left'&&(S.sent.finished||!S.strat.some(Boolean))))return;
+  S.sent[kind]=1;save();
+  var body=JSON.stringify({kind:kind,report:S.report&&S.report.id||null,payload:payload()});
+  try{
+    if(kind==='left'&&navigator.sendBeacon&&navigator.sendBeacon('/api/listing-check-result',new Blob([body],{type:'text/plain'})))return;
+    fetch('/api/listing-check-result',{method:'POST',headers:{'Content-Type':'application/json'},body:body,keepalive:true}).catch(function(){});
+  }catch(e){}
+}
+window.addEventListener('pagehide',function(){sendResult('left');});
 function track(e,p){try{if(typeof window.rwTrack==='function')window.rwTrack(e,p||{});}catch(x){}}
 function fbCustom(e,p){try{if(typeof window.fbq==='function')window.fbq('trackCustom',e,p||{});}catch(x){}}
 
 /* ── the offer: standard plan through the existing /checkout-form (its rep-link path writes the
-   $500/mo, 3-month-then-month-to-month terms into the service agreement and charges onboarding only) ── */
-var PRICE={was:996,now:498,monthly:500,term:3};
+   $500/mo terms into the service agreement and charges onboarding only). convert_months makes it the
+   MSA v2 3-month plan (Growth Hub's three_then_annual): 3 months, then it converts to 9 more, 12 in all ── */
+var PRICE={was:996,now:498,monthly:500,term:3,convert:9};
 function checkoutUrl(){
-  var q=new URLSearchParams({plan:'enterprise',monthly_cost:String(PRICE.monthly),term_months:String(PRICE.term),onboarding_fee:String(PRICE.now),listing_count:'1'});
+  var q=new URLSearchParams({plan:'enterprise',monthly_cost:String(PRICE.monthly),term_months:String(PRICE.term),convert_months:String(PRICE.convert),onboarding_fee:String(PRICE.now),listing_count:'1'});
   if(emailOk(S.lead.email))q.set('email',S.lead.email);
   return '/checkout-form?'+q.toString();
 }
@@ -926,16 +1024,36 @@ PV.preload='auto';PV.setAttribute('disablepictureinpicture','');PV.setAttribute(
 var cur=null,curBar=null,curCap=null,capLast=null,raf=0,blessed=false;
 function setV(s){if(cur)cur.setAttribute('data-state',s);}
 function vState(){return cur?cur.getAttribute('data-state'):'';}
-PV.addEventListener('playing',function(){setV(PV.muted?'muted':'playing');loop();});
+PV.addEventListener('playing',function(){vTries=0;setV(PV.muted?'muted':'playing');loop();});
 PV.addEventListener('pause',function(){
   tick();
   // a pause left over from the previous screen's video lands while the new one is still loading: ignore it
-  if(!cur||PV.ended||vState()==='loading')return;
+  // (and a failed load is the error handler's to show)
+  if(!cur||PV.ended||PV.error||vState()==='loading'||vState()==='failed')return;
   setV('paused');
 });
 PV.addEventListener('ended',function(){tick();setV('ended');track('listing_check_video_complete',{video:(PV.getAttribute('data-src')||'').split('/').pop().split('.')[0]});});
 PV.addEventListener('volumechange',function(){if(cur&&!PV.paused)setV(PV.muted?'muted':'playing');});
-PV.addEventListener('error',function(){if(cur&&PV.getAttribute('src'))setV('error');});
+/* A load that fails (a dropped connection, a phone that put the tab to sleep mid-download) is retried
+   quietly, twice. If it still won't load, the screen shows the video's poster and a play button that
+   tries again: never an error box, least of all under the checkout button. Each failure is tracked
+   with the browser's own error code, so we can see what actually breaks in the wild. */
+var vTries=0;
+function vName(){return (PV.getAttribute('data-src')||'').split('/').pop().split('.')[0];}
+PV.addEventListener('error',function(){
+  if(!cur||!PV.getAttribute('src'))return;
+  var e=PV.error,code=e?e.code:0,m=cur;
+  track('listing_check_video_error',{video:vName(),code:code,message:e&&e.message?String(e.message).slice(0,120):'',attempt:vTries+1,online:navigator.onLine!==false,hidden:!!document.hidden});
+  // (Chrome reports a download that drops before any data arrives as code 4, "unsupported", so every code gets the retries)
+  if(vTries<2){
+    vTries++;setV('loading');
+    setTimeout(function(){if(cur===m&&PV.error)retry(true);},vTries===1?700:2500);
+    return;
+  }
+  setV('failed');
+});
+window.addEventListener('online',function(){if(vState()==='failed'){vTries=0;retry(true);}});
+document.addEventListener('visibilitychange',function(){if(!document.hidden&&vState()==='failed'){vTries=0;retry(true);}});
 function loop(){
   if(raf)return;
   var f=function(){raf=0;tick();if(!PV.paused&&PV.isConnected)raf=requestAnimationFrame(f);};
@@ -955,7 +1073,7 @@ function mountMedia(el){
   if(!m){PV.pause();if(PV.parentNode)PV.parentNode.removeChild(PV);curBar=curCap=null;return;}
   curBar=m.querySelector('.vprog i');curCap=m.querySelector('.vcap span');
   var src=m.getAttribute('data-src');
-  setV('loading');
+  vTries=0;setV('loading');
   m.querySelector('.frame').insertBefore(PV,m.querySelector('.frame').firstChild);
   if(m.getAttribute('data-poster'))PV.setAttribute('poster',m.getAttribute('data-poster'));else PV.removeAttribute('poster');
   if(PV.getAttribute('data-src')!==src){PV.setAttribute('data-src',src);PV.src=src;}
@@ -970,27 +1088,37 @@ function startV(){
   var p=PV.play();
   if(!p||!p.then)return;
   p.then(function(){if(cur===m)setV(PV.muted?'muted':'playing');}).catch(function(err){
-    if(cur!==m||(err&&err.name==='AbortError'))return;
+    // a failed load rejects play() too: the error handler retries it or shows the still
+    if(cur!==m||PV.error||(err&&err.name==='AbortError'))return;
     // sound isn't allowed yet: play muted (the captions carry it) and offer sound
     PV.muted=true;
     var p2=PV.play();
-    if(p2&&p2.then)p2.then(function(){if(cur===m)setV('muted');}).catch(function(){if(cur===m)setV('idle');});
+    if(p2&&p2.then)p2.then(function(){if(cur===m)setV('muted');}).catch(function(){if(cur===m&&!PV.error)setV('idle');});
   });
 }
 function playNow(){
   if(PV.ended)try{PV.currentTime=0;}catch(e){}
   PV.muted=false;
   var p=PV.play();
-  if(p&&p.catch)p.catch(function(){PV.muted=true;PV.play().catch(function(){setV('idle');});});
+  if(p&&p.catch)p.catch(function(){if(PV.error)return;PV.muted=true;PV.play().catch(function(){if(!PV.error)setV('idle');});});
 }
 function soundOn(){try{PV.currentTime=0;}catch(e){}playNow();}
 function vToggle(){
   var s=vState();
   if(s==='muted')return soundOn();
-  if(s==='error')return retry();
+  if(s==='failed')return retry();
+  if(cur)cur.setAttribute('data-tapped','');
   if(PV.paused)playNow();else PV.pause();
 }
-function retry(){if(!cur)return;var src=cur.getAttribute('data-src');setV('loading');PV.setAttribute('data-src',src);PV.src=src;startV();}
+function vPlay(){if(vState()==='failed'||PV.error)return retry();if(cur)cur.setAttribute('data-tapped','');playNow();}
+// Reload the current video. A quiet retry (auto) leaves a below-the-fold video nobody has tapped yet waiting for its tap.
+function retry(auto){
+  if(!cur)return;var m=cur,src=m.getAttribute('data-src');
+  if(!auto){vTries=0;m.setAttribute('data-tapped','');}
+  PV.setAttribute('data-src',src);PV.src=src;
+  if((m.hasAttribute('data-hold')||RM.matches)&&!m.hasAttribute('data-tapped')){setV('idle');return;}
+  setV('loading');startV();
+}
 // The first tap anywhere lets this element play with sound from then on, without changing what it's doing now.
 function bless(){
   if(blessed)return;blessed=true;
@@ -1010,14 +1138,16 @@ function prefetchNext(){
 /* ── screens ── */
 function media(kind,n){
   var strat=kind==='strat',f=strat?STRATS[n].f:VID[kind];
-  // the offer's video sits below the fold: it waits for a tap and shows a still until then
-  var hold=kind==='offer'?' data-hold="1" data-poster="'+V+'analyst-poster.c83bae1d.jpg"':'';
-  return '<div class="media'+(kind==='offer'?'':' rv')+(strat?'':' cream')+'" data-src="'+V+f+'.mp4"'+(strat?' data-n="'+n+'"':'')+hold+' data-state="loading">'+
+  // every video has a still (its first frame; the analyst's own cover): shown while it loads, and in place of it if it won't
+  var poster=V+f.replace('.','-poster.')+'.jpg';
+  // the offer's video sits below the fold: it waits for a tap and shows the still until then
+  var hold=kind==='offer'?' data-hold="1"':'';
+  return '<div class="media'+(kind==='offer'?'':' rv')+(strat?'':' cream')+'" data-src="'+V+f+'.mp4" data-poster="'+poster+'"'+(strat?' data-n="'+n+'"':'')+hold+' data-state="loading">'+
     '<div class="frame" data-act="vtoggle">'+
+      '<img class="vpost" src="'+poster+'" alt="" aria-hidden="true">'+
       '<div class="vprog"><i></i></div>'+
       '<button class="vbig" type="button" data-act="vplay" aria-label="Play video">'+IC.play+IC.replay+'</button>'+
       '<button class="vsound" type="button" data-act="sound">'+IC.muted+'Tap for sound</button>'+
-      '<div class="verr">This video couldn\'t load.<button type="button" data-act="vretry">Try again</button></div>'+
     '</div>'+
     (strat?'<div class="vcap" aria-hidden="true"><span></span></div>':'')+
   '</div>';
@@ -1066,17 +1196,20 @@ function takeLead(){
 // The first screen: people land here straight from the audit form, so it says what this is and what's ahead
 function vHow(){
   var L=S.lead,first=firstName(L.name);
-  var kick=first?IC.check+'Thanks, '+esc(first)+'. Your request is in.':'',h='First, a quick audit of <em>how you run</em> your listing';
+  var kick=first?IC.check+'Thanks, '+esc(first)+'. Your request is in.':'',h='Run your listing <em>health check</em>';
+  // TODO(Nick): add the client revenue lift ("...we use to lift client revenue N%") once the figure is confirmed with its source
+  var sub='Check your listing against the same checklist we run on every client listing. At the end, you get your search rank and listing improvement report.';
   var steps=[
     ['Watch 10 short videos','One per strategy we run on every listing.'],
     ['Tell us what you do today','Yes, partly or not yet, plus an optional note.'],
     ['Get your score and listing report','Built from your Airbnb listing as you go.']
   ];
   return '<div class="split">'+
-    lead((kick?'<p class="kick">'+kick+'</p>':'')+'<h1 class="h" tabindex="-1" data-focus>'+h+'</h1>')+
+    lead((kick?'<p class="kick">'+kick+'</p>':'')+'<h1 class="h" tabindex="-1" data-focus>'+h+'</h1><p class="hsub">'+sub+'</p>')+
     media('how')+'<div class="col"><div class="qcard">'+
     (kick?'<p class="kick rv lg-only">'+kick+'</p>':'')+
     '<h1 class="h rv lg-only" tabindex="-1" data-focus>'+h+'</h1>'+
+    '<p class="hsub rv lg-only">'+sub+'</p>'+
     '<ol class="steps rv">'+steps.map(function(x,i){return '<li><b>'+(i+1)+'</b><div><strong>'+x[0]+'</strong><span>'+x[1]+'</span></div></li>';}).join('')+'</ol>'+
     (listingIdFrom(L.url)
       ?'<div class="lchip rv"><span class="tile">'+IC.airbnb+'</span><span class="lt"><b>Your listing</b><small>'+esc(shortUrl(L.url))+'</small></span></div>'
@@ -1170,26 +1303,51 @@ function vReport(){
       ?'<div class="hero rv"><div class="lab">Open nights over the next 3 months</div><div class="big" data-count="'+vac.value90+'">$'+fmt(vac.value90)+'</div><div class="sub">still unbooked</div><p>'+vac.open90+' nights open at about $'+fmt(vac.adr)+' a night'+(vac.adrSource==='market'?', the average rate in your market.':', your rate in Airbnb search.')+'</p></div>'
       :'<div class="hero rv"><div class="lab">Over the next 3 months</div><div class="big">'+vac.open90+' nights</div><div class="sub">still unbooked</div></div>';
   }
-  // where you rank: one row per group size, page one in green
+  // where you rank, by stay type (the onboarding report's format): each stay Growth Hub searched,
+  // grouped as weekend, midweek, extended or full week, one column per group size. Cells are page + position.
   var g=D.primary.guests,P1=function(w){return w.pos&&w.pos<=18;};
-  var byDate={};if(small)small.windows.forEach(function(w){byDate[w.in]=w;});
-  var cell=function(w){return w&&w.pos?'<td class="'+(w.pos<=18?'p1':'pn')+'">#'+w.pos+'</td>':'<td class="pn" title="Not in the results we checked">&ndash;</td>';};
-  var rows='<tr><th>'+(g?g+' guests':'Your listing')+'</th>'+prim.map(cell).join('')+'</tr>'+
-    (small?'<tr><th>'+small.guests+' guests</th>'+prim.map(function(w){return cell(byDate[w.in]);}).join('')+'</tr>':'');
+  var stayKey=function(w){return w.in+'|'+(w.out||'');};
+  var byStay={},byIn={};if(small)small.windows.forEach(function(w){byStay[stayKey(w)]=w;byIn[w.in]=byIn[w.in]||w;});
+  var smallFor=function(w){return byStay[stayKey(w)]||(w.out?null:byIn[w.in]);};
+  var maxPg=Math.max(1,Math.round((vis.deepest||270)/18));
+  var cell=function(w){
+    if(!w||!w.pos)return '<td class="pn" title="Not in the first '+maxPg+' pages of results"><b>&gt;P'+maxPg+'</b></td>';
+    var pg=Math.ceil(w.pos/18);
+    return '<td class="'+(pg===1?'p1':pg<=3?'p2':'pn')+'"><b>P'+pg+'</b><small>#'+w.pos+'</small></td>';
+  };
+  var noon=function(iso){return new Date(iso+'T12:00:00');};
+  var nightsOf=function(w){var n=w.out?Math.round((noon(w.out)-noon(w.in))/864e5):0;return n>0?n:0;};
+  var STAY=[['Weekend','Friday or Saturday night'],['Midweek','Sunday to Thursday nights'],['Extended stay','5 to 6 nights'],['Full week','7 nights or more']];
+  var stayType=function(w){
+    var n=nightsOf(w);if(n>=7)return 3;if(n>=5)return 2;
+    for(var d=noon(w.in).getDay(),k=0;k<Math.max(n,1);k++)if((d+k)%7===5||(d+k)%7===6)return 0;
+    return 1;
+  };
+  var range=function(w){
+    var a=noon(w.in),b=w.out?noon(w.out):null,mo=function(d){return d.toLocaleDateString('en-US',{month:'short'});};
+    if(!b||isNaN(b))return shortDate(w.in);
+    return mo(a)+' '+a.getDate()+'&ndash;'+(mo(b)!==mo(a)?mo(b)+' ':'')+b.getDate();
+  };
+  var groups=[[],[],[],[]];prim.forEach(function(w){groups[stayType(w)].push(w);});
+  var rows=groups.map(function(ws,t){
+    if(!ws.length)return '';
+    return '<tr class="grp"><th colspan="'+(small?3:2)+'">'+STAY[t][0]+'<small>'+STAY[t][1]+'</small></th></tr>'+
+      ws.map(function(w){var nn=nightsOf(w);return '<tr><th>'+range(w)+(nn?'<small>'+nn+(nn===1?' night':' nights')+'</small>':'')+'</th>'+cell(w)+(small?cell(smallFor(w)):'')+'</tr>';}).join('');
+  }).join('');
   var p1=prim.filter(P1).length,n=prim.length,find;
   if(!n)find='';
-  else if(!prim.some(function(w){return w.pos;}))find='We didn\'t find your listing in the first '+(vis.deepest||'')+' results for any of the '+n+' dates we searched.';
+  else if(!prim.some(function(w){return w.pos;}))find='We didn\'t find your listing in the first '+maxPg+' pages of results for any of the '+n+' stays we searched.';
   else{
-    find='At '+g+' guests you\'re on page one for '+(p1===n?'all '+n:p1+' of '+n)+' dates.';
+    find='At '+g+' guests you\'re on page one for '+(p1===n?'all '+n:p1+' of '+n)+' stays.';
     if(small){
-      var sw=prim.map(function(w){return byDate[w.in];}).filter(Boolean),sp=sw.filter(P1).length;
+      var sw=prim.map(smallFor).filter(Boolean),sp=sw.filter(P1).length;
       find+=' At '+small.guests+' guests, '+(sp===sw.length?'all '+sw.length:sp+' of '+sw.length)+'.';
       if(sp<p1)find+=' Smaller groups make up most of the near-term searches.';
     }
   }
-  var rank=n?'<section class="rsec rv"><h3>Where you rank by date</h3><p class="find">'+find+'</p>'+
-    '<div class="rtable"><table><thead><tr><th></th>'+prim.map(function(w){return '<th>'+shortDate(w.in)+'</th>';}).join('')+'</tr></thead><tbody>'+rows+'</tbody></table></div>'+
-    '<div class="legend"><span style="--c:var(--accent-wash)">Page one</span><span style="--c:var(--terra-wash)">Page two or lower</span></div>'+ties([2,3,5])+'</section>':'';
+  var rank=n?'<section class="rsec rv"><h3>Where you rank, by stay</h3><p class="find">'+find+'</p>'+
+    '<div class="rtable stay"><table><thead><tr><th>Stay dates</th><th>'+(g?g+' guests':'Your listing')+'</th>'+(small?'<th>'+small.guests+' guests</th>':'')+'</tr></thead><tbody>'+rows+'</tbody></table></div>'+
+    '<div class="legend"><span style="--c:var(--accent-wash)">Page one</span><span style="--c:var(--gold-wash)">Page two or three</span><span style="--c:var(--terra-wash)">Page four or lower</span><span class="nb">P = page, # = position</span></div>'+ties([2,3,5])+'</section>':'';
   // how far guests scroll: Growth Hub's reach curve
   var seen='';
   if(vis.avgPosition){
@@ -1232,18 +1390,24 @@ function vOffer(){
   var row=function(r){return '<li><b class="pl-n">'+(r.n+1)+'</b><span class="pl-t">'+esc(r.t)+'</span>'+(r.a==='no'?'<span class="tag no">Not yet</span>':'<span class="tag partly">Partly</span>')+'</li>';};
   var step=function(t,x){return '<li>'+IC.check+'<span><b>'+t+'</b><small>'+x+'</small></span></li>';};
   var faq=function(q,a){return '<details><summary>'+q+'</summary><p>'+a+'</p></details>';};
+  // one side of the before/after: an Airbnb-style cover grid (hero, then four) and the listing title under it
+  var baSide=function(set,k,when,alt,title){
+    var g='';for(var n=1;n<=5;n++)g+='<img src="/images/listing-check/htk1/'+set+'-'+n+'.webp" alt="" width="'+(n===1?760:400)+'" height="'+(n===1?520:280)+'" loading="lazy" decoding="async">';
+    return '<div class="ba-side ba-'+set+'"><p class="ba-k">'+k+' <small>'+when+'</small></p><div class="ba-g" role="img" aria-label="'+alt+'">'+g+'</div><p class="ba-t"><small>Title</small>'+title+'</p></div>';
+  };
   // their own nightly rate from the report: what the monthly fee is worth in nights
   var D=reportData(),adr=D&&D.vacancy&&D.vacancy.adrSource==='own'?D.vacancy.adr:0,be=adr?Math.max(1,Math.round(PRICE.monthly/adr*10)/10):0;
   return '<div class="op">'+
     '<header class="op-head rv">'+
       '<p class="kick">'+IC.check+'Your plan'+(first?', '+esc(first):'')+'</p>'+
       '<h2 class="h" tabindex="-1" data-focus>Here\'s exactly what you\'re <em>signing up for</em></h2>'+
-      '<p class="op-sub">You scored '+yes+' of 10. Onboarding takes 7 days, then your analyst manages your listing\'s performance. Guests and cleaning stay with you.</p>'+
+      // gaps read as upside, not a grade: a low score is a likely real result and sits right above the price
+      '<p class="op-sub">'+(yes<10?'<b>'+(10-yes)+' of 10</b> levers are still open on your listing. ':'You already run all ten levers. We keep them running and work the results. ')+'Onboarding takes 7 days, then your analyst manages your listing\'s performance. Guests and cleaning stay with you.</p>'+
     '</header>'+
     // the offer at a glance: exactly what onboarding delivers. On phones its price button is the pinned bar, on desktop the card is sticky
     '<aside class="op-card offer rv" aria-label="What you get">'+
       '<p class="op-k">Done-for-you performance management</p>'+
-      '<p class="op-on">Your 7-day onboarding covers five areas:</p>'+
+      '<p class="op-on">Your 7-day onboarding covers:</p>'+
       '<ul class="op-list op-steps">'+
         step('Search rank baseline','Your current position across 60 to 90 days of open dates, tracked by guest configuration.')+
         step('Rules and settings optimization','Account-level adjustments that directly affect visibility.')+
@@ -1252,7 +1416,11 @@ function vOffer(){
         step('Pricing strategy and rules','A dynamic pricing structure built around a true competitive set.')+
         step('Implementation','Our team executes every approved change to your account, listing and pricing setup, in about 2 days depending on the volume of changes.')+
       '</ul>'+
-      '<div class="op-month"><span>Then <b>$'+PRICE.monthly+'</b>/mo</span><span class="op-term">'+(be?'About '+be+(be===1?' night':' nights')+' a month at your rate':PRICE.term+' months, then month to month')+'</span></div>'+
+      // the real thing they'd get on the onboarding call; opens over the page so the price button never moves
+      '<button class="op-sample" type="button" data-act="sample" aria-haspopup="dialog">'+IC.doc+'<span>See a sample onboarding report</span>'+IC.arrow+'</button>'+
+      '<div class="op-month"><span>Then <b>$'+PRICE.monthly+'</b>/mo</span>'+(be?'<span class="op-term">About '+be+(be===1?' night':' nights')+' a month at your rate</span>':'')+'</div>'+
+      // the term sits right above the button: it auto-converts, so it has to be plain before they pay (MSA v2 Section 2.1)
+      '<p class="op-commit">'+PRICE.term+'-month term, then it converts to '+PRICE.convert+' more months ('+(PRICE.term+PRICE.convert)+' total) unless you cancel at least 30 days before.</p>'+
       '<div class="paybar"><button class="pricebtn" type="button" data-act="checkout"><span class="pb-left"><span class="pb-k">Onboarding</span><span class="pb-prices"><span class="pb-was">$'+PRICE.was+'<i></i></span><span class="pb-now">$'+PRICE.now+'</span></span></span><span class="pb-go">Start onboarding'+IC.arrow+'</span></button>'+
         '<p class="op-trust">'+IC.lock+'Secure checkout with Stripe</p></div>'+
     '</aside>'+
@@ -1260,15 +1428,41 @@ function vOffer(){
     '<section class="op-sec rv"><h2>Client performance</h2>'+
       '<div class="proof">'+
         '<article class="pf"><img src="/images/properties/cards/moonlit-peak.webp" alt="Moonlit Peak, a lakefront A-frame at dusk" width="400" height="300" loading="lazy"><div class="pf-b"><b>Moonlit Peak</b><small>4 BR lakefront, Pocono Mountains, PA</small>'+
-          '<div class="pf-up"><strong>+61%</strong><span>2026 bookings vs last year</span></div><div class="pf-was">$77.4K &rarr; $125.0K</div></div></article>'+
-        '<article class="pf"><img src="/images/properties/cards/waters-edge.webp" alt="Waters Edge Hideaway chalet on a winter evening" width="400" height="300" loading="lazy"><div class="pf-b"><b>Waters Edge Hideaway</b><small>5 BR, Pocono Mountains, PA</small>'+
-          '<div class="pf-up"><strong>+38%</strong><span>2026 bookings vs last year</span></div><div class="pf-was">$75.1K &rarr; $103.3K</div></div></article>'+
+          '<div class="pf-up"><strong>+44%</strong><span>2026 bookings vs last year</span></div><div class="pf-was">$110.8K &rarr; $159.4K</div></div></article>'+
         '<article class="pf"><img src="/images/listing-check/proof-bears-tale.jpg" alt="A Bear\'s Tale cabin at sunset" width="400" height="225" loading="lazy"><div class="pf-b"><b>A Bear\'s Tale</b><small>2 BR cabin, Pigeon Forge, TN</small>'+
-          '<div class="pf-up"><strong>+33%</strong><span>2026 bookings vs last year</span></div><div class="pf-was">$32.6K &rarr; $43.3K</div></div></article>'+
+          '<div class="pf-up"><strong>+28%</strong><span>2026 bookings vs last year</span></div><div class="pf-was">$50.9K &rarr; $65.2K</div></div></article>'+
         '<article class="pf"><img src="/images/listing-check/proof-gulfstream.jpg" alt="Gulfstream Villa pool at golden hour" width="400" height="266" loading="lazy"><div class="pf-b"><b>Gulfstream Villa</b><small>3 BR, Gulf Coast, FL</small>'+
-          '<div class="pf-up"><strong>+31%</strong><span>since we took over</span></div><div class="pf-was">$31.0K &rarr; $40.7K</div></div></article>'+
+          '<div class="pf-up"><strong>+13%</strong><span>since we took over</span></div><div class="pf-was">$23.7K &rarr; $26.7K</div></div></article>'+
       '</div>'+
-      '<p class="pf-src">Revenue on the books as of July 2026, against the same point last year. Source: PriceLabs. <a href="/case-study">See all case studies</a></p></section>'+
+      // refreshed Nov 12, 2026 from RevWhisper OS (PriceLabs bookings): 2026 stay months on the books vs the same booking date in 2025.
+      // Gulfstream counts April to December, the months since we took over. Water's Edge Hideaway was offboarded in October and is left out.
+      '<p class="pf-src">Revenue on the books as of November 2026, against the same point last year. Source: PriceLabs. <a href="/case-study">See all case studies</a></p></section>'+
+    // before and after (Nick's #11): HTK1, a 5 BR chalet in Killington, VT. The same five-photo sets Growth Hub's proposal
+    // page uses (public/checkout-preview); the titles are the real ones from OS Listing Studio (Sep 11 vs Oct 28, 2026).
+    '<section class="op-sec rv"><h2>Same house, same photos. Nothing reshot.</h2>'+
+      '<p class="op-note">We work from the photos you already have. We pick the strongest, edit them, put them in the order guests care about and caption every one.</p>'+
+      '<div class="ba"><div class="ba-in">'+
+        baSide('before','Before','Sep 11','Cover photos before: the front of the house in snow, the deck, the hot tub at night, the back stairs and the barrel sauna','|Hot tub|Sauna | 3k sqft|100 inch TV|Massage Chair')+
+        baSide('after','After','Oct 28','Cover photos after: the mountain view from the barrel sauna, the great room, the hot tub, the house at dusk in snow and a bedroom','Hot-Tub, Sauna, Fire Table, EV | Mountain Chalet')+
+      '</div></div>'+
+      '<p class="pf-src">A 5 BR mountain chalet in Killington, VT we manage. The photo tour went from 16 rooms to 26 with every photo captioned, and the description was rebuilt room by room.</p></section>'+
+    // more than Airbnb: Vrbo ads, shown with one managed home's real numbers (Seabrook Island, SC; OS Vrbo Ads, Nov 12, 2026).
+    // The $4,116 booking is real (Vrbo, booked Oct 15, 6 nights); the $3,450 one is illustrative and says so.
+    '<section class="op-sec rv"><h2>More than Airbnb</h2>'+
+      '<p class="op-note">We also run your Vrbo ads and your Booking.com listing. On Vrbo, ad spend is capped at the 3.5% commission gap and is only charged when a guest books from the ad. Clicks, views and saves cost nothing.</p>'+
+      '<div class="ch">'+
+        '<div class="ch-c"><p class="ch-k">The bid</p><p class="ch-big">$21.00 <small>on a $602 night</small></p><p>Set at 3.5% of the nightly rate. Vrbo charges per booked night, never per click.</p></div>'+
+        '<div class="ch-c"><p class="ch-k">Cover photo test</p>'+
+          '<div class="ab"><span>Bright kitchen</span><i style="--w:100%"></i><b>4.0%</b></div>'+
+          '<div class="ab lo"><span>Exterior at dusk</span><i style="--w:82%"></i><b>3.3%</b></div>'+
+          '<p>Click rate over 30 days. We keep the winner and test the next one.</p></div>'+
+        '<div class="ch-c ch-wide"><p class="ch-k">What a booking from an ad cost</p>'+
+          '<ul class="ch-bk">'+
+            '<li><span class="bk-v">$4,116<small>6 nights</small></span><span class="bk-c">$0.00<small>ad cost</small></span><p>The guest saw the ad, saved the home and came back later to book.</p></li>'+
+            '<li><span class="bk-v">$3,450<small>5 nights</small></span><span class="bk-c lo">$103.16<small>2.99%</small></span><p>Illustrative. Under the 3.5% cap, which would be $120.75.</p></li>'+
+          '</ul></div>'+
+      '</div>'+
+      '<p class="pf-src">Real figures from a Seabrook Island, SC home we manage, except where marked illustrative.</p></section>'+
     '<section class="op-sec rv"><h2>Your plan</h2><p class="op-note">Built from your answers in the check.</p>'+
       '<div class="plan">'+
         (notYet.length?'<p class="pl-g">First</p><ul>'+notYet.map(row).join('')+'</ul>':'')+
@@ -1288,7 +1482,7 @@ function vOffer(){
       faq('Do you take over guests or cleaning?','No. Guests, cleaning, maintenance and day-to-day operations stay with you. We handle pricing, ranking and the listing itself.')+
       faq('I already use PriceLabs or Smart Pricing. Do I need this?','Pricing tools price you against the market average. We price against the listings guests actually see for your dates, and we also work your ranking and photos, which no pricing tool does.')+
       faq('Will it affect bookings I already have?','No. Bookings already on your calendar stay exactly as they are.')+
-      faq('How long do I commit for?','The first '+PRICE.term+' months are a set term. After that it\'s month to month, and you can cancel with 30 days\' notice.')+
+      faq('How long do I commit for?',(PRICE.term+PRICE.convert)+' months in all. The first '+PRICE.term+' months are the initial term. Then your plan converts to '+PRICE.convert+' more months at the same $'+PRICE.monthly+'/mo, unless you tell us at least 30 days before the first '+PRICE.term+' months end. Once it converts, you still have 15 days to cancel without a fee. Leaving during the first '+PRICE.term+' months costs 2 months\' fees. After the '+(PRICE.term+PRICE.convert)+' months, it renews a year at a time unless either side gives 30 days\' notice.')+
     '</div></section>'+
     '<p class="op-foot rv">'+IC.home+'Built by hosts, for hosts</p>'+
     (REVIEW?'<details class="data rv"><summary>What the team receives from this submission</summary><pre>'+esc(JSON.stringify(payload(),null,2))+'</pre></details>':'')+
@@ -1318,6 +1512,7 @@ function render(dir){
 }
 function mount(st,dir){
   if(PV.parentNode)PV.pause();
+  closeSample();
   if(S.report&&S.report.error==='failed')startReport();
   stage.textContent='';
   window.scrollTo(0,0);
@@ -1346,10 +1541,11 @@ function chrome(){
   Array.prototype.forEach.call(segs.children,function(g,j){g.classList.toggle('on',j<=upto);});
   document.getElementById('back').hidden=S.i===0;
   // "Building your report": the report is on its way while they answer
+  // on checkout it names the step instead: "Your plan"
   var ri=STEPS.length-2,si=STEPS.length-3,chip=document.getElementById('rchip');
-  chip.classList.toggle('off',S.i===0||S.i>=ri);
-  document.getElementById('rchip-t').textContent=S.i>=si?'Report almost ready':'Building your report';
-  document.getElementById('rchip-b').style.transform='scaleX('+(S.i>=si?.96:(S.i/si)*.9).toFixed(3)+')';
+  chip.classList.toggle('off',S.i===0||S.i===ri);
+  document.getElementById('rchip-t').textContent=k==='offer'?'Your plan':S.i>=si?'Report almost ready':'Building your report';
+  document.getElementById('rchip-b').style.transform='scaleX('+(k==='offer'?1:S.i>=si?.96:(S.i/si)*.9).toFixed(3)+')';
   if(REVIEW){var sel=document.getElementById('jump');if(sel)sel.value=String(S.i);}
 }
 function countUp(el,to,dur,delay,prefix){
@@ -1363,6 +1559,7 @@ function afterMount(st,el){
   if(st.k==='score'){
     el.querySelectorAll('[data-count]').forEach(function(n,k){countUp(n,+n.getAttribute('data-count'),k===0?900:700,k===0?350:600);});
     var c=counts();track('listing_check_score',{yes:c.yes,partly:c.partly,no:c.no});fbCustom('ListingCheckComplete',{score:c.yes});
+    sendResult('finished');
     fetchReport(function(){});   // warm the report while they read their score
   }
   if(st.k==='report'){
@@ -1398,9 +1595,40 @@ function next(){
 }
 function checkout(btn){
   track('listing_check_checkout_click',{score:counts().yes});
+  sendResult('checkout');
   btn.disabled=true;btn.querySelector('.pb-go').innerHTML='Opening checkout'+IC.arrow;
   setTimeout(function(){location.href=checkoutUrl();},150);   // a beat for the event to leave
 }
+/* ── the sample onboarding report: a sheet over the offer (the plan card is sticky on desktop and its
+   price button pinned on phones, so opening it inline would push the price off the screen).
+   Pages 1-5 are a real client's report with the address and town names anonymized; page 6 is illustrative. ── */
+var SAMPLE=[['p1','Reservation history and search rank baseline',1812],['p2','Rank grid by guest count and stay type',1082],['p3','Rank grid by search location',1082],
+  ['p4','Forward demand, conversion and wishlist saves',1812],['p5','Current settings, preferences and what happens next',1812],['p6','Sample monthly report (illustrative figures)',1082]];   // [file, caption, height at 1400 wide]
+var sheet=null,sheetFrom=null;
+function openSample(btn){
+  if(sheet)return;
+  sheetFrom=btn||null;
+  track('listing_check_sample_report',{});
+  sheet=document.createElement('div');sheet.className='sheet';
+  sheet.innerHTML='<div class="sh-in" role="dialog" aria-modal="true" aria-labelledby="sh-t">'+
+    '<header class="sh-h"><div><h2 class="sh-t" id="sh-t" tabindex="-1">Sample onboarding report</h2><p class="sh-l">This is the report your data analyst walks you through on your onboarding call.</p></div>'+
+      '<button class="sh-x" type="button" data-sh="close" aria-label="Close the sample report"><span aria-hidden="true"></span></button></header>'+
+    SAMPLE.map(function(p,i){return '<figure class="sh-p"><figcaption><b>'+(i+1)+'</b>'+p[1]+'</figcaption><img src="/images/listing-check/sample-report/'+p[0]+'.webp" alt="Sample onboarding report, page '+(i+1)+': '+esc(p[1])+'" width="1400" height="'+p[2]+'"'+(i>1?' loading="lazy"':'')+'></figure>';}).join('')+
+    '<button class="sh-done" type="button" data-sh="close">Back to my plan</button>'+
+  '</div>';
+  sheet.addEventListener('click',function(e){if(e.target===sheet||e.target.closest('[data-sh=close]'))closeSample();});
+  document.body.appendChild(sheet);document.documentElement.classList.add('sheet-open');
+  requestAnimationFrame(function(){requestAnimationFrame(function(){if(sheet)sheet.classList.add('on');});});
+  try{sheet.querySelector('#sh-t').focus({preventScroll:true});}catch(e){}
+}
+function closeSample(){
+  if(!sheet)return;
+  var s=sheet;sheet=null;
+  s.classList.remove('on');document.documentElement.classList.remove('sheet-open');
+  setTimeout(function(){if(s.parentNode)s.parentNode.removeChild(s);},RM.matches?0:260);
+  if(sheetFrom&&sheetFrom.isConnected)try{sheetFrom.focus({preventScroll:true});}catch(e){}
+}
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&sheet)closeSample();});
 function restart(){
   try{sessionStorage.removeItem(KEY);}catch(e){}
   S=fresh(readLead());save();go(0,{replace:true});
@@ -1412,10 +1640,10 @@ stage.addEventListener('click',function(e){
     case 'next':next();break;
     case 'back':back();break;
     case 'vtoggle':vToggle();break;
-    case 'vplay':playNow();break;
+    case 'vplay':vPlay();break;
     case 'sound':soundOn();break;
-    case 'vretry':retry();break;
     case 'checkout':checkout(a);break;
+    case 'sample':openSample(a);break;
     case 'restart':restart();break;
   }
 });

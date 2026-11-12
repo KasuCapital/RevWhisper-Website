@@ -180,6 +180,7 @@ module.exports = async function handler(req, res) {
     cancelQuery.set('onboarding_fee', String(onboardingFee));
     if (monthlyCost) cancelQuery.set('monthly_cost', String(monthlyCost));
     if (payload.term_months) cancelQuery.set('term_months', String(payload.term_months));
+    if (payload.convert_months) cancelQuery.set('convert_months', String(payload.convert_months));
   }
   if (onboardingCap > 0) cancelQuery.set('onboarding_cap', String(onboardingCap));
   if (promoDiscount > 0) cancelQuery.set('promo', promoCode);
@@ -206,7 +207,7 @@ module.exports = async function handler(req, res) {
       params,
       Math.round(onboardingFee * 100),
       listingCount,
-      'Listing Optimization Fee (Enterprise)',
+      payload.convert_months ? 'RevWhisper Onboarding (one-time)' : 'Listing Optimization Fee (Enterprise)',
       onboardingCap
     );
   } else {
@@ -230,6 +231,7 @@ module.exports = async function handler(req, res) {
     params.set('metadata[onboarding_fee]', String(onboardingFee));
     params.set('metadata[monthly_cost]', String(monthlyCost));
     if (payload.term_months) params.set('metadata[term_months]', String(payload.term_months));
+    if (payload.convert_months) params.set('metadata[convert_months]', String(payload.convert_months));
   } else {
     params.set(
       'metadata[onboarding_fee_per_listing]',
