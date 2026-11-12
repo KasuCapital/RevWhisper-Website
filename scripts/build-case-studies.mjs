@@ -125,7 +125,7 @@ function headMeta({ title, description, path, image }) {
 const headBottom = `<link rel="stylesheet" href="/assets/header.css">
 <script defer src="/assets/header.js"></script>
 <link rel="stylesheet" href="/assets/footer.css">
-<link rel="stylesheet" href="/assets/cs-strip.css?v=5">
+<link rel="stylesheet" href="/assets/cs-strip.css?v=6">
 <script defer src="/assets/cs-strip.js?v=3"></script>
 <script src="/assets/x-pixel-base.js?v=2"></script>`;
 
@@ -138,7 +138,7 @@ const shellCss = `<style>
 
 // ── The scrolling strip ──────────────────────────────────────────────────────────────────────────
 // `all`: the "See all case studies" link back to /case-study (left off on /case-study itself).
-// `compact`: smaller cards with the "For" tag and a pop-up stat on the photo, no host line (the carousel above The System on /case-study).
+// Every card has the "For" tag and a pop-up stat on the photo. `compact`: smaller cards, no host line (the carousel above The System on /case-study).
 function strip({ id, eyebrow, title, sub, exclude, all = true, compact = false }) {
   const list = PAGES.filter(p => p.slug !== exclude);
   return `<aside class="cs-strip${compact ? ' cs-strip--compact' : ''}" aria-labelledby="${id}-h" data-cs-strip>
@@ -157,12 +157,11 @@ function strip({ id, eyebrow, title, sub, exclude, all = true, compact = false }
     </div>
     <ul class="cs-strip-row" role="list">
 ${list.map((p, i) => `      <li><a class="cs-strip-card" href="${url(p)}">
-        <span class="cs-strip-img"><img src="/images/case-studies/${p.img}" alt="" loading="lazy" style="${imgStyle(p)}">${compact ? `<span class="cs-strip-tag">For: ${p.tag}</span>` : ''}${compact && p.stat ? `<span class="cs-strip-stat" style="--i:${i}"><b>${esc(p.stat[0])}</b><span>${esc(p.stat[1])}</span></span>` : ''}</span>
+        <span class="cs-strip-img"><img src="/images/case-studies/${p.img}" alt="" loading="lazy" style="${imgStyle(p)}"><span class="cs-strip-tag">For: ${p.tag}</span>${p.stat ? `<span class="cs-strip-stat" style="--i:${i}"><b>${esc(p.stat[0])}</b><span>${esc(p.stat[1])}</span></span>` : ''}</span>
         <span class="cs-strip-body">
           <span class="cs-strip-kick">${p.eyebrow}</span>
           <span class="cs-strip-h">${p.h}</span>
           <span class="cs-strip-meta">${esc(p.name)}${compact ? '' : ` · ${esc(p.host)}`}</span>
-${compact ? '' : `          <span class="cs-strip-for"><b>For:</b> ${p.tag}</span>`}
         </span>
       </a></li>`).join('\n')}
     </ul>
