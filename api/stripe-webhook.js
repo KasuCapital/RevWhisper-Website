@@ -88,8 +88,13 @@ module.exports = async function handler(req, res) {
     const checkoutSecret = process.env.ONBOARDING_CHECKOUT_SECRET;
     // Only kick off onboarding for a session Stripe says is actually paid.
     const paid = object.payment_status === 'paid' || object.payment_status === 'no_payment_required';
+    // Stripe sends this endpoint every Checkout in the account, including Growth Hub's own invoice payments,
+    // which Growth Hub already handles itself. Only sessions made by /checkout-form are ours to hand off.
+    const fromWebsite = object.metadata?.source === 'checkout-form';
 
-    if (!paid) {
+    if (!fromWebsite) {
+      // not ours: nothing to do
+    } else if (!paid) {
       console.error('[checkout] session completed but not paid; skipping Growth Hub notify:', object.id, object.payment_status);
     } else if (email && checkoutSecret) {
       try {
