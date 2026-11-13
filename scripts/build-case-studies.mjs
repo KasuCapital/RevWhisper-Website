@@ -27,7 +27,7 @@ const SITE = 'https://revwhisper.com';
 // take it from the page's own figures and update it when the draft changes.
 const PAGES = [
   { group: 'full', slug: 'sombrero-beach-home', stat: ['80% vs 36%', 'booked in September, vs similar homes'], src: 'sombrero-beach-home', tag: 'Single-home owner', name: 'Sombrero Beach Home', eyebrow: 'Marathon, FL · 4 BR Waterfront',
-    h: 'More homes in Marathon. <em>More nights booked anyway.</em>', host: 'Matt, owner', img: '2ffee431a42c79b46932c5245e9d3cde.jpg', crop: '8.3% 49.1% 34.4% 5.1%', pos: '20% 30%' },
+    h: 'More homes in Marathon. <em>More nights booked anyway.</em>', host: 'Matt, owner', img: 'sombrero-after.jpg', crop: '11.5% 50% 2.9% 1.6%', pos: '20% 30%' },
   { group: 'full', slug: 'peek-n-peak', stat: ['0 → 14', 'October nights booked, vs last October'], src: 'peek-n-peak', tag: 'Owner with a slow off-season', name: 'Peek n’ Peak', eyebrow: 'Clymer, NY · 4 BR Ski Chalet',
     h: 'A ski house that sat <em>empty all fall.</em>', host: 'Mike and Julie, owners', img: 'lead-peek-house-a.jpg' },
   { group: 'full', slug: 'eastside-pool-home', stat: ['$437 → $721', 'November nightly price'], src: 'eastside-pool-home', tag: 'Manager with a new listing', name: 'Eastside Pool Home', eyebrow: 'Austin, TX · 5 BR Group Home',
