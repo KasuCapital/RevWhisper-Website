@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!-- GENERATED from audit-flow.html by scripts/build-unqualified-preview.mjs. Don't edit: change audit-flow.html and re-run. -->
-<html lang="en">
+<html lang="en" data-vsl-ab="audit-vsl-phone">
 <head>
 <meta charset="UTF-8">
 <!-- Warm the two heavy third-party origins before their loaders fire below -->
@@ -419,6 +419,23 @@ body.kb .scr .pill{display:none}
 .intro .intro-sub{animation:introIn .6s var(--silk) .27s both}
 .intro .intro-meta{animation:introIn .6s var(--silk) .32s both}
 .intro .cta{animation:introIn .6s var(--silk) .38s both}
+/* Video A/B control (VSL-AB in <head> adds html.rw-vsl-off): the welcome screen exactly as it was before the
+   video: three rows of cards under the original fade, the round logo where the video sits, the original spacing */
+.row.l2,.logo{display:none}
+html.rw-vsl-off .iv{display:none}
+html.rw-vsl-off .row.l2{display:flex;animation:rowL 58s linear infinite}
+html.rw-vsl-off .rows::after{top:auto;height:62%;background:linear-gradient(180deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.55) 38%,rgba(255,255,255,.9) 70%,#fff 100%)}
+html.rw-vsl-off .logo{width:78px;height:78px;border-radius:50%;background:#fff;display:grid;place-items:center;margin-top:-46px;position:relative;z-index:1;
+  box-shadow:0 1px 2px rgba(50,48,47,.06),0 12px 30px -8px rgba(50,48,47,.25)}
+.logo img{width:42px;height:42px}
+html.rw-vsl-off .intro-h{margin:18px auto 10px}
+html.rw-vsl-off .intro-sub{font-size:15px;display:block}
+html.rw-vsl-off .intro-meta{display:flex;margin-top:16px}
+html.rw-vsl-off .intro-gap{flex-basis:24px}
+html.rw-vsl-off .intro-body .cta{margin-top:auto}
+@media(max-height:620px){ html.rw-vsl-off .intro-sub{font-size:14px} html.rw-vsl-off .intro-meta{display:none} html.rw-vsl-off .intro-h{margin-top:12px} }
+@keyframes logoIn{from{opacity:0;transform:translate3d(0,8px,0) scale(.86)}to{opacity:1;transform:none}}
+.intro .logo{animation:logoIn .7s var(--silk) .15s both}
 
 /* the video: 16:9, rounded, over the bottom of the rows. Before it plays, a dark fade along the bottom
    carries a big sage play button and its length, bottom-left and clear of Bryan's face */
@@ -599,8 +616,9 @@ body.kb .scr .pill{display:none}
 <div class="app intro-on" id="app">
   <!-- Intro: welcome screen before question 1 (rows filled by JS); Bryan's video waits for a tap -->
   <section class="intro" id="intro" aria-labelledby="intro-h">
-    <div class="rows" aria-hidden="true"><div class="row l"></div><div class="row r"></div></div>
+    <div class="rows" aria-hidden="true"><div class="row l"></div><div class="row r"></div><div class="row l2"></div></div>
     <div class="intro-body">
+      <div class="logo"><img src="/icons/favicon-light.svg" alt="RevWhisper" width="42" height="42"></div>
       <div class="iv" id="iv" data-state="idle">
         <div class="iv-frame">
           <video id="intro-vsl" playsinline webkit-playsinline preload="metadata" disableremoteplayback poster="/images/video/audit-vsl-poster.aabb1ad8.webp" width="1280" height="720">
@@ -1030,7 +1048,7 @@ let introOpen=true;
     return '<div class="lc"><div class="lc-ph"><img src="/images/flow/'+c[0]+'.webp" alt="" loading="eager" decoding="async">'+(c[1]?'<span class="lc-fav">Guest favorite</span>':'')+heart+'</div>'+
       '</div>';
   }
-  const order=[[0,1,2,3,4,5,6,7],[8,9,10,11,0,3,6,1]];
+  const order=[[0,1,2,3,4,5,6,7],[8,9,10,11,0,3,6,1],[5,7,2,9,4,11,8,10]]; // the third row shows only without the video (A/B control)
   document.querySelectorAll('.row').forEach(function(r,i){
     const set=order[i].map(function(j){ return card(L[j]); }).join('');
     r.innerHTML=set+set; // two copies: translating by -50% loops seamlessly

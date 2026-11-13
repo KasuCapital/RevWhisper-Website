@@ -1435,7 +1435,7 @@ function submitForm(){
     try{ fbq('trackCustom','UnqualifiedLead',{content_name:'Free Audit',content_category:'Audit Lead — Unqualified'}); }catch(e){}
     rwTrack('generate_lead_unqualified',{page:PAGE,listings:data.listings,revenue:data.revenue});
     fetch(FORM_WEBHOOK_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({event_type:'get_started',payload:data}),keepalive:true}).catch(function(){});
-    window.location.href='/audit-report-coming';
+    window.location.href='/listing-check';
     return;
   }
 

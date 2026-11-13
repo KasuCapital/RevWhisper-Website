@@ -497,7 +497,7 @@ function submitForm(){
     // so the server's CAPI Lead is skipped too) — this keeps Meta's optimizer
     // from learning to find more sub-threshold submitters. We fire a custom
     // measurement-only event, still capture the lead to the CRM (flagged
-    // qualified:false), then route to the report page instead of the calendar.
+    // qualified:false), then route to the Listing Check (/listing-check) instead of the calendar.
     try{ fbq('trackCustom','UnqualifiedLead',{content_name:'Free Audit',content_category:'Audit Lead — Unqualified'}); }catch(e){}
     track('generate_lead_unqualified',{page:PAGE,listings:data.listings,revenue:data.revenue});
     fetch(FORM_WEBHOOK_ENDPOINT,{
@@ -505,7 +505,7 @@ function submitForm(){
       body:JSON.stringify({event_type:'get_started',payload:data}),
       keepalive:true
     }).catch(function(){});
-    window.location.href='/audit-report-coming';
+    window.location.href='/listing-check';
     return;
   }
 

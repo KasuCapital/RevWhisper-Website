@@ -37,12 +37,13 @@ function edit(html, file, find, replace) {
 const COMMON = [
   ['<!DOCTYPE html>\n', (src) => `<!DOCTYPE html>\n<!-- GENERATED from ${src} by scripts/build-unqualified-preview.mjs. Don't edit: change ${src} and re-run. -->\n`],
   ['<script src="/assets/rw-consent.js?v=3"></script>\n', () => '<script src="/assets/rw-consent.js?v=3"></script>\n' + PREVIEW_SCRIPT + '\n'],
-  ['<script defer src="/assets/rw-posthog.js?v=4"></script>\n', () => ''],
+  ['<script defer src="/assets/rw-posthog.js?v=5"></script>\n', () => ''],
   ["(window.rwConsent?rwConsent.whenAllowed:function(f){f();})(function(){var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-Y1FYZ5849B';document.head.appendChild(s);});", () => '/* preview: gtag.js not loaded */'],
   [/<!-- Meta Pixel[\s\S]*?<!-- End Meta Pixel -->/, () => '<!-- preview: Meta Pixel not loaded -->'],
   [/<!-- X Pixel base code[\s\S]*?<!-- End X Pixel base code -->/, () => '<!-- preview: X Pixel not loaded -->'],
   ['<script defer src="/_vercel/insights/script.js"></script>', () => ''],
-  ["window.location.href='/audit-report-coming';", () => "window.location.href='/listing-check';"],
+  // the /audit video A/B test asks PostHog for a flag before the page shows; the preview stays out of it
+  [/<!-- VSL-AB:START -->[\s\S]*?<!-- VSL-AB:END -->\n?/, () => ''],
 ];
 
 const PAGES = [
@@ -67,7 +68,7 @@ for (const page of PAGES) {
   let html = await readFile(join(ROOT, page.src), 'utf8');
   for (const [find, make] of COMMON) html = edit(html, page.src, find, make(page.src));
   for (const [find, replace] of page.edits) html = edit(html, page.src, find, replace);
-  for (const banned of ['fbevents.js', 'gtag/js?id=', 'rw-posthog.js', 'x-pixel-base.js', '/audit-report-coming']) {
+  for (const banned of ['fbevents.js', 'gtag/js?id=', 'src="/assets/rw-posthog.js', 'x-pixel-base.js', '/audit-report-coming', 'phc_', '/ingest']) {
     if (html.includes(banned)) throw new Error(`${page.out}: still contains ${banned}`);
   }
   await writeFile(join(ROOT, page.out), html);
