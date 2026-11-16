@@ -916,13 +916,36 @@ function checkoutUrl(){
 var GH='https://app.revwhisper.com';
 var RKEY='rw_listing_check_report';
 var REPORT_WAIT_MS=45000;   // on the report screen, how long to wait before saying it's taking longer
-function listingIdFrom(u){
-  var t=String(u||'').trim();if(!t)return null;
-  if(!/^https?:\/\//i.test(t))t='https://'+t;
-  var x;try{x=new URL(t);}catch(e){return null;}
+/* The one listing to check, from whatever the host pasted. Most hosts paste their custom link
+   (airbnb.com/h/their-place: 44 of the 48 non-/rooms/ links on the forms Oct 15 to Nov 16), which Growth Hub's
+   create-analysis resolves to the listing itself, so it's passed through as is. Also takes /rooms/ links,
+   the editor link from the host dashboard, a link pasted inside other text, and a doubled https://.
+   Host profiles and share-sheet short links (abnb.me) can't be resolved to one listing: those are asked again. */
+function linkText(u){
+  var t=String(u||'').trim().replace(/^["'<]+|["'>]+$/g,'');
+  var found=t.match(/(?:https?:\/\/)*(?:[a-z0-9-]+\.)*(?:airbnb\.[a-z.]{2,6}|abnb\.me)\/[^\s"'<>]*/i);   // the link inside "Check out my place: https://..."
+  if(found)t=found[0];
+  return t.replace(/^(?:https?:?\/*)+/i,'');   // "https://https://www.airbnb..." from pasting over a prefilled https://
+}
+function listingFrom(u){
+  var t=linkText(u);if(!t)return null;
+  var x;try{x=new URL('https://'+t);}catch(e){return null;}
   if(!/(^|\.)airbnb\.[a-z]{2,3}(\.[a-z]{2})?$/i.test(x.hostname))return null;
-  var m=x.pathname.match(/^\/rooms\/(?:plus\/)?(\d{1,20})\/?$/);
-  return m?m[1]:null;
+  var p=x.pathname,m=p.match(/^\/rooms\/(?:plus\/)?(\d{1,20})\/?$/)||p.match(/^\/(?:hosting\/listings(?:\/editor)?|manage-your-space)\/(\d{5,20})(?:\/|$)/i);
+  if(m)return {key:m[1],url:'https://www.airbnb.com/rooms/'+m[1]};
+  m=p.match(/^\/h\/([a-z0-9][a-z0-9_-]{0,80})\/?$/i);
+  if(m)return {key:'h/'+m[1].toLowerCase(),url:'https://www.airbnb.com/h/'+m[1]};
+  return null;
+}
+function listingIdFrom(u){var l=listingFrom(u);return l?l.key:null;}
+// What kind of link didn't work, for the rejected event (never the link itself)
+function linkKind(u){
+  var t=linkText(u).toLowerCase();
+  if(!t)return 'empty';
+  if(/^(?:[a-z0-9-]+\.)*abnb\.me\//.test(t))return 'short_link';
+  if(/\/users\/(?:show|profile)|\/user\//.test(t))return 'host_profile';
+  var m=t.match(/^(?:[a-z0-9-]+\.)*airbnb\.[a-z.]+\/([a-z0-9_-]*)/);
+  return m?'airbnb_'+(m[1]||'home'):'not_airbnb';
 }
 // The form's revenue band ("Under $40k", "$40k–$70k", "CA$55k+") as one number for Growth Hub's upside model.
 function revenueFrom(band){
@@ -938,13 +961,13 @@ function reportData(){
 }
 function keepReport(data){try{sessionStorage.setItem(RKEY,JSON.stringify({id:S.report.id,data:data}));}catch(e){}}
 function startReport(){
-  var id=listingIdFrom(S.lead.url),r=S.report;
+  var L1=listingFrom(S.lead.url),id=L1&&L1.key,r=S.report;
   if(!id||!emailOk(S.lead.email))return;
   // already started (or Growth Hub already rejected this exact link: wait for a new one;
   // a start that failed is retried at most once a minute, as they move through the check)
   if(r&&r.listing===id&&(r.id||r.error==='listing'||((r.pending||r.error==='failed')&&Date.now()-r.at<60000)))return;
   S.report={listing:id,pending:true,at:Date.now()};save();
-  var body={email:S.lead.email,airbnbUrl:'https://www.airbnb.com/rooms/'+id,revenue:revenueFrom(S.lead.revenue),reportType:'ranking',delivery:'embedded',
+  var body={email:S.lead.email,airbnbUrl:L1.url,revenue:revenueFrom(S.lead.revenue),reportType:'ranking',delivery:'embedded',
     attribution:Object.assign({},typeof window.rwAttribution==='function'?window.rwAttribution():{},{source:'listing-check'})};
   if(S.lead.name)body.fullName=S.lead.name;
   if(S.lead.phone)body.phone=S.lead.phone;
@@ -1174,14 +1197,17 @@ function emailAsk(){
 function takeLead(){
   var u=document.getElementById('lurl'),m=document.getElementById('lmail');
   if(!u&&!m)return true;
-  var id=u?listingIdFrom(u.value):null,mail=m?m.value.trim():'',bad=null;
+  var lk=u?listingFrom(u.value):null,id=lk&&lk.key,mail=m?m.value.trim():'',bad=null;
   // each field's hint turns into its error, and back once that field is fixed
   var hint=function(el,text,isBad){var h=document.getElementById(el.id+'-msg');h.textContent=text;h.classList.toggle('bad',isBad);};
   if(u){
     if(id)hint(u,LINK_HINT,false);
     else{
-      hint(u,/users\/show|\/user\//i.test(u.value)?'That\'s a host profile. Open the one listing you want checked and paste its link.':'Paste the link to one Airbnb listing. It looks like airbnb.com/rooms/12345678.',true);
-      bad=u;track('listing_check_listing_rejected',{});
+      var kind=linkKind(u.value);
+      hint(u,kind==='host_profile'?'That\'s your host profile. Open the one listing you want checked and paste its link.'
+        :kind==='short_link'?'That\'s a share link. Open it, then copy the link from your browser\'s address bar.'
+        :'Paste the link to one Airbnb listing. It looks like airbnb.com/rooms/12345678 or airbnb.com/h/your-place.',true);
+      bad=u;track('listing_check_listing_rejected',{kind:kind});
     }
   }
   if(m){
@@ -1189,7 +1215,7 @@ function takeLead(){
     else{hint(m,'Enter your email, like name@example.com.',true);bad=bad||m;}
   }
   if(bad){bad.focus();return false;}
-  if(u)S.lead.url='https://www.airbnb.com/rooms/'+id;
+  if(u)S.lead.url=lk.url;
   if(m)S.lead.email=mail;
   S.report=null;save();startReport();return true;
 }
