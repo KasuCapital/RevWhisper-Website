@@ -16,8 +16,6 @@ const PARTIALS = [
   // Landing-page sections (10/3/26): proof band + client results, shared across paid LPs.
   { name: 'LP-PROOF', file: '_partials/lp-proof.html' },
   { name: 'LP-RESULTS', file: '_partials/lp-results.html' },
-  // Bryan's intro video (10/27/26): the Google LPs and the homepage (taken off /audit 11/17/26 after the A/B test).
-  { name: 'VSL', file: '_partials/vsl.html' },
   // UTM + click-ID capture (10/16/26). allPages: synced into every page that has the markers,
   // not just TARGETS, so no landing page can drift from the copy the forms rely on.
   { name: 'ATTRIBUTION', file: '_partials/attribution.html', allPages: true },

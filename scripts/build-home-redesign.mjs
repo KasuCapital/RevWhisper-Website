@@ -323,9 +323,7 @@ const fcOpen = formSrc.indexOf('<div class="form-card" id="audit-form">');
 if (fcOpen < 0) throw new Error('Could not find .form-card#audit-form in scripts/home-redesign.form.html');
 const formCard = slice(formSrc, fcOpen).replace('id="audit-form">', 'id="audit-form" data-fullscreen>');
 
-const heroHtml = read('scripts/home-redesign.hero.html')
-  .replace('<!--FORM-->', () => formCard)
-  .replace('<!--VSL-->', () => read('_partials/vsl.html').trimEnd());
+const heroHtml = read('scripts/home-redesign.hero.html').replace('<!--FORM-->', () => formCard);
 
 let content = [wrapperOpenTag, heroHtml, ...ordered, '</div>'].join('\n\n');
 content = siteButtons(content);
