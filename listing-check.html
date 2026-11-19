@@ -104,8 +104,9 @@ fbq('track', 'PageView');
 <title>Your Listing Check | RevWhisper</title>
 <!-- Where a disqualified /audit lead goes after the contact form: ten short strategy videos, a score,
      their live listing report (RevWhisper Growth Hub, read through /api/listing-report) and the onboarding
-     offer, which hands off to /checkout-form. Not linked yet: the live forms still send unqualified leads to
-     /audit-report-coming. Reads the lead from sessionStorage.rw_audit_lead (set by the /audit forms), or
+     offer, which hands off to Growth Hub's public checkout (app.revwhisper.com/start: agreement, signature
+     and Stripe). Every form copy sends disqualified leads here (since 11/13). Reads the lead from
+     sessionStorage.rw_audit_lead (set by the /audit forms), or
      from ?name=&email=&listing= when opened directly; a listing link or email still missing is asked for on
      the first screen, since the report needs both. ?review=1 adds a screen picker; ?review=1&report=<id>
      loads any finished Growth Hub report. Tracking: GA4 + PostHog events (listing_check_*), Meta
@@ -895,15 +896,14 @@ window.addEventListener('pagehide',function(){sendResult('left');});
 function track(e,p){try{if(typeof window.rwTrack==='function')window.rwTrack(e,p||{});}catch(x){}}
 function fbCustom(e,p){try{if(typeof window.fbq==='function')window.fbq('trackCustom',e,p||{});}catch(x){}}
 
-/* ── the offer: standard plan through the existing /checkout-form (its rep-link path writes the
-   $500/mo terms into the service agreement and charges onboarding only). convert_months makes it the
-   MSA v2 3-month plan (Growth Hub's three_then_annual): 3 months, then it converts to 9 more, 12 in all ── */
+/* ── the offer: Growth Hub's public checkout (app.revwhisper.com/start). The agreement, the signature and
+   Stripe all live there now, not in this repo. Its prices are fixed server-side (PUBLIC_OFFER in Growth Hub's
+   src/lib/public-checkout-core.ts: $498 onboarding + $500/mo per listing, three_then_annual = 3 months
+   converting to 9 more, 12 in all); PRICE below is display only and must match it. /start takes no URL
+   parameters, so the visitor types their name and email again there. ── */
 var PRICE={was:996,now:498,monthly:500,term:3,convert:9};
-function checkoutUrl(){
-  var q=new URLSearchParams({plan:'enterprise',monthly_cost:String(PRICE.monthly),term_months:String(PRICE.term),convert_months:String(PRICE.convert),onboarding_fee:String(PRICE.now),listing_count:'1'});
-  if(emailOk(S.lead.email))q.set('email',S.lead.email);
-  return '/checkout-form?'+q.toString();
-}
+var CHECKOUT_URL='https://app.revwhisper.com/start';
+function checkoutUrl(){return CHECKOUT_URL;}
 
 /* ── the live listing report (RevWhisper Growth Hub) ──
    The visitor's browser starts the report as soon as they land: Growth Hub's public create-analysis
