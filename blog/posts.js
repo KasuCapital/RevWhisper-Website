@@ -29,6 +29,66 @@
 
 var BLOG_POSTS = [
   {
+    slug: "how-much-does-airbnb-management-cost",
+    title: "How Much Does Airbnb Management Cost?",
+    excerpt: "Full-service managers, co-hosts, revenue managers and software: how each one charges, and what you get for it.",
+    date: "2026-11-27",
+    updated: "2026-11-27",
+    publish: "2026-11-27T09:00:00-05:00",
+    image: "/images/blog/how-much-does-airbnb-management-cost.png",
+    hero: true,
+    tags: ["Deep Dive", "Revenue Management"],
+    author: "Marisa @ RevWhisper"
+  },
+  {
+    slug: "pricing-airbnb-stays-28-nights-or-more",
+    title: "Pricing Airbnb Stays of 28 Nights or More",
+    excerpt: "Monthly stays fill slow months but run on their own discount, cancellation, payout and tax rules. When to accept them and how to price them.",
+    date: "2026-11-26",
+    updated: "2026-11-26",
+    publish: "2026-11-26T09:00:00-05:00",
+    image: "/images/blog/pricing-airbnb-stays-28-nights-or-more.png",
+    hero: true,
+    tags: ["Guide", "Pricing"],
+    author: "Marisa @ RevWhisper"
+  },
+  {
+    slug: "airbnb-smart-pricing-vs-pricelabs",
+    title: "Airbnb Smart Pricing vs PriceLabs: Which Should You Use?",
+    excerpt: "Smart Pricing is built into Airbnb. PriceLabs costs a monthly fee and needs setup. Here is what each one does, and how to choose.",
+    date: "2026-11-25",
+    updated: "2026-11-25",
+    publish: "2026-11-25T09:00:00-05:00",
+    image: "/images/blog/airbnb-smart-pricing-vs-pricelabs.png",
+    hero: true,
+    tags: ["Comparison", "Revenue Management"],
+    author: "Marisa @ RevWhisper"
+  },
+  {
+    slug: "airbnb-revenue-management-arizona",
+    title: "Airbnb Revenue Management in Arizona: Rules, Taxes and Pricing by Season",
+    excerpt: "What Arizona hosts need to know about state and local rules, lodging taxes and seasonal pricing, and how RevWhisper works with Arizona listings.",
+    date: "2026-11-24",
+    updated: "2026-11-24",
+    publish: "2026-11-24T09:00:00-05:00",
+    image: "/images/blog/airbnb-revenue-management-arizona.png",
+    hero: true,
+    tags: ["Market Guide", "Revenue Management"],
+    author: "Marisa @ RevWhisper"
+  },
+  {
+    slug: "airbnb-discounts-for-hosts",
+    title: "Airbnb Discounts for Hosts: Weekly, Monthly and the New 2026 Guest Discounts",
+    excerpt: "Every discount Airbnb offers hosts in 2026, which one applies when several overlap, and when each one pays off.",
+    date: "2026-11-23",
+    updated: "2026-11-23",
+    publish: "2026-11-23T09:00:00-05:00",
+    image: "/images/blog/airbnb-discounts-for-hosts.png",
+    hero: true,
+    tags: ["Guide", "Pricing"],
+    author: "Marisa @ RevWhisper"
+  },
+  {
     slug: "catskills-airbnb-guide",
     title: "Catskills Airbnb Guide for Hosts: Kingston, Hunter and the Hudson Valley",
     excerpt: "County taxes, town rules and seasonal pricing for Airbnb hosts in the Catskills and Hudson Valley, from a revenue manager with client homes across the region.",

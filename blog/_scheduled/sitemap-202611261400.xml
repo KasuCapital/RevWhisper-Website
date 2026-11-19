@@ -78,8 +78,43 @@
   <!-- BLOG-SITEMAP:START -->
   <url>
     <loc>https://revwhisper.com/blog</loc>
-    <lastmod>2026-11-17</lastmod>
+    <lastmod>2026-11-26</lastmod>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://revwhisper.com/blog/pricing-airbnb-stays-28-nights-or-more</loc>
+    <lastmod>2026-11-26</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://revwhisper.com/blog/airbnb-smart-pricing-vs-pricelabs</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://revwhisper.com/blog/airbnb-revenue-management-arizona</loc>
+    <lastmod>2026-11-24</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://revwhisper.com/blog/airbnb-discounts-for-hosts</loc>
+    <lastmod>2026-11-23</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://revwhisper.com/blog/catskills-airbnb-guide</loc>
+    <lastmod>2026-11-20</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://revwhisper.com/blog/remote-revenue-management-vs-local-airbnb-manager</loc>
+    <lastmod>2026-11-19</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://revwhisper.com/blog/how-to-set-up-pricelabs-airbnb</loc>
+    <lastmod>2026-11-18</lastmod>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://revwhisper.com/blog/sedona-northern-arizona-airbnb-guide</loc>
